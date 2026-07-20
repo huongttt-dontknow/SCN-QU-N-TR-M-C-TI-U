@@ -22,7 +22,7 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
     { name: "Dashboard Tổng Hợp", path: "/", icon: <LayoutDashboard size={18} /> },
     { name: "Báo Cáo Đơn Vị", path: "/unit-data", icon: <Building2 size={18} /> },
     { name: "Báo Cáo Sản Phẩm", path: "/product-data", icon: <Layers size={18} /> },
-    { name: "Nhập Liệu KPI", path: "/input-form", icon: <FileEdit size={18} /> },
+    { name: "Nhập Liệu Báo Cáo", path: "/input-form", icon: <FileEdit size={18} /> },
     { name: "Chiến Lược & OKRs", path: "/okr-strategy", icon: <TrendingUp size={18} /> },
     { name: "Phân Quyền", path: "/permissions", icon: <KeyRound size={18} /> },
   ];
