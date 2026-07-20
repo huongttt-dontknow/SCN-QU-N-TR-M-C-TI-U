@@ -4,14 +4,11 @@ import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import FiltersHeader from "@/components/FiltersHeader";
 import { 
-  Plus, 
   Target, 
   Calendar, 
   User, 
-  TrendingUp, 
   ChevronRight, 
-  ChevronDown, 
-  Activity 
+  ChevronDown 
 } from "lucide-react";
 
 interface ActionItem {

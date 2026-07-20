@@ -10,10 +10,7 @@ import {
   Check, 
   X, 
   Plus, 
-  FolderPlus,
-  Send,
-  Database,
-  Lock
+  Send
 } from "lucide-react";
 
 interface KpiItem {

@@ -9,9 +9,6 @@ import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
 import { 
   Trophy, 
   AlertTriangle, 
-  DollarSign, 
-  Film, 
-  Flame, 
   Award,
   BookOpen
 } from "lucide-react";
