@@ -21,7 +21,7 @@ body {
   color: var(--foreground);
   background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%);
   min-height: 100vh;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   overflow-x: hidden;
 }
 
