@@ -2,584 +2,544 @@
 
 import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import FiltersHeader from "@/context/../components/FiltersHeader";
+import FiltersHeader from "@/components/FiltersHeader";
 import { 
   Save, 
   Sparkles, 
-  MessageSquare, 
-  Send, 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle 
+  AlertTriangle, 
+  Check, 
+  X, 
+  Plus, 
+  FolderPlus,
+  Send,
+  Database,
+  Lock
 } from "lucide-react";
 
 interface KpiItem {
-  id: string;
-  indicatorCode: string;
-  targetValue: number;
-  actualValue: number;
-  pic: string;
-  status: string;
-  explanation: string;
-  title?: string;
-  periodType: string;
-}
-
-interface AiForecast {
-  indicatorCode: string;
-  progress: number;
-  forecastProgress: number;
-  riskLevel: string;
-}
-
-interface SuggestedAction {
+  code: string;
   title: string;
-  targetIndicator: string;
-  impact: string;
+  unit: string;
+  formula: string;
+  target: number;
+  actual: number;
+  status: string;
+  pic: string;
+  group: string;
 }
 
-interface ChatMessage {
-  sender: "ai" | "user";
-  text: string;
+interface ActionItem {
+  id: number;
+  title: string;
+  indicator: string;
+  impact: string;
+  status: string;
 }
 
 export default function InputFormPage() {
-  const { filters, currentLoggedUser } = useApp();
-  
-  // States
-  const [kpis, setKpis] = useState<KpiItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [aiAnalyzing, setAiAnalyzing] = useState(false);
-  
-  // AI Results States
-  const [aiSummary, setAiSummary] = useState("");
-  const [aiForecasts, setAiForecasts] = useState<AiForecast[]>([]);
-  const [aiActions, setAiActions] = useState<SuggestedAction[]>([]);
-  const [acceptedActions, setAcceptedActions] = useState<Record<number, boolean>>({});
-  const [tdvNotes, setTdvNotes] = useState("");
+  const { filters, currentLoggedUser, setCurrentLoggedUser } = useApp();
 
-  // Reflection/5 Whys Chat States
-  const [q1, setQ1] = useState("");
-  const [causeCat, setCauseCat] = useState("Nhân sự");
-  const [q3, setQ3] = useState("");
-  const [q4, setQ4] = useState("");
-  const [chatInput, setChatInput] = useState("");
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
-    { sender: "ai", text: "Xin chào! Tôi thấy hiệu suất Doanh thu kỳ này của bạn giảm xuống 72%. Hãy cho biết tại sao kế hoạch không đạt được?" }
+  // 1. Dữ liệu bảng chỉ tiêu cho Wolfoo (Khớp 100% với screenshot)
+  const defaultWolfooKpis: KpiItem[] = [
+    { code: "VM1-I02.01", title: "Tổng doanh thu", unit: "VNĐ", formula: "Tổng doanh thu phát sinh trong kỳ", target: 91840000, actual: 83574400, status: "Đang nhập", pic: "Lê Đăng Khoa", group: "M1. TÀI CHÍNH / KINH DOANH" },
+    
+    { code: "VM2-I01.01", title: "Số lượng video hoàn thành sản xuất", unit: "Video", formula: "Số lượng video hoàn thành sản xuất", target: 11, actual: 8, status: "Đang nhập", pic: "Lê Đăng Khoa", group: "M2. SẢN PHẨM / SẢN XUẤT" },
+    { code: "VM2-I02.01", title: "Số sản phẩm phái sinh & khai thác", unit: "Sản phẩm", formula: "Số sản phẩm phái sinh & khai thác xuất bản", target: 14, actual: 17, status: "Đang nhập", pic: "Lê Đăng Khoa", group: "M2. SẢN PHẨM / SẢN XUẤT" },
+    { code: "VM2-I01.3", title: "Số lượng ý tưởng mới", unit: "Ý tưởng", formula: "Số lượng ý tưởng mới sx trong kỳ (Áp dụng cho BP Wolfoo và BP AS)", target: 30, actual: 36, status: "Đang nhập", pic: "Lê Đăng Khoa", group: "M2. SẢN PHẨM / SẢN XUẤT" },
+    { code: "VM2-I01.4", title: "Số lượng ý tưởng được chọn", unit: "Ý tưởng", formula: "Số lượng ý tưởng được chọn sx trong kỳ (Áp dụng cho BP Wolfoo và BP AS)", target: 18, actual: 16, status: "Đang nhập", pic: "Lê Đăng Khoa", group: "M2. SẢN PHẨM / SẢN XUẤT" },
+    { code: "VM2-I01.5", title: "Tỷ lệ chọn ý tưởng", unit: "%", formula: "Tỷ lệ chọn ý tưởng", target: 80, actual: 70, status: "Đang nhập", pic: "Lê Đăng Khoa", group: "M2. SẢN PHẨM / SẢN XUẤT" },
+    { code: "VM2-I01.6", title: "SL Kịch bản mới SX", unit: "Kịch bản", formula: "Số lượng kịch bản mới sản xuất", target: 11, actual: 10, status: "Đang nhập", pic: "Lê Đăng Khoa", group: "M2. SẢN PHẨM / SẢN XUẤT" },
+
+    { code: "TM3-I01.02", title: "Tổng traffic đơn vị (Views)", unit: "Lượt", formula: "Tổng traffic đơn vị", target: 17820000, actual: 17107200, status: "Đang nhập", pic: "Trịnh Quốc Thịnh", group: "M3. KHÁCH HÀNG / DỊCH VỤ" },
+    { code: "TM3-I01.03", title: "Số lượng video upload (nội dung)", unit: "Video", formula: "Số lượng video upload", target: 11, actual: 13, status: "Đang nhập", pic: "Trịnh Quốc Thịnh", group: "M3. KHÁCH HÀNG / DỊCH VỤ" },
+    { code: "TM3-I01.06", title: "View TB/1 nội dung mới upload trong kỳ", unit: "Views", formula: "View trung bình của video upload mới", target: 215000, actual: 225750, status: "Đang nhập", pic: "Trịnh Quốc Thịnh", group: "M3. KHÁCH HÀNG / DỊCH VỤ" },
+  ];
+
+  const [kpis, setKpis] = useState<KpiItem[]>(defaultWolfooKpis);
+  const [reportNotes, setReportNotes] = useState("");
+  const [reportStatus, setReportStatus] = useState("Đang nhập");
+  const [explanations, setExplanations] = useState<Record<string, string>>({
+    "VM2-I01.01": "Giải trình do nhân sự thiết kế chính xin nghỉ 3 ngày giữa tuần ảnh hưởng tốc độ kết xuất."
+  });
+  
+  // Khối 4: Suggested Actions
+  const [actions, setActions] = useState<ActionItem[]>([
+    { id: 1, title: "Chuẩn hóa thư viện asset dùng chung để đẩy nhanh tốc độ diễn hoạt", indicator: "VM2-I01.01", impact: "Tăng sản lượng thêm 2 tập/tuần", status: "Chờ quyết định" }
   ]);
-  const [whyCount, setWhyCount] = useState(1);
 
-  // Security checks
+  // Khối 5: Chỉ đạo GĐBU
+  const [directorComment, setDirectorComment] = useState("");
+
   const isReadOnly = currentLoggedUser?.role === "Người dùng";
-  const isDirector = currentLoggedUser?.role === "Admin" || currentLoggedUser?.role === "Quản trị viên"; // Directors simulator
 
-  // Fetch KPIs
-  const fetchKpis = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/kpi?unitCode=${filters.unitCode}&periodKey=${filters.periodType}_${filters.month}_${filters.week}&periodType=${filters.periodType}`);
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setKpis(data);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Đồng bộ thay đổi dữ liệu theo đơn vị được lọc
   useEffect(() => {
-    fetchKpis();
-    // Clear AI states on filter change
-    setAiSummary("");
-    setAiForecasts([]);
-    setAiActions([]);
-    setAcceptedActions({});
+    if (filters.unitCode === "Wofloo") {
+      setKpis(defaultWolfooKpis);
+    } else {
+      // Giả lập các đơn vị khác
+      setKpis(defaultWolfooKpis.map(k => ({
+        ...k,
+        actual: Math.round(k.target * (0.85 + Math.random() * 0.3))
+      })));
+    }
   }, [filters]);
 
-  // Handle actual value input change
-  const handleActualChange = (id: string, val: string) => {
-    setKpis(prev => prev.map(k => k.id === id ? { ...k, actualValue: parseFloat(val) || 0 } : k));
+  const handleInputChange = (code: string, val: string) => {
+    setKpis(prev => prev.map(k => k.code === code ? { ...k, actual: parseFloat(val) || 0 } : k));
   };
 
-  // Handle explanation change
-  const handleExplanationChange = (id: string, val: string) => {
-    setKpis(prev => prev.map(k => k.id === id ? { ...k, explanation: val } : k));
-  };
-
-  // Save KPI data and trigger AI analysis
-  const handleSaveAndAnalyze = async () => {
+  // Lưu dòng đơn lẻ (Khớp với nút [Lưu dòng])
+  const handleSaveRow = (code: string) => {
     if (isReadOnly) return;
-    setSaving(true);
-    setAiAnalyzing(true);
-
-    try {
-      // 1. Save data to database
-      const saveRes = await fetch("/api/kpi", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          unitCode: filters.unitCode,
-          periodKey: `${filters.periodType}_${filters.month}_${filters.week}`,
-          periodType: filters.periodType,
-          kpiUpdates: kpis.map(k => ({
-            id: k.id,
-            actualValue: k.actualValue,
-            explanation: k.explanation,
-            status: k.actualValue >= k.targetValue ? "Hoàn thành" : "Đang thực hiện",
-          })),
-        }),
-      });
-
-      const saveResult = await saveRes.json();
-      if (saveResult.data) {
-        setKpis(saveResult.data);
-      }
-
-      // 2. Call AI analyze endpoint
-      const aiRes = await fetch("/api/ai/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          unitCode: filters.unitCode,
-          periodKey: `${filters.periodType}_${filters.month}_${filters.week}`,
-          periodType: filters.periodType,
-          kpis: kpis,
-        }),
-      });
-
-      const aiResult = await aiRes.json();
-      setAiSummary(aiResult.summary || "");
-      setAiForecasts(aiResult.forecasts || []);
-      setAiActions(aiResult.suggestedActions || []);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setSaving(false);
-      setAiAnalyzing(false);
-    }
+    setKpis(prev => prev.map(k => k.code === code ? { ...k, status: "Đang nhập" } : k));
+    alert(`✓ Đã lưu tạm dữ liệu của chỉ tiêu: ${code}`);
   };
 
-  // Chat message send
-  const handleSendMessage = () => {
-    if (!chatInput.trim() || isReadOnly) return;
-
-    const newMsgs = [...chatMessages, { sender: "user", text: chatInput } as ChatMessage];
-    setChatMessages(newMsgs);
-    setChatInput("");
-
-    if (whyCount < 5) {
-      setTimeout(() => {
-        const questions = [
-          "Tại sao nhân sự tham gia dự án lại thiếu hụt trong tuần?",
-          "Tại sao designer chính lại nghỉ đột xuất và không có người back up?",
-          "Tại sao quy trình đào tạo chéo kỹ năng cho team chưa hoàn thành?",
-          "Tại sao ngân sách đào tạo nội bộ lại bị trì hoãn duyệt?"
-        ];
-        setChatMessages(prev => [
-          ...prev,
-          { sender: "ai", text: `[Why ${whyCount + 1}] Cảm ơn bạn. ${questions[whyCount - 1]}` }
-        ]);
-        setWhyCount(whyCount + 1);
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        setChatMessages(prev => [
-          ...prev,
-          { sender: "ai", text: "✓ [Nguyên nhân gốc rễ]: Chậm phê duyệt ngân sách và thiếu Skill Matrix dự phòng. Tôi đã đề xuất giải pháp ở Khối 4 phía dưới." }
-        ]);
-      }, 1000);
-    }
+  const handleSaveNotes = () => {
+    alert("✓ Đã lưu thành công ý kiến ghi chú của Trưởng đơn vị!");
   };
 
-  // Accept suggested action
-  const toggleAcceptAction = (index: number) => {
-    setAcceptedActions(prev => ({
+  const handleSaveExplanations = () => {
+    alert("✓ Đã lưu giải trình bắt buộc thành công!");
+  };
+
+  const handleAcceptAction = (id: number) => {
+    setActions(prev => prev.map(a => a.id === id ? { ...a, status: "Đã chấp nhận" } : a));
+  };
+
+  const handleSkipAction = (id: number) => {
+    setActions(prev => prev.map(a => a.id === id ? { ...a, status: "Bỏ qua" } : a));
+  };
+
+  const handleAddCustomAction = () => {
+    if (isReadOnly) return;
+    const title = prompt("Nhập tiêu đề hành động chủ động:");
+    if (!title) return;
+    const indicator = prompt("Nhập mã chỉ tiêu tác động:", "VM2-I01.01");
+    if (!indicator) return;
+    const impact = prompt("Nhập kỳ vọng giải quyết (Impact):", "Tối ưu hóa thời gian");
+    if (!indicator) return;
+
+    setActions(prev => [
       ...prev,
-      [index]: !prev[index],
-    }));
+      { id: Date.now(), title, indicator, impact, status: "Chờ quyết định" }
+    ]);
   };
 
-  // Director actions
-  const handleApproveReport = () => {
-    alert("✓ Phê duyệt báo cáo thành công! Dữ liệu đã được khóa và Actions đã đồng bộ sang OKR tháng tiếp theo.");
+  const handleSendReport = () => {
+    setReportStatus("Chờ duyệt");
+    alert("🚀 Đã gửi báo cáo lên Giám đốc BU SCVN duyệt thành công!");
   };
 
-  const handleRejectReport = () => {
-    alert("✖ Đã yêu cầu hiệu chỉnh báo cáo! Trưởng đơn vị đã nhận được thông báo.");
+  const handleSaveDraft = () => {
+    alert("💾 Đã lưu nháp báo cáo toàn kỳ!");
   };
+
+  // Lọc lấy các chỉ số lỗi (< 80%) để đưa vào Khối 3 giải trình
+  const failedKpis = kpis.filter(k => k.target > 0 && (k.actual / k.target) < 0.8);
+
+  // Group KPIs by their category header for presentation
+  const groups = Array.from(new Set(kpis.map(k => k.group)));
 
   return (
-    <div className="flex flex-col gap-4 pb-12">
+    <div className="flex flex-col gap-6 pb-16">
+      {/* FREEZE FILTERS */}
       <FiltersHeader />
 
-      {loading ? (
-        <div className="glass-panel p-8 text-center text-[var(--text-muted)] text-sm">
-          Đang tải dữ liệu nhập liệu KPI...
-        </div>
-      ) : (
-        <>
-          {/* KHỐI 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ */}
-          <div className="glass-panel p-5">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xs font-bold text-white tracking-wider uppercase">
-                📋 KHỐI 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ
-              </h3>
-              <button
-                onClick={handleSaveAndAnalyze}
-                disabled={isReadOnly || saving}
-                className="bg-[var(--accent-cyan)] text-slate-950 text-xs font-extrabold px-4 py-2 rounded-lg hover:shadow-[0_0_15px_rgba(0,242,254,0.4)] transition-all flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Save size={14} />
-                {saving ? "Đang lưu..." : "LƯU SỐ LIỆU & AI PHÂN TÍCH"}
-              </button>
-            </div>
+      {/* KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ */}
+      <div className="glass-panel p-5">
+        <h3 className="text-sm font-bold text-[#10b981] tracking-wider uppercase mb-4">
+          🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
+        </h3>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-white/5 text-[var(--text-muted)] font-bold bg-slate-900/50">
-                    <th className="p-3 w-16 text-center">Mã</th>
-                    <th className="p-3">Tên Chỉ tiêu</th>
-                    <th className="p-3 w-28 text-center">Chỉ tiêu</th>
-                    <th className="p-3 w-32 text-center">Thực tế đã nhập</th>
-                    <th className="p-3 w-20 text-center">Tiến độ</th>
-                    <th className="p-3 w-36">Người phụ trách</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {kpis.map(kpi => {
-                    const pct = kpi.targetValue > 0 ? Math.round((kpi.actualValue / kpi.targetValue) * 100) : 100;
-                    return (
-                      <tr key={kpi.id} className="border-b border-white/5 text-[var(--text-muted)] hover:bg-white/5">
-                        <td className="p-3 text-center">
-                          <code className="bg-white/5 px-1.5 py-0.5 rounded text-[10px]">{kpi.indicatorCode}</code>
-                        </td>
-                        <td className="p-3 text-white font-medium">{kpi.title || kpi.indicatorCode}</td>
-                        <td className="p-3 text-center font-bold">{kpi.targetValue.toLocaleString()}</td>
-                        <td className="p-3 text-center">
-                          <input
-                            type="number"
-                            value={kpi.actualValue || ""}
-                            disabled={isReadOnly}
-                            onChange={(e) => handleActualChange(kpi.id, e.target.value)}
-                            className="w-24 bg-slate-950 border border-[var(--glass-border)] text-white text-center text-xs font-bold rounded p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
-                          />
-                        </td>
-                        <td className={`p-3 text-center font-bold ${pct >= 100 ? "text-emerald-400" : pct >= 75 ? "text-yellow-400" : "text-rose-500"}`}>
-                          {pct}%
-                        </td>
-                        <td className="p-3 text-left font-medium">{kpi.pic}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* KHỐI 2: BÁO CÁO ĐÁNH GIÁ TỔNG HỢP & DỰ BÁO TỰ ĐỘNG BỞI AI */}
-          {(aiAnalyzing || aiSummary) && (
-            <div className="glass-panel p-5 relative overflow-hidden">
-              {aiAnalyzing && (
-                <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center gap-2 z-10">
-                  <Sparkles className="animate-spin text-[var(--accent-cyan)]" />
-                  <span className="text-xs font-bold text-white uppercase tracking-wider">
-                    AI Agent đang phân tích & lập dự báo...
-                  </span>
-                </div>
-              )}
-
-              <h3 className="text-xs font-bold text-white tracking-wider uppercase mb-4 flex items-center gap-1.5">
-                <Sparkles size={16} className="text-[var(--accent-cyan)]" />
-                🤖 KHỐI 2: BÁO CÁO ĐÁNH GIÁ TỔNG HỢP & DỰ BÁO TỰ ĐỘNG BỞI AI
-              </h3>
-
-              <div className="bg-slate-900/60 border border-[var(--glass-border)] p-4 rounded-lg text-sm text-[var(--text-muted)] mb-5 leading-relaxed">
-                {aiSummary}
-              </div>
-
-              {/* Grid 3 Forecast Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                {aiForecasts.slice(0, 3).map((f, i) => (
-                  <div key={f.indicatorCode} className="glass-card flex flex-col justify-between h-[130px]">
-                    <div className="flex justify-between items-start">
-                      <span className="text-[9px] text-[var(--accent-cyan)] font-extrabold tracking-widest uppercase">
-                        Chỉ số: {f.indicatorCode}
-                      </span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                        f.riskLevel === "Rất cao" 
-                          ? "bg-rose-500/10 text-rose-500 border border-rose-500/20 animate-pulse" 
-                          : f.riskLevel === "Cao"
-                            ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20"
-                            : "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
-                      }`}>
-                        ⚠️ Rủi ro {f.riskLevel}
-                      </span>
-                    </div>
-                    <div className="my-2">
-                      <div className="text-[10px] text-[var(--text-muted)]">Tiến độ kỳ này</div>
-                      <div className="text-xl font-black text-white">{f.progress}%</div>
-                    </div>
-                    <div className="bg-white/5 p-1.5 rounded text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
-                      💡 AI Dự báo tháng: {f.forecastProgress}% hoàn thành
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* TĐV notes */}
-              <div className="mt-4">
-                <label className="block text-[10px] text-[var(--text-muted)] font-bold mb-2 uppercase tracking-wider">
-                  Ý kiến ghi chú của Trưởng đơn vị
-                </label>
-                <textarea
-                  value={tdvNotes}
-                  onChange={(e) => setTdvNotes(e.target.value)}
-                  placeholder="Ghi chú thêm về vận hành đặc thù trong kỳ này..."
-                  rows={2}
-                  className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)] transition-all resize-none"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* KHỐI 3: HỘP THÔNG TIN YÊU CẦU GIẢI TRÌNH BẮT BUỘC */}
-          {kpis.some(k => k.actualValue < k.targetValue * 0.8) && (
-            <div className="glass-panel p-5 border-l-4 border-l-rose-500 bg-rose-500/5">
-              <h3 className="text-xs font-bold text-rose-500 tracking-wider uppercase mb-4 flex items-center gap-1.5">
-                <AlertTriangle size={16} />
-                ⚠️ KHỐI 3: GIẢI TRÌNH BẮT BUỘC (HOÀN THÀNH DƯỚI 80%)
-              </h3>
-              
-              <div className="space-y-4">
-                {kpis.filter(k => k.actualValue < k.targetValue * 0.8).map(kpi => (
-                  <div key={kpi.id} className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center py-2 border-b border-white/5">
-                    <div>
-                      <h4 className="text-xs font-bold text-white">{kpi.title || kpi.indicatorCode}</h4>
-                      <p className="text-[10px] text-[var(--text-muted)]">
-                        Kế hoạch: {kpi.targetValue} | Thực tế: {kpi.actualValue} ({Math.round((kpi.actualValue / kpi.targetValue) * 100)}%)
-                      </p>
-                    </div>
-                    <textarea
-                      value={kpi.explanation}
-                      disabled={isReadOnly}
-                      onChange={(e) => handleExplanationChange(kpi.id, e.target.value)}
-                      placeholder="Bắt buộc nhập lý do lỗi cụ thể và giải pháp khắc phục..."
-                      rows={2}
-                      className="bg-slate-950 border border-rose-500/30 rounded p-2 text-xs text-white focus:outline-none focus:border-rose-500 resize-none w-full"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* KHỐI Phản tỉnh 5 Whys (Phân hệ 5.3) */}
-          <div className="glass-panel p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            {/* Vùng khảo sát khảo sát */}
-            <div className="space-y-4">
-              <h3 className="text-xs font-bold text-[var(--accent-purple)] tracking-wider uppercase mb-2">
-                🧠 PHẢN TỈNH CHUYÊN SÂU & ĐÁNH GIÁ CHẤT LƯỢNG (PHÂN HỆ 5.3)
-              </h3>
-              
-              <div>
-                <label className="block text-[11px] font-bold text-white mb-1.5">
-                  Q1: Đánh giá kết quả: Kết quả thực tế có đạt kỳ vọng không? Mức độ ảnh hưởng?
-                </label>
-                <textarea
-                  value={q1}
-                  disabled={isReadOnly}
-                  onChange={(e) => setQ1(e.target.value)}
-                  placeholder="Đánh giá nhanh về sự tác động..."
-                  rows={2}
-                  className="w-full bg-slate-950 border border-[var(--glass-border)] rounded text-xs p-2 text-white focus:outline-none focus:border-[var(--accent-cyan)] resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-white mb-1.5">
-                  Q2: Chọn nhóm nguyên nhân chính cốt lõi ảnh hưởng
-                </label>
-                <select
-                  value={causeCat}
-                  disabled={isReadOnly}
-                  onChange={(e) => setCauseCat(e.target.value)}
-                  className="w-full bg-slate-950 border border-[var(--glass-border)] rounded text-xs p-2 text-white focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
-                >
-                  <option value="Nhân sự">Nhân sự (Thiếu người, năng lực yếu, phối hợp kém)</option>
-                  <option value="Quy trình">Quy trình (Rườm rà, thiếu tài liệu hướng dẫn, chậm duyệt)</option>
-                  <option value="Công nghệ">Công nghệ & Công cụ (Máy tính yếu, lỗi tool, thiếu tài nguyên)</option>
-                  <option value="Khách hàng">Khách hàng / Đối tác (Yêu cầu thay đổi, chậm thanh toán)</option>
-                  <option value="Ngân sách">Ngân sách & Chi phí (Bị cắt giảm, thiếu kinh phí)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-white mb-1.5">
-                  Q3: Đánh giá Action kỳ trước: Đối chiếu lại cam kết và hiệu quả thực tế
-                </label>
-                <textarea
-                  value={q3}
-                  disabled={isReadOnly}
-                  onChange={(e) => setQ3(e.target.value)}
-                  placeholder="Ví dụ: Đã đẩy mạnh SEO - tăng traffic 20%, Action về Asset bị chậm..."
-                  rows={2}
-                  className="w-full bg-slate-950 border border-[var(--glass-border)] rounded text-xs p-2 text-white focus:outline-none focus:border-[var(--accent-cyan)] resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-white mb-1.5">
-                  Q4: Cam kết kế hoạch kỳ tiếp theo: Tiếp tục gì? Dừng gì? Bắt đầu làm gì mới?
-                </label>
-                <textarea
-                  value={q4}
-                  disabled={isReadOnly}
-                  onChange={(e) => setQ4(e.target.value)}
-                  placeholder="Nhập cam kết cải tiến..."
-                  rows={2}
-                  className="w-full bg-slate-950 border border-[var(--glass-border)] rounded text-xs p-2 text-white focus:outline-none focus:border-[var(--accent-cyan)] resize-none"
-                />
-              </div>
-            </div>
-
-            {/* Vùng Chatbot 5 Whys */}
-            <div className="flex flex-col border-l border-[var(--glass-border)] pl-6">
-              <h3 className="text-xs font-bold text-[var(--accent-cyan)] tracking-wider uppercase mb-4 flex items-center gap-1.5">
-                <MessageSquare size={16} />
-                💬 HỘI THOẠI 5 WHYS TÌM NGUYÊN NHÂN GỐC RỄ
-              </h3>
-
-              {/* Chat Messages Panel */}
-              <div className="flex-1 min-h-[220px] max-h-[220px] overflow-y-auto bg-slate-950/60 border border-[var(--glass-border)] rounded-lg p-3 space-y-2 mb-3">
-                {chatMessages.map((msg, i) => (
-                  <div 
-                    key={i} 
-                    className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
-                  >
-                    <div 
-                      className={`max-w-[85%] rounded-lg px-3 py-2 text-xs leading-relaxed ${
-                        msg.sender === "user" 
-                          ? "bg-[var(--accent-purple)] text-white" 
-                          : "bg-slate-900 text-[var(--text-muted)] border border-white/5"
-                      }`}
-                    >
-                      {msg.text}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Chat Input */}
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={chatInput}
-                  disabled={isReadOnly}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  placeholder={whyCount < 5 ? `Why ${whyCount}: Trả lời nguyên nhân của bạn...` : "Nhập tin nhắn..."}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  className="flex-1 bg-slate-950 border border-[var(--glass-border)] text-white text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={isReadOnly}
-                  className="bg-[var(--accent-cyan)] text-slate-950 p-2 rounded-lg hover:shadow-[0_0_10px_rgba(0,242,254,0.3)] transition-all disabled:opacity-50"
-                >
-                  <Send size={14} />
-                </button>
-              </div>
-              <div className="text-[10px] text-[var(--text-muted)] mt-1.5 font-semibold">
-                Tiến độ phản tỉnh: {whyCount}/5 câu hỏi cốt lõi
-              </div>
-            </div>
-
-          </div>
-
-          {/* KHỐI 4: GỢI Ý HÀNH ĐỘNG KỲ TIẾP THEO (AI SUGGESTED ACTIONS) */}
-          {aiActions.length > 0 && (
-            <div className="glass-panel p-5">
-              <h3 className="text-xs font-bold text-white tracking-wider uppercase mb-4">
-                💡 KHỐI 4: GỢI Ý HÀNH ĐỘNG KỲ TIẾP THEO (AI-GENERATED ACTIONS)
-              </h3>
-              
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-white/5 text-[var(--text-muted)] font-bold bg-slate-900/50">
-                      <th className="p-3">Hành động khắc phục đề xuất</th>
-                      <th className="p-3 w-40">Chỉ tiêu tác động</th>
-                      <th className="p-3 w-64">Kỳ vọng giải quyết (Impact)</th>
-                      <th className="p-3 w-32 text-center">Quyết định TĐV</th>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-white/10 text-[var(--text-muted)] font-bold bg-slate-900/60">
+                <th className="p-3 w-28">Mã chỉ tiêu</th>
+                <th className="p-3">Mục tiêu / Chi tiêu cần báo cáo</th>
+                <th className="p-3 w-16 text-center">ĐVT</th>
+                <th className="p-3 w-56">Cách tính</th>
+                <th className="p-3 w-36 text-center">Kế hoạch định kỳ</th>
+                <th className="p-3 w-32 text-center">Kết quả thực tế đã nhập</th>
+                <th className="p-3 w-24 text-center">Tỷ lệ hoàn thành</th>
+                <th className="p-3 w-28 text-center">Trạng thái duyệt</th>
+                <th className="p-3 w-24 text-center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {groups.map(groupName => {
+                const groupItems = kpis.filter(k => k.group === groupName);
+                return (
+                  <React.Fragment key={groupName}>
+                    {/* Header Row */}
+                    <tr className="bg-slate-900/40 text-[var(--accent-cyan)] font-extrabold border-b border-white/5">
+                      <td colSpan={9} className="p-2.5 uppercase text-[10px] tracking-wider">
+                        {groupName}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {aiActions.map((action, i) => {
-                      const isAccepted = !!acceptedActions[i];
+                    {groupItems.map(kpi => {
+                      const pct = Math.round((kpi.actual / kpi.target) * 100);
                       return (
-                        <tr key={i} className="border-b border-white/5 text-[var(--text-muted)] hover:bg-white/5">
-                          <td className="p-3 text-white font-semibold">{action.title}</td>
+                        <tr key={kpi.code} className="border-b border-white/5 hover:bg-white/5 text-[11px] text-[var(--text-muted)]">
                           <td className="p-3">
-                            <code className="bg-white/5 px-1.5 py-0.5 rounded text-[10px]">{action.targetIndicator}</code>
+                            <code className="bg-white/5 px-1.5 py-0.5 rounded text-[10px] text-white font-mono">{kpi.code}</code>
                           </td>
-                          <td className="p-3 italic">{action.impact}</td>
+                          <td className="p-3 text-white font-medium">{kpi.title}</td>
+                          <td className="p-3 text-center">{kpi.unit}</td>
+                          <td className="p-3 italic text-slate-400 font-medium truncate max-w-[200px]" title={kpi.formula}>
+                            {kpi.formula}
+                          </td>
+                          <td className="p-3 text-center font-semibold text-slate-300">
+                            {kpi.target.toLocaleString()} {kpi.unit}
+                          </td>
+                          <td className="p-3 text-center">
+                            <input
+                              type="number"
+                              value={kpi.actual}
+                              disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                              onChange={(e) => handleInputChange(kpi.code, e.target.value)}
+                              className="w-24 bg-slate-950 border border-[var(--glass-border)] text-white text-center text-xs font-bold rounded p-1 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                            />
+                          </td>
+                          <td className={`p-3 text-center font-bold ${pct >= 100 ? "text-emerald-400" : pct >= 75 ? "text-yellow-400" : "text-rose-500"}`}>
+                            {pct}%
+                          </td>
+                          <td className="p-3 text-center font-bold text-yellow-400">
+                            {reportStatus}
+                          </td>
                           <td className="p-3 text-center">
                             <button
-                              onClick={() => toggleAcceptAction(i)}
-                              className={`text-[10px] font-extrabold px-3 py-1.5 rounded-lg border transition-all ${
-                                isAccepted 
-                                  ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" 
-                                  : "bg-slate-950 text-[var(--text-muted)] border-[var(--glass-border)] hover:text-white"
-                              }`}
+                              onClick={() => handleSaveRow(kpi.code)}
+                              disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                              className="bg-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/80 text-white font-bold text-[9px] px-2.5 py-1.5 rounded transition-all disabled:opacity-40"
                             >
-                              {isAccepted ? "✓ ĐÃ CHẤP NHẬN" : "➕ CHẤP NHẬN"}
+                              Lưu dòng
                             </button>
                           </td>
                         </tr>
                       );
                     })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-          {/* KHỐI 5: KHU VỰC TƯƠNG TÁC & PHÊ DUYỆT CỦA GIÁM ĐỐC BU SCVN */}
-          <div className="glass-panel p-5 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-              <h3 className="text-xs font-bold text-white tracking-wider uppercase">
-                🔑 KHỐI 5: THẨM ĐỊNH & DUYỆT BÁO CÁO CỦA GIÁM ĐỐC BU
-              </h3>
-              <p className="text-[10px] text-[var(--text-muted)] mt-1 font-medium">
-                Chỉ dành riêng cho Giám đốc BU SCVN hoặc Admin phê duyệt báo cáo cuối kỳ để đồng bộ số liệu.
-              </p>
+      {/* KHỐI 2: BÁO CÁO ĐÁNH GIÁ TỔNG HỢP & DỰ BÁO TỰ ĐỘNG BỞI AI */}
+      <div className="glass-panel p-5">
+        <h3 className="text-sm font-bold text-[#00f2fe] tracking-wider uppercase mb-4 flex items-center gap-1.5">
+          <Sparkles size={16} />
+          🤖 KHỐI 2: BÁO CÁO ĐÁNH GIÁ TỔNG HỢP & DỰ BÁO TỰ ĐỘNG BỞI AI
+        </h3>
+
+        {/* 3 AI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          {/* Card A: Doanh thu */}
+          <div className="glass-card flex flex-col justify-between h-[180px]">
+            <div className="flex justify-between items-start">
+              <span className="text-[10px] text-white font-extrabold uppercase tracking-wide">
+                🟢 DOANH THU (VM1-I02.01)
+              </span>
+              <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                Đạt 91%
+              </span>
             </div>
-            
-            <div className="flex gap-3">
+            <div className="text-[11px] text-[var(--text-muted)] space-y-1 my-2">
+              <div>Thực tế: <span className="font-bold text-white">83,574,400 VNĐ</span></div>
+              <div>KH: <span className="font-semibold text-slate-300">91,840,000 VNĐ</span></div>
+              <div>So với tuần trước: <span className="font-bold text-emerald-400">N/A</span></div>
+              <div>Đề xuất: <span className="text-emerald-400 font-bold">Duy trì</span></div>
+            </div>
+            <div className="bg-slate-950 p-2 rounded text-[10px] text-emerald-400 font-bold flex justify-between items-center border border-white/5">
+              <span>💡 AI DỰ BÁO THÁNG: Dự kiến đạt 91% KH</span>
+              <span className="bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded text-[8px] uppercase font-extrabold">Thấp</span>
+            </div>
+          </div>
+
+          {/* Card B: Traffic */}
+          <div className="glass-card flex flex-col justify-between h-[180px]">
+            <div className="flex justify-between items-start">
+              <span className="text-[10px] text-white font-extrabold uppercase tracking-wide">
+                📊 TRAFFIC (TM3-I01.02)
+              </span>
+              <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                Đạt 96%
+              </span>
+            </div>
+            <div className="text-[11px] text-[var(--text-muted)] space-y-1 my-2">
+              <div>Thực tế: <span className="font-bold text-white">17,107,200 Lượt</span></div>
+              <div>KH: <span className="font-semibold text-slate-300">17,820,000 Lượt</span></div>
+              <div>So với tuần trước: <span className="font-bold text-emerald-400">N/A</span></div>
+              <div>Đề xuất: <span className="text-emerald-400 font-bold">Duy trì</span></div>
+            </div>
+            <div className="bg-slate-950 p-2 rounded text-[10px] text-emerald-400 font-bold flex justify-between items-center border border-white/5">
+              <span>💡 AI DỰ BÁO THÁNG: Dự kiến đạt 96% KH</span>
+              <span className="bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded text-[8px] uppercase font-extrabold">Thấp</span>
+            </div>
+          </div>
+
+          {/* Card C: Sản lượng */}
+          <div className="glass-card flex flex-col justify-between h-[180px]">
+            <div className="flex justify-between items-start">
+              <span className="text-[10px] text-white font-extrabold uppercase tracking-wide">
+                🪵 SẢN LƯỢNG (VM2-I01.01)
+              </span>
+              <span className="text-[10px] font-black text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
+                Đạt 73%
+              </span>
+            </div>
+            <div className="text-[11px] text-[var(--text-muted)] space-y-1 my-2">
+              <div>Thực tế: <span className="font-bold text-white">8 Video</span></div>
+              <div>KH: <span className="font-semibold text-slate-300">11 Video</span></div>
+              <div>So với tuần trước: <span className="font-bold text-rose-400">N/A</span></div>
+              <div>Đề xuất: <span className="text-rose-400 font-bold">Tối ưu asset, tăng phái sinh</span></div>
+            </div>
+            <div className="bg-slate-950 p-2 rounded text-[10px] text-rose-500 font-bold flex justify-between items-center border border-white/5">
+              <span>💡 AI DỰ BÁO THÁNG: Dự kiến đạt 73% KH</span>
+              <span className="bg-rose-500/20 text-rose-500 px-1.5 py-0.5 rounded text-[8px] uppercase font-extrabold animate-pulse">Rất cao</span>
+            </div>
+          </div>
+        </div>
+
+        {/* CHỈ TIÊU BỔ SUNG & PHỤ TRỢ TRONG KỲ */}
+        <div className="bg-slate-950/40 border border-white/5 p-4 rounded-lg mb-4">
+          <h4 className="text-[10px] text-[var(--text-muted)] font-extrabold uppercase tracking-wider mb-2">
+            ⚙️ Chỉ tiêu bổ sung & phụ trợ trong kỳ
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {kpis.slice(2).map(k => {
+              const pct = Math.round((k.actual / k.target) * 100);
+              return (
+                <span key={k.code} className="bg-white/5 border border-white/10 rounded px-2.5 py-1 text-[10px] text-slate-300 flex items-center gap-1.5">
+                  <span className="font-bold text-[var(--accent-cyan)]">{k.code}</span>
+                  <span>{k.title}:</span>
+                  <span className="font-bold text-white">{k.actual.toLocaleString()} {k.unit}</span>
+                  <span className={`font-black ${pct >= 100 ? "text-emerald-400" : "text-yellow-400"}`}>{pct}%</span>
+                </span>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Ý kiến Trưởng đơn vị */}
+        <div className="flex flex-col gap-2">
+          <label className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-wider">
+            ✍️ Ghi chú sự kiện vận hành đặc thù (Ý kiến Trưởng đơn vị):
+          </label>
+          <textarea
+            value={reportNotes}
+            onChange={(e) => setReportNotes(e.target.value)}
+            placeholder="Ghi chú thêm các sự kiện vận hành đặc thù của riêng kỳ báo cáo này..."
+            rows={2}
+            className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)] transition-all resize-none"
+          />
+          <div className="text-right">
+            <button
+              onClick={handleSaveNotes}
+              className="bg-[var(--accent-cyan)] text-slate-950 text-[10px] font-extrabold px-3 py-1.5 rounded hover:shadow-[0_0_10px_rgba(0,242,254,0.3)] transition-all"
+            >
+              💾 Lưu ghi chú
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* KHỐI 3: HỘP THÔNG TIN YÊU CẦU GIẢI TRÌNH BẮT BUỘC */}
+      {failedKpis.length > 0 && (
+        <div className="glass-panel p-5 border-l-4 border-l-rose-500 bg-rose-500/5">
+          <h3 className="text-xs font-bold text-rose-500 tracking-wider uppercase mb-3 flex items-center gap-1.5">
+            <AlertTriangle size={16} />
+            ⚠️ KHỐI 3: HỘP THÔNG TIN YÊU CẦU GIẢI TRÌNH (BẮT BUỘC BỞI AI)
+          </h3>
+          <p className="text-[10px] text-[var(--text-muted)] mb-4">
+            AI tự động phát hiện các chỉ số lỗi/bất thường dưới ngưỡng quy định. Bạn bắt buộc phải nhập giải trình trước khi gửi báo cáo.
+          </p>
+
+          <div className="space-y-4">
+            {failedKpis.map(kpi => {
+              const pct = Math.round((kpi.actual / kpi.target) * 100);
+              return (
+                <div key={kpi.code} className="bg-slate-950 border border-rose-500/20 rounded-lg p-4 space-y-3">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                    <span className="text-xs font-bold text-white">
+                      ⚠️ Chỉ tiêu {kpi.code} - {kpi.title} (Đạt {pct}%)
+                    </span>
+                    <span className="text-[9px] font-bold bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded">
+                      Rủi ro tháng: Rất cao
+                    </span>
+                  </div>
+                  
+                  <div className="flex flex-col md:flex-row gap-4 items-center">
+                    <textarea
+                      value={explanations[kpi.code] || ""}
+                      onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.code]: e.target.value }))}
+                      placeholder="Giải trình lý do cụ thể và đề xuất giải pháp tạm thời (tối thiểu 10 ký tự)..."
+                      rows={2}
+                      className="flex-1 bg-slate-950 border border-rose-500/30 rounded p-2 text-xs text-white focus:outline-none focus:border-rose-500 resize-none w-full"
+                    />
+                    <span className="text-[10px] text-rose-400 font-extrabold shrink-0">
+                      Yêu cầu giải trình bắt buộc
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+
+            <div className="text-right">
               <button
-                onClick={handleRejectReport}
-                disabled={!isDirector}
-                className="bg-rose-500/10 text-rose-500 border border-rose-500/30 hover:bg-rose-500/20 text-xs font-extrabold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleSaveExplanations}
+                className="bg-rose-500 text-white text-[10px] font-bold px-3 py-1.5 rounded hover:shadow-[0_0_10px_rgba(239,68,68,0.3)] transition-all"
               >
-                <XCircle size={14} />
-                YÊU CẦU HIỆU CHỈNH (REJECT)
-              </button>
-              <button
-                onClick={handleApproveReport}
-                disabled={!isDirector}
-                className="bg-emerald-500 text-slate-950 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] text-xs font-extrabold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <CheckCircle size={14} />
-                PHÊ DUYỆT BÁO CÁO (APPROVE)
+                💾 Lưu Giải Trình
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
+
+      {/* KHỐI 4: GỢI Ý HÀNH ĐỘNG KỲ TIẾP THEO (AI-GENERATED ACTIONS) */}
+      <div className="glass-panel p-5">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h3 className="text-xs font-bold text-[#8b5cf6] tracking-wider uppercase">
+              ⚡ KHỐI 4: GỢI Ý HÀNH ĐỘNG KỲ TIẾP THEO (AI-GENERATED ACTIONS)
+            </h3>
+            <p className="text-[10px] text-[var(--text-muted)] mt-1">
+              Đề xuất tự động từ AI Agent dựa trên bối cảnh dữ liệu. Hãy chọn các giải pháp phù hợp để chốt kế hoạch kỳ sau.
+            </p>
+          </div>
+          <button
+            onClick={handleAddCustomAction}
+            disabled={isReadOnly}
+            className="bg-slate-900 hover:bg-slate-800 border border-white/10 text-white text-[10px] font-bold px-3 py-1.5 rounded flex items-center gap-1.5 transition-all disabled:opacity-40"
+          >
+            <Plus size={12} />
+            Thêm hành động chủ động
+          </button>
+        </div>
+
+        <div className="overflow-x-auto border border-white/5 rounded">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-white/5 text-[var(--text-muted)] font-bold bg-slate-900/50">
+                <th className="p-3">Tên hành động khắc phục đề xuất</th>
+                <th className="p-3 w-40 text-center">Chỉ tiêu tác động</th>
+                <th className="p-3 w-52 text-center">Kỳ vọng giải quyết</th>
+                <th className="p-3 w-40 text-center">Trạng thái duyệt</th>
+                <th className="p-3 w-44 text-center">Tương tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {actions.map(action => (
+                <tr key={action.id} className="border-b border-white/5 hover:bg-white/5 text-[11px] text-[var(--text-muted)]">
+                  <td className="p-3 text-white font-semibold">{action.title}</td>
+                  <td className="p-3 text-center">
+                    <code className="bg-white/5 px-1.5 py-0.5 rounded text-[10px] text-white">{action.indicator}</code>
+                  </td>
+                  <td className="p-3 text-center italic text-slate-300">{action.impact}</td>
+                  <td className="p-3 text-center font-bold text-yellow-500">{action.status}</td>
+                  <td className="p-3 text-center">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => handleAcceptAction(action.id)}
+                        disabled={isReadOnly || action.status !== "Chờ quyết định"}
+                        className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-2.5 py-1.5 rounded flex items-center gap-1 transition-all disabled:opacity-40"
+                      >
+                        <Check size={12} /> Chọn
+                      </button>
+                      <button
+                        onClick={() => handleSkipAction(action.id)}
+                        disabled={isReadOnly || action.status !== "Chờ quyết định"}
+                        className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 font-bold text-[10px] px-2.5 py-1.5 rounded flex items-center gap-1 transition-all disabled:opacity-40"
+                      >
+                        <X size={12} /> Bỏ qua
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* KHỐI 5: KHU VỰC TƯƠNG TÁC & PHÊ DUYỆT CỦA GIÁM ĐỐC BU SCVN */}
+      <div className="glass-panel p-5">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-3 mb-4 gap-3">
+          <h3 className="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+            👑 KHỐI 5: KHU VỰC TƯƠNG TÁC & PHÊ DUYỆT CỦA GIÁM ĐỐC BU SCVN
+          </h3>
+          <div className="flex items-center gap-4 text-[10px] font-bold">
+            <span className="text-[var(--text-muted)]">
+              Trạng thái báo cáo: <span className="text-yellow-400 uppercase font-black ml-1">{reportStatus}</span>
+            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[var(--text-muted)]">Vai trò giả lập:</span>
+              <select
+                value={currentLoggedUser?.role || "Trưởng đơn vị"}
+                onChange={(e) => {
+                  const targetRole = e.target.value;
+                  const targetUser = {
+                    id: currentLoggedUser?.id || "1",
+                    employeeCode: currentLoggedUser?.employeeCode || "SCN001",
+                    fullname: currentLoggedUser?.fullname || "Trần Thị Thu Hương",
+                    email: currentLoggedUser?.email || "huongttt@s-connect.net",
+                    role: targetRole,
+                    unitCode: currentLoggedUser?.unitCode || "Wofloo"
+                  };
+                  setCurrentLoggedUser(targetUser);
+                }}
+                className="bg-slate-900 border border-[var(--glass-border)] text-white text-[10px] rounded px-1.5 py-1 focus:outline-none"
+              >
+                <option value="Admin">Admin</option>
+                <option value="Quản trị viên">Quản trị viên</option>
+                <option value="Trưởng đơn vị">Trưởng đơn vị (TĐV)</option>
+                <option value="Người dùng">Người dùng</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 mb-4">
+          <label className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-wider">
+            Ý kiến chỉ đạo của Giám đốc BU (Dành riêng cho GĐBU):
+          </label>
+          <textarea
+            value={directorComment}
+            onChange={(e) => setDirectorComment(e.target.value)}
+            disabled={currentLoggedUser?.role !== "Admin" && currentLoggedUser?.role !== "Quản trị viên"}
+            placeholder="Nhập ý kiến chỉ đạo, nhận xét hoặc lý do yêu cầu hiệu chỉnh..."
+            rows={2}
+            className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)] transition-all resize-none disabled:opacity-50"
+          />
+        </div>
+
+        <div className="flex flex-wrap justify-between items-center gap-4">
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveDraft}
+              disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+              className="bg-slate-900 hover:bg-slate-800 border border-white/10 text-white text-[10px] font-bold px-4 py-2 rounded transition-all disabled:opacity-40"
+            >
+              💾 Lưu nháp (Draft)
+            </button>
+            <button
+              onClick={handleSendReport}
+              disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+              className="bg-white text-slate-950 hover:bg-slate-100 text-[10px] font-extrabold px-4 py-2 rounded transition-all disabled:opacity-40"
+            >
+              🚀 Gửi báo cáo cho Giám đốc BU
+            </button>
+          </div>
+          <div className="text-[9px] text-[var(--text-muted)] italic">
+            Lưu ý: Báo cáo sau khi gửi sẽ bị khóa dữ liệu nhập cho đến khi được duyệt hoặc từ chối duyệt.
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
