@@ -80,9 +80,9 @@ export default function OkrStrategyPage() {
   // Add new Objective
   const handleAddObjective = async () => {
     if (!isEditable) return;
-    const title = prompt("Nhập tiêu đề Mục tiêu (Objective) mới:");
+    const title = prompt("Nhập tiêu đề Mục tiêu (Objective) mới:") || "";
     if (!title) return;
-    const weight = prompt("Nhập trọng số (%) của Mục tiêu này:", "20");
+    const weight = prompt("Nhập trọng số (%) của Mục tiêu này:", "20") || "";
     if (!weight) return;
 
     try {
@@ -111,11 +111,11 @@ export default function OkrStrategyPage() {
   // Add Key Result
   const handleAddKr = async (objId: string) => {
     if (!isEditable) return;
-    const title = prompt("Nhập tiêu đề Kết quả then chốt (Key Result) mới:");
+    const title = prompt("Nhập tiêu đề Kết quả then chốt (Key Result) mới:") || "";
     if (!title) return;
-    const weight = prompt("Nhập trọng số (%) trong Objective:", "25");
+    const weight = prompt("Nhập trọng số (%) trong Objective:", "25") || "";
     if (!weight) return;
-    const pic = prompt("Nhập tên PIC chịu trách nhiệm:", currentLoggedUser?.fullname || "");
+    const pic = prompt("Nhập tên PIC chịu trách nhiệm:", currentLoggedUser?.fullname || "") || "";
     if (!pic) return;
 
     try {
@@ -146,9 +146,9 @@ export default function OkrStrategyPage() {
   // Add Action
   const handleAddAction = async (krId: string) => {
     if (!isEditable) return;
-    const title = prompt("Nhập hành động (Action) chi tiết:");
+    const title = prompt("Nhập hành động (Action) chi tiết:") || "";
     if (!title) return;
-    const pic = prompt("Nhập tên người thực thi:", currentLoggedUser?.fullname || "");
+    const pic = prompt("Nhập tên người thực thi:", currentLoggedUser?.fullname || "") || "";
     if (!pic) return;
 
     try {

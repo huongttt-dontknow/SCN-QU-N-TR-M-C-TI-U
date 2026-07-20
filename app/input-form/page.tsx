@@ -111,12 +111,12 @@ export default function InputFormPage() {
 
   const handleAddCustomAction = () => {
     if (isReadOnly) return;
-    const title = prompt("Nhập tiêu đề hành động chủ động:");
+    const title = prompt("Nhập tiêu đề hành động chủ động:") || "";
     if (!title) return;
-    const indicator = prompt("Nhập mã chỉ tiêu tác động:", "VM2-I01.01");
+    const indicator = prompt("Nhập mã chỉ tiêu tác động:", "VM2-I01.01") || "";
     if (!indicator) return;
-    const impact = prompt("Nhập kỳ vọng giải quyết (Impact):", "Tối ưu hóa thời gian");
-    if (!indicator) return;
+    const impact = prompt("Nhập kỳ vọng giải quyết (Impact):", "Tối ưu hóa thời gian") || "";
+    if (!impact) return;
 
     setActions(prev => [
       ...prev,
