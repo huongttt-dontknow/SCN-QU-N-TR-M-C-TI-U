@@ -1,0 +1,97 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Bảng Người dùng
+model User {
+  id           String   @id @default(uuid())
+  employeeCode String   @unique // Mã nhân sự SCN...
+  fullname     String
+  email        String   @unique
+  role         String   // Admin, QuanTriVien, TruongDonVi, NguoiDung
+  unitCode     String   // WO, LEGO, AS, SCMU, NDTH, CR, CN, SCS, DA01
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Ma trận Phân quyền
+model RolePermission {
+  role             String  @id // Admin, QuanTriVien, TruongDonVi, NguoiDung
+  viewDashboard    Boolean @default(true)
+  editKPI          Boolean @default(false)
+  approveReport    Boolean @default(false)
+  editOKR          Boolean @default(false)
+  manageRoles      Boolean @default(false)
+}
+
+// Bảng Kết quả Thực tế & Chỉ tiêu KPI
+model KpiData {
+  id            String   @id @default(uuid())
+  indicatorCode String   // Mã chỉ tiêu ví dụ: VM2-I01.01
+  unitCode      String   // Đơn vị áp dụng
+  productCode   String?  // Sản phẩm áp dụng (nếu có)
+  periodType    String   // weekly, monthly, quarterly, yearly
+  periodKey     String   // Khóa thời gian ví dụ: weekly_7_1, monthly_7
+  targetValue   Float    @default(0)
+  actualValue   Float    @default(0)
+  pic           String?
+  status        String   @default("Chưa thực hiện")
+  explanation   String?  @db.Text // Giải trình bắt buộc nếu lỗi
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([indicatorCode, unitCode, periodKey])
+}
+
+// Bảng OKR Objectives (Mục tiêu)
+model Objective {
+  id                  String      @id @default(uuid())
+  unitCode            String
+  title               String
+  weight              Float       // Trọng số %
+  period              String      // Ví dụ: Q1_2026, M7_2026
+  progress            Float       @default(0) // Tiến độ thực tế (%)
+  aiForecastProgress  Float       @default(0) // AI dự phóng (%)
+  aiRiskLevel         String      @default("Thấp") // Thấp, Cao, Rất cao
+  keyResults          KeyResult[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+}
+
+// Bảng OKR Key Results
+model KeyResult {
+  id          String    @id @default(uuid())
+  objectiveId String
+  objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  title       String
+  weight      Float     // Trọng số % trong Objective
+  progress    Float     @default(0)
+  priority    String    @default("Medium") // High, Medium, Low
+  pic         String
+  deadline    DateTime
+  actions     Action[]
+}
+
+// Bảng Actions (Hành động con và hành động phát sinh)
+model Action {
+  id           String     @id @default(uuid())
+  keyResultId  String?    // Nullable nếu là Action phát sinh ngoài kế hoạch
+  keyResult    KeyResult? @relation(fields: [keyResultId], references: [id], onDelete: Cascade)
+  unitCode     String
+  title        String
+  pic          String
+  startDate    DateTime
+  endDate      DateTime
+  progress     Float      @default(0)
+  status       String     @default("Chưa thực hiện")
+  notes        String?    @db.Text
+  isUnplanned  Boolean    @default(false) // Phát sinh ngoài kế hoạch
+  origin       String     @default("OKR") // OKR, AI Review, Chi dao BLD
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}

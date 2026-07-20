@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --glass-bg: rgba(30, 41, 59, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  
+  --accent-cyan: #00f2fe;
+  --accent-emerald: #10b981;
+  --accent-pink: #ff4b72;
+  --accent-purple: #8b5cf6;
+  --text-muted: #94a3b8;
+  --text-main: #f8fafc;
+}
+
+body {
+  color: var(--foreground);
+  background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%);
+  min-height: 100vh;
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism panel styling */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Glass card styling */
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Priority Badges */
+.priority-badge {
+  font-weight: 800;
+  border-radius: 4px;
+  font-size: 10px;
+  padding: 2px 6px;
+  text-transform: uppercase;
+}
+
+.priority-high {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.priority-medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.priority-low {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
