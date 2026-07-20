@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const apiKey = process.env.GEMINI_API_KEY || "";
-const genAI = apiKey ? new GoogleGenAI({ apiKey }) : null;
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 // POST /api/ai/analyze - Phân tích hiệu suất KPI và tạo dự báo qua Gemini AI
 export async function POST(request: Request) {
