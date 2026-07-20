@@ -5,6 +5,7 @@ import { useApp } from "@/context/AppContext";
 import FiltersHeader from "@/components/FiltersHeader";
 import ObjectiveRadarChart from "@/components/ObjectiveRadarChart";
 import RevenueDonutChart from "@/components/RevenueDonutChart";
+import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
 import { 
   Trophy, 
   AlertTriangle, 
@@ -163,13 +164,32 @@ export default function DashboardPage() {
       </div>
 
       {/* ADDITIONAL ANALYSIS & CHARTS ROW */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className={`grid gap-4 ${isWeekly ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-4"}`}>
         {/* Donut Chart: Cơ cấu doanh thu */}
-        <div className="glass-panel p-5 flex flex-col justify-between">
-          <h3 className="text-xs font-bold text-white tracking-wider mb-4 uppercase">
-            📊 CƠ CẤU DOANH THU ĐƠN VỊ
-          </h3>
-          <RevenueDonutChart />
+        <div className={`glass-panel p-5 flex flex-col justify-between ${isWeekly ? "col-span-1" : "md:col-span-2"}`}>
+          {isWeekly ? (
+            <>
+              <h3 className="text-xs font-bold text-white tracking-wider mb-4 uppercase">
+                📊 CƠ CẤU DOANH THU ĐƠN VỊ
+              </h3>
+              <RevenueDonutChart />
+            </>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-xs font-bold text-white tracking-wider mb-4 uppercase">
+                  📊 CƠ CẤU DOANH THU ĐƠN VỊ
+                </h3>
+                <RevenueDonutChart />
+              </div>
+              <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-6">
+                <h3 className="text-xs font-bold text-white tracking-wider mb-4 uppercase">
+                  💰 CƠ CẤU DOANH THU THEO NGUỒN
+                </h3>
+                <SourceRevenueDonutChart />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Traffic Progress */}
