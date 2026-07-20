@@ -8,7 +8,8 @@ import {
   Calendar, 
   User, 
   ChevronRight, 
-  ChevronDown 
+  ChevronDown,
+  X
 } from "lucide-react";
 
 interface ActionItem {
@@ -48,6 +49,32 @@ export default function OkrStrategyPage() {
   const [loading, setLoading] = useState(false);
   const [expandedKr, setExpandedKr] = useState<Record<string, boolean>>({});
 
+  // Modal states
+  const [isObjModalOpen, setIsObjModalOpen] = useState(false);
+  const [isKrModalOpen, setIsKrModalOpen] = useState(false);
+  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+
+  // Active parent IDs
+  const [activeObjId, setActiveObjId] = useState("");
+  const [activeKrId, setActiveKrId] = useState("");
+
+  // Objective Form States
+  const [objTitle, setObjTitle] = useState("");
+  const [objWeight, setObjWeight] = useState("30");
+  const [objPic, setObjPic] = useState("");
+
+  // KR Form States
+  const [krTitle, setKrTitle] = useState("");
+  const [krWeight, setKrWeight] = useState("25");
+  const [krPic, setKrPic] = useState("");
+  const [krDeadline, setKrDeadline] = useState("");
+
+  // Action Form States
+  const [actionTitle, setActionTitle] = useState("");
+  const [actionPic, setActionPic] = useState("");
+  const [actionStart, setActionStart] = useState("");
+  const [actionEnd, setActionEnd] = useState("");
+
   // Check editable permission
   const isEditable = 
     currentLoggedUser?.role === "Admin" || 
@@ -77,13 +104,39 @@ export default function OkrStrategyPage() {
     setExpandedKr(prev => ({ ...prev, [krId]: !prev[krId] }));
   };
 
-  // Add new Objective
-  const handleAddObjective = async () => {
+  // Open Modal Helpers
+  const handleOpenObjModal = () => {
     if (!isEditable) return;
-    const title = prompt("Nhập tiêu đề Mục tiêu (Objective) mới:") || "";
-    if (!title) return;
-    const weight = prompt("Nhập trọng số (%) của Mục tiêu này:", "20") || "";
-    if (!weight) return;
+    setObjTitle("");
+    setObjWeight("30");
+    setObjPic(currentLoggedUser?.fullname || "Lê Quỳnh Nga");
+    setIsObjModalOpen(true);
+  };
+
+  const handleOpenKrModal = (objId: string) => {
+    if (!isEditable) return;
+    setActiveObjId(objId);
+    setKrTitle("");
+    setKrWeight("25");
+    setKrPic(currentLoggedUser?.fullname || "Lê Quỳnh Nga");
+    setKrDeadline(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+    setIsKrModalOpen(true);
+  };
+
+  const handleOpenActionModal = (krId: string) => {
+    if (!isEditable) return;
+    setActiveKrId(krId);
+    setActionTitle("");
+    setActionPic(currentLoggedUser?.fullname || "Lê Quỳnh Nga");
+    setActionStart(new Date().toISOString().split('T')[0]);
+    setActionEnd(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+    setIsActionModalOpen(true);
+  };
+
+  // Submissions
+  const handleSubmitObjective = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!objTitle) return;
 
     try {
       const res = await fetch("/api/okrs", {
@@ -93,14 +146,15 @@ export default function OkrStrategyPage() {
           type: "objective",
           data: {
             unitCode: filters.unitCode,
-            title,
-            weight: parseFloat(weight) || 10,
+            title: objTitle,
+            weight: parseFloat(objWeight) || 10,
             period: `${filters.periodType === "weekly" ? "M" + filters.month : filters.quarter}_${filters.year}`,
           }
         }),
       });
 
       if (res.ok) {
+        setIsObjModalOpen(false);
         fetchOkrs();
       }
     } catch (e) {
@@ -108,15 +162,9 @@ export default function OkrStrategyPage() {
     }
   };
 
-  // Add Key Result
-  const handleAddKr = async (objId: string) => {
-    if (!isEditable) return;
-    const title = prompt("Nhập tiêu đề Kết quả then chốt (Key Result) mới:") || "";
-    if (!title) return;
-    const weight = prompt("Nhập trọng số (%) trong Objective:", "25") || "";
-    if (!weight) return;
-    const pic = prompt("Nhập tên PIC chịu trách nhiệm:", currentLoggedUser?.fullname || "") || "";
-    if (!pic) return;
+  const handleSubmitKr = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!krTitle) return;
 
     try {
       const res = await fetch("/api/okrs", {
@@ -125,17 +173,18 @@ export default function OkrStrategyPage() {
         body: JSON.stringify({
           type: "kr",
           data: {
-            objectiveId: objId,
-            title,
-            weight: parseFloat(weight) || 25,
-            pic,
+            objectiveId: activeObjId,
+            title: krTitle,
+            weight: parseFloat(krWeight) || 25,
+            pic: krPic,
             priority: "Medium",
-            deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            deadline: new Date(krDeadline).toISOString(),
           }
         }),
       });
 
       if (res.ok) {
+        setIsKrModalOpen(false);
         fetchOkrs();
       }
     } catch (e) {
@@ -143,13 +192,9 @@ export default function OkrStrategyPage() {
     }
   };
 
-  // Add Action
-  const handleAddAction = async (krId: string) => {
-    if (!isEditable) return;
-    const title = prompt("Nhập hành động (Action) chi tiết:") || "";
-    if (!title) return;
-    const pic = prompt("Nhập tên người thực thi:", currentLoggedUser?.fullname || "") || "";
-    if (!pic) return;
+  const handleSubmitAction = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!actionTitle) return;
 
     try {
       const res = await fetch("/api/okrs", {
@@ -158,17 +203,18 @@ export default function OkrStrategyPage() {
         body: JSON.stringify({
           type: "action",
           data: {
-            keyResultId: krId,
+            keyResultId: activeKrId,
             unitCode: filters.unitCode,
-            title,
-            pic,
-            startDate: new Date().toISOString(),
-            endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+            title: actionTitle,
+            pic: actionPic,
+            startDate: new Date(actionStart).toISOString(),
+            endDate: new Date(actionEnd).toISOString(),
           }
         }),
       });
 
       if (res.ok) {
+        setIsActionModalOpen(false);
         fetchOkrs();
       }
     } catch (e) {
@@ -188,12 +234,11 @@ export default function OkrStrategyPage() {
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 relative">
       <FiltersHeader />
 
       {/* FREEZE MICRO CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Card 1: Số lượng O */}
         <div className="glass-panel p-4 flex flex-col justify-between h-[100px]">
           <span className="text-[10px] text-[var(--text-muted)] font-extrabold tracking-wider uppercase">
             Mục tiêu (Objectives) kỳ này
@@ -204,7 +249,6 @@ export default function OkrStrategyPage() {
           </div>
         </div>
 
-        {/* Card 2: Tiến độ TB */}
         <div className="glass-panel p-4 flex flex-col justify-between h-[100px]">
           <span className="text-[10px] text-[var(--text-muted)] font-extrabold tracking-wider uppercase">
             Tiến độ hoàn thành OKR đơn vị
@@ -217,7 +261,6 @@ export default function OkrStrategyPage() {
           </div>
         </div>
 
-        {/* Card 3: KR Hoàn thành */}
         <div className="glass-panel p-4 flex flex-col justify-between h-[100px]">
           <span className="text-[10px] text-[var(--text-muted)] font-extrabold tracking-wider uppercase">
             Kết quả then chốt đã xong
@@ -237,7 +280,7 @@ export default function OkrStrategyPage() {
           🌳 BẢN ĐỒ CHIẾN LƯỢC & THIẾT LẬP OKR ĐƠN VỊ
         </h2>
         <button
-          onClick={handleAddObjective}
+          onClick={handleOpenObjModal}
           disabled={!isEditable}
           className="bg-[var(--accent-cyan)] text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded hover:shadow-[0_0_10px_rgba(0,242,254,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
@@ -281,7 +324,7 @@ export default function OkrStrategyPage() {
                     </span>
                   )}
                   <button
-                    onClick={() => handleAddKr(obj.id)}
+                    onClick={() => handleOpenKrModal(obj.id)}
                     disabled={!isEditable}
                     className="bg-white/5 border border-white/10 text-[var(--text-muted)] hover:text-white text-xs font-bold px-3 py-1.5 rounded transition-all disabled:opacity-50"
                   >
@@ -322,7 +365,7 @@ export default function OkrStrategyPage() {
                             <span className="text-xs font-extrabold text-[var(--accent-cyan)]">{kr.progress}%</span>
                           </div>
                           <button
-                            onClick={() => handleAddAction(kr.id)}
+                            onClick={() => handleOpenActionModal(kr.id)}
                             disabled={!isEditable}
                             className="bg-[var(--accent-purple)]/10 text-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/20 border border-[var(--accent-purple)]/20 text-[10px] font-bold px-2 py-1 rounded transition-all disabled:opacity-50"
                           >
@@ -376,6 +419,271 @@ export default function OkrStrategyPage() {
 
             </div>
           ))}
+        </div>
+      )}
+
+      {/* MODAL 1: THIẾT LẬP MỤC TIÊU (OBJECTIVE) MỚI - Match screenshot */}
+      {isObjModalOpen && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="w-full max-w-lg bg-slate-900/90 border border-white/10 rounded-2xl shadow-2xl p-6 relative">
+            <button 
+              onClick={() => setIsObjModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+            >
+              <X size={18} />
+            </button>
+            
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-[var(--accent-pink)]">🎯</span>
+              <h3 className="text-sm font-extrabold text-white uppercase tracking-wide">
+                Thiết lập mục tiêu (Objective) mới
+              </h3>
+            </div>
+
+            <form onSubmit={handleSubmitObjective} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                  Tên mục tiêu (Objective):
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={objTitle}
+                  onChange={(e) => setObjTitle(e.target.value)}
+                  placeholder="Nhập tên mục tiêu của bạn..."
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Trọng số (%):
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={objWeight}
+                    onChange={(e) => setObjWeight(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Người phụ trách (PIC):
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={objPic}
+                    onChange={(e) => setObjPic(e.target.value)}
+                    placeholder="Tên người phụ trách..."
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsObjModalOpen(false)}
+                  className="bg-slate-950 text-slate-300 border border-white/10 hover:bg-slate-900 text-xs font-bold px-4 py-2 rounded-lg transition-all"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  className="bg-white text-slate-950 hover:bg-slate-100 text-xs font-extrabold px-4 py-2 rounded-lg transition-all"
+                >
+                  Thêm mới
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: THIẾT LẬP KẾT QUẢ THEN CHỐT (KEY RESULT) MỚI */}
+      {isKrModalOpen && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="w-full max-w-lg bg-slate-900/90 border border-white/10 rounded-2xl shadow-2xl p-6 relative">
+            <button 
+              onClick={() => setIsKrModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+            >
+              <X size={18} />
+            </button>
+            
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-[var(--accent-cyan)]">🔑</span>
+              <h3 className="text-sm font-extrabold text-white uppercase tracking-wide">
+                Thiết lập kết quả then chốt (Key Result) mới
+              </h3>
+            </div>
+
+            <form onSubmit={handleSubmitKr} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                  Tên Kết quả then chốt (Key Result):
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={krTitle}
+                  onChange={(e) => setKrTitle(e.target.value)}
+                  placeholder="Nhập nội dung kết quả then chốt..."
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Trọng số (%):
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={krWeight}
+                    onChange={(e) => setKrWeight(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Người phụ trách:
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={krPic}
+                    onChange={(e) => setKrPic(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Hạn chót:
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={krDeadline}
+                    onChange={(e) => setKrDeadline(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsKrModalOpen(false)}
+                  className="bg-slate-950 text-slate-300 border border-white/10 hover:bg-slate-900 text-xs font-bold px-4 py-2 rounded-lg transition-all"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  className="bg-white text-slate-950 hover:bg-slate-100 text-xs font-extrabold px-4 py-2 rounded-lg transition-all"
+                >
+                  Thêm mới
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: THÊM HÀNH ĐỘNG (ACTION) MỚI */}
+      {isActionModalOpen && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="w-full max-w-lg bg-slate-900/90 border border-white/10 rounded-2xl shadow-2xl p-6 relative">
+            <button 
+              onClick={() => setIsActionModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+            >
+              <X size={18} />
+            </button>
+            
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-[var(--accent-purple)]">⚡</span>
+              <h3 className="text-sm font-extrabold text-white uppercase tracking-wide">
+                Thiết lập hành động (Action) mới
+              </h3>
+            </div>
+
+            <form onSubmit={handleSubmitAction} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                  Tên hành động (Action) chi tiết:
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={actionTitle}
+                  onChange={(e) => setActionTitle(e.target.value)}
+                  placeholder="Nhập mô tả hành động chi tiết..."
+                  className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Người thực hiện:
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={actionPic}
+                    onChange={(e) => setActionPic(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Từ ngày:
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={actionStart}
+                    onChange={(e) => setActionStart(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1.5 uppercase">
+                    Đến ngày:
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={actionEnd}
+                    onChange={(e) => setActionEnd(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsActionModalOpen(false)}
+                  className="bg-slate-950 text-slate-300 border border-white/10 hover:bg-slate-900 text-xs font-bold px-4 py-2 rounded-lg transition-all"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  className="bg-white text-slate-950 hover:bg-slate-100 text-xs font-extrabold px-4 py-2 rounded-lg transition-all"
+                >
+                  Thêm mới
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
