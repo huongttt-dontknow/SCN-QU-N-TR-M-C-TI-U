@@ -520,20 +520,45 @@ export default function InputFormPage() {
 
         <div className="flex flex-wrap justify-between items-center gap-4">
           <div className="flex gap-2">
-            <button
-              onClick={handleSaveDraft}
-              disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-              className="bg-slate-900 hover:bg-slate-800 border border-white/10 text-white text-[10px] font-bold px-4 py-2 rounded transition-all disabled:opacity-40"
-            >
-              💾 Lưu nháp (Draft)
-            </button>
-            <button
-              onClick={handleSendReport}
-              disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-              className="bg-white text-slate-950 hover:bg-slate-100 text-[10px] font-extrabold px-4 py-2 rounded transition-all disabled:opacity-40"
-            >
-              🚀 Gửi báo cáo cho Giám đốc BU
-            </button>
+            {currentLoggedUser?.role === "Admin" || currentLoggedUser?.role === "Quản trị viên" ? (
+              <>
+                <button
+                  onClick={() => {
+                    setReportStatus("Đã duyệt");
+                    alert("✓ Báo cáo đã được phê duyệt! Toàn bộ số liệu vận hành đã khóa và các Actions được duyệt đã tự động đồng bộ sang Module 5.2 của kỳ kế tiếp.");
+                  }}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-[10px] font-extrabold px-4 py-2 rounded transition-all"
+                >
+                  ✓ PHÊ DUYỆT BÁO CÁO (APPROVE)
+                </button>
+                <button
+                  onClick={() => {
+                    setReportStatus("Đang nhập");
+                    alert("✖ Đã từ chối duyệt báo cáo. Báo cáo được mở khóa (trả về Trạng thái nháp) để Trưởng đơn vị chỉnh sửa.");
+                  }}
+                  className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 text-[10px] font-bold px-4 py-2 rounded transition-all"
+                >
+                  ✖ YÊU CẦU HIỆU CHỈNH (REJECT)
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={handleSaveDraft}
+                  disabled={isReadOnly || reportStatus === "Chờ duyệt" || reportStatus === "Đã duyệt"}
+                  className="bg-slate-900 hover:bg-slate-800 border border-white/10 text-white text-[10px] font-bold px-4 py-2 rounded transition-all disabled:opacity-40"
+                >
+                  💾 Lưu nháp (Draft)
+                </button>
+                <button
+                  onClick={handleSendReport}
+                  disabled={isReadOnly || reportStatus === "Chờ duyệt" || reportStatus === "Đã duyệt"}
+                  className="bg-white text-slate-950 hover:bg-slate-100 text-[10px] font-extrabold px-4 py-2 rounded transition-all disabled:opacity-40"
+                >
+                  🚀 Gửi báo cáo cho Giám đốc BU
+                </button>
+              </>
+            )}
           </div>
           <div className="text-[9px] text-[var(--text-muted)] italic">
             Lưu ý: Báo cáo sau khi gửi sẽ bị khóa dữ liệu nhập cho đến khi được duyệt hoặc từ chối duyệt.
