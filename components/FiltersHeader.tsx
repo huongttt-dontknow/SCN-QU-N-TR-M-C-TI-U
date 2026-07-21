@@ -63,24 +63,27 @@ export default function FiltersHeader() {
             <option value="weekly">Hàng tuần</option>
             <option value="monthly">Hàng tháng</option>
             <option value="quarterly">Hàng quý</option>
+            <option value="yearly">Hàng năm</option>
           </select>
         </div>
 
         {/* Lọc tháng */}
-        <div className="flex flex-col">
-          <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
-            Tháng
-          </label>
-          <select
-            value={filters.month}
-            onChange={(e) => handleFilterChange("month", e.target.value)}
-            className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <option key={i + 1} value={i + 1}>Tháng {i + 1}</option>
-            ))}
-          </select>
-        </div>
+        {filters.periodType !== "yearly" && (
+          <div className="flex flex-col">
+            <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+              Tháng
+            </label>
+            <select
+              value={filters.month}
+              onChange={(e) => handleFilterChange("month", e.target.value)}
+              className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+            >
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i + 1} value={i + 1}>Tháng {i + 1}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Lọc tuần */}
         {filters.periodType === "weekly" && (
@@ -124,7 +127,7 @@ export default function FiltersHeader() {
 
       <div className="text-right">
         <span className="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest bg-[rgba(0,242,254,0.06)] px-2.5 py-1 rounded border border-[rgba(0,242,254,0.2)]">
-          KỲ LỌC: {filters.periodType === "weekly" ? `Tuần ${filters.week} - Tháng ${filters.month}` : filters.periodType === "monthly" ? `Tháng ${filters.month}` : `${filters.quarter}`} / {filters.year}
+          KỲ LỌC: {filters.periodType === "weekly" ? `Tuần ${filters.week} - Tháng ${filters.month}` : filters.periodType === "monthly" ? `Tháng ${filters.month}` : filters.periodType === "quarterly" ? `${filters.quarter}` : `Năm`} / {filters.year}
         </span>
       </div>
     </div>

@@ -33,17 +33,17 @@ export default function DashboardPage() {
     setTimeout(() => setIsSaved(false), 2000);
   };
 
-  // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị (Khớp ảnh 1)
+  // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị (Kết hợp Cột Mục tiêu - Kết quả & Đường % Hoàn thành)
   const revenueComparisonData = [
-    { name: "Wolfoo", revenue: 76.0, completion: 95 },
-    { name: "Lego", revenue: 70.0, completion: 88 },
-    { name: "Animated", revenue: 70.0, completion: 88 },
-    { name: "Dự án 01", revenue: 70.0, completion: 88 },
-    { name: "Music", revenue: 70.0, completion: 88 },
-    { name: "Nội dung", revenue: 70.0, completion: 88 },
-    { name: "Creative", revenue: 70.0, completion: 88 },
-    { name: "CNGP", revenue: 70.0, completion: 88 },
-    { name: "Studio", revenue: 70.0, completion: 88 },
+    { name: "Wolfoo", target: 80.0, revenue: 76.0, completion: 95 },
+    { name: "Lego", target: 79.5, revenue: 70.0, completion: 88 },
+    { name: "Animated", target: 79.5, revenue: 70.0, completion: 88 },
+    { name: "Dự án 01", target: 79.5, revenue: 70.0, completion: 88 },
+    { name: "Music", target: 79.5, revenue: 70.0, completion: 88 },
+    { name: "Nội dung", target: 79.5, revenue: 70.0, completion: 88 },
+    { name: "Creative", target: 79.5, revenue: 70.0, completion: 88 },
+    { name: "CNGP", target: 79.5, revenue: 70.0, completion: 88 },
+    { name: "Studio", target: 79.5, revenue: 70.0, completion: 88 },
   ];
 
   return (
@@ -221,8 +221,9 @@ export default function DashboardPage() {
               <YAxis yAxisId="left" stroke="#94a3b8" fontSize={11} tickFormatter={(val) => `${val}T`} />
               <YAxis yAxisId="right" orientation="right" stroke="#8b5cf6" fontSize={11} tickFormatter={(val) => `${val}%`} />
               <RechartsTooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }} />
-              <Bar yAxisId="left" dataKey="revenue" fill="#0369a1" radius={[4, 4, 0, 0]} barSize={24} name="Doanh thu (Tỷ)" />
-              <Line yAxisId="right" type="monotone" dataKey="completion" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 5, fill: "#8b5cf6" }} name="% Hoàn thành" />
+              <Bar yAxisId="left" dataKey="target" fill="#0284c7" radius={[4, 4, 0, 0]} barSize={16} name="Mục tiêu (Tỷ)" />
+              <Bar yAxisId="left" dataKey="revenue" fill="#00f2fe" radius={[4, 4, 0, 0]} barSize={16} name="Kết quả thực tế (Tỷ)" />
+              <Line yAxisId="right" type="monotone" dataKey="completion" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 5, fill: "#a855f7", stroke: "#ffffff", strokeWidth: 1.5 }} name="% Hoàn thành" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
