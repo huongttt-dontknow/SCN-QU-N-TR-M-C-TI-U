@@ -113,19 +113,34 @@ export default function UnitDataPage() {
     }));
   };
 
-  // Tính toán chỉ số Micro Cards
+  // Xác định tiêu đề cột Theo Kỳ & Lũy Kế
+  const isWeekly = filters.periodType === "weekly";
+  const isMonthly = filters.periodType === "monthly";
+  const isQuarterly = filters.periodType === "quarterly";
+
+  const primaryTitle = isWeekly ? "Tuần" : isMonthly ? "Tháng" : isQuarterly ? "Quý" : "Năm";
+  const cumulativeTitle = isWeekly ? "Tháng" : isMonthly ? "Quý" : isQuarterly ? "Năm" : "5 Năm";
+
+  // 1. Tính toán Doanh thu trong kỳ (Card 1) tương ứng dòng VM1-I02.01 (Tổng doanh thu)
   const revRow = kpiRows.find(r => r.code === "VM1-I02.01");
-  const revCompletion = revRow ? Math.round((revRow.actualWeek / revRow.targetWeek) * 100) : 90;
+  const targetRev = isWeekly ? (revRow?.targetWeek || 1) : isMonthly ? (revRow?.targetMonth || 1) : isQuarterly ? (revRow?.targetQuarter || 1) : (revRow?.targetYear || 1);
+  const actualRev = isWeekly ? (revRow?.actualWeek || 0) : isMonthly ? (revRow?.actualMonth || 0) : isQuarterly ? (revRow?.actualQuarter || 0) : (revRow?.actualYear || 0);
+  const revCompletion = targetRev > 0 ? Math.round((actualRev / targetRev) * 100) : 0;
 
+  // 2. Tính toán Traffic trong kỳ (Card 2) tương ứng dòng TM3-I01.02 (Tổng traffic đơn vị Views)
   const trafficRow = kpiRows.find(r => r.code === "TM3-I01.02");
-  const trafficCompletion = trafficRow ? Math.round((trafficRow.actualWeek / trafficRow.targetWeek) * 100) : 78;
+  const targetTraffic = isWeekly ? (trafficRow?.targetWeek || 1) : isMonthly ? (trafficRow?.targetMonth || 1) : isQuarterly ? (trafficRow?.targetQuarter || 1) : (trafficRow?.targetYear || 1);
+  const actualTraffic = isWeekly ? (trafficRow?.actualWeek || 0) : isMonthly ? (trafficRow?.actualMonth || 0) : isQuarterly ? (trafficRow?.actualQuarter || 0) : (trafficRow?.actualYear || 0);
+  const trafficCompletion = targetTraffic > 0 ? Math.round((actualTraffic / targetTraffic) * 100) : 0;
 
-  // Lọc chỉ tiêu báo động (< 80%)
+  // 3. Lọc chỉ tiêu báo động (< 80%) theo kỳ được chọn
   const warningList = kpiRows
-    .filter(r => !r.isParent && r.targetWeek > 0)
+    .filter(r => !r.isParent)
     .map(r => {
-      const pct = Math.round((r.actualWeek / r.targetWeek) * 100);
-      return { ...r, pct };
+      const target = isWeekly ? r.targetWeek : isMonthly ? r.targetMonth : isQuarterly ? r.targetQuarter : r.targetYear;
+      const actual = isWeekly ? r.actualWeek : isMonthly ? r.actualMonth : isQuarterly ? r.actualQuarter : r.actualYear;
+      const pct = target > 0 ? Math.round((actual / target) * 100) : 100;
+      return { ...r, target, actual, pct };
     })
     .filter(r => r.pct < 80)
     .sort((a, b) => a.pct - b.pct);
@@ -141,38 +156,35 @@ export default function UnitDataPage() {
     return "text-emerald-400 font-extrabold";
   };
 
-  // Xác định tiêu đề cột Theo Kỳ & Lũy Kế
-  const isWeekly = filters.periodType === "weekly";
-  const isMonthly = filters.periodType === "monthly";
-  const isQuarterly = filters.periodType === "quarterly";
-
-  const primaryTitle = isWeekly ? "Tuần" : isMonthly ? "Tháng" : isQuarterly ? "Quý" : "Năm";
-  const cumulativeTitle = isWeekly ? "Tháng" : isMonthly ? "Quý" : isQuarterly ? "Năm" : "5 Năm";
-
   return (
     <div className="flex flex-col gap-5 text-white">
       {/* 1. FREEZE FILTERS PANEL */}
       <FiltersHeader />
 
-      {/* 2. MICRO CARDS TỔNG QUAN ĐƠN VỊ (KHỚP 100% ẢNH MỚI) */}
+      {/* 2. MICRO CARDS TỔNG QUAN ĐƠN VỊ (KHỚP DỮ LIỆU ĐỘNG THEO KỲ) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Card 1: Doanh thu trong kỳ */}
         <div className="glass-panel p-4 flex flex-col justify-between min-h-[110px]">
           <div className="flex justify-between items-start">
             <span className="text-[10px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
-              DOANH THU TRONG KỲ
+              DOANH THU TRONG KỲ ({primaryTitle.toUpperCase()})
             </span>
             <DollarSign size={16} className="text-amber-400" />
           </div>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-amber-400">{revCompletion}%</span>
+              <span className={`text-3xl font-black ${revCompletion < 100 ? "text-amber-400" : "text-emerald-400"}`}>
+                {revCompletion}%
+              </span>
             </div>
             <div className="w-full h-1.5 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
-              <div className="h-full rounded-full bg-amber-500" style={{ width: `${Math.min(100, revCompletion)}%` }} />
+              <div 
+                className={`h-full rounded-full ${revCompletion < 100 ? "bg-amber-500" : "bg-emerald-500"}`} 
+                style={{ width: `${Math.min(100, revCompletion)}%` }} 
+              />
             </div>
-            <span className="text-[10px] text-rose-400 font-bold block mt-1">
-              ▼ -6.4% so với kỳ trước
+            <span className="text-[10px] text-[var(--text-muted)] font-semibold block mt-1">
+              Thực tế: {(actualRev / 1000000).toFixed(1)}M / KH: {(targetRev / 1000000).toFixed(1)}M VNĐ
             </span>
           </div>
         </div>
@@ -181,31 +193,45 @@ export default function UnitDataPage() {
         <div className="glass-panel p-4 flex flex-col justify-between min-h-[110px]">
           <div className="flex justify-between items-start">
             <span className="text-[10px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
-              TRAFFIC TRONG KỲ
+              TRAFFIC TRONG KỲ ({primaryTitle.toUpperCase()})
             </span>
             <TrendingUp size={16} className="text-purple-400" />
           </div>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-purple-400">{trafficCompletion}%</span>
+              <span className={`text-3xl font-black ${trafficCompletion < 100 ? "text-purple-400" : "text-emerald-400"}`}>
+                {trafficCompletion}%
+              </span>
             </div>
-            <span className="text-[10px] text-[var(--text-muted)] font-medium block mt-1">
-              88.0M / 113.0M Views
+            <div className="w-full h-1.5 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
+              <div 
+                className={`h-full rounded-full ${trafficCompletion < 100 ? "bg-purple-500" : "bg-emerald-500"}`} 
+                style={{ width: `${Math.min(100, trafficCompletion)}%` }} 
+              />
+            </div>
+            <span className="text-[10px] text-[var(--text-muted)] font-semibold block mt-1">
+              Thực tế: {actualTraffic}M / KH: {targetTraffic}M Views
             </span>
           </div>
         </div>
 
         {/* Card 3: Chỉ tiêu báo động (< 80%) */}
-        <div className="glass-panel p-4 flex flex-col justify-between min-h-[110px] border-l-4 border-l-rose-500">
+        <div className={`glass-panel p-4 flex flex-col justify-between min-h-[110px] border-l-4 ${warningList.length > 0 ? "border-l-rose-500" : "border-l-emerald-500"}`}>
           <div className="flex justify-between items-start">
             <span className="text-[10px] font-extrabold text-rose-400 uppercase tracking-wider flex items-center gap-1">
               <AlertOctagon size={14} /> CHỈ TIÊU BÁO ĐỘNG (&lt; 80%)
             </span>
           </div>
           <div className="space-y-1 text-[11px] font-semibold text-rose-300">
-            <p>• Chi phí CTV (Cộng tác viên): <strong className="text-rose-400">75%</strong></p>
-            <p>• Số buổi đào tạo được: <strong className="text-rose-400">67%</strong></p>
-            <p>• Hiệu suất doanh thu: <strong className="text-rose-400">77%</strong></p>
+            {warningList.length > 0 ? (
+              warningList.map(w => (
+                <p key={w.code}>• {w.title}: <strong className="text-rose-400">{w.pct}%</strong></p>
+              ))
+            ) : (
+              <span className="text-emerald-400 font-extrabold text-xs block py-1">
+                ✓ Tất cả chỉ tiêu đạt trên 80%
+              </span>
+            )}
           </div>
         </div>
       </div>
