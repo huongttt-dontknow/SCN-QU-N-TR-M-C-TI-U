@@ -258,19 +258,19 @@ export default function ProductDataPage() {
 
       {/* FLAT GRID KPI LIST */}
       <div className="glass-panel p-5">
-        <h3 className="text-sm font-bold text-white tracking-wider mb-4 uppercase">
+        <h3 className="text-sm font-black text-white tracking-wider mb-4 uppercase flex items-center gap-2">
           📋 BẢNG CHỈ TIÊU PHẲNG SẢN PHẨM (FLAT GRID)
         </h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-white/5 text-[var(--text-muted)] font-bold bg-slate-900/50">
-                <th className="p-3 w-16 text-center">Mã</th>
+              <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900/60 uppercase text-xs tracking-wider">
+                <th className="p-3 w-32 text-center">Mã chỉ tiêu</th>
                 <th className="p-3">Tên Chỉ tiêu</th>
-                <th className="p-3 w-28 text-center">Kế hoạch</th>
-                <th className="p-3 w-28 text-center">Thực tế</th>
-                <th className="p-3 w-20 text-center">ĐVT</th>
-                <th className="p-3 w-20 text-center">Hoàn thành</th>
+                <th className="p-3 w-32 text-center">Kế hoạch</th>
+                <th className="p-3 w-32 text-center">Thực tế</th>
+                <th className="p-3 w-24 text-center">ĐVT</th>
+                <th className="p-3 w-28 text-center">Hoàn thành</th>
               </tr>
             </thead>
             <tbody>
@@ -283,16 +283,26 @@ export default function ProductDataPage() {
               ].map(row => {
                 const pct = Math.round((row.actual / row.target) * 100);
                 return (
-                  <tr key={row.code} className="border-b border-white/5 text-[var(--text-muted)] hover:bg-white/5">
+                  <tr key={row.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                     <td className="p-3 text-center">
-                      <code className="bg-white/5 px-1.5 py-0.5 rounded text-[10px]">{row.code}</code>
+                      <code className="bg-slate-800 text-sky-400 px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border border-sky-500/20">
+                        {row.code}
+                      </code>
                     </td>
-                    <td className="p-3 text-white font-medium">{row.title}</td>
-                    <td className="p-3 text-center">{row.target}</td>
-                    <td className="p-3 text-center font-bold text-white">{row.actual}</td>
-                    <td className="p-3 text-center">{row.unit}</td>
-                    <td className={`p-3 text-center font-bold ${pct >= 100 ? "text-emerald-400" : pct >= 75 ? "text-yellow-400" : "text-rose-500"}`}>
-                      {pct}%
+                    <td className="p-3 text-white font-extrabold">{row.title}</td>
+                    <td className="p-3 text-center font-bold text-slate-300">{row.target}</td>
+                    <td className="p-3 text-center font-black text-white">{row.actual}</td>
+                    <td className="p-3 text-center font-bold text-slate-400 text-xs">{row.unit}</td>
+                    <td className="p-3 text-center">
+                      <span className={`px-2.5 py-1 rounded-lg font-black text-xs inline-block ${
+                        pct >= 100 
+                          ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" 
+                          : pct >= 80 
+                          ? "text-amber-500 bg-amber-500/10 border border-amber-500/20" 
+                          : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
+                      }`}>
+                        {pct}%
+                      </span>
                     </td>
                   </tr>
                 );

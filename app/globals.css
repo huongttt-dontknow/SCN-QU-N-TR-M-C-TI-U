@@ -1,47 +1,42 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 :root {
-  --background: #0f172a;
+  --background: #0b0f19;
   --foreground: #f8fafc;
-  --glass-bg: rgba(30, 41, 59, 0.65);
+  --glass-bg: rgba(15, 23, 42, 0.75);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  
+  --card-bg: #1e293b;
   --accent-cyan: #00f2fe;
-  --accent-emerald: #10b981;
-  --accent-pink: #ff4b72;
-  --accent-purple: #8b5cf6;
+  --accent-purple: #9d4edd;
+  --accent-pink: #f43f5e;
   --text-muted: #94a3b8;
-  --text-main: #f8fafc;
+  --sidebar-w: 260px;
 
-  /* Sconnect Brand Theme Tokens */
+  /* Brand Colors Sconnect */
   --sconnect-green: #16a34a;
   --sconnect-lime: #84cc16;
   --sconnect-purple: #7e22ce;
+  --sconnect-dark: #0f172a;
 }
 
-/* ==========================================================================
-   SCONNECT BRAND LIGHT MODE DESIGN SYSTEM (HIGH CONTRAST & CRISP READABILITY)
-   ========================================================================== */
-html.light,
-html.light body {
+html.light {
   --background: #f8fafc;
   --foreground: #0f172a;
   --glass-bg: #ffffff;
   --glass-border: #e2e8f0;
-  --glass-shadow: 0 4px 20px 0 rgba(15, 23, 42, 0.05);
-
+  --card-bg: #ffffff;
   --accent-cyan: #0284c7;
-  --accent-emerald: #16a34a;
-  --accent-pink: #e11d48;
   --accent-purple: #7e22ce;
+  --accent-pink: #e11d48;
   --text-muted: #475569;
-  --text-main: #0f172a;
 
-  color: #0f172a !important;
-  background: #f8fafc !important;
+  /* Brand Colors Sconnect Light Mode */
+  --sconnect-green: #15803d;
+  --sconnect-lime: #65a30d;
+  --sconnect-purple: #6b21a8;
+  --sconnect-dark: #0f172a;
 }
 
 body {
@@ -49,6 +44,8 @@ body {
   background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%);
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   overflow-x: hidden;
 }
 
@@ -56,26 +53,26 @@ html.light body {
   background: #f8fafc !important;
 }
 
-/* Glassmorphism panel styling */
+/* Custom Glassmorphism styles */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
   border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
 }
 
 html.light .glass-panel {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 20px 0 rgba(15, 23, 42, 0.04) !important;
+  box-shadow: 0 4px 20px 0 rgba(15, 23, 42, 0.05) !important;
 }
 
 .glass-panel:hover {
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 30px 0 rgba(0, 242, 254, 0.15);
 }
 
 html.light .glass-panel:hover {
@@ -99,9 +96,9 @@ html.light .glass-card {
 }
 
 /* ==========================================================================
-   LIGHT MODE TEXT & BACKGROUND CONTRAST OVERRIDES
+   LIGHT MODE TEXT & CONTRAST OVERRIDES (SCONNECT BRAND HIGHLIGHTS)
    ========================================================================== */
-html.light div:not(button):not(.bg-purple-800):not(.bg-indigo-600):not(.bg-emerald-600):not(.bg-rose-600) > .text-white {
+html.light div:not(button):not(.bg-purple-800):not(.bg-purple-700):not(.bg-indigo-700):not(.bg-indigo-600):not(.bg-emerald-600):not(.bg-rose-600) > .text-white {
   color: #0f172a !important;
 }
 
@@ -134,16 +131,19 @@ html.light .text-slate-500 {
   color: #64748b !important;
 }
 
-/* Accent texts in light mode for better contrast */
+/* Accent texts in light mode for Sconnect Brand contrast */
+html.light .text-emerald-500,
 html.light .text-emerald-400 {
   color: #15803d !important;
 }
 
-html.light .text-sky-400 {
+html.light .text-sky-400,
+html.light .text-sky-300 {
   color: #0369a1 !important;
 }
 
-html.light .text-purple-400 {
+html.light .text-purple-400,
+html.light .text-purple-300 {
   color: #6b21a8 !important;
 }
 
@@ -157,23 +157,86 @@ html.light .text-rose-300 {
   color: #be123c !important;
 }
 
-/* Background containers in light mode */
+/* ==========================================================================
+   SCONNECT BRAND LIGHT MODE TABLE & CONTAINER STYLING SYSTEM
+   ========================================================================== */
+
+/* 1. Main Table Headers */
+html.light table th {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+html.light tr.bg-slate-900\/60,
+html.light tr.bg-slate-900\/50 {
+  background-color: #f1f5f9 !important;
+  border-bottom: 2px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* 2. Parent Category Rows (M1, M2, M3...) */
+html.light tr.bg-slate-900\/80 {
+  background-color: #e2e8f0 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+
+html.light tr.bg-slate-900\/80 td {
+  color: #0f172a !important;
+}
+
+/* 3. Kỳ Chính Columns (KH Tháng, Thực tế Tháng, % HT Tháng) */
+html.light th.bg-sky-950\/40,
+html.light th.bg-sky-950\/30 {
+  background-color: #e0f2fe !important;
+  color: #0369a1 !important;
+  font-weight: 900 !important;
+  border-color: #bae6fd !important;
+}
+
+html.light td.bg-sky-950\/10 {
+  background-color: #f0f9ff !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  border-color: #e0f2fe !important;
+}
+
+/* 4. Lũy Kế Columns (KH Quý, Thực tế Quý, % HT Quý) */
+html.light th.bg-purple-950\/40,
+html.light th.bg-purple-950\/30 {
+  background-color: #f3e8ff !important;
+  color: #6b21a8 !important;
+  font-weight: 900 !important;
+  border-color: #e9d5ff !important;
+}
+
+html.light td.bg-purple-950\/10 {
+  background-color: #faf5ff !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  border-color: #f3e8ff !important;
+}
+
+/* 5. Code Badges (VM1-I01.01, etc.) */
+html.light code.bg-slate-800 {
+  background-color: #ecfdf5 !important;
+  color: #15803d !important;
+  border: 1px solid #a7f3d0 !important;
+  font-weight: 800 !important;
+}
+
+/* 6. General background overrides */
 html.light .bg-slate-950,
-html.light .bg-slate-900,
-html.light .bg-slate-900\/80,
-html.light .bg-slate-900\/60,
-html.light .bg-slate-900\/50,
-html.light .bg-slate-900\/40,
-html.light .bg-slate-800,
-html.light .bg-slate-900\/30 {
-  background-color: #f8fafc !important;
+html.light .bg-slate-900 {
+  background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
   color: #0f172a !important;
 }
 
 html.light .bg-white\/5,
 html.light .bg-white\/10 {
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important;
   border-color: #e2e8f0 !important;
 }
 
