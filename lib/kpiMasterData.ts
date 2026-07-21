@@ -31245,7 +31245,10 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiItem>> = {
 export function getMasterKpiRecord(unitCode: string, kpiCode: string, periodKey: string): PeriodKpiVal | null {
   const u = MASTER_KPI_DATA[unitCode] || MASTER_KPI_DATA["SCVN"];
   if (!u) return null;
-  const item = u[kpiCode];
+  let item = u[kpiCode];
+  if (!item && (kpiCode === "VM1-I02.01" || kpiCode === "M1-I02")) {
+    item = u["2.1"] || Object.values(u).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
+  }
   if (!item || !item.periods) return null;
   return item.periods[periodKey] || null;
 }

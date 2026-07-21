@@ -17,7 +17,8 @@ import {
   YAxis, 
   Tooltip as RechartsTooltip, 
   ResponsiveContainer, 
-  CartesianGrid 
+  CartesianGrid,
+  LabelList
 } from "recharts";
 
 export default function DashboardPage() {
@@ -295,7 +296,9 @@ export default function DashboardPage() {
               />
               <Bar yAxisId="left" dataKey="target" name="Mục tiêu (Tỷ VNĐ)" fill="#0284c7" radius={[4, 4, 0, 0]} />
               <Bar yAxisId="left" dataKey="revenue" name="Thực tế (Tỷ VNĐ)" fill="#16a34a" radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" type="monotone" dataKey="completion" name="% Hoàn thành" stroke="#7e22ce" strokeWidth={3} dot={{ r: 5 }} />
+              <Line yAxisId="right" type="monotone" dataKey="completion" name="% Hoàn thành" stroke="#a855f7" strokeWidth={3} dot={{ r: 6, fill: "#a855f7", stroke: "#ffffff", strokeWidth: 2 }}>
+                <LabelList dataKey="completion" position="top" formatter={(val: any) => `${val}%`} style={{ fill: theme === "light" ? "#7e22ce" : "#c084fc", fontSize: 11, fontWeight: 800 }} />
+              </Line>
             </ComposedChart>
           </ResponsiveContainer>
         </div>
