@@ -16689,7 +16689,8 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiItem>> = {
         },
         "monthly_6": {
           "actual": 537752012.0,
-          "pct": 0.88
+          "pct": 0.88,
+          "target": 611851020.0
         },
         "monthly_7": {
           "pct": 0.0
