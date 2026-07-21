@@ -123,11 +123,27 @@ export default function FiltersHeader() {
             </select>
           </div>
         )}
+
+        {/* Lọc Năm (2025 / 2026 / 2027) */}
+        <div className="flex flex-col">
+          <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+            Năm
+          </label>
+          <select
+            value={filters.year}
+            onChange={(e) => handleFilterChange("year", e.target.value)}
+            className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+          >
+            <option value="2025">Năm 2025</option>
+            <option value="2026">Năm 2026</option>
+            <option value="2027">Năm 2027</option>
+          </select>
+        </div>
       </div>
 
       <div className="text-right">
         <span className="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest bg-[rgba(0,242,254,0.06)] px-2.5 py-1 rounded border border-[rgba(0,242,254,0.2)]">
-          KỲ LỌC: {filters.periodType === "weekly" ? `Tuần ${filters.week} - Tháng ${filters.month}` : filters.periodType === "monthly" ? `Tháng ${filters.month}` : filters.periodType === "quarterly" ? `${filters.quarter}` : `Năm`} / {filters.year}
+          KỲ LỌC: {filters.periodType === "weekly" ? `Tuần ${filters.week} - Tháng ${filters.month}` : filters.periodType === "monthly" ? `Tháng ${filters.month}` : filters.periodType === "quarterly" ? `${filters.quarter}` : `Năm ${filters.year}`} / {filters.year}
         </span>
       </div>
     </div>
