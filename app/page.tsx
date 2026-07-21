@@ -103,6 +103,7 @@ export default function DashboardPage() {
 
   // Dữ liệu Bánh xe mục tiêu 7 mặt M1 -> M7 từ Excel
   const radarData = getRadarScores(
+    filters.unitCode,
     filters.periodType,
     filters.month,
     filters.quarter,
@@ -122,15 +123,15 @@ export default function DashboardPage() {
           {/* Radar Chart */}
           <div className="flex-1 flex flex-col justify-between">
             <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
-              🎯 BÁNH XE MỤC TIÊU SỨC KHỎE (TCT VS SCVN)
+              🎯 BÁNH XE MỤC TIÊU SỨC KHỎE ({radarData.unitName})
             </h3>
             <ObjectiveRadarChart />
             <div className="flex justify-center gap-4 text-xs font-bold mt-2">
               <span className="flex items-center gap-1.5 text-emerald-500">
-                <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> BU SCVN ({radarData.labelCurr})
+                <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> {radarData.unitName} ({radarData.labelCurr})
               </span>
-              <span className="flex items-center gap-1.5 text-sky-400">
-                <span className="w-2.5 h-1 bg-sky-400 inline-block rounded"></span> Tổng Công Ty (TCT)
+              <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                <span className="w-2.5 h-1 bg-slate-500 inline-block border-t border-dashed rounded"></span> Kỳ trước ({radarData.labelPrev})
               </span>
             </div>
           </div>
@@ -154,7 +155,7 @@ export default function DashboardPage() {
                   <div key={item.code} className="flex justify-between items-center py-1.5 border-b border-white/5 text-xs gap-2">
                     <span className="text-[var(--text-muted)] font-bold whitespace-nowrap">{item.subject}</span>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-extrabold text-white min-w-[32px] text-right text-xs">{item["BU SCVN"]}%</span>
+                      <span className="font-extrabold text-white min-w-[32px] text-right text-xs">{item["Kỳ này"]}%</span>
                       <span className={`font-black min-w-[42px] text-right text-xs ${isUp ? "text-emerald-500" : "text-rose-500"}`}>
                         {isUp ? "▲" : "▼"} {isUp ? `+${item.change}%` : `${item.change}%`}
                       </span>

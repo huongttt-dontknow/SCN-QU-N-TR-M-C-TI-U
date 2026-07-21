@@ -22,7 +22,8 @@ export default function ObjectiveRadarChart({ customData }: ObjectiveRadarChartP
   const { filters, theme } = useApp();
   const isLight = theme === "light";
 
-  const { points } = getRadarScores(
+  const { unitName, labelCurr, labelPrev, points } = getRadarScores(
+    filters.unitCode,
     filters.periodType,
     filters.month,
     filters.quarter,
@@ -46,25 +47,18 @@ export default function ObjectiveRadarChart({ customData }: ObjectiveRadarChartP
             tick={{ fill: isLight ? "#475569" : "#64748b", fontSize: 9 }}
           />
           <Radar
-            name="BU SCVN"
-            dataKey="BU SCVN"
+            name={`${unitName} (${labelCurr})`}
+            dataKey="Kỳ này"
             stroke="#10b981"
             fill="#10b981"
             fillOpacity={isLight ? 0.35 : 0.25}
           />
           <Radar
-            name="Tổng Công Ty (TCT)"
-            dataKey="TCT Sconnect"
-            stroke="#0284c7"
-            fill="#0284c7"
-            fillOpacity={isLight ? 0.25 : 0.15}
-          />
-          <Radar
-            name="Kỳ trước (SCVN)"
+            name={`Kỳ trước (${labelPrev})`}
             dataKey="Kỳ trước"
             stroke={isLight ? "#64748b" : "#94a3b8"}
             fill={isLight ? "#64748b" : "#94a3b8"}
-            fillOpacity={0.1}
+            fillOpacity={0.12}
           />
           <Tooltip 
             formatter={(val: any) => `${val}%`}
