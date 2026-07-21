@@ -301,13 +301,13 @@ export default function InputFormPage() {
       <FiltersHeader />
 
       {/* THANH CHUYỂN TAB ĐỈNH TRANG (TAB SWITCHER BAR) */}
-      <div className="flex bg-slate-900/80 p-1.5 rounded-xl border border-white/10 w-full md:w-fit self-start shadow-lg">
+      <div className="flex bg-slate-100 dark:bg-slate-900/80 p-1.5 rounded-xl border border-slate-300 dark:border-white/10 w-full md:w-fit self-start shadow-md">
         <button
           onClick={() => setActiveTab("unit")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-black transition-all ${
             activeTab === "unit"
-              ? "bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-              : "text-slate-400 hover:text-white hover:bg-white/5"
+              ? "bg-gradient-to-r from-emerald-600 to-lime-600 text-white shadow-md"
+              : "bg-white dark:bg-transparent text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-transparent font-bold"
           }`}
         >
           <Building2 size={15} /> 🏢 BÁO CÁO KẾT QUẢ THEO ĐƠN VỊ ({filters.unitCode})
@@ -316,8 +316,8 @@ export default function InputFormPage() {
           onClick={() => setActiveTab("product")}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-black transition-all ${
             activeTab === "product"
-              ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]"
-              : "text-slate-400 hover:text-white hover:bg-white/5"
+              ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md"
+              : "bg-white dark:bg-transparent text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-transparent font-bold"
           }`}
         >
           <Film size={15} /> 🎬 BÁO CÁO KẾT QUẢ THEO SẢN PHẨM
@@ -412,121 +412,121 @@ export default function InputFormPage() {
             </div>
           </div>
 
-          {/* KHỐI 2: BÁO CÁO ĐÁNH GIÁ TỔNG HỢP & DỰ BÁO TỰ ĐỘNG BỞI AI (KHỚP 100% ẢNH 1) */}
+          {/* KHỐI 2: BÁO CÁO ĐÁNH GIÁ TỔNG HỢP & DỰ BÁO TỰ ĐỘNG BỞI AI */}
           <div className="glass-panel p-5 space-y-5">
-            <h3 className="text-sm font-black text-sky-400 tracking-wider uppercase flex items-center gap-2">
+            <h3 className="text-sm font-black text-sky-600 dark:text-sky-400 tracking-wider uppercase flex items-center gap-2">
               🤖 KHỐI 2: BÁO CÁO ĐÁNH GIÁ TỔNG HỢP & DỰ BÁO TỰ ĐỘNG BỞI AI
             </h3>
 
             {/* 3 THẺ MỤC TIÊU CỐT LÕI (DOANH THU, TRAFFIC, SẢN LƯỢNG) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               
               {/* Thẻ 1: Doanh thu */}
-              <div className="bg-slate-900/80 border border-white/10 p-4 rounded-xl flex flex-col justify-between h-[190px]">
+              <div className="bg-white dark:bg-slate-900/80 border-l-4 border-l-emerald-600 border border-slate-200 dark:border-white/10 p-4 rounded-xl flex flex-col justify-between h-[200px] shadow-sm">
                 <div>
                   <div className="flex justify-between items-start">
-                    <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                    <h4 className="text-xs font-extrabold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
                       📊 DOANH THU (VM1-I02.01)
                     </h4>
-                    <span className="text-xs font-black text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded">Đạt 91%</span>
+                    <span className="text-xs font-black text-emerald-800 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-transparent px-2.5 py-0.5 rounded-lg">Đạt 91%</span>
                   </div>
-                  <div className="text-[11px] text-slate-300 mt-2 space-y-0.5">
-                    <p>Thực tế: <strong className="text-white">83,574,400 VNĐ</strong></p>
-                    <p>KH: <strong className="text-slate-400">91,840,000 VNĐ</strong></p>
-                    <p className="text-[10px] text-slate-400 mt-2">So với tuần trước: <span className="text-slate-300">N/A</span></p>
+                  <div className="text-xs text-slate-700 dark:text-slate-300 mt-2.5 space-y-1">
+                    <p>Thực tế: <strong className="text-slate-900 dark:text-white font-black text-sm">83,574,400 VNĐ</strong></p>
+                    <p>KH: <strong className="text-slate-600 dark:text-slate-400 font-bold">91,840,000 VNĐ</strong></p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">So với tuần trước: <span className="text-slate-700 dark:text-slate-300 font-bold">N/A</span></p>
                   </div>
                 </div>
 
-                <div className="bg-slate-950/80 p-2.5 rounded-lg border border-white/5 flex justify-between items-center text-[10px]">
-                  <span className="font-bold text-amber-300">💡 AI DỰ BÁO THÁNG</span>
-                  <span className="font-bold text-slate-300">Dự kiến đạt: 417,872,000 (91% KH tháng)</span>
-                  <span className="bg-emerald-500/20 text-emerald-400 text-[9px] font-black px-2 py-0.5 rounded">🟢 Thấp</span>
+                <div className="bg-emerald-50/80 dark:bg-slate-950/80 p-2.5 rounded-lg border border-emerald-200 dark:border-white/5 flex justify-between items-center text-xs">
+                  <span className="font-extrabold text-emerald-900 dark:text-amber-300">💡 AI DỰ BÁO THÁNG</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-300">Dự kiến đạt: 417,872,000 (91% KH)</span>
+                  <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-xs">🟢 Thấp</span>
                 </div>
               </div>
 
               {/* Thẻ 2: Traffic */}
-              <div className="bg-slate-900/80 border border-white/10 p-4 rounded-xl flex flex-col justify-between h-[190px]">
+              <div className="bg-white dark:bg-slate-900/80 border-l-4 border-l-sky-600 border border-slate-200 dark:border-white/10 p-4 rounded-xl flex flex-col justify-between h-[200px] shadow-sm">
                 <div>
                   <div className="flex justify-between items-start">
-                    <h4 className="text-xs font-bold text-sky-400 uppercase tracking-wider">
+                    <h4 className="text-xs font-extrabold text-sky-700 dark:text-sky-400 uppercase tracking-wider">
                       🎬 TRAFFIC (TM3-I01.02)
                     </h4>
-                    <span className="text-xs font-black text-sky-400 bg-sky-500/20 px-2 py-0.5 rounded">Đạt 96%</span>
+                    <span className="text-xs font-black text-sky-800 dark:text-sky-400 bg-sky-100 dark:bg-sky-500/20 border border-sky-300 dark:border-transparent px-2.5 py-0.5 rounded-lg">Đạt 96%</span>
                   </div>
-                  <div className="text-[11px] text-slate-300 mt-2 space-y-0.5">
-                    <p>Thực tế: <strong className="text-white">17,107,200 Lượt</strong></p>
-                    <p>KH: <strong className="text-slate-400">17,820,000 Lượt</strong></p>
-                    <p className="text-[10px] text-slate-400 mt-1">So với tuần trước: <span className="text-slate-300">N/A</span></p>
-                    <p className="text-[10px] text-emerald-400 font-bold">Đề xuất: Duy trì</p>
+                  <div className="text-xs text-slate-700 dark:text-slate-300 mt-2.5 space-y-1">
+                    <p>Thực tế: <strong className="text-slate-900 dark:text-white font-black text-sm">17,107,200 Lượt</strong></p>
+                    <p>KH: <strong className="text-slate-600 dark:text-slate-400 font-bold">17,820,000 Lượt</strong></p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">So với tuần trước: <span className="text-slate-700 dark:text-slate-300 font-bold">N/A</span></p>
+                    <p className="text-xs text-emerald-700 dark:text-emerald-400 font-black">Đề xuất: Duy trì</p>
                   </div>
                 </div>
 
-                <div className="bg-slate-950/80 p-2.5 rounded-lg border border-white/5 flex justify-between items-center text-[10px]">
-                  <span className="font-bold text-amber-300">💡 AI DỰ BÁO THÁNG</span>
-                  <span className="font-bold text-slate-300">Dự kiến đạt: 85,536,000 (96% KH tháng)</span>
-                  <span className="bg-emerald-500/20 text-emerald-400 text-[9px] font-black px-2 py-0.5 rounded">🟢 Thấp</span>
+                <div className="bg-sky-50/80 dark:bg-slate-950/80 p-2.5 rounded-lg border border-sky-200 dark:border-white/5 flex justify-between items-center text-xs">
+                  <span className="font-extrabold text-sky-900 dark:text-amber-300">💡 AI DỰ BÁO THÁNG</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-300">Dự kiến đạt: 85,536,000 (96% KH)</span>
+                  <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-xs">🟢 Thấp</span>
                 </div>
               </div>
 
               {/* Thẻ 3: Sản lượng */}
-              <div className="bg-slate-900/80 border border-white/10 p-4 rounded-xl flex flex-col justify-between h-[190px]">
+              <div className="bg-white dark:bg-slate-900/80 border-l-4 border-l-rose-500 border border-slate-200 dark:border-white/10 p-4 rounded-xl flex flex-col justify-between h-[200px] shadow-sm">
                 <div>
                   <div className="flex justify-between items-start">
-                    <h4 className="text-xs font-bold text-purple-400 uppercase tracking-wider">
+                    <h4 className="text-xs font-extrabold text-rose-700 dark:text-purple-400 uppercase tracking-wider">
                       📦 SẢN LƯỢNG (VM2-I01.01)
                     </h4>
-                    <span className="text-xs font-black text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded">Đạt 73%</span>
+                    <span className="text-xs font-black text-rose-800 dark:text-rose-400 bg-rose-100 dark:bg-rose-500/20 border border-rose-300 dark:border-transparent px-2.5 py-0.5 rounded-lg">Đạt 73%</span>
                   </div>
-                  <div className="text-[11px] text-slate-300 mt-2 space-y-0.5">
-                    <p>Thực tế: <strong className="text-white">8 Video</strong></p>
-                    <p>KH: <strong className="text-slate-400">11 Video</strong></p>
-                    <p className="text-[10px] text-slate-400 mt-1">So với tuần trước: <span className="text-slate-300">N/A</span></p>
-                    <p className="text-[10px] text-rose-400 font-bold">Đề xuất: Điều chỉnh (Sản xuất phái sinh / Tối ưu asset)</p>
+                  <div className="text-xs text-slate-700 dark:text-slate-300 mt-2.5 space-y-1">
+                    <p>Thực tế: <strong className="text-slate-900 dark:text-white font-black text-sm">8 Video</strong></p>
+                    <p>KH: <strong className="text-slate-600 dark:text-slate-400 font-bold">11 Video</strong></p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">So với tuần trước: <span className="text-slate-700 dark:text-slate-300 font-bold">N/A</span></p>
+                    <p className="text-xs text-rose-700 dark:text-rose-400 font-black">Đề xuất: Điều chỉnh (Phái sinh / Tối ưu asset)</p>
                   </div>
                 </div>
 
-                <div className="bg-slate-950/80 p-2.5 rounded-lg border border-white/5 flex justify-between items-center text-[10px]">
-                  <span className="font-bold text-amber-300">💡 AI DỰ BÁO THÁNG</span>
-                  <span className="font-bold text-slate-300">Dự kiến đạt: 40 (73% KH tháng)</span>
-                  <span className="bg-rose-500/20 text-rose-400 text-[9px] font-black px-2 py-0.5 rounded">🔴 Rất cao</span>
+                <div className="bg-rose-50/80 dark:bg-slate-950/80 p-2.5 rounded-lg border border-rose-200 dark:border-white/5 flex justify-between items-center text-xs">
+                  <span className="font-extrabold text-rose-900 dark:text-amber-300">💡 AI DỰ BÁO THÁNG</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-300">Dự kiến đạt: 40 (73% KH)</span>
+                  <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-xs">🔴 Rất cao</span>
                 </div>
               </div>
 
             </div>
 
             {/* DẢI CHỈ TIÊU BỔ SUNG & PHỤ TRỢ TRONG KỲ */}
-            <div className="bg-slate-900/60 border border-white/10 p-3 rounded-xl space-y-2">
-              <h5 className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+            <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 p-4 rounded-xl space-y-3 shadow-sm">
+              <h5 className="text-xs font-black text-slate-800 dark:text-slate-300 uppercase tracking-wider">
                 📌 CHỈ TIÊU BỔ SUNG & PHỤ TRỢ TRONG KỲ:
               </h5>
-              <div className="flex flex-wrap gap-2 text-[11px]">
-                <span className="bg-slate-950 border border-white/10 px-2.5 py-1 rounded-lg text-slate-300">
-                  <strong className="text-white">VM2-I02.01</strong> Số sản phẩm phái sinh & khai thác: <strong>17 Sản phẩm</strong> <span className="text-emerald-400 font-black bg-emerald-500/20 px-1.5 py-0.5 rounded">121%</span>
+              <div className="flex flex-wrap gap-2.5 text-xs">
+                <span className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg text-slate-800 dark:text-slate-300 font-bold">
+                  <strong className="text-slate-900 dark:text-white">VM2-I02.01</strong> Số sản phẩm phái sinh & khai thác: <strong>17 Sản phẩm</strong> <span className="text-emerald-700 dark:text-emerald-400 font-black bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded-md ml-1">121%</span>
                 </span>
-                <span className="bg-slate-950 border border-white/10 px-2.5 py-1 rounded-lg text-slate-300">
-                  <strong className="text-white">VM2-I01.3</strong> Số lượng ý tưởng mới: <strong>36 Ý tưởng</strong> <span className="text-emerald-400 font-black bg-emerald-500/20 px-1.5 py-0.5 rounded">120%</span>
+                <span className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg text-slate-800 dark:text-slate-300 font-bold">
+                  <strong className="text-slate-900 dark:text-white">VM2-I01.3</strong> Số lượng ý tưởng mới: <strong>36 Ý tưởng</strong> <span className="text-emerald-700 dark:text-emerald-400 font-black bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded-md ml-1">120%</span>
                 </span>
-                <span className="bg-slate-950 border border-white/10 px-2.5 py-1 rounded-lg text-slate-300">
-                  <strong className="text-white">VM2-I01.4</strong> Số lượng ý tưởng được chọn: <strong>16 Ý tưởng</strong> <span className="text-amber-400 font-black bg-amber-500/20 px-1.5 py-0.5 rounded">89%</span>
+                <span className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg text-slate-800 dark:text-slate-300 font-bold">
+                  <strong className="text-slate-900 dark:text-white">VM2-I01.4</strong> Số lượng ý tưởng được chọn: <strong>16 Ý tưởng</strong> <span className="text-amber-700 dark:text-amber-400 font-black bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 rounded-md ml-1">89%</span>
                 </span>
-                <span className="bg-slate-950 border border-white/10 px-2.5 py-1 rounded-lg text-slate-300">
-                  <strong className="text-white">VM2-I01.5</strong> Tỷ lệ chọn ý tưởng: <strong>70%</strong> <span className="text-amber-400 font-black bg-amber-500/20 px-1.5 py-0.5 rounded">88%</span>
+                <span className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg text-slate-800 dark:text-slate-300 font-bold">
+                  <strong className="text-slate-900 dark:text-white">VM2-I01.5</strong> Tỷ lệ chọn ý tưởng: <strong>70%</strong> <span className="text-amber-700 dark:text-amber-400 font-black bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 rounded-md ml-1">88%</span>
                 </span>
-                <span className="bg-slate-950 border border-white/10 px-2.5 py-1 rounded-lg text-slate-300">
-                  <strong className="text-white">VM2-I01.6</strong> SL Kịch bản mới SX: <strong>10 Kịch bản</strong> <span className="text-emerald-400 font-black bg-emerald-500/20 px-1.5 py-0.5 rounded">91%</span>
+                <span className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg text-slate-800 dark:text-slate-300 font-bold">
+                  <strong className="text-slate-900 dark:text-white">VM2-I01.6</strong> SL Kịch bản mới SX: <strong>10 Kịch bản</strong> <span className="text-emerald-700 dark:text-emerald-400 font-black bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded-md ml-1">91%</span>
                 </span>
-                <span className="bg-slate-950 border border-white/10 px-2.5 py-1 rounded-lg text-slate-300">
-                  <strong className="text-white">TM3-I01.03</strong> Số lượng video upload (nội dung): <strong>13 Video</strong> <span className="text-emerald-400 font-black bg-emerald-500/20 px-1.5 py-0.5 rounded">118%</span>
+                <span className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg text-slate-800 dark:text-slate-300 font-bold">
+                  <strong className="text-slate-900 dark:text-white">TM3-I01.03</strong> Số lượng video upload (nội dung): <strong>13 Video</strong> <span className="text-emerald-700 dark:text-emerald-400 font-black bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded-md ml-1">118%</span>
                 </span>
-                <span className="bg-slate-950 border border-white/10 px-2.5 py-1 rounded-lg text-slate-300">
-                  <strong className="text-white">TM3-I01.06</strong> View TB/1 nội dung mới upload trong kỳ: <strong>225,750 Views</strong> <span className="text-emerald-400 font-black bg-emerald-500/20 px-1.5 py-0.5 rounded">105%</span>
+                <span className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg text-slate-800 dark:text-slate-300 font-bold">
+                  <strong className="text-slate-900 dark:text-white">TM3-I01.06</strong> View TB/1 nội dung mới upload: <strong>225,750 Views</strong> <span className="text-emerald-700 dark:text-emerald-400 font-black bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded-md ml-1">105%</span>
                 </span>
               </div>
             </div>
 
             {/* Ô NHẬP Ý KIẾN TRƯỞNG ĐƠN VỊ */}
             <div className="space-y-2 pt-1">
-              <label className="text-xs font-bold text-amber-300 block">
+              <label className="text-xs font-black text-amber-600 dark:text-amber-300 block">
                 💡 Ghi chú sự kiện vận hành đặc thù (Ý kiến Trưởng đơn vị):
               </label>
               <textarea
@@ -534,7 +534,7 @@ export default function InputFormPage() {
                 onChange={(e) => setReportNotes(e.target.value)}
                 placeholder="Ghi chú thêm các sự kiện vận hành đặc thù của riêng kỳ báo cáo này..."
                 rows={2}
-                className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"
+                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-3 text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-amber-500 resize-none shadow-sm"
               />
               <div className="flex justify-end">
                 <button

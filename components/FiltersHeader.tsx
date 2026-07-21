@@ -142,7 +142,7 @@ export default function FiltersHeader() {
       </div>
 
       {/* Tóm tắt bộ lọc active */}
-      <div className="bg-slate-900/60 border border-[var(--glass-border)] px-3.5 py-2 rounded-xl text-xs font-black text-[var(--accent-cyan)] tracking-wider">
+      <div className="bg-sky-50 dark:bg-slate-900/60 border border-sky-200 dark:border-[var(--glass-border)] px-4 py-2 rounded-xl text-xs font-black text-sky-800 dark:text-[var(--accent-cyan)] tracking-wider shadow-sm">
         KỲ LỌC: {filters.periodType === "weekly" ? `TUẦN ${filters.week} - THÁNG ${filters.month}` : filters.periodType === "monthly" ? `THÁNG ${filters.month}` : filters.periodType === "quarterly" ? `QUÝ ${filters.quarter}` : "CẢ NĂM"} / {filters.year}
       </div>
     </div>
