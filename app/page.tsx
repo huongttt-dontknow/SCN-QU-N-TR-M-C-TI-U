@@ -395,7 +395,7 @@ export default function DashboardPage() {
       </div>
 
       {/* 6. ĐÁNH GIÁ HIỆU QUẢ CÁC SẢN PHẨM & TOP 3/CẢNH BÁO (ẨN KHI XEM BÁO CÁO HÀNG TUẦN) */}
-      {!isWeekly && (
+      {filters.periodType !== "weekly" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           
           {/* Trái: Hiệu quả các Dòng Sản phẩm (Điểm PSH) - THIẾT KẾ GỌN GÀNG KHÔNG TRỐNG) */}
