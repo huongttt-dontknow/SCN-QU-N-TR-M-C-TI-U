@@ -58,7 +58,7 @@ export default function DashboardPage() {
     { code: "AS", label: "Animated" },
     { code: "DA01", label: "Dự án 01" },
     { code: "Music", label: "Music" },
-    { code: "NDTH", label: "Nội dung" },
+    { code: "NDTH", label: "NDTH" },
     { code: "CR", label: "Creative" },
     { code: "CN", label: "CNGP" },
     { code: "SCS", label: "Studio" },
@@ -308,7 +308,20 @@ export default function DashboardPage() {
               <Bar yAxisId="left" dataKey="target" name="Mục tiêu (Triệu VNĐ)" fill="#0284c7" radius={[4, 4, 0, 0]} />
               <Bar yAxisId="left" dataKey="revenue" name="Thực tế (Triệu VNĐ)" fill="#16a34a" radius={[4, 4, 0, 0]} />
               <Line yAxisId="right" type="monotone" dataKey="completion" name="% Hoàn thành" stroke="#a855f7" strokeWidth={3} dot={{ r: 6, fill: "#a855f7", stroke: "#ffffff", strokeWidth: 2 }}>
-                <LabelList dataKey="completion" position="top" formatter={(val: any) => `${val}%`} style={{ fill: theme === "light" ? "#7e22ce" : "#c084fc", fontSize: 11, fontWeight: 800 }} />
+                <LabelList 
+                  dataKey="completion" 
+                  position="top" 
+                  offset={12}
+                  formatter={(val: any) => `${val}%`} 
+                  style={{ 
+                    fill: theme === "light" ? "#6d28d9" : "#facc15", 
+                    fontSize: 12, 
+                    fontWeight: 900,
+                    paintOrder: "stroke",
+                    stroke: theme === "light" ? "#ffffff" : "#0f172a",
+                    strokeWidth: 3
+                  }} 
+                />
               </Line>
             </ComposedChart>
           </ResponsiveContainer>
