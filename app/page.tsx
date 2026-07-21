@@ -23,6 +23,8 @@ export default function DashboardPage() {
   const [bodComment, setBodComment] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
+  const isWeekly = filters.periodType === "weekly";
+
   useEffect(() => {
     setBodComment("");
     setIsSaved(false);
