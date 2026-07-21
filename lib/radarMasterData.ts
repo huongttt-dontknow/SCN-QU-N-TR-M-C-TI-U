@@ -25,7 +25,6 @@ export const RADAR_MASTER_DATA: Record<string, Record<string, ObjectiveScoreReco
       "q2_2025": 45,
       "q3_2025": 41,
       "q4_2025": 50,
-      "year_2026": 65,
       "q1_2026": 57,
       "q2_2026": 58,
       "m1_26": 60,
@@ -41,7 +40,6 @@ export const RADAR_MASTER_DATA: Record<string, Record<string, ObjectiveScoreReco
       "q2_2025": 79,
       "q3_2025": 67,
       "q4_2025": 89,
-      "year_2026": 103,
       "q1_2026": 72,
       "q2_2026": 72,
       "m1_26": 71,
@@ -57,7 +55,6 @@ export const RADAR_MASTER_DATA: Record<string, Record<string, ObjectiveScoreReco
       "q2_2025": 54,
       "q3_2025": 72,
       "q4_2025": 69,
-      "year_2026": 80,
       "q1_2026": 87,
       "q2_2026": 72,
       "m1_26": 75,
@@ -73,7 +70,6 @@ export const RADAR_MASTER_DATA: Record<string, Record<string, ObjectiveScoreReco
       "q2_2025": 62,
       "q3_2025": 0,
       "q4_2025": 0,
-      "year_2026": 70,
       "q1_2026": 67,
       "q2_2026": 65,
       "m1_26": 67,
@@ -89,7 +85,6 @@ export const RADAR_MASTER_DATA: Record<string, Record<string, ObjectiveScoreReco
       "q2_2025": 103,
       "q3_2025": 100,
       "q4_2025": 100,
-      "year_2026": 85,
       "q1_2026": 92,
       "q2_2026": 94,
       "m1_26": 89,
@@ -105,7 +100,6 @@ export const RADAR_MASTER_DATA: Record<string, Record<string, ObjectiveScoreReco
       "q2_2025": 81,
       "q3_2025": 90,
       "q4_2025": 100,
-      "year_2026": 96,
       "q1_2026": 91,
       "q2_2026": 91,
       "m1_26": 84,
@@ -121,7 +115,6 @@ export const RADAR_MASTER_DATA: Record<string, Record<string, ObjectiveScoreReco
       "q2_2025": 88,
       "q3_2025": 100,
       "q4_2025": 100,
-      "year_2026": 90,
       "q1_2026": 88,
       "q2_2026": 89,
       "m1_26": 95,
@@ -275,7 +268,7 @@ export function getRadarScores(periodType: string, monthStr: number | string, qu
 
     const scvnVal = scvnRec[currKey] ?? scvnRec["m6_26"] ?? 80;
     const scvnPrev = scvnRec[prevKey] ?? scvnRec["m5_26"] ?? scvnVal;
-    const tctVal = tctRec[currKey] ?? tctRec["m6_26"] ?? 85;
+    const tctVal = tctRec[currKey] ?? (currKey === "year_2026" ? 0 : (tctRec["m6_26"] ?? 0));
 
     const change = scvnVal - scvnPrev;
 
