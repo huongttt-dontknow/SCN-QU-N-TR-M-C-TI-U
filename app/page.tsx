@@ -6,6 +6,7 @@ import FiltersHeader from "@/components/FiltersHeader";
 import ObjectiveRadarChart from "@/components/ObjectiveRadarChart";
 import RevenueDonutChart from "@/components/RevenueDonutChart";
 import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
+import { getMasterKpiRecord } from "@/lib/kpiMasterData";
 import { BarChart3 } from "lucide-react";
 import { 
   ComposedChart, 
@@ -23,8 +24,6 @@ export default function DashboardPage() {
   const [bodComment, setBodComment] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
-  const isWeekly = filters.periodType === "weekly";
-
   useEffect(() => {
     setBodComment("");
     setIsSaved(false);
@@ -35,26 +34,71 @@ export default function DashboardPage() {
     setTimeout(() => setIsSaved(false), 2000);
   };
 
-  // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị tự động tính theo kỳ lọc (Tuần / Tháng / Quý / Năm)
-  const getRevenueComparisonData = () => {
-    const isWeekly = filters.periodType === "weekly";
-    const isMonthly = filters.periodType === "monthly";
-    const isQuarterly = filters.periodType === "quarterly";
-
-    const factor = isWeekly ? 0.08 : isMonthly ? 0.33 : isQuarterly ? 1.0 : 4.0;
-
-    return [
-      { name: "Wolfoo", target: Number((80.0 * factor).toFixed(1)), revenue: Number((76.0 * factor).toFixed(1)), completion: 95 },
-      { name: "Lego", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-      { name: "Animated", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-      { name: "Dự án 01", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-      { name: "Music", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-      { name: "Nội dung", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-      { name: "Creative", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-      { name: "CNGP", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-      { name: "Studio", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
-    ];
+  // Helper tính periodKey dựa trên bộ lọc
+  const getPeriodKey = () => {
+    if (filters.periodType === "weekly") {
+      return `weekly_${filters.month}_${filters.week}`;
+    } else if (filters.periodType === "monthly") {
+      return `monthly_${filters.month}`;
+    } else if (filters.periodType === "quarterly") {
+      return `quarterly_${filters.quarter}`;
+    } else {
+      return `yearly_2026`;
+    }
   };
+
+  const periodKey = getPeriodKey();
+
+  // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị THỰC TẾ từ lib/kpiMasterData.ts
+  const unitList = [
+    { code: "Wofloo", label: "Wolfoo" },
+    { code: "Lego", label: "Lego" },
+    { code: "AS", label: "Animated" },
+    { code: "DA01", label: "Dự án 01" },
+    { code: "Music", label: "Music" },
+    { code: "NDTH", label: "Nội dung" },
+    { code: "CR", label: "Creative" },
+    { code: "CN", label: "CNGP" },
+    { code: "SCS", label: "Studio" },
+  ];
+
+  const barComparisonData = unitList.map(u => {
+    const rec = getMasterKpiRecord(u.code, "VM1-I02.01", periodKey);
+    const target = rec?.target ? Number((rec.target / 1e9).toFixed(2)) : 0;
+    const revenue = rec?.actual ? Number((rec.actual / 1e9).toFixed(2)) : 0;
+    const completion = rec?.pct ? Math.round(rec.pct * 100) : (target > 0 ? Math.round((revenue / target) * 100) : 0);
+    return {
+      name: u.label,
+      target,
+      revenue,
+      completion
+    };
+  });
+
+  // Số liệu thực tế SCVN cấp Toàn BU
+  const scvnRevRec = getMasterKpiRecord("SCVN", "VM1-I02.01", periodKey);
+  const scvnVolRec = getMasterKpiRecord("SCVN", "VM2-I01.01", periodKey);
+  const scvnDisciplineRec = getMasterKpiRecord("SCVN", "TM7-I01.01", periodKey);
+  const scvnRoiRec = getMasterKpiRecord("SCVN", "VM1-I01.01", periodKey);
+
+  // Card 1: Doanh thu & Tiến độ hoàn thành SCVN
+  const revTargetVal = scvnRevRec?.target ? (scvnRevRec.target >= 1e9 ? `${(scvnRevRec.target / 1e9).toFixed(2)} Tỷ VNĐ` : `${(scvnRevRec.target / 1e6).toFixed(0)} Triệu VNĐ`) : "7.98 Tỷ VNĐ";
+  const revActualVal = scvnRevRec?.actual ? (scvnRevRec.actual >= 1e9 ? `${(scvnRevRec.actual / 1e9).toFixed(2)} Tỷ VNĐ` : `${(scvnRevRec.actual / 1e6).toFixed(0)} Triệu VNĐ`) : "3.76 Tỷ VNĐ";
+  const revPct = scvnRevRec?.pct ? Math.round(scvnRevRec.pct * 100) : 47;
+
+  // Card 2: Sản lượng Video hoàn thành SCVN
+  const volTargetVal = scvnVolRec?.target ?? 112;
+  const volActualVal = scvnVolRec?.actual ?? 108;
+  const volPct = scvnVolRec?.pct ? Math.round(scvnVolRec.pct * 100) : (volTargetVal > 0 ? Math.round((volActualVal / volTargetVal) * 100) : 96);
+
+  // Card 3: Đơn vị xuất sắc nhất
+  const topUnit = [...barComparisonData].sort((a, b) => b.completion - a.completion)[0] || { name: "Dự án 01", completion: 88 };
+
+  // Card 4: Tỷ lệ không vi phạm kỷ luật
+  const disciplinePct = scvnDisciplineRec?.actual ? `${scvnDisciplineRec.actual}%` : (scvnDisciplineRec?.pct ? `${(scvnDisciplineRec.pct * 100).toFixed(1)}%` : "99.85%");
+
+  // Card 5: ROI
+  const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
   return (
     <div className="flex flex-col gap-6 text-white text-sm">
@@ -125,17 +169,17 @@ export default function DashboardPage() {
           <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[175px]">
             <div>
               <span className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider block">
-                DOANH THU & TIẾN ĐỘ HOÀN THÀNH
+                DOANH THU & TIẾN ĐỘ HOÀN THÀNH (SCVN)
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
-                <span className="text-4xl font-black text-white">100%</span>
+                <span className="text-4xl font-black text-white">{revPct}%</span>
               </div>
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
-                100.0 Tỷ VNĐ | ▲ +4.0% so với quý trước
+                {revActualVal} | Thực tế đạt được
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: 100.0 Tỷ VNĐ)</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {revTargetVal})</span>
             </div>
           </div>
 
@@ -143,17 +187,17 @@ export default function DashboardPage() {
           <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-emerald-500 min-h-[175px]">
             <div>
               <span className="text-xs font-black text-emerald-500 uppercase tracking-wider block">
-                SẢN LƯỢNG VIDEO HOÀN THÀNH
+                SẢN LƯỢNG VIDEO HOÀN THÀNH (SCVN)
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
-                <span className="text-4xl font-black text-emerald-500">363 Video</span>
+                <span className="text-4xl font-black text-emerald-500">{volActualVal} Video</span>
               </div>
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
-                110% | ▲ +12.0% so với quý trước
+                Đạt {volPct}% Kế hoạch
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: 330 Video)</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} Video)</span>
             </div>
           </div>
 
@@ -165,7 +209,7 @@ export default function DashboardPage() {
               </span>
               <div className="mt-1.5">
                 <span className="text-3xl font-black text-white truncate block">
-                  Wolfoo - 95%
+                  {topUnit.name} - {topUnit.completion}%
                 </span>
               </div>
             </div>
@@ -182,15 +226,15 @@ export default function DashboardPage() {
               </span>
               <div className="mt-1.5">
                 <span className="text-4xl font-black text-[var(--accent-pink)]">
-                  99.85%
+                  {disciplinePct}
                 </span>
               </div>
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
-                ▲ +0.05% so với quý trước
+                Kỷ luật tuân thủ nhân sự
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: &gt; 98.0%)</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(Mục tiêu: &gt; 98.0%)</span>
             </div>
           </div>
 
@@ -203,15 +247,15 @@ export default function DashboardPage() {
                     TỶ SUẤT LỢI NHUẬN ROI ({filters.periodType === "quarterly" ? "QUÝ" : "NĂM"})
                   </span>
                   <span className="text-4xl font-black text-purple-300 mt-1 block">
-                    {filters.periodType === "quarterly" ? "70.0%" : "135.0%"}
+                    {roiVal}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className={`text-sm font-extrabold block ${filters.periodType === "quarterly" ? "text-rose-500" : "text-emerald-500"}`}>
-                    {filters.periodType === "quarterly" ? "88% | ▼ -12.0% so với kỳ trước" : "▲ +12.5% so với năm trước"}
+                  <span className="text-sm font-extrabold block text-emerald-500">
+                    Hiệu quả đầu tư ROI thực tế
                   </span>
                   <span className="text-xs text-[var(--text-muted)] font-semibold">
-                    {filters.periodType === "quarterly" ? "(KH: 80.0%)" : "(KH: 120.0%)"}
+                    (Số liệu kế toán tổng hợp)
                   </span>
                 </div>
               </div>
@@ -224,20 +268,29 @@ export default function DashboardPage() {
       {/* 3. BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU CÁC ĐƠN VỊ THEO KỲ */}
       <div className="glass-panel p-6">
         <h3 className="text-sm font-black text-white tracking-wider uppercase mb-4 flex items-center gap-2">
-          <BarChart3 size={18} className="text-[var(--accent-cyan)]" />
-          📊 BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU {filters.periodType === "weekly" ? "TUẦN" : filters.periodType === "monthly" ? "THÁNG" : filters.periodType === "quarterly" ? "QUÝ" : "NĂM"} (9 ĐƠN VỊ)
+          <BarChart3 size={18} className="text-[var(--accent-cyan)]" /> 
+          📊 BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU {filters.periodType === "weekly" ? `TUẦN ${filters.week} - THÁNG ${filters.month}` : filters.periodType === "monthly" ? `THÁNG ${filters.month}` : filters.periodType === "quarterly" ? `QUÝ ${filters.quarter}` : "CẢ NĂM"} / {filters.year} (9 ĐƠN VỊ)
         </h3>
-        <div className="w-full h-[260px]">
+        
+        <div className="w-full h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={getRevenueComparisonData()}>
-              <CartesianGrid strokeDasharray="3 3" stroke={theme === "light" ? "#e2e8f0" : "rgba(255,255,255,0.05)"} />
-              <XAxis dataKey="name" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={12} tickLine={false} />
-              <YAxis yAxisId="left" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={12} tickFormatter={(val) => `${val}T`} />
-              <YAxis yAxisId="right" orientation="right" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} fontSize={12} tickFormatter={(val) => `${val}%`} />
-              <RechartsTooltip contentStyle={{ background: theme === "light" ? "#ffffff" : "#0f172a", border: theme === "light" ? "1px solid #cbd5e1" : "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 13, color: theme === "light" ? "#0f172a" : "#ffffff", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" }} />
-              <Bar yAxisId="left" dataKey="target" fill={theme === "light" ? "#0284c7" : "#0284c7"} radius={[4, 4, 0, 0]} barSize={18} name="Mục tiêu (Tỷ)" />
-              <Bar yAxisId="left" dataKey="revenue" fill={theme === "light" ? "#16a34a" : "#00f2fe"} radius={[4, 4, 0, 0]} barSize={18} name="Kết quả thực tế (Tỷ)" />
-              <Line yAxisId="right" type="monotone" dataKey="completion" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} strokeWidth={3} dot={{ r: 6, fill: theme === "light" ? "#7e22ce" : "#a855f7", stroke: "#ffffff", strokeWidth: 2 }} name="% Hoàn thành" />
+            <ComposedChart data={barComparisonData}>
+              <CartesianGrid strokeDasharray="3 3" stroke={theme === "light" ? "#cbd5e1" : "rgba(255, 255, 255, 0.05)"} />
+              <XAxis dataKey="name" tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11, fontWeight: 700 }} />
+              <YAxis yAxisId="left" tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11 }} label={{ value: 'Tỷ VNĐ', angle: -90, position: 'insideLeft', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} />
+              <YAxis yAxisId="right" orientation="right" tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11 }} label={{ value: '% HT', angle: 90, position: 'insideRight', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} />
+              <RechartsTooltip 
+                contentStyle={{ 
+                  background: theme === "light" ? "#ffffff" : "#0f172a", 
+                  border: theme === "light" ? "1px solid #cbd5e1" : "1px solid var(--glass-border)", 
+                  borderRadius: 8,
+                  color: theme === "light" ? "#0f172a" : "#ffffff",
+                  fontWeight: "bold"
+                }} 
+              />
+              <Bar yAxisId="left" dataKey="target" name="Mục tiêu (Tỷ VNĐ)" fill="#0284c7" radius={[4, 4, 0, 0]} />
+              <Bar yAxisId="left" dataKey="revenue" name="Thực tế (Tỷ VNĐ)" fill="#16a34a" radius={[4, 4, 0, 0]} />
+              <Line yAxisId="right" type="monotone" dataKey="completion" name="% Hoàn thành" stroke="#7e22ce" strokeWidth={3} dot={{ r: 5 }} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
