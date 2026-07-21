@@ -160,21 +160,42 @@ export default function DashboardPage() {
   // Dữ liệu M3 Traffic (Số lượt view youtube) cho 9 đơn vị theo kỳ
   const trafficData = unitList.map(u => {
     const uDict = MASTER_KPI_DATA[u.code] || {};
-    let item = uDict["TM3-I01.02"] || uDict["VM3-I01.02"] || uDict["3.1"];
-    if (!item) {
-      for (const k in uDict) {
-        const v = uDict[k];
-        const t = (v.title || "").toUpperCase();
-        const unitStr = (v.unit || "").toUpperCase();
-        if (t.includes("SỐ LƯỢT VIEW YOUTUBE") || t.includes("VIEW YOUTUBE") || t.includes("TRAFFIC") || unitStr.includes("VIEWS")) {
-          if (v.periods) {
-            item = v;
-            break;
-          }
+    const candidates: { item: any; rec: any }[] = [];
+
+    for (const k in uDict) {
+      const v = uDict[k];
+      const t = (v.title || "").toUpperCase();
+      const uStr = (v.unit || "").toUpperCase();
+      const kStr = k.toUpperCase();
+
+      if (
+        (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+        !uStr.includes("CTR") &&
+        !uStr.includes("TB/1")
+      ) {
+        const pData = v.periods?.[periodKey];
+        if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
+          candidates.push({ item: v, rec: pData });
         }
       }
     }
-    const rec = item?.periods?.[periodKey];
+
+    let rec: any = null;
+    if (candidates.length > 0) {
+      candidates.sort((a, b) => Math.max(b.rec.actual || 0, b.rec.target || 0) - Math.max(a.rec.actual || 0, a.rec.target || 0));
+      rec = candidates[0].rec;
+    } else {
+      for (const k in uDict) {
+        const v = uDict[k];
+        const t = (v.title || "").toUpperCase();
+        const uStr = (v.unit || "").toUpperCase();
+        if (t.includes("SỐ LƯỢT VIEW YOUTUBE") || t.includes("VIEW YOUTUBE") || t.includes("TRAFFIC") || uStr.includes("VIEWS")) {
+          rec = v.periods?.[periodKey];
+          if (rec) break;
+        }
+      }
+    }
+
     const tgt = rec?.target ?? 0;
     const act = rec?.actual ?? 0;
 
