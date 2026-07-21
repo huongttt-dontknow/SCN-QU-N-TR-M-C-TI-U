@@ -160,9 +160,9 @@ export default function ProductDataPage() {
           <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-5">
             
             {/* Widget A: Doanh thu */}
-            <div className="glass-panel p-5 flex flex-col justify-between h-[230px]">
+            <div className="glass-panel p-5 flex flex-col justify-between h-[230px] border-t-4 border-t-emerald-600">
               <div>
-                <span className="text-xs text-[var(--accent-cyan)] font-black tracking-widest uppercase">
+                <span className="text-xs text-emerald-600 font-black tracking-widest uppercase">
                   Doanh thu (M1)
                 </span>
                 <h4 className="text-xs text-[var(--text-muted)] font-bold mt-1">Hoàn thành kế hoạch</h4>
@@ -178,7 +178,7 @@ export default function ProductDataPage() {
                 </div>
                 <div className="w-full h-2 bg-slate-900 rounded-full mt-2 overflow-hidden border border-white/5">
                   <div 
-                    className="h-full rounded-full bg-[var(--accent-cyan)]"
+                    className="h-full rounded-full bg-emerald-600"
                     style={{ width: `${Math.round((profile.revenueActual / profile.revenueTarget) * 100)}%` }}
                   />
                 </div>
@@ -191,9 +191,9 @@ export default function ProductDataPage() {
             </div>
 
             {/* Widget B: Sản lượng */}
-            <div className="glass-panel p-5 flex flex-col justify-between h-[230px]">
+            <div className="glass-panel p-5 flex flex-col justify-between h-[230px] border-t-4 border-t-lime-500">
               <div>
-                <span className="text-xs text-[var(--accent-purple)] font-black tracking-widest uppercase">
+                <span className="text-xs text-lime-600 font-black tracking-widest uppercase">
                   Sản lượng (M2)
                 </span>
                 <h4 className="text-xs text-[var(--text-muted)] font-bold mt-1">Video hoàn thành</h4>
@@ -209,7 +209,7 @@ export default function ProductDataPage() {
                 </div>
                 <div className="w-full h-2 bg-slate-900 rounded-full mt-2 overflow-hidden border border-white/5">
                   <div 
-                    className="h-full rounded-full bg-[var(--accent-purple)]"
+                    className="h-full rounded-full bg-lime-500"
                     style={{ width: `${Math.round((profile.sảnLượngActual / profile.sảnLượngTarget) * 100)}%` }}
                   />
                 </div>
@@ -222,9 +222,9 @@ export default function ProductDataPage() {
             </div>
 
             {/* Widget C: Traffic */}
-            <div className="glass-panel p-5 flex flex-col justify-between h-[230px]">
+            <div className="glass-panel p-5 flex flex-col justify-between h-[230px] border-t-4 border-t-emerald-500">
               <div>
-                <span className="text-xs text-[var(--accent-pink)] font-black tracking-widest uppercase">
+                <span className="text-xs text-emerald-600 font-black tracking-widest uppercase">
                   Lượt xem (M4)
                 </span>
                 <h4 className="text-xs text-[var(--text-muted)] font-bold mt-1">Traffic đạt được</h4>
@@ -240,7 +240,7 @@ export default function ProductDataPage() {
                 </div>
                 <div className="w-full h-2 bg-slate-900 rounded-full mt-2 overflow-hidden border border-white/5">
                   <div 
-                    className="h-full rounded-full bg-[var(--accent-pink)]"
+                    className="h-full rounded-full bg-emerald-500"
                     style={{ width: `${Math.round((profile.trafficActual / profile.trafficTarget) * 100)}%` }}
                   />
                 </div>

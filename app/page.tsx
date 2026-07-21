@@ -276,15 +276,15 @@ export default function DashboardPage() {
           </p>
           <div className="space-y-3 overflow-y-auto max-h-[280px] pr-1">
             {[
-              { name: "Wolfoo (WO)", actual: 369.0, target: 330.0, pct: 112, color: "bg-rose-500" },
-              { name: "Lego (LE)", actual: 140.0, target: 154.0, pct: 91, color: "bg-rose-500" },
-              { name: "Animated Story", actual: 84.0, target: 109.0, pct: 77, color: "bg-rose-500" },
-              { name: "Dự án 01 (DA)", actual: 103.0, target: 107.0, pct: 96, color: "bg-rose-500" },
-              { name: "Music (SCMU)", actual: 134.0, target: 172.0, pct: 78, color: "bg-rose-500" },
-              { name: "Nội dung TH", actual: 93.0, target: 75.0, pct: 124, color: "bg-purple-500" },
-              { name: "Creative Hub", actual: 61.0, target: 55.0, pct: 111, color: "bg-rose-500" },
-              { name: "CNGP (Game)", actual: 41.0, target: 49.0, pct: 84, color: "bg-purple-500" },
-              { name: "Studio (ST)", actual: 31.0, target: 34.0, pct: 91, color: "bg-purple-500" },
+              { name: "Wolfoo (WO)", actual: 369.0, target: 330.0, pct: 112, color: "bg-emerald-600 font-extrabold" },
+              { name: "Lego (LE)", actual: 140.0, target: 154.0, pct: 91, color: "bg-lime-500 font-extrabold" },
+              { name: "Animated Story", actual: 84.0, target: 109.0, pct: 77, color: "bg-rose-500 font-extrabold" },
+              { name: "Dự án 01 (DA)", actual: 103.0, target: 107.0, pct: 96, color: "bg-lime-500 font-extrabold" },
+              { name: "Music (SCMU)", actual: 134.0, target: 172.0, pct: 78, color: "bg-rose-500 font-extrabold" },
+              { name: "Nội dung TH", actual: 93.0, target: 75.0, pct: 124, color: "bg-emerald-500 font-extrabold" },
+              { name: "Creative Hub", actual: 61.0, target: 55.0, pct: 111, color: "bg-emerald-600 font-extrabold" },
+              { name: "CNGP (Game)", actual: 41.0, target: 49.0, pct: 84, color: "bg-lime-500 font-extrabold" },
+              { name: "Studio (ST)", actual: 31.0, target: 34.0, pct: 91, color: "bg-lime-500 font-extrabold" },
             ].map(item => (
               <div key={item.name} className="space-y-1">
                 <div className="flex justify-between text-xs font-bold">

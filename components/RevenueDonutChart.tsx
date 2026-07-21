@@ -23,8 +23,8 @@ export default function RevenueDonutChart() {
   ];
 
   const COLORS = isLight 
-    ? ["#0284c7", "#7e22ce", "#16a34a", "#e11d48", "#64748b"]
-    : ["#00f2fe", "#8b5cf6", "#10b981", "#ff4b72", "#64748b"];
+    ? ["#16a34a", "#84cc16", "#a3e635", "#10b981", "#64748b"]
+    : ["#22c55e", "#a3e635", "#10b981", "#00f2fe", "#64748b"];
 
   return (
     <div className="w-full h-[240px] flex items-center justify-center">
