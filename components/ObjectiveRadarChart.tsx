@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useApp } from "@/context/AppContext";
+import { getRadarScores } from "@/lib/radarMasterData";
 import {
   Radar,
   RadarChart,
@@ -13,31 +14,27 @@ import {
   Tooltip
 } from "recharts";
 
-interface RadarData {
-  subject: string;
-  "Kỳ này": number;
-  "Kỳ trước": number;
+interface ObjectiveRadarChartProps {
+  customData?: any[];
 }
 
-export default function ObjectiveRadarChart() {
-  const { theme } = useApp();
+export default function ObjectiveRadarChart({ customData }: ObjectiveRadarChartProps) {
+  const { filters, theme } = useApp();
   const isLight = theme === "light";
 
-  // Dữ liệu mặc định 7 mặt mục tiêu
-  const data: RadarData[] = [
-    { subject: "Tài chính", "Kỳ này": 85, "Kỳ trước": 75 },
-    { subject: "Sản phẩm", "Kỳ này": 90, "Kỳ trước": 80 },
-    { subject: "Khách hàng", "Kỳ này": 70, "Kỳ trước": 85 },
-    { subject: "Thương hiệu", "Kỳ này": 88, "Kỳ trước": 70 },
-    { subject: "QT Vận hành", "Kỳ này": 95, "Kỳ trước": 88 },
-    { subject: "Nhân sự", "Kỳ này": 80, "Kỳ trước": 82 },
-    { subject: "Văn hóa", "Kỳ này": 90, "Kỳ trước": 92 },
-  ];
+  const { points } = getRadarScores(
+    filters.periodType,
+    filters.month,
+    filters.quarter,
+    filters.year
+  );
+
+  const chartData = customData || points;
 
   return (
     <div className="w-full h-[320px] flex items-center justify-center">
       <ResponsiveContainer width="100%" height="100%">
-        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
+        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={chartData}>
           <PolarGrid stroke={isLight ? "#cbd5e1" : "rgba(255, 255, 255, 0.1)"} />
           <PolarAngleAxis 
             dataKey="subject" 
@@ -45,24 +42,32 @@ export default function ObjectiveRadarChart() {
           />
           <PolarRadiusAxis 
             angle={30} 
-            domain={[0, 100]} 
+            domain={[0, 120]} 
             tick={{ fill: isLight ? "#475569" : "#64748b", fontSize: 9 }}
           />
           <Radar
-            name="Kỳ này"
-            dataKey="Kỳ này"
-            stroke="var(--accent-emerald)"
-            fill="var(--accent-emerald)"
+            name="BU SCVN"
+            dataKey="BU SCVN"
+            stroke="#10b981"
+            fill="#10b981"
             fillOpacity={isLight ? 0.35 : 0.25}
           />
           <Radar
-            name="Kỳ trước"
+            name="Tổng Công Ty (TCT)"
+            dataKey="TCT Sconnect"
+            stroke="#0284c7"
+            fill="#0284c7"
+            fillOpacity={isLight ? 0.25 : 0.15}
+          />
+          <Radar
+            name="Kỳ trước (SCVN)"
             dataKey="Kỳ trước"
             stroke={isLight ? "#64748b" : "#94a3b8"}
             fill={isLight ? "#64748b" : "#94a3b8"}
-            fillOpacity={0.15}
+            fillOpacity={0.1}
           />
           <Tooltip 
+            formatter={(val: any) => `${val}%`}
             contentStyle={{ 
               background: isLight ? "#ffffff" : "#0f172a", 
               border: isLight ? "1px solid #cbd5e1" : "1px solid var(--glass-border)", 

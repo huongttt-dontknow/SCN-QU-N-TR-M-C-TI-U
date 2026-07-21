@@ -7,6 +7,7 @@ import ObjectiveRadarChart from "@/components/ObjectiveRadarChart";
 import RevenueDonutChart from "@/components/RevenueDonutChart";
 import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
 import { getMasterKpiRecord } from "@/lib/kpiMasterData";
+import { getRadarScores } from "@/lib/radarMasterData";
 import { BarChart3 } from "lucide-react";
 import { 
   ComposedChart, 
@@ -100,6 +101,14 @@ export default function DashboardPage() {
   // Card 5: ROI
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
+  // Dữ liệu Bánh xe mục tiêu 7 mặt M1 -> M7 từ Excel
+  const radarData = getRadarScores(
+    filters.periodType,
+    filters.month,
+    filters.quarter,
+    filters.year
+  );
+
   return (
     <div className="flex flex-col gap-6 text-white text-sm">
       {/* 1. FREEZE FILTERS PANEL */}
@@ -113,15 +122,15 @@ export default function DashboardPage() {
           {/* Radar Chart */}
           <div className="flex-1 flex flex-col justify-between">
             <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
-              🎯 BÁNH XE MỤC TIÊU (SỨC KHỎE DOANH NGHIỆP)
+              🎯 BÁNH XE MỤC TIÊU SỨC KHỎE (TCT VS SCVN)
             </h3>
             <ObjectiveRadarChart />
             <div className="flex justify-center gap-4 text-xs font-bold mt-2">
               <span className="flex items-center gap-1.5 text-emerald-500">
-                <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> Kỳ này (Q3/2026)
+                <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> BU SCVN ({radarData.labelCurr})
               </span>
-              <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
-                <span className="w-2.5 h-1 bg-slate-500 inline-block border-t border-dashed rounded"></span> Kỳ trước (Q2/2026)
+              <span className="flex items-center gap-1.5 text-sky-400">
+                <span className="w-2.5 h-1 bg-sky-400 inline-block rounded"></span> Tổng Công Ty (TCT)
               </span>
             </div>
           </div>
@@ -129,7 +138,7 @@ export default function DashboardPage() {
           {/* Chi tiết biến động */}
           <div className="w-full md:w-72 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-5">
             <h4 className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-              📈 CHI TIẾT BIẾN ĐỘNG
+              📈 CHI TIẾT BIẾN ĐỘNG (7 MẶT MT)
             </h4>
             <div className="space-y-2.5 text-xs flex-1">
               <div className="flex justify-between text-xs text-[var(--text-muted)] font-black border-b border-white/10 pb-1.5 uppercase tracking-wider">
@@ -139,25 +148,20 @@ export default function DashboardPage() {
                   <span>BIẾN ĐỘNG</span>
                 </div>
               </div>
-              {[
-                { name: "Tài chính", current: "82%", change: "+7%", up: true },
-                { name: "Sản phẩm/ SX", current: "88%", change: "+6%", up: true },
-                { name: "Khách hàng", current: "85%", change: "+6%", up: true },
-                { name: "Thương hiệu – kênh KD", current: "78%", change: "+6%", up: true },
-                { name: "QT Vận hành", current: "92%", change: "+3%", up: true },
-                { name: "Nhân sự", current: "87%", change: "+3%", up: true },
-                { name: "Văn hóa", current: "96%", change: "+4%", up: true },
-              ].map(item => (
-                <div key={item.name} className="flex justify-between items-center py-1.5 border-b border-white/5 text-xs gap-2">
-                  <span className="text-[var(--text-muted)] font-bold whitespace-nowrap">{item.name}</span>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="font-extrabold text-white min-w-[32px] text-right text-xs">{item.current}</span>
-                    <span className={`font-black min-w-[42px] text-right text-xs ${item.up ? "text-emerald-500" : "text-rose-500"}`}>
-                      {item.up ? "▲" : "▼"} {item.change}
-                    </span>
+              {radarData.points.map(item => {
+                const isUp = item.change >= 0;
+                return (
+                  <div key={item.code} className="flex justify-between items-center py-1.5 border-b border-white/5 text-xs gap-2">
+                    <span className="text-[var(--text-muted)] font-bold whitespace-nowrap">{item.subject}</span>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="font-extrabold text-white min-w-[32px] text-right text-xs">{item["BU SCVN"]}%</span>
+                      <span className={`font-black min-w-[42px] text-right text-xs ${isUp ? "text-emerald-500" : "text-rose-500"}`}>
+                        {isUp ? "▲" : "▼"} {isUp ? `+${item.change}%` : `${item.change}%`}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
