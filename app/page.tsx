@@ -66,8 +66,8 @@ export default function DashboardPage() {
 
   const barComparisonData = unitList.map(u => {
     const rec = getMasterKpiRecord(u.code, "VM1-I02.01", periodKey);
-    const target = rec?.target ? Number((rec.target / 1e9).toFixed(2)) : 0;
-    const revenue = rec?.actual ? Number((rec.actual / 1e9).toFixed(2)) : 0;
+    const target = rec?.target ? Math.round(rec.target / 1e6) : 0;
+    const revenue = rec?.actual ? Math.round(rec.actual / 1e6) : 0;
     const completion = rec?.pct ? Math.round(rec.pct * 100) : (target > 0 ? Math.round((revenue / target) * 100) : 0);
     return {
       name: u.label,
@@ -283,9 +283,20 @@ export default function DashboardPage() {
             <ComposedChart data={barComparisonData}>
               <CartesianGrid strokeDasharray="3 3" stroke={theme === "light" ? "#cbd5e1" : "rgba(255, 255, 255, 0.05)"} />
               <XAxis dataKey="name" tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11, fontWeight: 700 }} />
-              <YAxis yAxisId="left" tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11 }} label={{ value: 'Tỷ VNĐ', angle: -90, position: 'insideLeft', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} />
+              <YAxis 
+                yAxisId="left" 
+                tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11 }} 
+                tickFormatter={(val) => val >= 1000 ? `${(val / 1000).toFixed(1)}T` : `${val}Tr`} 
+                label={{ value: 'Triệu VNĐ', angle: -90, position: 'insideLeft', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} 
+              />
               <YAxis yAxisId="right" orientation="right" tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11 }} label={{ value: '% HT', angle: 90, position: 'insideRight', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} />
               <RechartsTooltip 
+                formatter={(value: any, name: any) => {
+                  if (name === "% Hoàn thành") return [`${value}%`, name];
+                  const num = Number(value) || 0;
+                  const str = num >= 1000 ? `${(num / 1000).toFixed(2)} Tỷ VNĐ (${num.toLocaleString()} Triệu)` : `${num.toLocaleString()} Triệu VNĐ`;
+                  return [str, name];
+                }}
                 contentStyle={{ 
                   background: theme === "light" ? "#ffffff" : "#0f172a", 
                   border: theme === "light" ? "1px solid #cbd5e1" : "1px solid var(--glass-border)", 
@@ -294,8 +305,8 @@ export default function DashboardPage() {
                   fontWeight: "bold"
                 }} 
               />
-              <Bar yAxisId="left" dataKey="target" name="Mục tiêu (Tỷ VNĐ)" fill="#0284c7" radius={[4, 4, 0, 0]} />
-              <Bar yAxisId="left" dataKey="revenue" name="Thực tế (Tỷ VNĐ)" fill="#16a34a" radius={[4, 4, 0, 0]} />
+              <Bar yAxisId="left" dataKey="target" name="Mục tiêu (Triệu VNĐ)" fill="#0284c7" radius={[4, 4, 0, 0]} />
+              <Bar yAxisId="left" dataKey="revenue" name="Thực tế (Triệu VNĐ)" fill="#16a34a" radius={[4, 4, 0, 0]} />
               <Line yAxisId="right" type="monotone" dataKey="completion" name="% Hoàn thành" stroke="#a855f7" strokeWidth={3} dot={{ r: 6, fill: "#a855f7", stroke: "#ffffff", strokeWidth: 2 }}>
                 <LabelList dataKey="completion" position="top" formatter={(val: any) => `${val}%`} style={{ fill: theme === "light" ? "#7e22ce" : "#c084fc", fontSize: 11, fontWeight: 800 }} />
               </Line>
