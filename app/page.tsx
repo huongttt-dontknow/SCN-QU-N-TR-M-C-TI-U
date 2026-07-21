@@ -96,8 +96,66 @@ export default function DashboardPage() {
   // Card 3: Đơn vị xuất sắc nhất
   const topUnit = [...barComparisonData].sort((a, b) => b.completion - a.completion)[0] || { name: "Dự án 01", completion: 88 };
 
-  // Card 4: Tỷ lệ không vi phạm kỷ luật
+  // Card 4: Kỷ luật (Tháng/Quý/Năm) vs Biến động doanh thu cao nhất (Tuần)
   const disciplinePct = scvnDisciplineRec?.actual ? `${scvnDisciplineRec.actual}%` : (scvnDisciplineRec?.pct ? `${(scvnDisciplineRec.pct * 100).toFixed(1)}%` : "99.85%");
+
+  // Tính toán biến động doanh thu theo tuần cho 9 đơn vị
+  const getPrevWeeklyPeriodKey = (mStr: string, wStr: string) => {
+    const m = Number(mStr) || 7;
+    const w = Number(wStr) || 1;
+    if (w > 1) {
+      return `weekly_${m}_${w - 1}`;
+    }
+    if (m > 1) {
+      return `weekly_${m - 1}_4`;
+    }
+    return `weekly_12_5`;
+  };
+
+  const isWeeklyReport = filters.periodType === "weekly";
+  const prevWeeklyKey = getPrevWeeklyPeriodKey(filters.month, filters.week);
+
+  const weeklyChanges = unitList.map(u => {
+    const currRec = getMasterKpiRecord(u.code, "VM1-I02.01", periodKey);
+    const prevRec = getMasterKpiRecord(u.code, "VM1-I02.01", prevWeeklyKey);
+
+    const currAct = currRec?.actual ?? 0;
+    const prevAct = prevRec?.actual ?? 0;
+    const diff = currAct - prevAct;
+    let pct = 0;
+    if (prevAct > 0) {
+      pct = Math.round(((currAct - prevAct) / prevAct) * 100);
+    } else if (currAct > 0) {
+      pct = 100;
+    }
+    return { name: u.label, currAct, prevAct, diff, pct };
+  });
+
+  const incUnits = [...weeklyChanges].filter(x => x.diff > 0).sort((a, b) => b.pct - a.pct);
+  const decUnits = [...weeklyChanges].filter(x => x.diff < 0).sort((a, b) => a.pct - b.pct);
+
+  let weeklyTopRows: { label: string; text: string; isUp: boolean }[] = [];
+  if (incUnits.length > 0 && decUnits.length > 0) {
+    weeklyTopRows = [
+      { label: "Tăng cao nhất", text: `${incUnits[0].name} (▲ +${incUnits[0].pct}%)`, isUp: true },
+      { label: "Giảm cao nhất", text: `${decUnits[0].name} (▼ ${decUnits[0].pct}%)`, isUp: false },
+    ];
+  } else if (decUnits.length > 0) {
+    weeklyTopRows = [
+      { label: "Giảm mạnh nhất", text: `${decUnits[0].name} (▼ ${decUnits[0].pct}%)`, isUp: false },
+      { label: "Giảm thứ 2", text: decUnits[1] ? `${decUnits[1].name} (▼ ${decUnits[1].pct}%)` : "-", isUp: false },
+    ];
+  } else if (incUnits.length > 0) {
+    weeklyTopRows = [
+      { label: "Tăng mạnh nhất", text: `${incUnits[0].name} (▲ +${incUnits[0].pct}%)`, isUp: true },
+      { label: "Tăng thứ 2", text: incUnits[1] ? `${incUnits[1].name} (▲ +${incUnits[1].pct}%)` : "-", isUp: true },
+    ];
+  } else {
+    weeklyTopRows = [
+      { label: "Tăng mạnh nhất", text: "Không biến động", isUp: true },
+      { label: "Giảm mạnh nhất", text: "Không biến động", isUp: false },
+    ];
+  }
 
   // Card 5: ROI
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
@@ -224,25 +282,48 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Card 4: Tỷ lệ không vi phạm kỷ luật */}
-          <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
-            <div>
-              <span className="text-xs font-black text-[var(--accent-pink)] uppercase tracking-wider block">
-                TỶ LỆ KHÔNG VI PHẠM KỶ LUẬT
-              </span>
-              <div className="mt-1.5">
-                <span className="text-4xl font-black text-[var(--accent-pink)]">
-                  {disciplinePct}
+          {/* Card 4: Tuần vs Tháng/Quý/Năm */}
+          {isWeeklyReport ? (
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
+              <div>
+                <span className="text-xs font-black text-[var(--accent-pink)] uppercase tracking-wider block">
+                  BIẾN ĐỘNG DOANH THU SO VỚI TUẦN TRƯỚC
                 </span>
+                <div className="mt-2.5 space-y-2">
+                  {weeklyTopRows.map((r, i) => (
+                    <div key={i} className="flex justify-between items-center text-xs border-b border-white/5 pb-1.5">
+                      <span className="text-[var(--text-muted)] font-bold">{r.label}:</span>
+                      <span className={`font-black text-sm ${r.isUp ? "text-emerald-400" : "text-rose-400"}`}>
+                        {r.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="text-xs text-[var(--text-muted)] border-t border-white/5 pt-2 font-bold">
+                Thống kê tăng / giảm mạnh nhất so với tuần trước
               </div>
             </div>
-            <div className="my-1">
-              <p className="text-sm font-extrabold text-emerald-500">
-                Kỷ luật tuân thủ nhân sự
-              </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(Mục tiêu: &gt; 98.0%)</span>
+          ) : (
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
+              <div>
+                <span className="text-xs font-black text-[var(--accent-pink)] uppercase tracking-wider block">
+                  TỶ LỆ KHÔNG VI PHẠM KỶ LUẬT
+                </span>
+                <div className="mt-1.5">
+                  <span className="text-4xl font-black text-[var(--accent-pink)]">
+                    {disciplinePct}
+                  </span>
+                </div>
+              </div>
+              <div className="my-1">
+                <p className="text-sm font-extrabold text-emerald-500">
+                  Kỷ luật tuân thủ nhân sự
+                </p>
+                <span className="text-xs text-[var(--text-muted)] font-semibold">(Mục tiêu: &gt; 98.0%)</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Card 5: Tỷ suất lợi nhuận ROI */}
           {(filters.periodType === "quarterly" || filters.periodType === "yearly") && (
