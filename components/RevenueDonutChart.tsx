@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useApp } from "@/context/AppContext";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 interface DonutData {
@@ -9,6 +10,9 @@ interface DonutData {
 }
 
 export default function RevenueDonutChart() {
+  const { theme } = useApp();
+  const isLight = theme === "light";
+
   // Dữ liệu tỷ trọng đóng góp doanh thu đơn vị
   const data: DonutData[] = [
     { name: "Wolfoo (WO)", value: 45 },
@@ -18,7 +22,9 @@ export default function RevenueDonutChart() {
     { name: "Khác", value: 8 },
   ];
 
-  const COLORS = ["#00f2fe", "#8b5cf6", "#10b981", "#ff4b72", "#64748b"];
+  const COLORS = isLight 
+    ? ["#0284c7", "#7e22ce", "#16a34a", "#e11d48", "#64748b"]
+    : ["#00f2fe", "#8b5cf6", "#10b981", "#ff4b72", "#64748b"];
 
   return (
     <div className="w-full h-[240px] flex items-center justify-center">
@@ -40,10 +46,12 @@ export default function RevenueDonutChart() {
           <Tooltip
             formatter={(value: any) => `${value}%`}
             contentStyle={{
-              background: "#0f172a",
-              border: "1px solid var(--glass-border)",
+              background: isLight ? "#ffffff" : "#0f172a",
+              border: isLight ? "1px solid #cbd5e1" : "1px solid var(--glass-border)",
               borderRadius: 8,
               fontSize: 12,
+              color: isLight ? "#0f172a" : "#ffffff",
+              boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
             }}
           />
           <Legend
@@ -51,7 +59,7 @@ export default function RevenueDonutChart() {
             height={36}
             iconSize={8}
             layout="horizontal"
-            wrapperStyle={{ fontSize: 10, color: "#94a3b8" }}
+            wrapperStyle={{ fontSize: 10, color: isLight ? "#0f172a" : "#94a3b8", fontWeight: 700 }}
           />
         </PieChart>
       </ResponsiveContainer>

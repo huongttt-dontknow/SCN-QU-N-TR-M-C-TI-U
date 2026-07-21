@@ -19,7 +19,7 @@ import {
 } from "recharts";
 
 export default function DashboardPage() {
-  const { filters } = useApp();
+  const { filters, theme } = useApp();
   const [bodComment, setBodComment] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
@@ -231,14 +231,14 @@ export default function DashboardPage() {
         <div className="w-full h-[240px]">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={getRevenueComparisonData()}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} />
-              <YAxis yAxisId="left" stroke="#94a3b8" fontSize={11} tickFormatter={(val) => `${val}T`} />
-              <YAxis yAxisId="right" orientation="right" stroke="#8b5cf6" fontSize={11} tickFormatter={(val) => `${val}%`} />
-              <RechartsTooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }} />
-              <Bar yAxisId="left" dataKey="target" fill="#0284c7" radius={[4, 4, 0, 0]} barSize={16} name="Mục tiêu (Tỷ)" />
-              <Bar yAxisId="left" dataKey="revenue" fill="#00f2fe" radius={[4, 4, 0, 0]} barSize={16} name="Kết quả thực tế (Tỷ)" />
-              <Line yAxisId="right" type="monotone" dataKey="completion" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 5, fill: "#a855f7", stroke: "#ffffff", strokeWidth: 1.5 }} name="% Hoàn thành" />
+              <CartesianGrid strokeDasharray="3 3" stroke={theme === "light" ? "#e2e8f0" : "rgba(255,255,255,0.05)"} />
+              <XAxis dataKey="name" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={11} tickLine={false} />
+              <YAxis yAxisId="left" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={11} tickFormatter={(val) => `${val}T`} />
+              <YAxis yAxisId="right" orientation="right" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} fontSize={11} tickFormatter={(val) => `${val}%`} />
+              <RechartsTooltip contentStyle={{ background: theme === "light" ? "#ffffff" : "#0f172a", border: theme === "light" ? "1px solid #cbd5e1" : "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12, color: theme === "light" ? "#0f172a" : "#ffffff", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" }} />
+              <Bar yAxisId="left" dataKey="target" fill={theme === "light" ? "#0284c7" : "#0284c7"} radius={[4, 4, 0, 0]} barSize={16} name="Mục tiêu (Tỷ)" />
+              <Bar yAxisId="left" dataKey="revenue" fill={theme === "light" ? "#16a34a" : "#00f2fe"} radius={[4, 4, 0, 0]} barSize={16} name="Kết quả thực tế (Tỷ)" />
+              <Line yAxisId="right" type="monotone" dataKey="completion" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} strokeWidth={3} dot={{ r: 5, fill: theme === "light" ? "#7e22ce" : "#a855f7", stroke: "#ffffff", strokeWidth: 1.5 }} name="% Hoàn thành" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useApp } from "@/context/AppContext";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 interface DonutData {
@@ -9,6 +10,9 @@ interface DonutData {
 }
 
 export default function SourceRevenueDonutChart() {
+  const { theme } = useApp();
+  const isLight = theme === "light";
+
   // Dữ liệu cơ cấu doanh thu theo nguồn
   const data: DonutData[] = [
     { name: "Doanh thu nội bộ", value: 35 },
@@ -18,8 +22,9 @@ export default function SourceRevenueDonutChart() {
     { name: "Khác", value: 8 },
   ];
 
-  // Bảng màu Glassmorphism tương thích
-  const COLORS = ["#00f2fe", "#10b981", "#ff4b72", "#8b5cf6", "#f59e0b"];
+  const COLORS = isLight 
+    ? ["#0284c7", "#16a34a", "#e11d48", "#7e22ce", "#d97706"]
+    : ["#00f2fe", "#10b981", "#ff4b72", "#8b5cf6", "#f59e0b"];
 
   return (
     <div className="w-full h-[240px] flex items-center justify-center">
@@ -41,10 +46,12 @@ export default function SourceRevenueDonutChart() {
           <Tooltip
             formatter={(value: any) => `${value}%`}
             contentStyle={{
-              background: "#0f172a",
-              border: "1px solid var(--glass-border)",
+              background: isLight ? "#ffffff" : "#0f172a",
+              border: isLight ? "1px solid #cbd5e1" : "1px solid var(--glass-border)",
               borderRadius: 8,
               fontSize: 12,
+              color: isLight ? "#0f172a" : "#ffffff",
+              boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
             }}
           />
           <Legend
@@ -52,7 +59,7 @@ export default function SourceRevenueDonutChart() {
             height={36}
             iconSize={8}
             layout="horizontal"
-            wrapperStyle={{ fontSize: 10, color: "#94a3b8" }}
+            wrapperStyle={{ fontSize: 10, color: isLight ? "#0f172a" : "#94a3b8", fontWeight: 700 }}
           />
         </PieChart>
       </ResponsiveContainer>
