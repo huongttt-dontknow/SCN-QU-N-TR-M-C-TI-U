@@ -1,1296 +1,4327 @@
-// AUTO-GENERATED FROM TEST DỮ LIỆU QUẢN LÝ HIỆU SUẤT.xlsx
-export interface MasterKpiValue {
-  title: string;
-  unit: string;
-  periods: Record<string, number>;
+// AUTO-GENERATED V12 MASTER DATA FROM TEST DỮ LIỆU QUẢN LÝ HIỆU SUẤT.xlsx
+export interface PeriodKpiVal {
+  target?: number;
+  actual?: number;
+  pct?: number;
 }
 
-export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
+export interface MasterKpiItem {
+  title: string;
+  unit: string;
+  formula?: string;
+  pic?: string;
+  periods: Record<string, PeriodKpiVal>;
+}
+
+export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiItem>> = {
   "SCVN": {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.1647,
-        "quarterly_1": 0.016,
-        "weekly_1_5": 0.06
+        "yearly_2026": {
+          "actual": 0.1647
+        },
+        "weekly_1_5": {
+          "pct": 0.06
+        }
       }
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.1414
+        "yearly_2026": {
+          "actual": 0.1414
+        }
       }
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "monthly_1": -0.209,
-        "weekly_1_1": -0.072,
-        "weekly_1_2": 0.143,
-        "weekly_1_3": 0.226,
-        "monthly_2": -0.26,
-        "weekly_2_1": 0.077,
-        "weekly_2_2": 0.162,
-        "weekly_2_3": -0.119,
-        "monthly_3": -0.035,
-        "weekly_3_1": -0.13,
-        "weekly_3_2": 0.025,
-        "weekly_3_5": -0.15,
-        "monthly_4": -0.042,
-        "weekly_4_1": -0.104,
-        "weekly_4_2": 0.02,
-        "weekly_4_3": -0.013,
-        "weekly_4_4": -0.131,
-        "monthly_5": 0.338,
-        "weekly_5_1": -0.058,
-        "weekly_5_2": -0.048,
-        "weekly_5_3": 0.042,
-        "monthly_6": -0.013,
-        "weekly_6_1": 0.096,
-        "weekly_6_2": 0.061,
-        "weekly_6_3": 0.398,
-        "monthly_7": -0.205,
-        "weekly_7_1": 0.112,
-        "weekly_7_2": 0.053,
-        "weekly_7_3": -1.0
+        "monthly_1": {
+          "target": -0.209,
+          "actual": -0.238
+        },
+        "weekly_1_1": {
+          "target": -0.072,
+          "actual": -0.332
+        },
+        "weekly_1_2": {
+          "target": 0.143,
+          "actual": -0.247
+        },
+        "weekly_1_3": {
+          "target": 0.226,
+          "actual": -0.088
+        },
+        "monthly_2": {
+          "target": -0.26,
+          "actual": -0.036
+        },
+        "weekly_2_1": {
+          "target": 0.077
+        },
+        "weekly_2_2": {
+          "target": 0.162
+        },
+        "weekly_2_3": {
+          "target": -0.119
+        },
+        "monthly_3": {
+          "target": -0.035,
+          "actual": 0.064
+        },
+        "weekly_3_1": {
+          "target": -0.13,
+          "actual": 0.023
+        },
+        "weekly_3_2": {
+          "target": 0.025,
+          "actual": 0.038
+        },
+        "weekly_3_5": {
+          "actual": -0.15
+        },
+        "monthly_4": {
+          "target": -0.042,
+          "actual": -0.04
+        },
+        "weekly_4_1": {
+          "target": -0.104,
+          "actual": -0.16
+        },
+        "weekly_4_2": {
+          "target": 0.02,
+          "actual": -0.18
+        },
+        "weekly_4_3": {
+          "target": -0.013,
+          "actual": -0.14
+        },
+        "weekly_4_4": {
+          "target": -0.131,
+          "actual": 4.16
+        },
+        "monthly_5": {
+          "target": 0.338,
+          "actual": 0.05
+        },
+        "weekly_5_1": {
+          "target": -0.058,
+          "actual": 0.1
+        },
+        "weekly_5_2": {
+          "target": -0.048,
+          "actual": 0.03
+        },
+        "weekly_5_3": {
+          "target": 0.042,
+          "actual": 0.09
+        },
+        "monthly_6": {
+          "target": -0.013,
+          "actual": -0.08
+        },
+        "weekly_6_1": {
+          "target": 0.096,
+          "actual": 0.07
+        },
+        "weekly_6_2": {
+          "target": 0.061,
+          "actual": 0.2
+        },
+        "weekly_6_3": {
+          "target": 0.398,
+          "actual": 0.61
+        },
+        "monthly_7": {
+          "target": -0.205,
+          "actual": 0.29
+        },
+        "weekly_7_1": {
+          "target": 0.112,
+          "actual": 0.31
+        },
+        "weekly_7_2": {
+          "target": 0.053,
+          "actual": 0.3
+        },
+        "weekly_7_3": {
+          "target": -1.0,
+          "actual": -1.0
+        }
       }
     },
     "VM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 17445694841.0,
-        "quarterly_1": 22308644493.0,
-        "monthly_1": 1125229277.0,
-        "weekly_1_1": 1052264727.0,
-        "weekly_1_2": 1114061133.0,
-        "weekly_1_3": 1128989629.0,
-        "weekly_1_5": 5631371932.0,
-        "monthly_2": 1171932090.0,
-        "weekly_2_1": 1130833237.0,
-        "weekly_2_2": 1126153237.0,
-        "weekly_2_3": 1168507237.0,
-        "weekly_2_5": 6329220601.0,
-        "monthly_3": 1196867492.0,
-        "weekly_3_1": 1211095289.0,
-        "weekly_3_2": 1219798934.0,
-        "weekly_3_3": 1242990934.0,
-        "weekly_3_4": 667617750.0,
-        "weekly_3_5": 6724266850.0,
-        "monthly_4": 1397716595.0,
-        "weekly_4_1": 1481196768.0,
-        "weekly_4_2": 1410710768.0,
-        "weekly_4_3": 1405926768.0,
-        "weekly_4_4": 1367656352.0,
-        "weekly_4_5": 7539058130.0,
-        "monthly_5": 1459081009.0,
-        "weekly_5_1": 1426388995.0,
-        "weekly_5_2": 1443970063.0,
-        "weekly_5_3": 1443970063.0,
-        "weekly_5_5": 7977676227.0,
-        "monthly_6": 1507127493.0,
-        "weekly_6_1": 1520770926.0,
-        "weekly_6_2": 1490661183.0,
-        "weekly_6_3": 1382427866.0,
-        "weekly_6_5": 8106194227.0,
-        "monthly_7": 1239062050.0,
-        "weekly_7_1": 1414693225.0,
-        "weekly_7_2": 1411521225.0,
-        "weekly_7_3": 1385885225.0
+        "yearly_2026": {
+          "target": 17445694841.0,
+          "actual": 11544830786.0,
+          "pct": 0.66
+        },
+        "quarterly_1": {
+          "target": 22308644493.0,
+          "actual": 11209651417.0,
+          "pct": 0.5
+        },
+        "monthly_1": {
+          "target": 1125229277.0,
+          "actual": 631204636.0,
+          "pct": 0.56
+        },
+        "weekly_1_1": {
+          "target": 1052264727.0,
+          "actual": 586055987.0,
+          "pct": 0.56
+        },
+        "weekly_1_2": {
+          "target": 1114061133.0,
+          "actual": 670074206.0,
+          "pct": 0.6
+        },
+        "weekly_1_3": {
+          "target": 1128989629.0,
+          "actual": 821410630.0,
+          "pct": 0.73
+        },
+        "weekly_1_5": {
+          "actual": 5631371932.0,
+          "pct": 3809707858.0
+        },
+        "monthly_2": {
+          "target": 1171932090.0,
+          "actual": 608189998.0,
+          "pct": 0.52
+        },
+        "weekly_2_1": {
+          "target": 1130833237.0,
+          "actual": 654805610.0,
+          "pct": 0.58
+        },
+        "weekly_2_2": {
+          "target": 1126153237.0,
+          "actual": 761149637.0,
+          "pct": 0.68
+        },
+        "weekly_2_3": {
+          "target": 1168507237.0,
+          "actual": 670511497.0,
+          "pct": 0.57
+        },
+        "weekly_2_5": {
+          "actual": 6329220601.0,
+          "pct": 4186973328.0
+        },
+        "monthly_3": {
+          "target": 1196867492.0,
+          "actual": 646879222.0,
+          "pct": 0.54
+        },
+        "weekly_3_1": {
+          "target": 1211095289.0,
+          "actual": 661850720.0,
+          "pct": 0.55
+        },
+        "weekly_3_2": {
+          "target": 1219798934.0,
+          "actual": 686983164.0,
+          "pct": 0.56
+        },
+        "weekly_3_3": {
+          "target": 1242990934.0,
+          "actual": 645077962.0,
+          "pct": 0.52
+        },
+        "weekly_3_4": {
+          "target": 667617750.0,
+          "actual": 93808000.0,
+          "pct": 0.14
+        },
+        "weekly_3_5": {
+          "actual": 6724266850.0,
+          "pct": 3558947204.0
+        },
+        "monthly_4": {
+          "target": 1397716595.0,
+          "actual": 618009750.0,
+          "pct": 0.44
+        },
+        "weekly_4_1": {
+          "target": 1481196768.0,
+          "actual": 553938637.0,
+          "pct": 0.37
+        },
+        "weekly_4_2": {
+          "target": 1410710768.0,
+          "actual": 564847054.0,
+          "pct": 0.4
+        },
+        "weekly_4_3": {
+          "target": 1405926768.0,
+          "actual": 557656852.0,
+          "pct": 0.4
+        },
+        "weekly_4_4": {
+          "target": 1367656352.0,
+          "actual": 484510333.0,
+          "pct": 0.35
+        },
+        "weekly_4_5": {
+          "actual": 7539058130.0,
+          "pct": 3683073922.0
+        },
+        "monthly_5": {
+          "target": 1459081009.0,
+          "actual": 648138188.0,
+          "pct": 0.44
+        },
+        "weekly_5_1": {
+          "target": 1426388995.0,
+          "actual": 610458400.0,
+          "pct": 0.43
+        },
+        "weekly_5_2": {
+          "target": 1443970063.0,
+          "actual": 581358043.0,
+          "pct": 0.4
+        },
+        "weekly_5_3": {
+          "target": 1443970063.0,
+          "actual": 605669369.0,
+          "pct": 0.42
+        },
+        "weekly_5_5": {
+          "actual": 7977676227.0,
+          "pct": 3756037422.0
+        },
+        "monthly_6": {
+          "target": 1507127493.0,
+          "actual": 597900898.0,
+          "pct": 0.4
+        },
+        "weekly_6_1": {
+          "target": 1520770926.0,
+          "actual": 655401872.0,
+          "pct": 0.43
+        },
+        "weekly_6_2": {
+          "target": 1490661183.0,
+          "actual": 695492188.0,
+          "pct": 0.47
+        },
+        "weekly_6_3": {
+          "target": 1382427866.0,
+          "actual": 972125118.0,
+          "pct": 0.7
+        },
+        "weekly_6_5": {
+          "actual": 8106194227.0,
+          "pct": 2752630485.0
+        },
+        "monthly_7": {
+          "target": 1239062050.0,
+          "actual": 772425345.0,
+          "pct": 0.62
+        },
+        "weekly_7_1": {
+          "target": 1414693225.0,
+          "actual": 858699668.0,
+          "pct": 0.61
+        },
+        "weekly_7_2": {
+          "target": 1411521225.0,
+          "actual": 904152502.0,
+          "pct": 0.64
+        },
+        "weekly_7_3": {
+          "target": 1385885225.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Tuần": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "DT phát sinh trong kỳ đánh giá",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 7823272911.0,
-        "quarterly_1": 9360202176.0,
-        "monthly_1": 569072434.0,
-        "weekly_1_1": 569072434.0,
-        "weekly_1_2": 569072434.0,
-        "weekly_1_3": 569072434.0,
-        "weekly_1_4": 0.2494,
-        "weekly_1_5": 2461566873.0,
-        "monthly_2": 582031450.0,
-        "weekly_2_1": 536531450.0,
-        "weekly_2_2": 536531450.0,
-        "weekly_2_3": 536531450.0,
-        "weekly_2_5": 2818516751.0,
-        "monthly_3": 613742298.0,
-        "weekly_3_1": 613742298.0,
-        "weekly_3_2": 613742298.0,
-        "weekly_3_3": 613742298.0,
-        "weekly_3_4": 613742298.0,
-        "weekly_3_5": 2973441148.0,
-        "monthly_4": 695360287.0,
-        "weekly_4_1": 695360287.0,
-        "weekly_4_2": 695360287.0,
-        "weekly_4_3": 695360287.0,
-        "weekly_4_4": 695360287.0,
-        "weekly_4_5": 3181579568.0,
-        "monthly_5": 706869487.0,
-        "weekly_5_1": 706869487.0,
-        "weekly_5_2": 706869487.0,
-        "weekly_5_3": 706869487.0,
-        "weekly_5_5": 3301890198.0,
-        "monthly_6": 727309568.0,
-        "weekly_6_1": 777309568.0,
-        "weekly_6_2": 727309568.0,
-        "weekly_6_3": 727309568.0,
-        "weekly_6_5": 2522696922.0,
-        "monthly_7": 560599316.0,
-        "weekly_7_1": 560599316.0,
-        "weekly_7_2": 560599316.0,
-        "weekly_7_3": 560599316.0,
-        "weekly_2_4": 0.0974
+        "yearly_2026": {
+          "target": 15.0,
+          "actual": 28.0,
+          "pct": 0.5
+        },
+        "quarterly_1": {
+          "target": 15.0,
+          "actual": 3.0,
+          "pct": 0.4
+        },
+        "monthly_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_1_4": {
+          "pct": 0.23
+        },
+        "weekly_1_5": {
+          "actual": 10.0,
+          "pct": 12.0
+        },
+        "monthly_2": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 10.0,
+          "pct": 232326875.0
+        },
+        "monthly_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 8.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.95,
+          "pct": 4.0
+        },
+        "monthly_4": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.95,
+          "pct": 3.0
+        },
+        "monthly_5": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 4.0
+        },
+        "monthly_6": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.95,
+          "pct": 254561030.0
+        },
+        "monthly_7": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 8.0,
+          "pct": 0.0
+        },
+        "weekly_2_4": {
+          "pct": 0.0974
+        }
       }
     },
     "ThienNX": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "BP AS",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 4274010000.0,
-        "quarterly_1": 5929170000.0,
-        "monthly_1": 257455840.0,
-        "weekly_1_1": 184491290.0,
-        "weekly_1_2": 246287696.0,
-        "weekly_1_3": 261216192.0,
-        "weekly_1_4": 0.1212,
-        "weekly_1_5": 1382002500.0,
-        "monthly_2": 255450000.0,
-        "weekly_2_1": 255450000.0,
-        "weekly_2_2": 250770000.0,
-        "weekly_2_3": 293124000.0,
-        "weekly_2_5": 1542944000.0,
-        "monthly_3": 296660000.0,
-        "weekly_3_1": 256984000.0,
-        "weekly_3_2": 270556000.0,
-        "weekly_3_3": 293748000.0,
-        "weekly_3_4": 93808000.0,
-        "weekly_3_5": 1785940000.0,
-        "monthly_4": 257218000.0,
-        "weekly_4_1": 322114000.0,
-        "weekly_4_2": 251628000.0,
-        "weekly_4_3": 246844000.0,
-        "weekly_4_4": 256880000.0,
-        "weekly_4_5": 1893175340.0,
-        "monthly_5": 366285716.0,
-        "weekly_5_1": 333593702.0,
-        "weekly_5_2": 351157766.0,
-        "weekly_5_3": 351157766.0,
-        "weekly_5_5": 2026054691.0,
-        "monthly_6": 377164081.0,
-        "weekly_6_1": 340807514.0,
-        "weekly_6_2": 360697771.0,
-        "weekly_6_3": 252464454.0,
-        "weekly_6_5": 2038560600.0,
-        "monthly_7": 171314000.0,
-        "weekly_7_1": 281944000.0,
-        "weekly_7_2": 278772000.0,
-        "weekly_7_3": 253136000.0,
-        "weekly_2_4": 0.1903
+        "yearly_2026": {
+          "target": 15.0,
+          "actual": 19.0,
+          "pct": 1.66
+        },
+        "quarterly_1": {
+          "target": 10.0,
+          "actual": 0.0,
+          "pct": 0.82
+        },
+        "monthly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_4": {
+          "pct": -0.0037
+        },
+        "weekly_1_5": {
+          "actual": 5.0,
+          "pct": 9.0
+        },
+        "monthly_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.67
+        },
+        "weekly_2_5": {
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "monthly_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 5.0,
+          "pct": 6.0
+        },
+        "monthly_4": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.67
+        },
+        "weekly_4_5": {
+          "actual": 5.0,
+          "pct": 6.0
+        },
+        "monthly_5": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 5.0,
+          "pct": 7.0
+        },
+        "monthly_6": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 5.0,
+          "pct": 31167502.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 4.0,
+          "actual": 4075191.0,
+          "pct": 0.0
+        },
+        "weekly_7_2": {
+          "target": 6800000.0,
+          "actual": 4049347.0,
+          "pct": 0.6
+        },
+        "weekly_7_3": {
+          "target": 6800000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_4": {
+          "pct": 0.1903
+        }
       }
     },
     "ThinhTQ": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "BP NDTH",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 2406200581.0,
-        "quarterly_1": 2685828360.0,
-        "monthly_1": 190263422.0,
-        "weekly_1_1": 190263422.0,
-        "weekly_1_2": 190263422.0,
-        "weekly_1_3": 190263422.0,
-        "weekly_1_4": -0.095,
-        "weekly_1_5": 805269899.0,
-        "monthly_2": 201317474.8,
-        "weekly_2_1": 201317474.8,
-        "weekly_2_2": 201317474.8,
-        "weekly_2_3": 201317474.8,
-        "weekly_2_5": 839164994.0,
-        "monthly_3": 209791249.0,
-        "weekly_3_1": 209791249.0,
-        "weekly_3_2": 209791249.0,
-        "weekly_3_3": 209791249.0,
-        "weekly_3_5": 864756172.0,
-        "monthly_4": 294650023.0,
-        "weekly_4_1": 294650023.0,
-        "weekly_4_2": 294650023.0,
-        "weekly_4_3": 294650023.0,
-        "weekly_4_4": 294650023.0,
-        "weekly_4_5": 890638235.0,
-        "monthly_5": 222659559.0,
-        "weekly_5_1": 222659559.0,
-        "weekly_5_2": 222676563.0,
-        "weekly_5_3": 222676563.0,
-        "weekly_5_5": 929440348.0,
-        "monthly_6": 232591484.0,
-        "weekly_6_1": 232591484.0,
-        "weekly_6_2": 232591484.0,
-        "weekly_6_3": 232591484.0,
-        "weekly_6_5": 550000000.0,
-        "monthly_7": 137500000.0,
-        "weekly_7_1": 137500000.0,
-        "weekly_7_2": 137500000.0,
-        "weekly_7_3": 137500000.0,
-        "weekly_2_4": -0.0637
+        "yearly_2026": {
+          "target": 6.0,
+          "actual": 15.0,
+          "pct": 0.28
+        },
+        "quarterly_1": {
+          "target": 10.0,
+          "actual": 4.0,
+          "pct": 1.18
+        },
+        "monthly_1": {
+          "target": 9600000.0,
+          "actual": 8007260.0,
+          "pct": 0.83
+        },
+        "weekly_1_1": {
+          "target": 9600000.0,
+          "actual": 6461451.0,
+          "pct": 0.67
+        },
+        "weekly_1_2": {
+          "target": 9600000.0,
+          "actual": 7287917.0,
+          "pct": 0.76
+        },
+        "weekly_1_3": {
+          "target": 9600000.0,
+          "actual": 7897562.0,
+          "pct": 0.82
+        },
+        "weekly_1_4": {
+          "pct": 0.1279
+        },
+        "weekly_1_5": {
+          "actual": 0.95,
+          "pct": 5.0
+        },
+        "monthly_2": {
+          "target": 9966250.0,
+          "actual": 8506899.0,
+          "pct": 0.85
+        },
+        "weekly_2_1": {
+          "target": 9966250.0,
+          "actual": 13467750.0,
+          "pct": 1.35
+        },
+        "weekly_2_2": {
+          "target": 9966250.0,
+          "actual": 12609988.0,
+          "pct": 1.27
+        },
+        "weekly_2_3": {
+          "target": 9966250.0,
+          "actual": 12993294.0,
+          "pct": 1.3
+        },
+        "weekly_2_5": {
+          "actual": 0.95,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 13802375.0,
+          "actual": 21335715.0,
+          "pct": 1.55
+        },
+        "weekly_3_2": {
+          "target": 13802375.0,
+          "actual": 13983505.0,
+          "pct": 1.01
+        },
+        "weekly_3_3": {
+          "target": 13802375.0,
+          "actual": 13802375.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 5.0,
+          "pct": 10.0
+        },
+        "monthly_4": {
+          "target": 7.0,
+          "actual": 8742015.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 12250000.0,
+          "actual": 12391949.0,
+          "pct": 1.01
+        },
+        "weekly_4_2": {
+          "target": 12250000.0,
+          "actual": 11068333.0,
+          "pct": 0.9
+        },
+        "weekly_4_3": {
+          "target": 12250000.0,
+          "actual": 11590232.0,
+          "pct": 0.95
+        },
+        "weekly_4_4": {
+          "target": 12250000.0,
+          "actual": 6568510.0,
+          "pct": 0.54
+        },
+        "weekly_4_5": {
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "monthly_5": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 13500000.0,
+          "actual": 11068333.0,
+          "pct": 0.82
+        },
+        "weekly_5_2": {
+          "target": 13500000.0,
+          "actual": 8218015.0,
+          "pct": 0.61
+        },
+        "weekly_5_3": {
+          "target": 13500000.0,
+          "actual": 6640466.0,
+          "pct": 0.49
+        },
+        "weekly_5_5": {
+          "actual": 3.0,
+          "pct": 7.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_6_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 5.0,
+          "actual": 13734536.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 3.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 4.0,
+          "pct": 0.0
+        },
+        "weekly_2_4": {
+          "pct": -0.0637
+        }
       }
     },
     "HangLQ": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "DA Lego",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 1592211349.0,
-        "quarterly_1": 1933443957.0,
-        "monthly_1": 108437581.0,
-        "weekly_1_1": 108437581.0,
-        "weekly_1_2": 108437581.0,
-        "weekly_1_3": 108437581.0,
-        "weekly_1_4": 0.0782,
-        "weekly_1_5": 532532660.0,
-        "monthly_2": 133133165.0,
-        "weekly_2_1": 137534313.0,
-        "weekly_2_2": 137534313.0,
-        "weekly_2_3": 137534313.0,
-        "weekly_2_5": 559618895.0,
-        "monthly_3": 76673945.0,
-        "weekly_3_1": 130577742.0,
-        "weekly_3_2": 125709387.0,
-        "weekly_3_3": 125709387.0,
-        "weekly_3_4": 53875452.0,
-        "weekly_3_5": 600129530.0,
-        "monthly_4": 150488285.0,
-        "weekly_4_1": 169072458.0,
-        "weekly_4_2": 169072458.0,
-        "weekly_4_3": 169072458.0,
-        "weekly_4_4": 120766042.0,
-        "weekly_4_5": 653064987.0,
-        "monthly_5": 163266247.0,
-        "weekly_5_1": 163266247.0,
-        "weekly_5_2": 163266247.0,
-        "weekly_5_3": 163266247.0,
-        "weekly_5_5": 682690990.0,
-        "monthly_6": 170062360.0,
-        "weekly_6_1": 170062360.0,
-        "weekly_6_2": 170062360.0,
-        "weekly_6_3": 170062360.0,
-        "weekly_6_5": 699925005.0,
-        "monthly_7": 86668234.0,
-        "weekly_7_1": 151669409.0,
-        "weekly_7_2": 151669409.0,
-        "weekly_7_3": 151669409.0,
-        "weekly_2_4": -0.076
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 9.0,
+          "pct": 0.58
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 1.1
+        },
+        "monthly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_4": {
+          "pct": 0.2649
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 6.0
+        },
+        "monthly_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0,
+          "pct": 6.0
+        },
+        "monthly_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 2.0
+        },
+        "monthly_5": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 4.0,
+          "actual": 6.0,
+          "pct": 1.5
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0,
+          "pct": 0.9
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 4.0,
+          "pct": 0.0
+        },
+        "weekly_2_4": {
+          "pct": -0.076
+        }
       }
     },
     "DM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 976888913.0,
-        "quarterly_1": 1990450000.0,
-        "monthly_1": 72200368.0,
-        "weekly_1_1": 71337132.0,
-        "weekly_1_2": 71337132.0,
-        "weekly_1_3": 71337132.0,
-        "weekly_1_4": -0.1084,
-        "weekly_1_5": 329265250.0,
-        "monthly_2": 109437500.0,
-        "weekly_2_1": 109437500.0,
-        "weekly_2_2": 109437500.0,
-        "weekly_2_3": 109437500.0,
-        "weekly_2_5": 363562011.0,
-        "monthly_3": 80813563.0,
-        "weekly_3_1": 80813563.0,
-        "weekly_3_2": 80813563.0,
-        "weekly_3_3": 80813563.0,
-        "weekly_3_5": 498323375.0,
-        "monthly_4": 110738528.0,
-        "weekly_4_1": 110738528.0,
-        "weekly_4_2": 158586500.0,
-        "weekly_4_3": 171022500.0,
-        "weekly_4_4": 171022500.0,
-        "weekly_4_5": 521453100.0,
-        "monthly_5": 167283200.0,
-        "weekly_5_1": 167283200.0,
-        "weekly_5_2": 167283200.0,
-        "weekly_5_3": 167283200.0,
-        "weekly_5_5": 611851020.0,
-        "monthly_6": 204336500.0,
-        "weekly_6_1": 204336500.0,
-        "weekly_6_2": 204336500.0,
-        "weekly_6_3": 204336500.0,
-        "weekly_6_5": 651900000.0,
-        "monthly_7": 130380000.0,
-        "weekly_7_1": 130380000.0,
-        "weekly_7_2": 130380000.0,
-        "weekly_7_3": 130380000.0,
-        "weekly_2_4": -0.1639
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 1.77
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.83
+        },
+        "monthly_1": {
+          "target": 107197813.0,
+          "actual": 148796480.0,
+          "pct": 1.39
+        },
+        "weekly_1_1": {
+          "target": 107197813.0,
+          "actual": 109787158.0,
+          "pct": 1.02
+        },
+        "weekly_1_2": {
+          "target": 107283975.0,
+          "actual": 102118944.0,
+          "pct": 0.95
+        },
+        "weekly_1_3": {
+          "target": 107283975.0,
+          "actual": 115441437.0,
+          "pct": 1.08
+        },
+        "weekly_1_4": {
+          "pct": -0.0698
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 104509706.0,
+          "actual": 113265309.0,
+          "pct": 1.08
+        },
+        "weekly_2_1": {
+          "target": 104509706.0,
+          "actual": 111180402.0,
+          "pct": 1.06
+        },
+        "weekly_2_2": {
+          "target": 104509706.0,
+          "actual": 92960312.0,
+          "pct": 0.89
+        },
+        "weekly_2_3": {
+          "target": 104509706.0,
+          "actual": 116473792.0,
+          "pct": 1.11
+        },
+        "weekly_2_5": {
+          "pct": 1.0,
+          "actual": 0.0
+        },
+        "monthly_3": {
+          "target": 129739812.0,
+          "actual": 120936673.0,
+          "pct": 0.93
+        },
+        "weekly_3_1": {
+          "target": 129790812.0,
+          "actual": 108068726.0,
+          "pct": 0.83
+        },
+        "weekly_3_2": {
+          "target": 130679445.0,
+          "actual": 105870505.0,
+          "pct": 0.81
+        },
+        "weekly_3_3": {
+          "target": 129679445.0,
+          "actual": 105000000.0,
+          "pct": 0.81
+        },
+        "weekly_3_5": {
+          "actual": 507000000.0,
+          "pct": 444086017.0
+        },
+        "monthly_4": {
+          "target": 129000000.0,
+          "actual": 127248767.0,
+          "pct": 0.99
+        },
+        "weekly_4_1": {
+          "target": 129200000.0,
+          "actual": 104483913.0,
+          "pct": 0.81
+        },
+        "weekly_4_2": {
+          "target": 129200000.0,
+          "actual": 112037011.0,
+          "pct": 0.87
+        },
+        "weekly_4_3": {
+          "target": 128000000.0,
+          "actual": 100316326.0,
+          "pct": 0.78
+        },
+        "weekly_4_4": {
+          "target": 128000000.0,
+          "actual": 110858169.0,
+          "pct": 0.87
+        },
+        "weekly_4_5": {
+          "actual": 513000000.0,
+          "pct": 446052131.0
+        },
+        "monthly_5": {
+          "target": 128250000.0,
+          "actual": 115494043.0,
+          "pct": 0.9
+        },
+        "weekly_5_1": {
+          "target": 128250000.0,
+          "actual": 106384892.0,
+          "pct": 0.83
+        },
+        "weekly_5_2": {
+          "target": 140000000.0,
+          "actual": 74048901.0,
+          "pct": 0.53
+        },
+        "weekly_5_3": {
+          "target": 140000000.0,
+          "actual": 97145597.0,
+          "pct": 0.69
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_6": {
+          "target": 135500000.0,
+          "actual": 70794431.0,
+          "pct": 0.52
+        },
+        "weekly_6_1": {
+          "target": 144000000.0,
+          "actual": 25069549.0,
+          "pct": 0.17
+        },
+        "weekly_6_2": {
+          "target": 144000000.0,
+          "actual": 41292738.0,
+          "pct": 0.29
+        },
+        "weekly_6_3": {
+          "target": 144000000.0,
+          "actual": 42730395.0,
+          "pct": 0.3
+        },
+        "weekly_6_5": {
+          "actual": 1.0,
+          "pct": 331272676.0
+        },
+        "monthly_7": {
+          "target": 71914000.0,
+          "actual": 88850939.0,
+          "pct": 1.24
+        },
+        "weekly_7_1": {
+          "target": 71914000.0,
+          "actual": 111764307.0,
+          "pct": 1.55
+        },
+        "weekly_7_2": {
+          "target": 71914000.0,
+          "actual": 130657431.0,
+          "pct": 1.82
+        },
+        "weekly_7_3": {
+          "target": 71914000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_4": {
+          "pct": -0.1639
+        }
       }
     },
     "SM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "quarterly_1": 2345419960.0,
-        "monthly_6": 154088458.0,
-        "weekly_6_3": 235067365.0,
-        "weekly_6_5": 610402000.0,
-        "monthly_7": 152600500.0,
-        "weekly_7_1": 152600500.0,
-        "weekly_7_2": 152600500.0,
-        "weekly_7_3": 152600500.0,
-        "yearly_2026": 9.0,
-        "weekly_5_5": 0.95
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.36
+        },
+        "monthly_6": {
+          "actual": 154088458.0
+        },
+        "weekly_6_3": {
+          "target": 7850000.0,
+          "actual": 11636259.0,
+          "pct": 1.48
+        },
+        "weekly_6_5": {
+          "actual": 0.95,
+          "pct": 58553319.0
+        },
+        "monthly_7": {
+          "target": 18919021.0,
+          "actual": 15651619.0,
+          "pct": 0.83
+        },
+        "weekly_7_1": {
+          "target": 18919021.0,
+          "actual": 25173299.0,
+          "pct": 1.33
+        },
+        "weekly_7_2": {
+          "target": 18919021.0,
+          "actual": 17728401.0,
+          "pct": 0.94
+        },
+        "weekly_7_3": {
+          "target": 18919021.0,
+          "pct": 0.0
+        },
+        "yearly_2026": {
+          "target": 9.0,
+          "actual": 9.0
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 2.0
+        }
       }
     },
     "MM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "quarterly_1": 1570537903.0,
-        "monthly_6": 25900478.0,
-        "weekly_6_3": 542915749.0,
-        "weekly_6_5": 332709700.0,
-        "monthly_7": 50000000.0,
-        "weekly_7_1": 60000000.0,
-        "weekly_7_2": 100000000.0,
-        "weekly_7_3": 60000000.0,
-        "yearly_2026": 1727.0,
-        "weekly_5_5": 0.85
+        "quarterly_1": {
+          "target": 24722000.0,
+          "actual": 15779573.0,
+          "pct": 0.64
+        },
+        "monthly_6": {
+          "actual": 25900478.0
+        },
+        "weekly_6_3": {
+          "target": 3423501.0,
+          "actual": 1093908.0,
+          "pct": 0.32
+        },
+        "weekly_6_5": {
+          "actual": 0.85,
+          "pct": 3739826.0
+        },
+        "monthly_7": {
+          "target": 1200000.0,
+          "actual": 1247720.0,
+          "pct": 1.04
+        },
+        "weekly_7_1": {
+          "target": 1500000.0,
+          "actual": 1220715.0,
+          "pct": 0.81
+        },
+        "weekly_7_2": {
+          "target": 1500000.0,
+          "actual": 1271391.0,
+          "pct": 0.85
+        },
+        "weekly_7_3": {
+          "target": 1500000.0,
+          "pct": 0.0,
+          "actual": 1.0
+        },
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 0.85,
+          "pct": 2.0
+        }
       }
     },
     "NM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "quarterly_1": 360000000.0,
-        "monthly_6": 17096931.0,
-        "weekly_6_3": 46700000.0,
-        "weekly_6_5": 250000000.0,
-        "monthly_7": 53655914.0,
-        "weekly_7_1": 56451613.0,
-        "weekly_7_2": 56451613.0,
-        "weekly_7_3": 56451613.0,
-        "weekly_5_5": 0.95
+        "quarterly_1": {
+          "target": 360000000.0,
+          "actual": 232675174.0,
+          "pct": 0.65
+        },
+        "monthly_6": {
+          "actual": 17096931.0
+        },
+        "weekly_6_3": {
+          "target": 2000000.0,
+          "actual": 1199201.0,
+          "pct": 0.6
+        },
+        "weekly_6_5": {
+          "actual": 0.95,
+          "pct": 1953327.0
+        },
+        "monthly_7": {
+          "target": 2194624.0,
+          "actual": 605648.0,
+          "pct": 0.28
+        },
+        "weekly_7_1": {
+          "target": 2325806.0,
+          "actual": 737300.0,
+          "pct": 0.32
+        },
+        "weekly_7_2": {
+          "target": 2325806.0,
+          "actual": 610379.0,
+          "pct": 0.26
+        },
+        "weekly_7_3": {
+          "target": 2325806.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 3.0
+        }
       }
     },
     "CM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "quarterly_1": 282100000.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0,
-        "yearly_2026": 6.0,
-        "weekly_5_5": 0.95
+        "weekly_6_5": {
+          "actual": 0.95,
+          "pct": 28926.0
+        },
+        "monthly_7": {
+          "target": 10000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 100000.0,
+          "actual": 5083.0,
+          "pct": 0.05
+        },
+        "weekly_7_2": {
+          "target": 250000.0,
+          "actual": 23843.0,
+          "pct": 0.1
+        },
+        "weekly_7_3": {
+          "target": 500000.0,
+          "pct": 0.0
+        },
+        "yearly_2026": {
+          "target": 6.0,
+          "actual": 8.0
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        }
       }
     },
     "BP Creative": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 300000000.0,
-        "weekly_1_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 470600000.0,
-        "weekly_5_5": 587600000.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 300000000.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 470600000.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 587600000.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "pct": 0.0
+        }
       }
     },
     "DA mới": {
       "title": "Tổng doanh thu",
       "unit": "BP WF",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1350000000.0,
-        "quarterly_1": 2100000000.0,
-        "weekly_1_5": 450000000.0,
-        "weekly_2_5": 450000000.0,
-        "weekly_3_5": 500000000.0,
-        "weekly_4_5": 450000000.0,
-        "weekly_5_5": 450000000.0,
-        "weekly_6_5": 450000000.0
+        "yearly_2026": {
+          "target": 1350000000.0,
+          "actual": 1245536624.0,
+          "pct": 0.92
+        },
+        "quarterly_1": {
+          "target": 2100000000.0,
+          "actual": 1197923718.0,
+          "pct": 0.57
+        },
+        "weekly_1_5": {
+          "actual": 450000000.0,
+          "pct": 421607296.0
+        },
+        "weekly_2_5": {
+          "actual": 450000000.0,
+          "pct": 450579925.0
+        },
+        "weekly_3_5": {
+          "actual": 500000000.0,
+          "pct": 427740267.0
+        },
+        "weekly_4_5": {
+          "actual": 450000000.0,
+          "pct": 372115247.0
+        },
+        "weekly_5_5": {
+          "actual": 450000000.0,
+          "pct": 398068204.0
+        },
+        "weekly_6_5": {
+          "actual": 450000000.0
+        }
       }
     },
     "VM1-I02.02": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu nội bộ",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 14054425708.0,
-        "quarterly_1": 18051990969.0,
-        "monthly_1": 1044377664.0,
-        "weekly_1_1": 971413114.0,
-        "weekly_1_2": 1033209520.0,
-        "weekly_1_3": 1048138016.0,
-        "weekly_1_5": 4809720359.0,
-        "monthly_2": 1109532090.0,
-        "weekly_2_1": 1113933237.0,
-        "weekly_2_2": 1109253237.0,
-        "weekly_2_3": 1151607237.0,
-        "weekly_2_5": 5329097081.0,
-        "monthly_3": 1179967492.0,
-        "weekly_3_1": 1194195289.0,
-        "weekly_3_2": 1202898934.0,
-        "weekly_3_3": 1226090934.0,
-        "weekly_3_4": 667617750.0,
-        "weekly_3_5": 5610666850.0,
-        "monthly_4": 1295696595.0,
-        "weekly_4_1": 1379176768.0,
-        "weekly_4_2": 1308690768.0,
-        "weekly_4_3": 1303906768.0,
-        "weekly_4_4": 1265636352.0,
-        "weekly_4_5": 5968150944.0,
-        "monthly_5": 1339581009.0,
-        "weekly_5_1": 1312868995.0,
-        "weekly_5_2": 1330450063.0,
-        "weekly_5_3": 1330450063.0,
-        "weekly_5_5": 6205758090.0,
-        "monthly_6": 1443607493.0,
-        "weekly_6_1": 1407250926.0,
-        "weekly_6_2": 1427141183.0,
-        "weekly_6_3": 1318907866.0,
-        "weekly_6_5": 4855871485.0,
-        "monthly_7": 588940814.0,
-        "weekly_7_1": 776072709.0,
-        "weekly_7_2": 772900709.0,
-        "weekly_7_3": 542305409.0
+        "yearly_2026": {
+          "target": 14054425708.0,
+          "actual": 9565101856.0,
+          "pct": 0.68
+        },
+        "quarterly_1": {
+          "target": 18051990969.0,
+          "actual": 8224291430.0,
+          "pct": 0.46
+        },
+        "monthly_1": {
+          "target": 1044377664.0,
+          "actual": 556371787.0,
+          "pct": 0.53
+        },
+        "weekly_1_1": {
+          "target": 971413114.0,
+          "actual": 511871268.0,
+          "pct": 0.53
+        },
+        "weekly_1_2": {
+          "target": 1033209520.0,
+          "actual": 595071593.0,
+          "pct": 0.58
+        },
+        "weekly_1_3": {
+          "target": 1048138016.0,
+          "actual": 745495897.0,
+          "pct": 0.71
+        },
+        "weekly_1_5": {
+          "actual": 4809720359.0,
+          "pct": 3249858888.0
+        },
+        "monthly_2": {
+          "target": 1109532090.0,
+          "actual": 595089998.0,
+          "pct": 0.54
+        },
+        "weekly_2_1": {
+          "target": 1113933237.0,
+          "actual": 650438650.0,
+          "pct": 0.58
+        },
+        "weekly_2_2": {
+          "target": 1109253237.0,
+          "actual": 755518557.0,
+          "pct": 0.68
+        },
+        "weekly_2_3": {
+          "target": 1151607237.0,
+          "actual": 664843755.0,
+          "pct": 0.58
+        },
+        "weekly_2_5": {
+          "actual": 5329097081.0,
+          "pct": 3312555737.0
+        },
+        "monthly_3": {
+          "target": 1179967492.0,
+          "actual": 642582982.0,
+          "pct": 0.54
+        },
+        "weekly_3_1": {
+          "target": 1194195289.0,
+          "actual": 645803080.0,
+          "pct": 0.54
+        },
+        "weekly_3_2": {
+          "target": 1202898934.0,
+          "actual": 675983164.0,
+          "pct": 0.56
+        },
+        "weekly_3_3": {
+          "target": 1226090934.0,
+          "actual": 627077962.0,
+          "pct": 0.51
+        },
+        "weekly_3_4": {
+          "target": 667617750.0,
+          "actual": 93808000.0,
+          "pct": 0.14
+        },
+        "weekly_3_5": {
+          "actual": 5610666850.0,
+          "pct": 2861053674.0
+        },
+        "monthly_4": {
+          "target": 1295696595.0,
+          "actual": 598009750.0,
+          "pct": 0.46
+        },
+        "weekly_4_1": {
+          "target": 1379176768.0,
+          "actual": 528908677.0,
+          "pct": 0.38
+        },
+        "weekly_4_2": {
+          "target": 1308690768.0,
+          "actual": 535542054.0,
+          "pct": 0.41
+        },
+        "weekly_4_3": {
+          "target": 1303906768.0,
+          "actual": 528767252.0,
+          "pct": 0.41
+        },
+        "weekly_4_4": {
+          "target": 1265636352.0,
+          "actual": 455550013.0,
+          "pct": 0.36
+        },
+        "weekly_4_5": {
+          "actual": 5968150944.0,
+          "pct": 3026429476.0
+        },
+        "monthly_5": {
+          "target": 1339581009.0,
+          "actual": 619438188.0,
+          "pct": 0.46
+        },
+        "weekly_5_1": {
+          "target": 1312868995.0,
+          "actual": 610458400.0,
+          "pct": 0.46
+        },
+        "weekly_5_2": {
+          "target": 1330450063.0,
+          "actual": 281894977.0,
+          "pct": 0.21
+        },
+        "weekly_5_3": {
+          "target": 1330450063.0,
+          "actual": 267206303.0,
+          "pct": 0.2
+        },
+        "weekly_5_5": {
+          "actual": 6205758090.0,
+          "pct": 2727611847.0
+        },
+        "monthly_6": {
+          "target": 1443607493.0,
+          "actual": 279105891.0,
+          "pct": 0.19
+        },
+        "weekly_6_1": {
+          "target": 1407250926.0,
+          "actual": 298009039.0,
+          "pct": 0.21
+        },
+        "weekly_6_2": {
+          "target": 1427141183.0,
+          "actual": 320184296.0,
+          "pct": 0.22
+        },
+        "weekly_6_3": {
+          "target": 1318907866.0,
+          "actual": 331584667.0,
+          "pct": 0.25
+        },
+        "weekly_6_5": {
+          "actual": 4855871485.0,
+          "pct": 1180253335.0
+        },
+        "monthly_7": {
+          "target": 588940814.0,
+          "actual": 428629973.0,
+          "pct": 0.73
+        },
+        "weekly_7_1": {
+          "target": 776072709.0,
+          "actual": 450704833.0,
+          "pct": 0.58
+        },
+        "weekly_7_2": {
+          "target": 772900709.0,
+          "actual": 470911272.0,
+          "pct": 0.61
+        },
+        "weekly_7_3": {
+          "target": 542305409.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "CM1-I02.02": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 90955800.0,
-        "quarterly_1": 613464224.0
+        "yearly_2026": {
+          "target": 90955800.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM1-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu chéo",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 813178198.0,
-        "quarterly_1": 871000000.0,
-        "monthly_1": 96204839.0,
-        "weekly_1_1": 96204839.0,
-        "weekly_1_2": 96204839.0,
-        "weekly_1_3": 35204839.0,
-        "weekly_1_5": 231400000.0,
-        "monthly_2": 57850000.0,
-        "weekly_2_1": 57850000.0,
-        "weekly_2_2": 57850000.0,
-        "weekly_2_3": 57850000.0,
-        "weekly_2_5": 231400000.0,
-        "monthly_3": 12350000.0,
-        "weekly_3_1": 12350000.0,
-        "weekly_3_2": 12350000.0,
-        "weekly_3_3": 12350000.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 283400000.0,
-        "monthly_4": 68380000.0,
-        "weekly_4_1": 68380000.0,
-        "weekly_4_2": 68380000.0,
-        "weekly_4_3": 68380000.0,
-        "weekly_4_4": 68380000.0,
-        "weekly_4_5": 286000000.0,
-        "monthly_5": 63000000.0,
-        "weekly_5_1": 59880000.0,
-        "weekly_5_2": 59880000.0,
-        "weekly_5_3": 59880000.0,
-        "weekly_5_5": 299000000.0,
-        "monthly_6": 59880000.0,
-        "weekly_6_1": 59880000.0,
-        "weekly_6_2": 59880000.0,
-        "weekly_6_3": 59880000.0,
-        "weekly_6_5": 52000000.0,
-        "monthly_7": 10400000.0,
-        "weekly_7_1": 10400000.0,
-        "weekly_7_2": 10400000.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 813178198.0,
+          "actual": 699382522.0,
+          "pct": 0.86
+        },
+        "quarterly_1": {
+          "target": 871000000.0,
+          "actual": 249934462.0,
+          "pct": 0.29
+        },
+        "monthly_1": {
+          "target": 96204839.0,
+          "actual": 53735200.0,
+          "pct": 0.56
+        },
+        "weekly_1_1": {
+          "target": 96204839.0,
+          "actual": 57546945.0,
+          "pct": 0.6
+        },
+        "weekly_1_2": {
+          "target": 96204839.0,
+          "actual": 53145089.0,
+          "pct": 0.55
+        },
+        "weekly_1_3": {
+          "target": 35204839.0,
+          "actual": 34817959.0,
+          "pct": 0.99
+        },
+        "weekly_1_5": {
+          "actual": 231400000.0,
+          "pct": 18700920.0
+        },
+        "monthly_2": {
+          "target": 57850000.0,
+          "actual": 4000000.0,
+          "pct": 0.07
+        },
+        "weekly_2_1": {
+          "target": 57850000.0,
+          "actual": 4366960.0,
+          "pct": 0.08
+        },
+        "weekly_2_2": {
+          "target": 57850000.0,
+          "actual": 5631080.0,
+          "pct": 0.1
+        },
+        "weekly_2_3": {
+          "target": 57850000.0,
+          "actual": 4702880.0,
+          "pct": 0.08
+        },
+        "weekly_2_5": {
+          "actual": 231400000.0,
+          "pct": 116792303.0
+        },
+        "monthly_3": {
+          "target": 12350000.0,
+          "actual": 4296240.0,
+          "pct": 0.35
+        },
+        "weekly_3_1": {
+          "target": 12350000.0,
+          "actual": 5047640.0,
+          "pct": 0.41
+        },
+        "weekly_3_2": {
+          "target": 12350000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 12350000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 283400000.0,
+          "pct": 32184880.0
+        },
+        "monthly_4": {
+          "target": 68380000.0,
+          "actual": 5000000.0,
+          "pct": 0.07
+        },
+        "weekly_4_1": {
+          "target": 68380000.0,
+          "actual": 10029960.0,
+          "pct": 0.15
+        },
+        "weekly_4_2": {
+          "target": 68380000.0,
+          "actual": 9305000.0,
+          "pct": 0.14
+        },
+        "weekly_4_3": {
+          "target": 68380000.0,
+          "actual": 3889600.0,
+          "pct": 0.06
+        },
+        "weekly_4_4": {
+          "target": 68380000.0,
+          "actual": 3960320.0,
+          "pct": 0.06
+        },
+        "weekly_4_5": {
+          "actual": 286000000.0,
+          "pct": 53700000.0
+        },
+        "monthly_5": {
+          "target": 63000000.0,
+          "actual": 13700000.0,
+          "pct": 0.22
+        },
+        "weekly_5_1": {
+          "target": 59880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 59880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 59880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 299000000.0,
+          "pct": 164049582.0
+        },
+        "monthly_6": {
+          "target": 59880000.0,
+          "actual": 5000000.0,
+          "pct": 0.08
+        },
+        "weekly_6_1": {
+          "target": 59880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 59880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 59880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 52000000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_2": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "VM1-I02.04": {
       "title": "",
       "unit": "Doanh thu đối tác",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1228090936.0,
-        "quarterly_1": 1014000000.0,
-        "monthly_1": 45646774.0,
-        "weekly_1_1": 45646774.0,
-        "weekly_1_2": 45646774.0,
-        "weekly_1_3": 45646774.0,
-        "weekly_1_5": 474200000.0,
-        "monthly_2": 4550000.0,
-        "weekly_2_1": 4550000.0,
-        "weekly_2_2": 4550000.0,
-        "weekly_2_3": 43550000.0,
-        "weekly_2_5": 200200000.0,
-        "monthly_3": 4550000.0,
-        "weekly_3_1": 4550000.0,
-        "weekly_3_2": 4550000.0,
-        "weekly_3_3": 4550000.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 330200000.0,
-        "monthly_4": 33640000.0,
-        "weekly_4_1": 33640000.0,
-        "weekly_4_2": 33640000.0,
-        "weekly_4_3": 33640000.0,
-        "weekly_4_4": 33640000.0,
-        "weekly_4_5": 338000000.0,
-        "monthly_5": 56500000.0,
-        "weekly_5_1": 53640000.0,
-        "weekly_5_2": 3640000.0,
-        "weekly_5_3": 3640000.0,
-        "weekly_5_5": 338000000.0,
-        "monthly_6": 3640000.0,
-        "weekly_6_1": 53640000.0,
-        "weekly_6_2": 53640000.0,
-        "weekly_6_3": 53640000.0,
-        "weekly_6_5": 26000000.0,
-        "monthly_7": 5200000.0,
-        "weekly_7_1": 5200000.0,
-        "weekly_7_2": 5200000.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 1228090936.0,
+          "actual": 2843725.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 1014000000.0,
+          "actual": 363636960.0,
+          "pct": 0.36
+        },
+        "monthly_1": {
+          "target": 45646774.0,
+          "actual": 41859499.0,
+          "pct": 0.92
+        },
+        "weekly_1_1": {
+          "target": 45646774.0,
+          "actual": 42177774.0,
+          "pct": 0.92
+        },
+        "weekly_1_2": {
+          "target": 45646774.0,
+          "actual": 42096774.0,
+          "pct": 0.92
+        },
+        "weekly_1_3": {
+          "target": 45646774.0,
+          "actual": 41096774.0,
+          "pct": 0.9
+        },
+        "weekly_1_5": {
+          "actual": 474200000.0,
+          "pct": 48600068.0
+        },
+        "monthly_2": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_1": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 43550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 200200000.0,
+          "pct": 290171406.0
+        },
+        "monthly_3": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 4550000.0,
+          "actual": 11000000.0,
+          "pct": 2.42
+        },
+        "weekly_3_2": {
+          "target": 4550000.0,
+          "actual": 11000000.0,
+          "pct": 2.42
+        },
+        "weekly_3_3": {
+          "target": 4550000.0,
+          "actual": 18000000.0,
+          "pct": 3.96
+        },
+        "weekly_3_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 330200000.0,
+          "pct": 245153263.0
+        },
+        "monthly_4": {
+          "target": 33640000.0,
+          "actual": 15000000.0,
+          "pct": 0.45
+        },
+        "weekly_4_1": {
+          "target": 33640000.0,
+          "actual": 15000000.0,
+          "pct": 0.45
+        },
+        "weekly_4_2": {
+          "target": 33640000.0,
+          "actual": 25000000.0,
+          "pct": 0.74
+        },
+        "weekly_4_3": {
+          "target": 33640000.0,
+          "actual": 25000000.0,
+          "pct": 0.74
+        },
+        "weekly_4_4": {
+          "target": 33640000.0,
+          "actual": 25000000.0,
+          "pct": 0.74
+        },
+        "weekly_4_5": {
+          "actual": 338000000.0,
+          "pct": 212168000.0
+        },
+        "monthly_5": {
+          "target": 56500000.0,
+          "actual": 15000000.0,
+          "pct": 0.27
+        },
+        "weekly_5_1": {
+          "target": 53640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 338000000.0,
+          "pct": 349426721.0
+        },
+        "monthly_6": {
+          "target": 3640000.0,
+          "actual": 15000000.0,
+          "pct": 4.12
+        },
+        "weekly_6_1": {
+          "target": 53640000.0,
+          "actual": 25000000.0,
+          "pct": 0.47
+        },
+        "weekly_6_2": {
+          "target": 53640000.0,
+          "actual": 30000000.0,
+          "pct": 0.56
+        },
+        "weekly_6_3": {
+          "target": 53640000.0,
+          "actual": 30000000.0,
+          "pct": 0.56
+        },
+        "weekly_6_5": {
+          "actual": 26000000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 5200000.0,
+          "actual": 23000000.0,
+          "pct": 4.42
+        },
+        "weekly_7_1": {
+          "target": 5200000.0,
+          "actual": 35000000.0,
+          "pct": 6.73
+        },
+        "weekly_7_2": {
+          "target": 5200000.0,
+          "actual": 38000000.0,
+          "pct": 7.31
+        },
+        "weekly_7_3": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "TM1-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ sử dụng ngân sách",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.01": {
       "title": "ROI",
       "unit": "Tối ưu chi phí nhân sự",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.02": {
       "title": "ROI",
       "unit": "Tối ưu chi phí sản xuất",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.03": {
       "title": "",
       "unit": "CP Mua mới công cụ AI",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 42000000.0
+        "weekly_6_5": {
+          "actual": 42000000.0,
+          "pct": 0.0
+        }
       }
     },
     "VM1-I05.04": {
       "title": "",
       "unit": "Chi phí CTV (Cộng tác viên)",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 153200000.0
+        "weekly_6_5": {
+          "actual": 153200000.0,
+          "pct": 0.0
+        }
       }
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.2,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2
+        "weekly_1_5": {
+          "target": 0.2
+        },
+        "weekly_2_5": {
+          "target": 0.2
+        },
+        "weekly_3_5": {
+          "target": 0.2
+        },
+        "weekly_4_5": {
+          "target": 0.2
+        },
+        "weekly_5_5": {
+          "target": 0.2
+        },
+        "weekly_6_5": {
+          "target": 0.2
+        }
       }
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM2-I01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Nội dung",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 294.0,
-        "quarterly_1": 399.0,
-        "monthly_1": 20.0,
-        "weekly_1_1": 21.0,
-        "weekly_1_2": 22.0,
-        "weekly_1_3": 28.0,
-        "weekly_1_5": 0.6,
-        "monthly_2": 20.0,
-        "weekly_2_1": 24.0,
-        "weekly_2_2": 1.0,
-        "weekly_2_3": 19.0,
-        "weekly_2_5": 0.6,
-        "monthly_3": 22.0,
-        "weekly_3_1": 26.0,
-        "weekly_3_2": 27.0,
-        "weekly_3_3": 25.0,
-        "weekly_3_4": 2.0,
-        "weekly_3_5": 0.6,
-        "monthly_4": 19.0,
-        "weekly_4_1": 25.0,
-        "weekly_4_2": 27.0,
-        "weekly_4_3": 25.0,
-        "weekly_4_4": 17.0,
-        "weekly_4_5": 0.6,
-        "monthly_5": 19.0,
-        "weekly_5_1": 26.0,
-        "weekly_5_2": 24.0,
-        "weekly_5_3": 26.0,
-        "weekly_5_5": 0.6,
-        "monthly_6": 22.0,
-        "weekly_6_1": 27.0,
-        "weekly_6_2": 28.0,
-        "weekly_6_3": 28.0,
-        "weekly_6_5": 0.6,
-        "monthly_7": 16.0,
-        "weekly_7_1": 24.0,
-        "weekly_7_2": 23.0,
-        "weekly_7_3": 22.0
+        "yearly_2026": {
+          "target": 294.0,
+          "actual": 281.0,
+          "pct": 0.96
+        },
+        "quarterly_1": {
+          "target": 399.0,
+          "actual": 359.0,
+          "pct": 0.9
+        },
+        "monthly_1": {
+          "target": 20.0,
+          "actual": 22.0,
+          "pct": 1.1
+        },
+        "weekly_1_1": {
+          "target": 21.0,
+          "actual": 21.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 22.0,
+          "actual": 22.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 28.0,
+          "actual": 27.0,
+          "pct": 0.96
+        },
+        "weekly_1_5": {
+          "target": 0.6,
+          "actual": 71.0,
+          "pct": 78.0
+        },
+        "monthly_2": {
+          "target": 20.0,
+          "actual": 22.0,
+          "pct": 1.1
+        },
+        "weekly_2_1": {
+          "target": 24.0,
+          "actual": 24.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 19.0,
+          "actual": 27.0,
+          "pct": 1.42
+        },
+        "weekly_2_5": {
+          "target": 0.6,
+          "actual": 106.0,
+          "pct": 108.0
+        },
+        "monthly_3": {
+          "target": 22.0,
+          "actual": 21.0,
+          "pct": 0.95
+        },
+        "weekly_3_1": {
+          "target": 26.0,
+          "actual": 25.0,
+          "pct": 0.96
+        },
+        "weekly_3_2": {
+          "target": 27.0,
+          "actual": 28.0,
+          "pct": 1.04
+        },
+        "weekly_3_3": {
+          "target": 25.0,
+          "actual": 25.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.6,
+          "actual": 107.0,
+          "pct": 112.0
+        },
+        "monthly_4": {
+          "target": 19.0,
+          "actual": 20.0,
+          "pct": 1.05
+        },
+        "weekly_4_1": {
+          "target": 25.0,
+          "actual": 25.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 27.0,
+          "actual": 26.0,
+          "pct": 0.96
+        },
+        "weekly_4_3": {
+          "target": 25.0,
+          "actual": 30.0,
+          "pct": 1.2
+        },
+        "weekly_4_4": {
+          "target": 17.0,
+          "actual": 18.0,
+          "pct": 1.06
+        },
+        "weekly_4_5": {
+          "target": 0.6,
+          "actual": 107.0,
+          "pct": 104.0
+        },
+        "monthly_5": {
+          "target": 19.0,
+          "actual": 18.0,
+          "pct": 0.95
+        },
+        "weekly_5_1": {
+          "target": 26.0,
+          "actual": 23.0,
+          "pct": 0.88
+        },
+        "weekly_5_2": {
+          "target": 24.0,
+          "actual": 25.0,
+          "pct": 1.04
+        },
+        "weekly_5_3": {
+          "target": 26.0,
+          "actual": 30.0,
+          "pct": 1.15
+        },
+        "weekly_5_5": {
+          "target": 0.6,
+          "actual": 112.0,
+          "pct": 108.0
+        },
+        "monthly_6": {
+          "target": 22.0,
+          "actual": 22.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 27.0,
+          "actual": 26.0,
+          "pct": 0.96
+        },
+        "weekly_6_2": {
+          "target": 28.0,
+          "actual": 26.0,
+          "pct": 0.93
+        },
+        "weekly_6_3": {
+          "target": 28.0,
+          "actual": 22.0,
+          "pct": 0.79
+        },
+        "weekly_6_5": {
+          "target": 0.6,
+          "actual": 183.0,
+          "pct": 20.0
+        },
+        "monthly_7": {
+          "target": 16.0,
+          "actual": 16.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 24.0,
+          "actual": 25.0,
+          "pct": 1.04
+        },
+        "weekly_7_2": {
+          "target": 23.0,
+          "actual": 23.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 22.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM2-I02.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 1968.0,
-        "weekly_6_5": 266.0,
-        "monthly_7": 56.0,
-        "weekly_7_1": 62.0,
-        "weekly_7_2": 58.0,
-        "weekly_7_3": 59.0
+        "quarterly_1": {
+          "target": 1968.0,
+          "actual": 1398.0
+        },
+        "weekly_6_5": {
+          "actual": 266.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 56.0,
+          "actual": 39.0,
+          "pct": 0.7
+        },
+        "weekly_7_1": {
+          "target": 62.0,
+          "actual": 60.0,
+          "pct": 0.96
+        },
+        "weekly_7_2": {
+          "target": 58.0,
+          "actual": 58.0,
+          "pct": 0.99
+        },
+        "weekly_7_3": {
+          "target": 59.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM2-I01.3": {
       "title": "Số lượng ý tưởng mới",
       "unit": "Ý tưởng",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 36.0
+        "weekly_6_5": {
+          "actual": 36.0,
+          "pct": 20.0
+        }
       }
     },
     "VM2-I01.4": {
       "title": "Số lượng ý tưởng mới",
       "unit": "Số lượng ý tưởng được chọn",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 36.0
+        "weekly_6_5": {
+          "actual": 36.0,
+          "pct": 20.0
+        }
       }
     },
     "VM2-I01.5": {
       "title": "ROI",
       "unit": "Tỷ lệ chọn ý tưởng",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 0.9
+        "weekly_6_5": {
+          "actual": 0.9,
+          "pct": 0.0
+        }
       }
     },
     "VM2-I01.6": {
       "title": "SL Kịch bản mới SX",
       "unit": "Kịch bản",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 33.0
+        "weekly_6_5": {
+          "actual": 33.0,
+          "pct": 11.0
+        }
       }
     },
     "TM2-I02": {
       "title": "",
       "unit": "",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {}
     },
     "TM2-I02.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng 1 triệu views (youtube)",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 25.0,
-        "quarterly_1": 23.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.3,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.3,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 0.3,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.3,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.3,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.3,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 25.0,
+          "actual": 9.0,
+          "pct": 0.36
+        },
+        "quarterly_1": {
+          "target": 23.0,
+          "actual": 11.0,
+          "pct": 0.48
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.3,
+          "actual": 3.0,
+          "pct": 5.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.3,
+          "actual": 3.0,
+          "pct": 4.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "target": 0.3,
+          "actual": 6.0,
+          "pct": 2.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "target": 0.3,
+          "actual": 5.0,
+          "pct": 4.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "target": 0.3,
+          "actual": 6.0,
+          "pct": 5.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.3,
+          "actual": 7.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.15,
-        "weekly_1_5": 0.15,
-        "weekly_2_5": 0.15,
-        "weekly_3_5": 0.15,
-        "weekly_4_5": 0.15,
-        "weekly_5_5": 0.15,
-        "weekly_6_5": 0.15
+        "weekly_1_5": {
+          "target": 0.15
+        },
+        "weekly_2_5": {
+          "target": 0.15
+        },
+        "weekly_3_5": {
+          "target": 0.15
+        },
+        "weekly_4_5": {
+          "target": 0.15
+        },
+        "weekly_5_5": {
+          "target": 0.15
+        },
+        "weekly_6_5": {
+          "target": 0.15
+        }
       }
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "monthly_1": -0.03,
-        "weekly_1_1": -0.156,
-        "weekly_1_2": 0.203,
-        "weekly_1_3": 0.406,
-        "monthly_2": 0.084,
-        "weekly_2_1": 0.8,
-        "weekly_2_2": 0.929,
-        "weekly_2_3": 0.801,
-        "monthly_3": 0.322,
-        "weekly_3_1": 0.093,
-        "weekly_3_2": -0.031,
-        "weekly_3_3": -0.243,
-        "weekly_3_4": -0.988,
-        "monthly_4": -0.027,
-        "weekly_4_1": 0.01,
-        "weekly_4_2": 0.03,
-        "weekly_4_3": -0.085,
-        "monthly_5": 0.638,
-        "weekly_5_1": -0.066,
-        "weekly_5_2": -0.272,
-        "weekly_5_3": -0.013,
-        "monthly_6": 0.129,
-        "weekly_6_1": 0.073,
-        "weekly_6_2": 0.085,
-        "weekly_6_3": 0.357,
-        "weekly_6_5": 1195381134.0,
-        "monthly_7": 0.162,
-        "weekly_7_1": 0.307,
-        "weekly_7_2": 0.044,
-        "weekly_7_3": -1.0
+        "monthly_1": {
+          "target": -0.03,
+          "actual": 0.347
+        },
+        "weekly_1_1": {
+          "target": -0.156,
+          "actual": 0.0862
+        },
+        "weekly_1_2": {
+          "target": 0.203,
+          "actual": 0.1662
+        },
+        "weekly_1_3": {
+          "target": 0.406
+        },
+        "monthly_2": {
+          "target": 0.084,
+          "actual": 0.547
+        },
+        "weekly_2_1": {
+          "target": 0.8,
+          "actual": 1.5
+        },
+        "weekly_2_2": {
+          "target": 0.929,
+          "actual": 1.679
+        },
+        "weekly_2_3": {
+          "target": 0.801,
+          "actual": 1.501
+        },
+        "monthly_3": {
+          "target": 0.322,
+          "actual": 0.586
+        },
+        "weekly_3_1": {
+          "target": 0.093,
+          "actual": -0.114
+        },
+        "weekly_3_2": {
+          "target": -0.031,
+          "actual": -0.114
+        },
+        "weekly_3_3": {
+          "target": -0.243,
+          "actual": 0.052
+        },
+        "weekly_3_4": {
+          "target": -0.988
+        },
+        "monthly_4": {
+          "target": -0.027,
+          "actual": -0.226
+        },
+        "weekly_4_1": {
+          "target": 0.01,
+          "actual": -0.117
+        },
+        "weekly_4_2": {
+          "target": 0.03,
+          "actual": 0.026
+        },
+        "weekly_4_3": {
+          "target": -0.085,
+          "actual": -0.075
+        },
+        "monthly_5": {
+          "target": 0.638,
+          "actual": 0.124
+        },
+        "weekly_5_1": {
+          "target": -0.066,
+          "actual": 0.04
+        },
+        "weekly_5_2": {
+          "target": -0.272,
+          "actual": -0.265
+        },
+        "weekly_5_3": {
+          "target": -0.013,
+          "actual": -0.207
+        },
+        "monthly_6": {
+          "target": 0.129,
+          "actual": -0.24
+        },
+        "weekly_6_1": {
+          "target": 0.073,
+          "actual": -0.13
+        },
+        "weekly_6_2": {
+          "target": 0.085,
+          "actual": 0.3
+        },
+        "weekly_6_3": {
+          "target": 0.357,
+          "actual": 0.78
+        },
+        "weekly_6_5": {
+          "actual": 1195381134.0
+        },
+        "monthly_7": {
+          "target": 0.162,
+          "actual": 0.84
+        },
+        "weekly_7_1": {
+          "target": 0.307,
+          "actual": 1.24
+        },
+        "weekly_7_2": {
+          "target": 0.044,
+          "actual": 1.15
+        },
+        "weekly_7_3": {
+          "target": -1.0,
+          "actual": -1.0
+        }
       }
     },
     "TM3-I01.02": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Views",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 1647417664.0,
-        "quarterly_1": 2470274934.0,
-        "monthly_1": 108466453.0,
-        "weekly_1_1": 69933212.0,
-        "weekly_1_2": 70036295.0,
-        "weekly_1_3": 107274251.0,
-        "weekly_1_5": 1.0,
-        "monthly_2": 148771692.0,
-        "weekly_2_1": 147014309.0,
-        "weekly_2_2": 147321760.0,
-        "weekly_2_3": 148289983.0,
-        "weekly_2_5": 1.0,
-        "monthly_3": 166305928.0,
-        "weekly_3_1": 163864603.0,
-        "weekly_3_2": 164513886.0,
-        "weekly_3_3": 164828462.0,
-        "weekly_3_4": 142326969.0,
-        "weekly_3_5": 1.0,
-        "monthly_4": 166712080.0,
-        "weekly_4_1": 167164570.0,
-        "weekly_4_2": 165553293.0,
-        "weekly_4_3": 165142578.0,
-        "weekly_4_4": 163872763.0,
-        "weekly_4_5": 1.0,
-        "monthly_5": 189108800.0,
-        "weekly_5_1": 189108800.0,
-        "weekly_5_2": 189108800.0,
-        "weekly_5_3": 189108800.0,
-        "weekly_5_5": 1.0,
-        "monthly_6": 188504672.0,
-        "weekly_6_1": 188504672.0,
-        "weekly_6_2": 188504672.0,
-        "weekly_6_3": 345778173.0,
-        "weekly_6_5": 1.0,
-        "monthly_7": 277807583.0,
-        "weekly_7_1": 284049967.0,
-        "weekly_7_2": 284199967.0,
-        "weekly_7_3": 284449967.0
+        "yearly_2026": {
+          "target": 1647417664.0,
+          "actual": 1525262630.0,
+          "pct": 0.93
+        },
+        "quarterly_1": {
+          "target": 2470274934.0,
+          "actual": 1549213399.0,
+          "pct": 0.63
+        },
+        "monthly_1": {
+          "target": 108466453.0,
+          "actual": 64464734.0,
+          "pct": 0.59
+        },
+        "weekly_1_1": {
+          "target": 69933212.0,
+          "actual": 54427005.0,
+          "pct": 0.78
+        },
+        "weekly_1_2": {
+          "target": 70036295.0,
+          "actual": 65476818.0,
+          "pct": 0.93
+        },
+        "weekly_1_3": {
+          "target": 107274251.0,
+          "actual": 92033353.0,
+          "pct": 0.86
+        },
+        "weekly_1_5": {
+          "target": 1.0,
+          "actual": 594670100.0,
+          "pct": 463455682.0
+        },
+        "monthly_2": {
+          "target": 148771692.0,
+          "actual": 99748657.0,
+          "pct": 0.67
+        },
+        "weekly_2_1": {
+          "target": 147014309.0,
+          "actual": 119617902.0,
+          "pct": 0.81
+        },
+        "weekly_2_2": {
+          "target": 147321760.0,
+          "actual": 128202333.0,
+          "pct": 0.87
+        },
+        "weekly_2_3": {
+          "target": 148289983.0,
+          "actual": 119664475.0,
+          "pct": 0.81
+        },
+        "weekly_2_5": {
+          "target": 1.0,
+          "actual": 668104850.0,
+          "pct": 555248145.0
+        },
+        "monthly_3": {
+          "target": 166305928.0,
+          "actual": 158199863.0,
+          "pct": 0.95
+        },
+        "weekly_3_1": {
+          "target": 163864603.0,
+          "actual": 140094330.0,
+          "pct": 0.85
+        },
+        "weekly_3_2": {
+          "target": 164513886.0,
+          "actual": 124188828.0,
+          "pct": 0.75
+        },
+        "weekly_3_3": {
+          "target": 164828462.0,
+          "actual": 125895827.0,
+          "pct": 0.76
+        },
+        "weekly_3_4": {
+          "target": 142326969.0,
+          "actual": 1968485.0,
+          "pct": 0.01
+        },
+        "weekly_3_5": {
+          "target": 1.0,
+          "actual": 710805300.0,
+          "pct": 503688565.0
+        },
+        "monthly_4": {
+          "target": 166712080.0,
+          "actual": 122471826.0,
+          "pct": 0.73
+        },
+        "weekly_4_1": {
+          "target": 167164570.0,
+          "actual": 123659443.0,
+          "pct": 0.74
+        },
+        "weekly_4_2": {
+          "target": 165553293.0,
+          "actual": 127392444.0,
+          "pct": 0.77
+        },
+        "weekly_4_3": {
+          "target": 165142578.0,
+          "actual": 116511450.0,
+          "pct": 0.71
+        },
+        "weekly_4_4": {
+          "target": 163872763.0,
+          "actual": 84015038.0,
+          "pct": 0.51
+        },
+        "weekly_4_5": {
+          "target": 1.0,
+          "actual": 756985200.0,
+          "pct": 488851744.0
+        },
+        "monthly_5": {
+          "target": 189108800.0,
+          "actual": 137599600.0,
+          "pct": 0.73
+        },
+        "weekly_5_1": {
+          "target": 189108800.0,
+          "actual": 128572307.0,
+          "pct": 0.68
+        },
+        "weekly_5_2": {
+          "target": 189108800.0,
+          "actual": 93576369.0,
+          "pct": 0.49
+        },
+        "weekly_5_3": {
+          "target": 189108800.0,
+          "actual": 92369360.0,
+          "pct": 0.49
+        },
+        "weekly_5_5": {
+          "target": 1.0,
+          "actual": 754018683.0,
+          "pct": 435016280.0
+        },
+        "monthly_6": {
+          "target": 188504672.0,
+          "actual": 104261050.0,
+          "pct": 0.55
+        },
+        "weekly_6_1": {
+          "target": 188504672.0,
+          "actual": 111845819.0,
+          "pct": 0.59
+        },
+        "weekly_6_2": {
+          "target": 188504672.0,
+          "actual": 121337448.0,
+          "pct": 0.64
+        },
+        "weekly_6_3": {
+          "target": 345778173.0,
+          "actual": 164609077.0,
+          "pct": 0.48
+        },
+        "weekly_6_5": {
+          "target": 1.0,
+          "actual": 1211181134.0,
+          "pct": 702759628.0
+        },
+        "monthly_7": {
+          "target": 277807583.0,
+          "actual": 191357805.0,
+          "pct": 0.69
+        },
+        "weekly_7_1": {
+          "target": 284049967.0,
+          "actual": 250137877.0,
+          "pct": 0.88
+        },
+        "weekly_7_2": {
+          "target": 284199967.0,
+          "actual": 261263947.0,
+          "pct": 0.92
+        },
+        "weekly_7_3": {
+          "target": 284449967.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "TM3-I01.03": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng video upload",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1856.0,
-        "quarterly_1": 307.0,
-        "monthly_1": 17.0,
-        "weekly_1_1": 17.0,
-        "weekly_1_2": 17.0,
-        "weekly_1_3": 12.0,
-        "weekly_1_5": 0.1,
-        "monthly_2": 11.0,
-        "weekly_2_1": 13.0,
-        "weekly_2_2": 16.0,
-        "weekly_2_3": 15.0,
-        "weekly_2_5": 0.1,
-        "monthly_3": 21.0,
-        "weekly_3_1": 15.0,
-        "weekly_3_2": 14.0,
-        "weekly_3_3": 15.0,
-        "weekly_3_4": 8.0,
-        "weekly_3_5": 0.1,
-        "monthly_4": 22.0,
-        "weekly_4_1": 15.0,
-        "weekly_4_2": 15.0,
-        "weekly_4_3": 15.0,
-        "weekly_4_4": 15.0,
-        "weekly_4_5": 0.1,
-        "monthly_5": 21.0,
-        "weekly_5_1": 16.0,
-        "weekly_5_2": 15.0,
-        "weekly_5_3": 16.0,
-        "weekly_5_5": 0.1,
-        "monthly_6": 19.0,
-        "weekly_6_1": 21.0,
-        "weekly_6_2": 20.0,
-        "weekly_6_3": 21.0,
-        "weekly_6_5": 0.1,
-        "monthly_7": 25.0,
-        "weekly_7_1": 20.0,
-        "weekly_7_2": 16.0,
-        "weekly_7_3": 16.0
+        "yearly_2026": {
+          "target": 1856.0,
+          "actual": 1761.0,
+          "pct": 0.95
+        },
+        "quarterly_1": {
+          "target": 307.0,
+          "actual": 319.0,
+          "pct": 1.04
+        },
+        "monthly_1": {
+          "target": 17.0,
+          "actual": 17.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 17.0,
+          "actual": 17.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 17.0,
+          "actual": 17.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 12.0,
+          "actual": 12.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.1,
+          "actual": 88.0,
+          "pct": 87.0
+        },
+        "monthly_2": {
+          "target": 11.0,
+          "actual": 11.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 13.0,
+          "actual": 13.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 16.0,
+          "actual": 16.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 15.0,
+          "actual": 14.0,
+          "pct": 0.93
+        },
+        "weekly_2_5": {
+          "target": 0.1,
+          "actual": 95.0,
+          "pct": 95.0
+        },
+        "monthly_3": {
+          "target": 21.0,
+          "actual": 21.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 14.0,
+          "actual": 14.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 8.0,
+          "actual": 1.0,
+          "pct": 0.13
+        },
+        "weekly_3_5": {
+          "target": 0.1,
+          "actual": 92.0,
+          "pct": 92.0
+        },
+        "monthly_4": {
+          "target": 22.0,
+          "actual": 15.0,
+          "pct": 0.68
+        },
+        "weekly_4_1": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 15.0,
+          "actual": 14.0,
+          "pct": 0.93
+        },
+        "weekly_4_5": {
+          "target": 0.1,
+          "actual": 105.0,
+          "pct": 123.0
+        },
+        "monthly_5": {
+          "target": 21.0,
+          "actual": 21.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 16.0,
+          "actual": 16.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 16.0,
+          "actual": 18.0,
+          "pct": 1.13
+        },
+        "weekly_5_5": {
+          "target": 0.1,
+          "actual": 105.0,
+          "pct": 104.0
+        },
+        "monthly_6": {
+          "target": 19.0,
+          "actual": 20.0,
+          "pct": 1.05
+        },
+        "weekly_6_1": {
+          "target": 21.0,
+          "actual": 21.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 20.0,
+          "actual": 20.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 21.0,
+          "actual": 16.0,
+          "pct": 0.76
+        },
+        "weekly_6_5": {
+          "target": 0.1,
+          "actual": 165.0,
+          "pct": 3.0
+        },
+        "monthly_7": {
+          "target": 25.0,
+          "actual": 25.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 20.0,
+          "actual": 16.0,
+          "pct": 0.8
+        },
+        "weekly_7_2": {
+          "target": 16.0,
+          "actual": 16.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 16.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM3-I01.04": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM3-I01.05": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.15,
-        "weekly_1_5": 0.15,
-        "weekly_2_5": 0.15,
-        "weekly_3_5": 0.15,
-        "weekly_4_5": 0.15,
-        "weekly_5_5": 0.15,
-        "weekly_6_5": 0.15
+        "weekly_1_5": {
+          "target": 0.15
+        },
+        "weekly_2_5": {
+          "target": 0.15
+        },
+        "weekly_3_5": {
+          "target": 0.15
+        },
+        "weekly_4_5": {
+          "target": 0.15
+        },
+        "weekly_5_5": {
+          "target": 0.15
+        },
+        "weekly_6_5": {
+          "target": 0.15
+        }
       }
     },
     "TM4-I01.01": {
       "title": "Độ phủ thương hiệu",
       "unit": "Lượt tiếp cận",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1875000.0,
-        "quarterly_1": 1500000.0,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25,
-        "weekly_3_5": 0.25,
-        "weekly_4_5": 0.25,
-        "weekly_5_5": 0.25,
-        "weekly_6_5": 0.25
+        "yearly_2026": {
+          "target": 1875000.0,
+          "actual": 842523.0,
+          "pct": 0.4493
+        },
+        "quarterly_1": {
+          "target": 1500000.0,
+          "actual": 600000.0,
+          "pct": 0.4
+        },
+        "weekly_1_5": {
+          "target": 0.25,
+          "actual": 323735.0,
+          "pct": 283363.0
+        },
+        "weekly_2_5": {
+          "target": 0.25,
+          "actual": 400000.0,
+          "pct": 289381.0
+        },
+        "weekly_3_5": {
+          "target": 0.25,
+          "actual": 400000.0,
+          "pct": 250000.0
+        },
+        "weekly_4_5": {
+          "target": 0.25,
+          "actual": 400000.0,
+          "pct": 260000.0
+        },
+        "weekly_5_5": {
+          "target": 0.25,
+          "actual": 350000.0
+        },
+        "weekly_6_5": {
+          "target": 0.25,
+          "actual": 250000.0
+        }
       }
     },
     "TM4-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Phát triển hệ thống kênh kinh doanh": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Kênh",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 5.0,
-        "quarterly_1": 5.0,
-        "weekly_1_5": 0.1,
-        "weekly_2_5": 0.1,
-        "weekly_3_5": 0.1,
-        "weekly_4_5": 0.1,
-        "weekly_5_5": 0.1,
-        "weekly_6_5": 0.1
+        "yearly_2026": {
+          "target": 5.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 5.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.1,
+          "actual": 3.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.1,
+          "actual": 3.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "target": 0.1,
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "target": 0.1,
+          "actual": 3.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "target": 0.1,
+          "actual": 3.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.1,
+          "actual": 2.0,
+          "pct": 0.0
+        }
       }
     },
     "TM4-I02.02": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 24.0,
-        "quarterly_1": 23.0,
-        "weekly_1_5": 0.35,
-        "weekly_2_5": 0.35,
-        "weekly_3_5": 0.35,
-        "weekly_4_5": 0.35,
-        "weekly_5_5": 0.35,
-        "weekly_6_5": 0.35
+        "yearly_2026": {
+          "target": 24.0,
+          "actual": 18.0,
+          "pct": 0.75
+        },
+        "quarterly_1": {
+          "target": 23.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.35,
+          "actual": 21.0,
+          "pct": 18.0
+        },
+        "weekly_2_5": {
+          "target": 0.35,
+          "actual": 23.0,
+          "pct": 14.0
+        },
+        "weekly_3_5": {
+          "target": 0.35,
+          "actual": 16.0,
+          "pct": 9.0
+        },
+        "weekly_4_5": {
+          "target": 0.35,
+          "actual": 16.0,
+          "pct": 10.0
+        },
+        "weekly_5_5": {
+          "target": 0.35,
+          "actual": 16.0,
+          "pct": 10.0
+        },
+        "weekly_6_5": {
+          "target": 0.35,
+          "actual": 16.0,
+          "pct": 0.0
+        }
       }
     },
     "TM4-I02.03": {
       "title": "ROI",
       "unit": "Tỷ lệ kênh đạt chuẩn an toàn (toàn bộ hệ thống)",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.95,
-        "weekly_1_5": 0.15,
-        "weekly_2_5": 0.15,
-        "weekly_3_5": 0.15,
-        "weekly_4_5": 0.15,
-        "weekly_5_5": 0.15,
-        "weekly_6_5": 0.15
+        "yearly_2026": {
+          "target": 0.95,
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 0.95,
+          "actual": 0.98,
+          "pct": 1.03
+        },
+        "weekly_1_5": {
+          "target": 0.15,
+          "actual": 1.0,
+          "pct": 0.94
+        },
+        "weekly_2_5": {
+          "target": 0.15,
+          "actual": 1.0,
+          "pct": 0.96
+        },
+        "weekly_3_5": {
+          "target": 0.15,
+          "actual": 1.0,
+          "pct": 0.98
+        },
+        "weekly_4_5": {
+          "target": 0.15,
+          "actual": 1.0,
+          "pct": 0.99
+        },
+        "weekly_5_5": {
+          "target": 0.15,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.15,
+          "actual": 1.0
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "SL",
+      "formula": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 5.0,
-        "quarterly_1": 7.0,
-        "weekly_1_5": 0.15,
-        "weekly_2_5": 0.15,
-        "weekly_3_5": 0.15,
-        "weekly_4_5": 0.15,
-        "weekly_5_5": 0.15,
-        "weekly_6_5": 0.15
+        "yearly_2026": {
+          "target": 5.0,
+          "actual": 20.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.15,
+          "actual": 3.0,
+          "pct": 5.0
+        },
+        "weekly_2_5": {
+          "target": 0.15,
+          "actual": 2.0,
+          "pct": 4.0
+        },
+        "weekly_3_5": {
+          "target": 0.15,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "target": 0.15,
+          "actual": 1.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "target": 0.15,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.15,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 69.0
+        "weekly_6_5": {
+          "actual": 69.0,
+          "pct": 23.0
+        }
       }
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 72.0
+        "weekly_6_5": {
+          "actual": 72.0,
+          "pct": 23.0
+        }
       }
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 0.9709,
-        "quarterly_1": 0.1,
-        "weekly_1_5": 0.1,
-        "weekly_2_5": 0.1,
-        "weekly_3_5": 0.1,
-        "weekly_4_5": 0.1,
-        "weekly_5_5": 0.1,
-        "weekly_6_5": 0.1
+        "yearly_2026": {
+          "pct": 0.9709
+        },
+        "weekly_1_5": {
+          "target": 0.1
+        },
+        "weekly_2_5": {
+          "target": 0.1
+        },
+        "weekly_3_5": {
+          "target": 0.1
+        },
+        "weekly_4_5": {
+          "target": 0.1
+        },
+        "weekly_5_5": {
+          "target": 0.1
+        },
+        "weekly_6_5": {
+          "target": 0.1
+        }
       }
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 4.0,
-        "quarterly_1": 3.0,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05,
-        "weekly_3_5": 0.05,
-        "weekly_5_5": 0.05,
-        "weekly_6_5": 0.05
+        "yearly_2026": {
+          "target": 4.0,
+          "actual": 3.0,
+          "pct": 0.75
+        },
+        "quarterly_1": {
+          "target": 3.0
+        },
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        },
+        "weekly_3_5": {
+          "target": 0.05
+        },
+        "weekly_5_5": {
+          "target": 0.05
+        },
+        "weekly_6_5": {
+          "target": 0.05
+        }
       }
     },
     "VM5-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.01": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 43.5,
-        "quarterly_1": 43.0,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2
+        "yearly_2026": {
+          "target": 43.5,
+          "actual": 46.0,
+          "pct": 1.07
+        },
+        "quarterly_1": {
+          "target": 43.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 44.7,
+          "pct": 45.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 45.0,
+          "pct": 44.5
+        },
+        "weekly_3_5": {
+          "target": 0.2,
+          "actual": 43.8,
+          "pct": 42.8
+        },
+        "weekly_4_5": {
+          "target": 0.2,
+          "actual": 35.5,
+          "pct": 41.0
+        },
+        "weekly_5_5": {
+          "target": 0.2,
+          "actual": 41.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.2,
+          "actual": 17.5
+        }
       }
     },
     "VM5-I02.02": {
       "title": "Hiệu suất sản xuất",
       "unit": "ND",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 18.0,
-        "quarterly_1": 20.0,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25,
-        "weekly_3_5": 0.25,
-        "weekly_4_5": 0.25,
-        "weekly_5_5": 0.25,
-        "weekly_6_5": 0.25
+        "yearly_2026": {
+          "target": 18.0,
+          "actual": 20.7,
+          "pct": 1.18
+        },
+        "quarterly_1": {
+          "target": 20.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.25,
+          "actual": 8.0,
+          "pct": 7.7
+        },
+        "weekly_2_5": {
+          "target": 0.25,
+          "actual": 8.0,
+          "pct": 8.2
+        },
+        "weekly_3_5": {
+          "target": 0.25,
+          "actual": 4.0,
+          "pct": 5.0
+        },
+        "weekly_4_5": {
+          "target": 0.25,
+          "actual": 4.0,
+          "pct": 5.0
+        },
+        "weekly_5_5": {
+          "target": 0.25,
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.25,
+          "actual": 4.0,
+          "pct": 0.0
+        }
       }
     },
     "Số NDSX/ số nhân sự sx (ko tính quản lý BP/DA)": {
       "title": "Hiệu suất sản xuất",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 627468151.0,
-        "quarterly_1": 755744054.0,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25,
-        "weekly_3_5": 0.25,
-        "weekly_4_5": 0.3,
-        "weekly_5_5": 0.25,
-        "weekly_6_5": 0.25
+        "yearly_2026": {
+          "target": 627468151.0,
+          "actual": 505647033.0,
+          "pct": 0.81
+        },
+        "quarterly_1": {
+          "target": 755744054.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.25,
+          "actual": 247774169.0,
+          "pct": 247308442.0
+        },
+        "weekly_2_5": {
+          "target": 0.25,
+          "actual": 258847634.0,
+          "pct": 221739497.0
+        },
+        "weekly_3_5": {
+          "target": 0.25,
+          "actual": 286591217.0,
+          "pct": 203374817.0
+        },
+        "weekly_4_5": {
+          "target": 0.3,
+          "actual": 297307965.0,
+          "pct": 204581138.0
+        },
+        "weekly_5_5": {
+          "target": 0.25,
+          "actual": 304571699.0,
+          "pct": 483477254334.0
+        },
+        "weekly_6_5": {
+          "target": 0.25,
+          "actual": 70374949.0,
+          "pct": 51315362.0
+        }
       }
     },
     "VM5-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 586476404.0,
-        "quarterly_1": 2700737193.0,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25,
-        "weekly_3_5": 0.25,
-        "weekly_4_5": 0.25,
-        "weekly_5_5": 0.25,
-        "weekly_6_5": 0.25
+        "yearly_2026": {
+          "target": 586476404.0,
+          "actual": 525013255.0,
+          "pct": 0.9
+        },
+        "quarterly_1": {
+          "target": 2700737193.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.25,
+          "actual": 1031403351.0,
+          "pct": 830167980.0
+        },
+        "weekly_2_5": {
+          "target": 0.25,
+          "actual": 1097878508.0,
+          "pct": 820767689.0
+        },
+        "weekly_3_5": {
+          "target": 0.25,
+          "actual": 1230251212.0,
+          "pct": 529001483.2
+        },
+        "weekly_4_5": {
+          "target": 0.25,
+          "actual": 1294151352.0,
+          "pct": 493591306.3
+        },
+        "weekly_5_5": {
+          "target": 0.25,
+          "actual": 1332439035.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.25,
+          "actual": 280619276.0
+        }
       }
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "Số lượng đầu mục công việc/ quy trình được số hóa": {
       "title": "ROI",
       "unit": "Mức độ ứng dụng AI trong sản xuất SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05,
-        "weekly_3_5": 0.05,
-        "weekly_4_5": 0.05,
-        "weekly_5_5": 0.05,
-        "weekly_6_5": 0.05
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        },
+        "weekly_3_5": {
+          "target": 0.05
+        },
+        "weekly_4_5": {
+          "target": 0.05
+        },
+        "weekly_5_5": {
+          "target": 0.05
+        },
+        "weekly_6_5": {
+          "target": 0.05
+        }
       }
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "Số buổi đào tạo được tổ chức",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 18.0,
-        "quarterly_1": 14.0,
-        "weekly_1_5": 0.5,
-        "weekly_2_5": 0.5,
-        "weekly_3_5": 0.5,
-        "weekly_4_5": 0.4,
-        "weekly_5_5": 0.5,
-        "weekly_6_5": 0.5
+        "yearly_2026": {
+          "target": 18.0,
+          "actual": 18.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 14.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.5,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.5,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.5,
+          "actual": 1.0,
+          "pct": 2.0
+        },
+        "weekly_4_5": {
+          "target": 0.4,
+          "actual": 1.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "target": 0.5,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.5,
+          "actual": 1.0,
+          "pct": 0.0
+        }
       }
     },
     "TM6-I01.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.83,
-        "quarterly_1": 0.83,
-        "weekly_1_5": 0.5,
-        "weekly_2_5": 0.5,
-        "weekly_3_5": 0.5,
-        "weekly_4_5": 0.5,
-        "weekly_5_5": 0.5,
-        "weekly_6_5": 0.5
+        "yearly_2026": {
+          "target": 0.83,
+          "actual": 1.0,
+          "pct": 1.21
+        },
+        "quarterly_1": {
+          "target": 0.83,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.5,
+          "actual": 0.92,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.5,
+          "actual": 0.88,
+          "pct": 0.95
+        },
+        "weekly_3_5": {
+          "target": 0.5,
+          "actual": 0.83,
+          "pct": 0.95
+        },
+        "weekly_4_5": {
+          "target": 0.5,
+          "actual": 0.83,
+          "pct": 0.95
+        },
+        "weekly_5_5": {
+          "target": 0.5,
+          "actual": 0.75
+        },
+        "weekly_6_5": {
+          "target": 0.5,
+          "actual": 0.83
+        }
       }
     },
     "VM6-I02": {
       "title": "",
       "unit": "Số lượng nhân sự fulltime",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 122.0
+        "weekly_6_5": {
+          "actual": 122.0
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 1.0,
-        "weekly_4_5": 0.1
+        "quarterly_1": {
+          "target": 1.0
+        },
+        "weekly_4_5": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 0.96
+        }
       }
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 0.1,
-        "weekly_4_5": 0.1
+        "quarterly_1": {
+          "target": 0.1
+        },
+        "weekly_4_5": {
+          "actual": 0.1,
+          "pct": 0.07
+        }
       }
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 0.7689,
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05,
-        "weekly_3_5": 0.05,
-        "weekly_4_5": 0.05,
-        "weekly_5_5": 0.05,
-        "weekly_6_5": 0.05
+        "yearly_2026": {
+          "pct": 0.7689
+        },
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        },
+        "weekly_3_5": {
+          "target": 0.05
+        },
+        "weekly_4_5": {
+          "target": 0.05
+        },
+        "weekly_5_5": {
+          "target": 0.05
+        },
+        "weekly_6_5": {
+          "target": 0.05
+        }
       }
     },
     "TM7-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.3,
-        "quarterly_1": 0.23,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2
+        "yearly_2026": {
+          "target": 0.3,
+          "actual": 0.25,
+          "pct": 0.83
+        },
+        "quarterly_1": {
+          "target": 0.23,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.2,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.2,
+          "pct": 0.2
+        },
+        "weekly_3_5": {
+          "actual": 0.2
+        },
+        "weekly_4_5": {
+          "actual": 0.2,
+          "pct": 0.2
+        },
+        "weekly_5_5": {
+          "actual": 0.2
+        },
+        "weekly_6_5": {
+          "actual": 0.2
+        }
       }
     },
     "TM7-I02": {
       "title": "ROI",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I02.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.2,
-        "quarterly_1": 0.17,
-        "weekly_1_5": 0.1,
-        "weekly_2_5": 0.1,
-        "weekly_3_5": 0.1,
-        "weekly_4_5": 0.1,
-        "weekly_5_5": 0.1,
-        "weekly_6_5": 0.1
+        "yearly_2026": {
+          "target": 0.2,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.17,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.1,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.1,
+          "pct": 0.1
+        },
+        "weekly_3_5": {
+          "actual": 0.1
+        },
+        "weekly_4_5": {
+          "actual": 0.1,
+          "pct": 0.1
+        },
+        "weekly_5_5": {
+          "actual": 0.1
+        },
+        "weekly_6_5": {
+          "actual": 0.1
+        }
       }
     },
     "VM7-I02.02": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "VM7-I02.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 4.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 1.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 4.0,
+          "actual": 1.0,
+          "pct": 0.25
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.89,
-        "quarterly_1": 3.55,
-        "weekly_1_5": 0.7,
-        "weekly_2_5": 0.7,
-        "weekly_3_5": 0.7,
-        "weekly_4_5": 0.7,
-        "weekly_5_5": 0.7,
-        "weekly_6_5": 0.7
+        "yearly_2026": {
+          "target": 0.89,
+          "actual": 0.94,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 3.55,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.7,
+          "actual": 0.95,
+          "pct": 0.96
+        },
+        "weekly_2_5": {
+          "target": 0.7,
+          "actual": 0.94,
+          "pct": 0.95
+        },
+        "weekly_3_5": {
+          "target": 0.7,
+          "actual": 0.94,
+          "pct": 0.97
+        },
+        "weekly_4_5": {
+          "target": 0.7,
+          "actual": 0.94,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "target": 0.7,
+          "actual": 0.94,
+          "pct": 0.98
+        },
+        "weekly_6_5": {
+          "target": 0.7,
+          "actual": 0.94,
+          "pct": 0.9
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 38.0,
-        "quarterly_1": 37.0,
-        "weekly_1_5": 0.3,
-        "weekly_2_5": 0.3,
-        "weekly_3_5": 0.3,
-        "weekly_4_5": 0.3,
-        "weekly_5_5": 0.3,
-        "weekly_6_5": 0.3
+        "yearly_2026": {
+          "target": 38.0,
+          "actual": 71.0,
+          "pct": 0.54
+        },
+        "quarterly_1": {
+          "target": 37.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.3,
+          "actual": 15.0,
+          "pct": 32.0
+        },
+        "weekly_2_5": {
+          "target": 0.3,
+          "actual": 16.0,
+          "pct": 6.0
+        },
+        "weekly_3_5": {
+          "target": 0.3,
+          "actual": 11.0,
+          "pct": 21.0
+        },
+        "weekly_4_5": {
+          "target": 0.3,
+          "actual": 10.0,
+          "pct": 12.0
+        },
+        "weekly_5_5": {
+          "target": 0.3,
+          "actual": 9.0,
+          "pct": 19.0
+        },
+        "weekly_6_5": {
+          "target": 0.3,
+          "actual": 9.0,
+          "pct": 0.0
+        }
       }
     }
   },
@@ -1298,1163 +4329,3599 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "quarterly_1": 0.3894,
-        "monthly_1": 0.8438
+        "quarterly_1": {
+          "actual": 0.3894
+        },
+        "monthly_1": {
+          "target": 0.8438
+        }
       }
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "quarterly_1": 0.2803,
-        "monthly_1": 1174912032.0
+        "quarterly_1": {
+          "actual": 0.2803
+        },
+        "monthly_1": {
+          "target": 1174912032.0
+        }
       }
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "2.1": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 7823272911.0,
-        "quarterly_1": 9360202176.0,
-        "monthly_1": 569072434.0,
-        "weekly_1_1": 569072434.0,
-        "weekly_1_2": 569072434.0,
-        "weekly_1_3": 569072434.0,
-        "weekly_1_5": 2461566873.0,
-        "monthly_2": 582031450.0,
-        "weekly_2_1": 536531450.0,
-        "weekly_2_2": 536531450.0,
-        "weekly_2_3": 536531450.0,
-        "weekly_2_5": 2818516751.0,
-        "monthly_3": 613742298.0,
-        "weekly_3_1": 613742298.0,
-        "weekly_3_2": 613742298.0,
-        "weekly_3_3": 613742298.0,
-        "weekly_3_4": 613742298.0,
-        "weekly_3_5": 2973441148.0,
-        "monthly_4": 695360287.0,
-        "weekly_4_1": 695360287.0,
-        "weekly_4_2": 695360287.0,
-        "weekly_4_3": 695360287.0,
-        "weekly_4_4": 695360287.0,
-        "weekly_4_5": 3181579568.0,
-        "monthly_5": 706869487.0,
-        "weekly_5_1": 706869487.0,
-        "weekly_5_2": 706869487.0,
-        "weekly_5_3": 706869487.0,
-        "weekly_5_5": 3268238272.0,
-        "monthly_6": 727309568.0,
-        "weekly_6_1": 777309568.0,
-        "weekly_6_2": 727309568.0,
-        "weekly_6_3": 727309568.0,
-        "weekly_6_5": 2522696922.0,
-        "monthly_7": 560599316.0,
-        "weekly_7_1": 560599316.0,
-        "weekly_7_2": 560599316.0,
-        "weekly_7_3": 560599316.0
+        "yearly_2026": {
+          "target": 7823272911.0,
+          "actual": 4170104048.0,
+          "pct": 0.53
+        },
+        "quarterly_1": {
+          "target": 9360202176.0,
+          "actual": 4545054253.0,
+          "pct": 0.4856
+        },
+        "monthly_1": {
+          "target": 569072434.0,
+          "actual": 246034466.0,
+          "pct": 0.43
+        },
+        "weekly_1_1": {
+          "target": 569072434.0,
+          "actual": 235413253.0,
+          "pct": 0.41
+        },
+        "weekly_1_2": {
+          "target": 569072434.0,
+          "actual": 294123687.0,
+          "pct": 0.52
+        },
+        "weekly_1_3": {
+          "target": 569072434.0,
+          "actual": 432342507.0,
+          "pct": 0.76
+        },
+        "weekly_1_5": {
+          "actual": 2461566873.0,
+          "pct": 1384834132.0
+        },
+        "monthly_2": {
+          "target": 582031450.0,
+          "actual": 249422628.0,
+          "pct": 0.43
+        },
+        "weekly_2_1": {
+          "target": 536531450.0,
+          "actual": 286209200.0,
+          "pct": 0.53
+        },
+        "weekly_2_2": {
+          "target": 536531450.0,
+          "actual": 337356641.0,
+          "pct": 0.63
+        },
+        "weekly_2_3": {
+          "target": 536531450.0,
+          "actual": 280402033.0,
+          "pct": 0.52
+        },
+        "weekly_2_5": {
+          "actual": 2818516751.0,
+          "pct": 1627530603.0
+        },
+        "monthly_3": {
+          "target": 613742298.0,
+          "actual": 299232255.0,
+          "pct": 0.49
+        },
+        "weekly_3_1": {
+          "target": 613742298.0,
+          "actual": 279599066.0,
+          "pct": 0.46
+        },
+        "weekly_3_2": {
+          "target": 613742298.0,
+          "actual": 269340823.0,
+          "pct": 0.44
+        },
+        "weekly_3_3": {
+          "target": 613742298.0,
+          "actual": 286599066.0,
+          "pct": 0.47
+        },
+        "weekly_3_4": {
+          "target": 613742298.0
+        },
+        "weekly_3_5": {
+          "actual": 2973441148.0,
+          "pct": 1243129031.0
+        },
+        "monthly_4": {
+          "target": 695360287.0,
+          "actual": 266920630.0,
+          "pct": 0.38
+        },
+        "weekly_4_1": {
+          "target": 695360287.0,
+          "actual": 241600464.0,
+          "pct": 0.35
+        },
+        "weekly_4_2": {
+          "target": 695360287.0,
+          "actual": 265132260.0,
+          "pct": 0.38
+        },
+        "weekly_4_3": {
+          "target": 695360287.0,
+          "actual": 250665518.0,
+          "pct": 0.36
+        },
+        "weekly_4_4": {
+          "target": 695360287.0,
+          "actual": 250665518.0,
+          "pct": 0.36
+        },
+        "weekly_4_5": {
+          "actual": 3181579568.0,
+          "pct": 1528460287.0
+        },
+        "monthly_5": {
+          "target": 706869487.0,
+          "actual": 287634971.0,
+          "pct": 0.41
+        },
+        "weekly_5_1": {
+          "target": 706869487.0,
+          "actual": 298992667.0,
+          "pct": 0.42
+        },
+        "weekly_5_2": {
+          "target": 706869487.0,
+          "actual": 299463066.0,
+          "pct": 0.42
+        },
+        "weekly_5_3": {
+          "target": 706869487.0,
+          "actual": 299463066.0
+        },
+        "weekly_5_5": {
+          "actual": 3268238272.0,
+          "pct": 1510333391.0
+        },
+        "monthly_6": {
+          "target": 727309568.0,
+          "actual": 303795007.0,
+          "pct": 0.42
+        },
+        "weekly_6_1": {
+          "target": 777309568.0,
+          "actual": 342392833.0,
+          "pct": 0.44
+        },
+        "weekly_6_2": {
+          "target": 727309568.0,
+          "actual": 360307892.0,
+          "pct": 0.5
+        },
+        "weekly_6_3": {
+          "target": 727309568.0,
+          "actual": 350294092.0,
+          "pct": 0.48
+        },
+        "weekly_6_5": {
+          "actual": 2522696922.0
+        },
+        "monthly_7": {
+          "target": 560599316.0,
+          "actual": 292061814.0,
+          "pct": 0.52
+        },
+        "weekly_7_1": {
+          "target": 560599316.0,
+          "actual": 307218604.0,
+          "pct": 0.55
+        },
+        "weekly_7_2": {
+          "target": 560599316.0,
+          "actual": 337940465.0,
+          "pct": 0.6
+        },
+        "weekly_7_3": {
+          "target": 560599316.0
+        }
       }
     },
     "VM1-I02.02": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu nội bộ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 5984803778.0,
-        "quarterly_1": 7737548652.0,
-        "monthly_1": 498620821.0,
-        "weekly_1_1": 498620821.0,
-        "weekly_1_2": 498620821.0,
-        "weekly_1_3": 498620821.0,
-        "weekly_1_5": 2146125800.0,
-        "monthly_2": 536531450.0,
-        "weekly_2_1": 536531450.0,
-        "weekly_2_2": 536531450.0,
-        "weekly_2_3": 536531450.0,
-        "weekly_2_5": 2454969192.0,
-        "monthly_3": 613742298.0,
-        "weekly_3_1": 613742298.0,
-        "weekly_3_2": 613742298.0,
-        "weekly_3_3": 613742298.0,
-        "weekly_3_4": 613742298.0,
-        "weekly_3_5": 2427441148.0,
-        "monthly_4": 606860287.0,
-        "weekly_4_1": 606860287.0,
-        "weekly_4_2": 606860287.0,
-        "weekly_4_3": 606860287.0,
-        "weekly_4_4": 606860287.0,
-        "weekly_4_5": 2600869232.0,
-        "monthly_5": 606869487.0,
-        "weekly_5_1": 606869487.0,
-        "weekly_5_2": 606869487.0,
-        "weekly_5_3": 606869487.0,
-        "weekly_5_5": 2709238272.0,
-        "monthly_6": 677309568.0,
-        "weekly_6_1": 677309568.0,
-        "weekly_6_2": 677309568.0,
-        "weekly_6_3": 677309568.0
+        "yearly_2026": {
+          "target": 5984803778.0,
+          "actual": 3514051064.0,
+          "pct": 0.59
+        },
+        "quarterly_1": {
+          "target": 7737548652.0,
+          "actual": 3284403010.0
+        },
+        "monthly_1": {
+          "target": 498620821.0,
+          "actual": 175582853.0,
+          "pct": 0.35
+        },
+        "weekly_1_1": {
+          "target": 498620821.0,
+          "actual": 164961640.0,
+          "pct": 0.33
+        },
+        "weekly_1_2": {
+          "target": 498620821.0,
+          "actual": 223672074.0,
+          "pct": 0.45
+        },
+        "weekly_1_3": {
+          "target": 498620821.0,
+          "actual": 361890894.0,
+          "pct": 0.73
+        },
+        "weekly_1_5": {
+          "actual": 2146125800.0,
+          "pct": 1292739113.0
+        },
+        "monthly_2": {
+          "target": 536531450.0,
+          "actual": 240322628.0,
+          "pct": 0.45
+        },
+        "weekly_2_1": {
+          "target": 536531450.0,
+          "actual": 286209200.0,
+          "pct": 0.53
+        },
+        "weekly_2_2": {
+          "target": 536531450.0,
+          "actual": 337356641.0,
+          "pct": 0.63
+        },
+        "weekly_2_3": {
+          "target": 536531450.0,
+          "actual": 280402033.0,
+          "pct": 0.52
+        },
+        "weekly_2_5": {
+          "actual": 2454969192.0,
+          "pct": 1229910774.0
+        },
+        "monthly_3": {
+          "target": 613742298.0,
+          "actual": 299232255.0,
+          "pct": 0.49
+        },
+        "weekly_3_1": {
+          "target": 613742298.0,
+          "actual": 268599066.0,
+          "pct": 0.44
+        },
+        "weekly_3_2": {
+          "target": 613742298.0,
+          "actual": 258340823.0,
+          "pct": 0.42
+        },
+        "weekly_3_3": {
+          "target": 613742298.0,
+          "actual": 268599066.0,
+          "pct": 0.44
+        },
+        "weekly_3_4": {
+          "target": 613742298.0
+        },
+        "weekly_3_5": {
+          "actual": 2427441148.0,
+          "pct": 1243129031.0
+        },
+        "monthly_4": {
+          "target": 606860287.0,
+          "actual": 246920630.0,
+          "pct": 0.41
+        },
+        "weekly_4_1": {
+          "target": 606860287.0,
+          "actual": 221600464.0,
+          "pct": 0.37
+        },
+        "weekly_4_2": {
+          "target": 606860287.0,
+          "actual": 240132260.0,
+          "pct": 0.4
+        },
+        "weekly_4_3": {
+          "target": 606860287.0,
+          "actual": 225665518.0,
+          "pct": 0.37
+        },
+        "weekly_4_4": {
+          "target": 606860287.0,
+          "actual": 225665518.0,
+          "pct": 0.37
+        },
+        "weekly_4_5": {
+          "actual": 2600869232.0,
+          "pct": 1528460287.0
+        },
+        "monthly_5": {
+          "target": 606869487.0,
+          "actual": 262634971.0,
+          "pct": 0.43
+        },
+        "weekly_5_1": {
+          "target": 606869487.0
+        },
+        "weekly_5_2": {
+          "target": 606869487.0
+        },
+        "weekly_5_3": {
+          "target": 606869487.0
+        },
+        "weekly_5_5": {
+          "actual": 2709238272.0,
+          "pct": 1085848004.0
+        },
+        "monthly_6": {
+          "target": 677309568.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 677309568.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 677309568.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 677309568.0,
+          "pct": 0.0
+        }
       }
     },
     "2.2": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 3520472810.0,
-        "quarterly_1": 1398585500.0,
-        "monthly_1": 315809629.0,
-        "weekly_1_1": 315809629.0,
-        "weekly_1_2": 315809629.0,
-        "weekly_1_3": 315809629.0,
-        "weekly_1_5": 1087400600.0,
-        "monthly_2": 271850150.0,
-        "weekly_2_1": 271850150.0,
-        "weekly_2_2": 271850150.0,
-        "weekly_2_3": 271850150.0,
-        "weekly_2_5": 1209284700.0,
-        "monthly_3": 302321175.0,
-        "weekly_3_1": 302321175.0,
-        "weekly_3_2": 302321175.0,
-        "weekly_3_3": 302321175.0,
-        "weekly_3_4": 302321175.0,
-        "weekly_3_5": 1247950110.0,
-        "monthly_4": 311987528.0,
-        "weekly_4_1": 311987528.0,
-        "weekly_4_2": 311987528.0,
-        "weekly_4_3": 311987528.0,
-        "weekly_4_4": 311987528.0,
-        "weekly_4_5": 1364731363.0,
-        "monthly_5": 318437318.0,
-        "weekly_5_1": 318437318.0,
-        "weekly_5_2": 318437318.0,
-        "weekly_5_3": 318437318.0,
-        "weekly_5_5": 1378617500.0,
-        "monthly_6": 344654375.0,
-        "weekly_6_1": 344654375.0,
-        "weekly_6_2": 344654375.0,
-        "weekly_6_3": 344654375.0,
-        "weekly_6_5": 90000000.0,
-        "monthly_7": 22500000.0,
-        "weekly_7_1": 22500000.0,
-        "weekly_7_2": 22500000.0,
-        "weekly_7_3": 22500000.0
+        "yearly_2026": {
+          "target": 204413000.0,
+          "pct": 0.6,
+          "actual": 122164814.0
+        },
+        "monthly_1": {
+          "target": 10612903.0,
+          "actual": 6229749.0,
+          "pct": 0.59
+        },
+        "weekly_1_1": {
+          "target": 10612903.0,
+          "actual": 6013315.0,
+          "pct": 0.57
+        },
+        "weekly_1_2": {
+          "target": 10612903.0,
+          "actual": 7770612.0,
+          "pct": 0.73
+        },
+        "weekly_1_3": {
+          "target": 10612903.0,
+          "actual": 9057033.0,
+          "pct": 0.85
+        },
+        "weekly_1_5": {
+          "actual": 51700000.0,
+          "pct": 41728481.0
+        },
+        "monthly_2": {
+          "target": 12925000.0,
+          "actual": 8221211.0,
+          "pct": 0.64
+        },
+        "weekly_2_1": {
+          "target": 12925000.0,
+          "actual": 10966076.0,
+          "pct": 0.85
+        },
+        "weekly_2_2": {
+          "target": 12925000.0,
+          "actual": 14015558.0,
+          "pct": 1.08
+        },
+        "weekly_2_3": {
+          "target": 12925000.0,
+          "actual": 9249173.0,
+          "pct": 0.72
+        },
+        "weekly_2_5": {
+          "actual": 55000000.0,
+          "pct": 47684367.0
+        },
+        "monthly_3": {
+          "target": 13750000.0,
+          "actual": 11659434.0,
+          "pct": 0.85
+        },
+        "weekly_3_1": {
+          "target": 13750000.0,
+          "actual": 9145923.0,
+          "pct": 0.67
+        },
+        "weekly_3_2": {
+          "target": 13750000.0,
+          "actual": 8495564.0,
+          "pct": 0.62
+        },
+        "weekly_3_3": {
+          "target": 13750000.0,
+          "actual": 12154782.0,
+          "pct": 0.88
+        },
+        "weekly_3_4": {
+          "target": 13750000.0
+        },
+        "weekly_3_5": {
+          "actual": 80000000.0,
+          "pct": 46101533.0
+        },
+        "monthly_4": {
+          "target": 18666667.0,
+          "actual": 13359950.0,
+          "pct": 0.72
+        },
+        "weekly_4_1": {
+          "target": 18666667.0,
+          "actual": 12073806.0,
+          "pct": 0.65
+        },
+        "weekly_4_2": {
+          "target": 18666667.0,
+          "actual": 11302268.0,
+          "pct": 0.61
+        },
+        "weekly_4_3": {
+          "target": 18666667.0,
+          "actual": 9948724.0,
+          "pct": 0.53
+        },
+        "weekly_4_4": {
+          "target": 18666667.0,
+          "actual": 142169835.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 80000000.0,
+          "pct": 53738213.0
+        },
+        "monthly_5": {
+          "target": 20000000.0,
+          "actual": 13746111.0,
+          "pct": 0.69
+        },
+        "weekly_5_1": {
+          "target": 20000000.0,
+          "actual": 12500037.0,
+          "pct": 0.63
+        },
+        "weekly_5_2": {
+          "target": 20000000.0,
+          "actual": 12432869.0,
+          "pct": 0.62
+        },
+        "weekly_5_3": {
+          "target": 20000000.0,
+          "actual": 10640979.0
+        },
+        "weekly_5_5": {
+          "actual": 90000000.0,
+          "pct": 42490828.0
+        },
+        "monthly_6": {
+          "target": 22500000.0,
+          "actual": 9837417.0,
+          "pct": 0.44
+        },
+        "weekly_6_1": {
+          "target": 22500000.0,
+          "actual": 11211084.0,
+          "pct": 0.5
+        },
+        "weekly_6_2": {
+          "target": 22500000.0,
+          "actual": 10480071.0,
+          "pct": 0.47
+        },
+        "weekly_6_3": {
+          "target": 22500000.0,
+          "actual": 9389452.0,
+          "pct": 0.42
+        },
+        "quarterly_1": {
+          "target": 250000000.0,
+          "actual": 161638691.0,
+          "pct": 0.65
+        },
+        "weekly_6_5": {
+          "actual": 90000000.0
+        },
+        "monthly_7": {
+          "target": 22500000.0,
+          "actual": 7932484.0,
+          "pct": 0.35
+        },
+        "weekly_7_1": {
+          "target": 22500000.0,
+          "actual": 9711264.0,
+          "pct": 0.43
+        },
+        "weekly_7_2": {
+          "target": 22500000.0,
+          "actual": 9448554.0,
+          "pct": 0.42
+        },
+        "weekly_7_3": {
+          "target": 22500000.0
+        }
       }
     },
     "WF01": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 469396375.0,
-        "quarterly_1": 28658500.0,
-        "monthly_1": 6471274.0,
-        "weekly_1_1": 6471274.0,
-        "weekly_1_2": 6471274.0,
-        "weekly_1_3": 6471274.0,
-        "weekly_1_5": 278967000.0,
-        "monthly_2": 69741750.0,
-        "weekly_2_1": 69741750.0,
-        "weekly_2_2": 69741750.0,
-        "weekly_2_3": 69741750.0,
-        "weekly_2_5": 330375500.0,
-        "monthly_3": 82593875.0,
-        "weekly_3_1": 82593875.0,
-        "weekly_3_2": 82593875.0,
-        "weekly_3_3": 82593875.0,
-        "weekly_3_4": 82593875.0,
-        "weekly_3_5": 234394875.0,
-        "monthly_4": 58598719.0,
-        "weekly_4_1": 58598719.0,
-        "weekly_4_2": 58598719.0,
-        "weekly_4_3": 58598719.0,
-        "weekly_4_4": 58598719.0,
-        "weekly_4_5": 287994850.0,
-        "monthly_5": 67198798.0,
-        "weekly_5_1": 67198798.0,
-        "weekly_5_2": 67198798.0,
-        "weekly_5_3": 67198798.0,
-        "weekly_5_5": 297992500.0,
-        "monthly_6": 74498125.0,
-        "weekly_6_1": 74498125.0,
-        "weekly_6_2": 74498125.0,
-        "weekly_6_3": 74498125.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 12445999.0,
+          "pct": 0.06,
+          "actual": 701395.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 5000000.0,
+          "pct": 341829.0
+        },
+        "monthly_2": {
+          "target": 1250000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_1": {
+          "target": 1250000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 1250000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 1250000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 5000000.0,
+          "pct": 359566.0
+        },
+        "monthly_3": {
+          "target": 1250000.0,
+          "actual": 210550.0,
+          "pct": 0.17
+        },
+        "weekly_3_1": {
+          "target": 1250000.0,
+          "actual": 115265.0,
+          "pct": 0.09
+        },
+        "weekly_3_2": {
+          "target": 1250000.0,
+          "actual": 9917.0,
+          "pct": 0.01
+        },
+        "weekly_3_3": {
+          "target": 1250000.0,
+          "actual": 18031.0,
+          "pct": 0.01
+        },
+        "weekly_3_4": {
+          "target": 1250000.0
+        },
+        "weekly_3_5": {
+          "actual": 10000000.0,
+          "pct": 80387.0
+        },
+        "monthly_4": {
+          "target": 2333333.0,
+          "actual": 14830.0,
+          "pct": 0.01
+        },
+        "weekly_4_1": {
+          "target": 2333333.0,
+          "actual": 13317.0,
+          "pct": 0.01
+        },
+        "weekly_4_2": {
+          "target": 2333333.0,
+          "actual": 26116.0,
+          "pct": 0.01
+        },
+        "weekly_4_3": {
+          "target": 2333333.0,
+          "actual": 20750.0,
+          "pct": 0.01
+        },
+        "weekly_4_4": {
+          "target": 2333333.0,
+          "actual": 142079.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 10000000.0,
+          "pct": 43970.0
+        },
+        "monthly_5": {
+          "target": 2500000.0,
+          "actual": 20892.0,
+          "pct": 0.01
+        },
+        "weekly_5_1": {
+          "target": 2500000.0,
+          "actual": 10735.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 2500000.0,
+          "actual": 8088.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 2500000.0,
+          "actual": 10735.0
+        },
+        "weekly_5_5": {
+          "actual": 10000000.0,
+          "pct": 4392335.0
+        },
+        "monthly_6": {
+          "target": 2500000.0,
+          "actual": 13366.0,
+          "pct": 0.01
+        },
+        "weekly_6_1": {
+          "target": 2500000.0,
+          "actual": 278368.0,
+          "pct": 0.11
+        },
+        "weekly_6_2": {
+          "target": 2500000.0,
+          "actual": 250294.0,
+          "pct": 0.1
+        },
+        "weekly_6_3": {
+          "target": 2500000.0,
+          "actual": 465156.0,
+          "pct": 0.19
+        },
+        "quarterly_1": {
+          "target": 55000000.0,
+          "actual": 174923.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        }
       }
     },
     "DA3D": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1994934593.0,
-        "quarterly_1": 780933920.0,
-        "monthly_1": 176339917.0,
-        "weekly_1_1": 176339917.0,
-        "weekly_1_2": 176339917.0,
-        "weekly_1_3": 176339917.0,
-        "weekly_1_5": 779758200.0,
-        "monthly_2": 194939550.0,
-        "weekly_2_1": 194939550.0,
-        "weekly_2_2": 194939550.0,
-        "weekly_2_3": 194939550.0,
-        "weekly_2_5": 915308992.0,
-        "monthly_3": 228827248.0,
-        "weekly_3_1": 228827248.0,
-        "weekly_3_2": 228827248.0,
-        "weekly_3_3": 228827248.0,
-        "weekly_3_4": 228827248.0,
-        "weekly_3_5": 945096163.0,
-        "monthly_4": 236274041.0,
-        "weekly_4_1": 236274041.0,
-        "weekly_4_2": 236274041.0,
-        "weekly_4_3": 236274041.0,
-        "weekly_4_4": 236274041.0,
-        "weekly_4_5": 947797230.0,
-        "monthly_5": 221152687.0,
-        "weekly_5_1": 221152687.0,
-        "weekly_5_2": 221152687.0,
-        "weekly_5_3": 221152687.0,
-        "weekly_5_5": 1032628272.0,
-        "monthly_6": 258157068.0,
-        "weekly_6_1": 258157068.0,
-        "weekly_6_2": 258157068.0,
-        "weekly_6_3": 258157068.0
+        "yearly_2026": {
+          "target": 132995640.0,
+          "pct": 0.0
+        },
+        "monthly_1": {
+          "target": 8219355.0,
+          "actual": 8219355.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 8219355.0,
+          "actual": 8219355.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 8219355.0,
+          "actual": 8219355.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 8219355.0,
+          "actual": 8219355.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 32000000.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 8000000.0,
+          "actual": 8000000.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 8000000.0,
+          "actual": 8000000.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 8000000.0,
+          "actual": 8000000.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 8000000.0,
+          "actual": 8000000.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 36400000.0
+        },
+        "monthly_3": {
+          "target": 9100000.0,
+          "actual": 133345733.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 9100000.0,
+          "actual": 110560211.0,
+          "pct": 0.0
+        },
+        "weekly_3_2": {
+          "target": 9100000.0,
+          "actual": 97514989.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 9100000.0,
+          "actual": 110551187.0,
+          "pct": 0.48
+        },
+        "weekly_3_4": {
+          "target": 9100000.0
+        },
+        "weekly_3_5": {
+          "actual": 62400000.0,
+          "pct": 380957952.0
+        },
+        "monthly_4": {
+          "target": 33800000.0,
+          "actual": 87186451.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 33800000.0,
+          "actual": 78727222.0,
+          "pct": 0.0
+        },
+        "weekly_4_2": {
+          "target": 33800000.0,
+          "actual": 87008545.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 33800000.0,
+          "actual": 83353604.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 33800000.0,
+          "actual": 83353604.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 62400000.0,
+          "pct": 476761708.0
+        },
+        "monthly_5": {
+          "target": 221152687.0,
+          "actual": 92809695.0,
+          "pct": 0.42
+        },
+        "weekly_5_1": {
+          "target": 221152687.0
+        },
+        "weekly_5_2": {
+          "target": 221152687.0
+        },
+        "weekly_5_3": {
+          "target": 221152687.0
+        },
+        "weekly_5_5": {
+          "actual": 62400000.0,
+          "pct": 61818486.0
+        },
+        "monthly_6": {
+          "target": 258157068.0
+        },
+        "weekly_6_1": {
+          "target": 258157068.0
+        },
+        "weekly_6_2": {
+          "target": 258157068.0
+        },
+        "weekly_6_3": {
+          "target": 258157068.0
+        }
       }
     },
     "VM1-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu chéo",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 664978198.0,
-        "quarterly_1": 715000000.0,
-        "monthly_1": 29354839.0,
-        "weekly_1_1": 29354839.0,
-        "weekly_1_2": 29354839.0,
-        "weekly_1_3": 29354839.0,
-        "weekly_1_5": 182000000.0,
-        "monthly_2": 45500000.0,
-        "weekly_2_1": 45500000.0,
-        "weekly_2_2": 45500000.0,
-        "weekly_2_3": 45500000.0,
-        "weekly_2_5": 182000000.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 234000000.0,
-        "monthly_4": 58500000.0,
-        "weekly_4_1": 58500000.0,
-        "weekly_4_2": 58500000.0,
-        "weekly_4_3": 58500000.0,
-        "weekly_4_4": 58500000.0,
-        "weekly_4_5": 234000000.0,
-        "monthly_5": 50000000.0,
-        "weekly_5_1": 50000000.0,
-        "weekly_5_2": 50000000.0,
-        "weekly_5_3": 50000000.0,
-        "weekly_5_5": 247000000.0,
-        "monthly_6": 50000000.0,
-        "weekly_6_1": 50000000.0,
-        "weekly_6_2": 50000000.0,
-        "weekly_6_3": 50000000.0
+        "yearly_2026": {
+          "target": 664978198.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 715000000.0,
+          "actual": 101500128.0
+        },
+        "monthly_1": {
+          "target": 29354839.0,
+          "actual": 29354839.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 29354839.0,
+          "actual": 29354839.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 29354839.0,
+          "actual": 29354839.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 29354839.0,
+          "actual": 29354839.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 182000000.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 45500000.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 45500000.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 45500000.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 45500000.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 182000000.0,
+          "pct": 107448423.0
+        },
+        "monthly_3": {
+          "target": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0
+        },
+        "weekly_3_4": {
+          "target": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 234000000.0
+        },
+        "monthly_4": {
+          "target": 58500000.0,
+          "actual": 5000000.0,
+          "pct": 0.09
+        },
+        "weekly_4_1": {
+          "target": 58500000.0,
+          "actual": 5000000.0
+        },
+        "weekly_4_2": {
+          "target": 58500000.0
+        },
+        "weekly_4_3": {
+          "target": 58500000.0
+        },
+        "weekly_4_4": {
+          "target": 58500000.0
+        },
+        "weekly_4_5": {
+          "actual": 234000000.0
+        },
+        "monthly_5": {
+          "target": 50000000.0,
+          "actual": 10000000.0,
+          "pct": 0.2
+        },
+        "weekly_5_1": {
+          "target": 50000000.0
+        },
+        "weekly_5_2": {
+          "target": 50000000.0
+        },
+        "weekly_5_3": {
+          "target": 50000000.0
+        },
+        "weekly_5_5": {
+          "actual": 247000000.0,
+          "pct": 101500128.0
+        },
+        "monthly_6": {
+          "target": 50000000.0,
+          "actual": 5000000.0,
+          "pct": 0.1
+        },
+        "weekly_6_1": {
+          "target": 50000000.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 50000000.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 50000000.0,
+          "pct": 0.0
+        }
       }
     },
     "VM1-I02.04": {
       "title": "",
       "unit": "Doanh thu đối tác",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1173490936.0,
-        "quarterly_1": 936000000.0,
-        "monthly_1": 41096774.0,
-        "weekly_1_1": 41096774.0,
-        "weekly_1_2": 41096774.0,
-        "weekly_1_3": 41096774.0,
-        "weekly_1_5": 156000000.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 39000000.0,
-        "weekly_2_5": 182000000.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 312000000.0,
-        "monthly_4": 30000000.0,
-        "weekly_4_1": 30000000.0,
-        "weekly_4_2": 30000000.0,
-        "weekly_4_3": 30000000.0,
-        "weekly_4_4": 30000000.0,
-        "weekly_4_5": 312000000.0,
-        "monthly_5": 50000000.0,
-        "weekly_5_1": 50000000.0,
-        "weekly_5_5": 312000000.0,
-        "weekly_6_1": 50000000.0,
-        "weekly_6_2": 50000000.0,
-        "weekly_6_3": 50000000.0,
-        "monthly_7": 15000000.0,
-        "weekly_7_1": 20000000.0,
-        "weekly_7_2": 20000000.0
+        "yearly_2026": {
+          "target": 1173490936.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 936000000.0
+        },
+        "monthly_1": {
+          "target": 41096774.0,
+          "actual": 41096774.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 41096774.0,
+          "actual": 41096774.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 41096774.0,
+          "actual": 41096774.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 41096774.0,
+          "actual": 41096774.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 156000000.0,
+          "pct": 48600068.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 39000000.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 182000000.0,
+          "pct": 290171406.0
+        },
+        "monthly_3": {
+          "target": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 11000000.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 11000000.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 18000000.0
+        },
+        "weekly_3_4": {
+          "target": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 312000000.0
+        },
+        "monthly_4": {
+          "target": 30000000.0,
+          "actual": 15000000.0,
+          "pct": 0.5
+        },
+        "weekly_4_1": {
+          "target": 30000000.0,
+          "actual": 15000000.0,
+          "pct": 0.5
+        },
+        "weekly_4_2": {
+          "target": 30000000.0,
+          "actual": 25000000.0,
+          "pct": 0.83
+        },
+        "weekly_4_3": {
+          "target": 30000000.0,
+          "actual": 25000000.0,
+          "pct": 0.83
+        },
+        "weekly_4_4": {
+          "target": 30000000.0,
+          "actual": 25000000.0,
+          "pct": 0.83
+        },
+        "weekly_4_5": {
+          "actual": 312000000.0
+        },
+        "monthly_5": {
+          "target": 50000000.0,
+          "actual": 15000000.0,
+          "pct": 0.3
+        },
+        "weekly_5_1": {
+          "target": 50000000.0
+        },
+        "weekly_5_5": {
+          "actual": 312000000.0,
+          "pct": 206468960.0
+        },
+        "weekly_6_1": {
+          "target": 50000000.0,
+          "actual": 10000000.0
+        },
+        "weekly_6_2": {
+          "target": 50000000.0,
+          "actual": 15000000.0
+        },
+        "weekly_6_3": {
+          "target": 50000000.0,
+          "actual": 15000000.0
+        },
+        "monthly_7": {
+          "actual": 15000000.0
+        },
+        "weekly_7_1": {
+          "actual": 20000000.0
+        },
+        "weekly_7_2": {
+          "actual": 20000000.0
+        }
       }
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.01": {
       "title": "ROI",
       "unit": "Tối ưu chi phí nhân sự",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.02": {
       "title": "ROI",
       "unit": "Tối ưu chi phí sản xuất",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí mua công cụ AI phân bổ hàng tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M2": {
       "title": "",
       "unit": "",
-      "periods": {
-        "quarterly_1": 0.25
-      }
+      "formula": "",
+      "pic": "",
+      "periods": {}
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM2-I01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Chi phí CTV",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 140.0,
-        "quarterly_1": 219.0,
-        "monthly_1": 8.0,
-        "weekly_1_1": 9.0,
-        "weekly_1_2": 8.0,
-        "weekly_1_3": 12.0,
-        "weekly_1_5": 37.0,
-        "monthly_2": 9.0,
-        "weekly_2_1": 12.0,
-        "weekly_2_3": 8.0,
-        "weekly_2_5": 58.0,
-        "monthly_3": 13.0,
-        "weekly_3_1": 13.0,
-        "weekly_3_2": 15.0,
-        "weekly_3_3": 12.0,
-        "weekly_3_5": 54.0,
-        "monthly_4": 12.0,
-        "weekly_4_1": 13.0,
-        "weekly_4_2": 14.0,
-        "weekly_4_3": 11.0,
-        "weekly_4_4": 7.0,
-        "weekly_4_5": 56.0,
-        "monthly_5": 10.0,
-        "weekly_5_1": 12.0,
-        "weekly_5_2": 11.0,
-        "weekly_5_3": 11.0,
-        "weekly_5_5": 52.0,
-        "monthly_6": 13.0,
-        "weekly_6_1": 12.0,
-        "weekly_6_2": 12.0,
-        "weekly_6_3": 12.0,
-        "weekly_6_5": 120.0,
-        "monthly_7": 8.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 8.0,
-        "weekly_7_3": 8.0
+        "yearly_2026": {
+          "target": 140.0,
+          "actual": 147.0,
+          "pct": 1.05
+        },
+        "quarterly_1": {
+          "target": 219.0,
+          "actual": 206.0,
+          "pct": 0.94
+        },
+        "monthly_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 9.0,
+          "actual": 9.0
+        },
+        "weekly_1_2": {
+          "target": 8.0,
+          "actual": 10.0
+        },
+        "weekly_1_3": {
+          "target": 12.0,
+          "actual": 12.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 37.0,
+          "pct": 45.0
+        },
+        "monthly_2": {
+          "target": 9.0,
+          "actual": 14.0,
+          "pct": 1.56
+        },
+        "weekly_2_1": {
+          "target": 12.0,
+          "actual": 11.0
+        },
+        "weekly_2_3": {
+          "target": 8.0,
+          "actual": 16.0
+        },
+        "weekly_2_5": {
+          "actual": 58.0,
+          "pct": 60.0
+        },
+        "monthly_3": {
+          "target": 13.0,
+          "actual": 13.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 13.0,
+          "actual": 13.0
+        },
+        "weekly_3_2": {
+          "target": 15.0,
+          "actual": 17.0,
+          "pct": 1.13
+        },
+        "weekly_3_3": {
+          "target": 12.0,
+          "actual": 12.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 54.0,
+          "pct": 58.0
+        },
+        "monthly_4": {
+          "target": 12.0,
+          "actual": 13.0
+        },
+        "weekly_4_1": {
+          "target": 13.0,
+          "actual": 13.0
+        },
+        "weekly_4_2": {
+          "target": 14.0,
+          "actual": 13.0
+        },
+        "weekly_4_3": {
+          "target": 11.0,
+          "actual": 16.0
+        },
+        "weekly_4_4": {
+          "target": 7.0,
+          "actual": 8.0
+        },
+        "weekly_4_5": {
+          "actual": 56.0,
+          "pct": 57.0
+        },
+        "monthly_5": {
+          "target": 10.0,
+          "actual": 10.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 12.0,
+          "actual": 11.0
+        },
+        "weekly_5_2": {
+          "target": 11.0,
+          "actual": 12.0
+        },
+        "weekly_5_3": {
+          "target": 11.0,
+          "actual": 16.0
+        },
+        "weekly_5_5": {
+          "actual": 52.0,
+          "pct": 56.0
+        },
+        "monthly_6": {
+          "target": 13.0,
+          "actual": 13.0
+        },
+        "weekly_6_1": {
+          "target": 12.0,
+          "actual": 12.0
+        },
+        "weekly_6_2": {
+          "target": 12.0,
+          "actual": 10.0
+        },
+        "weekly_6_3": {
+          "target": 12.0,
+          "actual": 11.0
+        },
+        "weekly_6_5": {
+          "actual": 120.0
+        },
+        "monthly_7": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 9.0,
+          "pct": 1.13
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_3": {
+          "target": 8.0
+        }
       }
     },
     "Số lượng video hoàn thành sản xuất (SNXD)": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Chi phí CTV",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 90.0,
-        "quarterly_1": 144.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 6.0,
-        "weekly_1_3": 9.0,
-        "weekly_1_5": 25.0,
-        "monthly_2": 6.0,
-        "weekly_2_1": 9.0,
-        "weekly_2_3": 6.0,
-        "weekly_2_5": 38.0,
-        "monthly_3": 9.0,
-        "weekly_3_1": 9.0,
-        "weekly_3_2": 10.0,
-        "weekly_3_3": 8.0,
-        "weekly_3_4": 10.0,
-        "weekly_3_5": 34.0,
-        "monthly_4": 7.0,
-        "weekly_4_1": 8.0,
-        "weekly_4_2": 10.0,
-        "weekly_4_3": 7.0,
-        "weekly_4_4": 4.0,
-        "weekly_4_5": 36.0,
-        "monthly_5": 7.0,
-        "weekly_5_1": 9.0,
-        "weekly_5_2": 8.0,
-        "weekly_5_3": 8.0,
-        "weekly_5_5": 32.0,
-        "monthly_6": 9.0,
-        "weekly_6_1": 8.0,
-        "weekly_6_2": 8.0,
-        "weekly_6_3": 8.0,
-        "weekly_6_4": 8.0,
-        "weekly_6_5": 30.0,
-        "monthly_7": 8.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 8.0,
-        "weekly_7_3": 8.0
+        "yearly_2026": {
+          "target": 90.0,
+          "actual": 111.0,
+          "pct": 1.23
+        },
+        "quarterly_1": {
+          "target": 144.0,
+          "actual": 131.0,
+          "pct": 0.91
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 6.0,
+          "actual": 9.0
+        },
+        "weekly_1_3": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 25.0,
+          "pct": 33.0
+        },
+        "monthly_2": {
+          "target": 6.0,
+          "actual": 11.0,
+          "pct": 1.83
+        },
+        "weekly_2_1": {
+          "target": 9.0,
+          "actual": 8.0
+        },
+        "weekly_2_3": {
+          "target": 6.0,
+          "actual": 14.0
+        },
+        "weekly_2_5": {
+          "actual": 38.0,
+          "pct": 40.0
+        },
+        "monthly_3": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 9.0,
+          "actual": 8.0
+        },
+        "weekly_3_2": {
+          "target": 10.0,
+          "actual": 12.0,
+          "pct": 1.2
+        },
+        "weekly_3_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 10.0
+        },
+        "weekly_3_5": {
+          "actual": 34.0,
+          "pct": 38.0
+        },
+        "monthly_4": {
+          "target": 7.0,
+          "actual": 8.0
+        },
+        "weekly_4_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_4_2": {
+          "target": 10.0,
+          "actual": 9.0
+        },
+        "weekly_4_3": {
+          "target": 7.0,
+          "actual": 11.0
+        },
+        "weekly_4_4": {
+          "target": 4.0,
+          "actual": 5.0
+        },
+        "weekly_4_5": {
+          "actual": 36.0,
+          "pct": 37.0
+        },
+        "monthly_5": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 9.0,
+          "actual": 8.0
+        },
+        "weekly_5_2": {
+          "target": 8.0,
+          "actual": 9.0
+        },
+        "weekly_5_3": {
+          "target": 8.0,
+          "actual": 12.0
+        },
+        "weekly_5_5": {
+          "actual": 32.0,
+          "pct": 36.0
+        },
+        "monthly_6": {
+          "target": 9.0,
+          "actual": 9.0
+        },
+        "weekly_6_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_6_2": {
+          "target": 8.0,
+          "actual": 6.0
+        },
+        "weekly_6_3": {
+          "target": 8.0,
+          "actual": 7.0
+        },
+        "weekly_6_4": {
+          "target": 8.0
+        },
+        "weekly_6_5": {
+          "actual": 30.0
+        },
+        "monthly_7": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 9.0
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_3": {
+          "target": 8.0
+        }
       }
     },
     "Số lượng video 2D hoàn thành sản xuất": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 50.0,
-        "quarterly_1": 75.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 3.0,
-        "weekly_1_5": 12.0,
-        "monthly_2": 3.0,
-        "weekly_2_1": 3.0,
-        "weekly_2_3": 2.0,
-        "weekly_2_5": 20.0,
-        "monthly_3": 4.0,
-        "weekly_3_1": 4.0,
-        "weekly_3_2": 5.0,
-        "weekly_3_3": 4.0,
-        "weekly_3_4": 4.0,
-        "weekly_3_5": 20.0,
-        "monthly_4": 5.0,
-        "weekly_4_1": 5.0,
-        "weekly_4_2": 4.0,
-        "weekly_4_3": 4.0,
-        "weekly_4_4": 3.0,
-        "weekly_4_5": 20.0,
-        "monthly_5": 3.0,
-        "weekly_5_1": 3.0,
-        "weekly_5_2": 3.0,
-        "weekly_5_3": 3.0,
-        "weekly_5_5": 20.0,
-        "monthly_6": 4.0,
-        "weekly_6_1": 4.0,
-        "weekly_6_2": 4.0,
-        "weekly_6_3": 4.0,
-        "weekly_6_5": 90.0
+        "yearly_2026": {
+          "target": 50.0,
+          "actual": 36.0,
+          "pct": 0.72
+        },
+        "quarterly_1": {
+          "target": 75.0,
+          "actual": 75.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 1.0
+        },
+        "weekly_1_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 12.0,
+          "pct": 12.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_2_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_2_5": {
+          "actual": 20.0,
+          "pct": 20.0
+        },
+        "monthly_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 4.0,
+          "actual": 5.0
+        },
+        "weekly_3_2": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 4.0
+        },
+        "weekly_3_5": {
+          "actual": 20.0,
+          "pct": 20.0
+        },
+        "monthly_4": {
+          "target": 5.0,
+          "actual": 5.0
+        },
+        "weekly_4_1": {
+          "target": 5.0,
+          "actual": 5.0
+        },
+        "weekly_4_2": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_4_3": {
+          "target": 4.0,
+          "actual": 5.0
+        },
+        "weekly_4_4": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_4_5": {
+          "actual": 20.0,
+          "pct": 20.0
+        },
+        "monthly_5": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_5_2": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_5_3": {
+          "target": 3.0,
+          "actual": 4.0
+        },
+        "weekly_5_5": {
+          "actual": 20.0,
+          "pct": 20.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_6_1": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_6_2": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_6_3": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_6_5": {
+          "actual": 90.0
+        }
       }
     },
     "VM2-I01.3": {
       "title": "Số lượng ý tưởng mới",
       "unit": "Ý tưởng",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM2-I01.4": {
       "title": "Số lượng ý tưởng mới",
       "unit": "Số lượng ý tưởng được chọn",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM2-I01.5": {
       "title": "ROI",
       "unit": "Tỷ lệ chọn ý tưởng",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM2-I01.6": {
       "title": "SL Kịch bản mới SX",
       "unit": "Kịch bản",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "TM2-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I02.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng 1 triệu views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 20.0,
-        "quarterly_1": 20.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 2.0,
-        "monthly_2": 0.0,
-        "weekly_2_5": 1.0,
-        "weekly_3_5": 2.0,
-        "weekly_4_5": 2.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 4.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 4.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 20.0,
+          "actual": 1.0,
+          "pct": 0.05
+        },
+        "quarterly_1": {
+          "target": 20.0,
+          "actual": 6.0,
+          "pct": 0.3
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 2.0,
+          "pct": 3.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 4.0,
+          "pct": 3.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 4.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "VM2-I02.02": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng X views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 100.0,
-        "quarterly_1": 100.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 15.0,
-        "monthly_2": 3.0,
-        "weekly_2_5": 10.0,
-        "weekly_3_5": 20.0,
-        "weekly_4_5": 20.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 1.0,
-        "weekly_5_5": 20.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 2.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_5": 20.0,
-        "monthly_7": 2.0,
-        "weekly_7_1": 1.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 100.0,
+          "actual": 15.0,
+          "pct": 0.15
+        },
+        "quarterly_1": {
+          "target": 100.0,
+          "actual": 31.0,
+          "pct": 0.31
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 15.0,
+          "pct": 5.0
+        },
+        "monthly_2": {
+          "target": 3.0
+        },
+        "weekly_2_5": {
+          "actual": 10.0,
+          "pct": 6.0
+        },
+        "weekly_3_5": {
+          "actual": 20.0,
+          "pct": 7.0
+        },
+        "weekly_4_5": {
+          "actual": 20.0,
+          "pct": 12.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 1.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 20.0,
+          "pct": 12.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 20.0
+        },
+        "monthly_7": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "TM3-I01.03": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng video upload",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 230.0,
-        "quarterly_1": 230.0,
-        "monthly_1": 9.0,
-        "weekly_1_1": 9.0,
-        "weekly_1_2": 9.0,
-        "weekly_1_3": 5.0,
-        "weekly_1_5": 30.0,
-        "monthly_2": 5.0,
-        "weekly_2_1": 6.0,
-        "weekly_2_2": 8.0,
-        "weekly_2_3": 8.0,
-        "weekly_2_5": 38.0,
-        "monthly_3": 8.0,
-        "weekly_3_1": 8.0,
-        "weekly_3_2": 8.0,
-        "weekly_3_3": 8.0,
-        "weekly_3_4": 8.0,
-        "weekly_3_5": 38.0,
-        "monthly_4": 8.0,
-        "weekly_4_1": 8.0,
-        "weekly_4_2": 8.0,
-        "weekly_4_3": 8.0,
-        "weekly_4_4": 8.0,
-        "weekly_4_5": 56.0,
-        "monthly_5": 8.0,
-        "weekly_5_1": 8.0,
-        "weekly_5_2": 8.0,
-        "weekly_5_3": 8.0,
-        "weekly_5_5": 60.0,
-        "monthly_6": 8.0,
-        "weekly_6_1": 8.0,
-        "weekly_6_2": 8.0,
-        "weekly_6_3": 8.0,
-        "weekly_6_4": 8.0,
-        "weekly_6_5": 120.0,
-        "monthly_7": 15.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 8.0,
-        "weekly_7_3": 8.0
+        "yearly_2026": {
+          "target": 230.0,
+          "actual": 106.0,
+          "pct": 0.46
+        },
+        "quarterly_1": {
+          "target": 230.0,
+          "actual": 178.0,
+          "pct": 0.77
+        },
+        "monthly_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 9.0,
+          "actual": 9.0
+        },
+        "weekly_1_2": {
+          "target": 9.0,
+          "actual": 9.0
+        },
+        "weekly_1_3": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 30.0,
+          "pct": 30.0
+        },
+        "monthly_2": {
+          "target": 5.0,
+          "actual": 5.0
+        },
+        "weekly_2_1": {
+          "target": 6.0,
+          "actual": 6.0
+        },
+        "weekly_2_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_2_3": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_2_5": {
+          "actual": 38.0,
+          "pct": 38.0
+        },
+        "monthly_3": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_3_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_3_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 8.0
+        },
+        "weekly_3_5": {
+          "actual": 38.0,
+          "pct": 58.0
+        },
+        "monthly_4": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_4_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_4_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_4_3": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_4_4": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_4_5": {
+          "actual": 56.0,
+          "pct": 60.0
+        },
+        "monthly_5": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_5_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_5_3": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_5_5": {
+          "actual": 60.0,
+          "pct": 60.0
+        },
+        "monthly_6": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_6_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_6_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_6_3": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_6_4": {
+          "target": 8.0
+        },
+        "weekly_6_5": {
+          "actual": 120.0
+        },
+        "monthly_7": {
+          "target": 15.0,
+          "actual": 15.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_3": {
+          "target": 8.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
-      "periods": {
-        "quarterly_1": 0.25
-      }
+      "formula": "",
+      "pic": "",
+      "periods": {}
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "SL video đạt ngưỡng X view trên nền tảng Youtube trong kỳ": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Traffic BP WF",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 1387299999.0,
-        "quarterly_1": 2173000000.0,
-        "monthly_1": 86935484.0,
-        "weekly_1_1": 49677419.0,
-        "weekly_1_2": 49677419.0,
-        "weekly_1_3": 49677419.0,
-        "weekly_1_5": 504800000.0,
-        "monthly_2": 126200000.0,
-        "weekly_2_1": 126200000.0,
-        "weekly_2_2": 126200000.0,
-        "weekly_2_3": 126200000.0,
-        "weekly_2_5": 560000000.0,
-        "monthly_3": 140000000.0,
-        "weekly_3_1": 140000000.0,
-        "weekly_3_2": 140000000.0,
-        "weekly_3_3": 140000000.0,
-        "weekly_3_4": 140000000.0,
-        "weekly_3_5": 610000000.0,
-        "monthly_4": 142333333.0,
-        "weekly_4_1": 142333333.0,
-        "weekly_4_2": 142333333.0,
-        "weekly_4_3": 142333333.0,
-        "weekly_4_4": 142333333.0,
-        "weekly_4_5": 650000000.0,
-        "monthly_5": 162500000.0,
-        "weekly_5_1": 162500000.0,
-        "weekly_5_2": 162500000.0,
-        "weekly_5_3": 162500000.0,
-        "weekly_5_5": 650000000.0,
-        "monthly_6": 162500000.0,
-        "weekly_6_1": 162500000.0,
-        "weekly_6_2": 162500000.0,
-        "weekly_6_3": 162500000.0,
-        "weekly_6_5": 650000000.0,
-        "monthly_7": 162500000.0,
-        "weekly_7_1": 162500000.0,
-        "weekly_7_2": 162500000.0,
-        "weekly_7_3": 162500000.0
+        "yearly_2026": {
+          "target": 1387299999.0,
+          "actual": 1244098927.0,
+          "pct": 0.9
+        },
+        "quarterly_1": {
+          "target": 2173000000.0,
+          "actual": 1369639592.0,
+          "pct": 0.63
+        },
+        "monthly_1": {
+          "target": 86935484.0,
+          "actual": 38613980.0,
+          "pct": 0.44
+        },
+        "weekly_1_1": {
+          "target": 49677419.0,
+          "actual": 34325808.0,
+          "pct": 0.69
+        },
+        "weekly_1_2": {
+          "target": 49677419.0,
+          "actual": 42220375.0,
+          "pct": 0.85
+        },
+        "weekly_1_3": {
+          "target": 49677419.0,
+          "actual": 70814007.0,
+          "pct": 1.43
+        },
+        "weekly_1_5": {
+          "actual": 504800000.0,
+          "pct": 375502326.0
+        },
+        "monthly_2": {
+          "target": 126200000.0,
+          "actual": 81291035.0,
+          "pct": 0.64
+        },
+        "weekly_2_1": {
+          "target": 126200000.0,
+          "actual": 94180806.0,
+          "pct": 0.75
+        },
+        "weekly_2_2": {
+          "target": 126200000.0,
+          "actual": 103354564.0,
+          "pct": 0.82
+        },
+        "weekly_2_3": {
+          "target": 126200000.0,
+          "actual": 97910883.0,
+          "pct": 0.78
+        },
+        "weekly_2_5": {
+          "actual": 560000000.0,
+          "pct": 450013541.0
+        },
+        "monthly_3": {
+          "target": 140000000.0,
+          "actual": 128982598.0,
+          "pct": 0.92
+        },
+        "weekly_3_1": {
+          "target": 140000000.0,
+          "actual": 112030301.0,
+          "pct": 0.8
+        },
+        "weekly_3_2": {
+          "target": 140000000.0,
+          "actual": 103500321.0,
+          "pct": 0.74
+        },
+        "weekly_3_3": {
+          "target": 140000000.0,
+          "actual": 105500321.0,
+          "pct": 0.75
+        },
+        "weekly_3_4": {
+          "target": 140000000.0
+        },
+        "weekly_3_5": {
+          "actual": 610000000.0,
+          "pct": 438771099.0
+        },
+        "monthly_4": {
+          "target": 142333333.0,
+          "actual": 107644579.0,
+          "pct": 0.76
+        },
+        "weekly_4_1": {
+          "target": 142333333.0,
+          "actual": 106238518.0,
+          "pct": 0.75
+        },
+        "weekly_4_2": {
+          "target": 142333333.0,
+          "actual": 111491344.0,
+          "pct": 0.78
+        },
+        "weekly_4_3": {
+          "target": 142333333.0,
+          "actual": 99916380.0,
+          "pct": 0.7
+        },
+        "weekly_4_4": {
+          "target": 142333333.0
+        },
+        "weekly_4_5": {
+          "actual": 650000000.0,
+          "pct": 433472676.0
+        },
+        "monthly_5": {
+          "target": 162500000.0,
+          "actual": 121794312.0,
+          "pct": 0.75
+        },
+        "weekly_5_1": {
+          "target": 162500000.0,
+          "actual": 112741810.0,
+          "pct": 0.69
+        },
+        "weekly_5_2": {
+          "target": 162500000.0,
+          "actual": 80756483.0,
+          "pct": 0.5
+        },
+        "weekly_5_3": {
+          "target": 162500000.0,
+          "actual": 80319462.0
+        },
+        "weekly_5_5": {
+          "actual": 650000000.0,
+          "pct": 365705039.0
+        },
+        "monthly_6": {
+          "target": 162500000.0,
+          "actual": 88603019.0,
+          "pct": 0.55
+        },
+        "weekly_6_1": {
+          "target": 162500000.0,
+          "actual": 94212772.0,
+          "pct": 0.58
+        },
+        "weekly_6_2": {
+          "target": 162500000.0,
+          "actual": 101627543.0,
+          "pct": 0.63
+        },
+        "weekly_6_3": {
+          "target": 162500000.0,
+          "actual": 89394118.0,
+          "pct": 0.55
+        },
+        "weekly_6_5": {
+          "actual": 650000000.0
+        },
+        "monthly_7": {
+          "target": 162500000.0,
+          "actual": 68579504.0,
+          "pct": 0.42
+        },
+        "weekly_7_1": {
+          "target": 162500000.0,
+          "actual": 92818433.0,
+          "pct": 0.57
+        },
+        "weekly_7_2": {
+          "target": 162500000.0,
+          "actual": 93163093.0,
+          "pct": 0.57
+        },
+        "weekly_7_3": {
+          "target": 162500000.0
+        }
       }
     },
     "Tổng sổ views trên các kênh của đơn vị": {
       "title": "Số lượt view youtube SCVN",
       "unit": "",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 465441000.0,
-        "quarterly_1": 868000000.0,
-        "monthly_1": 38612903.0,
-        "weekly_1_1": 38612903.0,
-        "weekly_1_2": 38612903.0,
-        "weekly_1_3": 38612903.0,
-        "weekly_1_5": 188100000.0,
-        "monthly_2": 47025000.0,
-        "weekly_2_1": 47025000.0,
-        "weekly_2_2": 47025000.0,
-        "weekly_2_3": 47025000.0,
-        "weekly_2_5": 220000000.0,
-        "monthly_3": 55000000.0,
-        "weekly_3_1": 55000000.0,
-        "weekly_3_2": 55000000.0,
-        "weekly_3_3": 55000000.0,
-        "weekly_3_4": 55000000.0,
-        "weekly_3_5": 190000000.0,
-        "monthly_4": 44333333.0,
-        "weekly_4_1": 44333333.0,
-        "weekly_4_2": 44333333.0,
-        "weekly_4_3": 44333333.0,
-        "weekly_4_4": 44333333.0,
-        "weekly_4_5": 200000000.0,
-        "monthly_5": 50000000.0,
-        "weekly_5_1": 50000000.0,
-        "weekly_5_2": 50000000.0,
-        "weekly_5_3": 50000000.0,
-        "weekly_5_5": 250000000.0,
-        "monthly_6": 62500000.0,
-        "weekly_6_1": 62500000.0,
-        "weekly_6_2": 62500000.0,
-        "weekly_6_3": 62500000.0,
-        "weekly_6_5": 260000000.0,
-        "monthly_7": 62500000.0,
-        "weekly_7_1": 62500000.0,
-        "weekly_7_2": 62500000.0,
-        "weekly_7_3": 62500000.0
+        "yearly_2026": {
+          "target": 465441000.0,
+          "actual": 541507496.0,
+          "pct": 1.16
+        },
+        "quarterly_1": {
+          "target": 868000000.0,
+          "actual": 487258529.0,
+          "pct": 0.56
+        },
+        "monthly_1": {
+          "target": 38612903.0,
+          "actual": 32384231.0,
+          "pct": 0.84
+        },
+        "weekly_1_1": {
+          "target": 38612903.0,
+          "actual": 28312493.0,
+          "pct": 0.73
+        },
+        "weekly_1_2": {
+          "target": 38612903.0,
+          "actual": 34449763.0,
+          "pct": 0.89
+        },
+        "weekly_1_3": {
+          "target": 38612903.0,
+          "actual": 61756974.0,
+          "pct": 1.6
+        },
+        "weekly_1_5": {
+          "actual": 188100000.0,
+          "pct": 172432016.0
+        },
+        "monthly_2": {
+          "target": 47025000.0,
+          "actual": 38656049.0,
+          "pct": 0.82
+        },
+        "weekly_2_1": {
+          "target": 47025000.0,
+          "actual": 45369119.0,
+          "pct": 0.96
+        },
+        "weekly_2_2": {
+          "target": 47025000.0,
+          "actual": 47598472.0,
+          "pct": 1.01
+        },
+        "weekly_2_3": {
+          "target": 47025000.0,
+          "actual": 40752719.0,
+          "pct": 0.87
+        },
+        "weekly_2_5": {
+          "actual": 220000000.0,
+          "pct": 197149616.0
+        },
+        "monthly_3": {
+          "target": 55000000.0,
+          "actual": 51278525.0,
+          "pct": 0.93
+        },
+        "weekly_3_1": {
+          "target": 55000000.0,
+          "actual": 43345017.0,
+          "pct": 0.79
+        },
+        "weekly_3_2": {
+          "target": 55000000.0,
+          "actual": 37166939.0,
+          "pct": 0.68
+        },
+        "weekly_3_3": {
+          "target": 55000000.0,
+          "actual": 45467229.0,
+          "pct": 0.83
+        },
+        "weekly_3_4": {
+          "target": 55000000.0
+        },
+        "weekly_3_5": {
+          "actual": 190000000.0,
+          "pct": 175390176.0
+        },
+        "monthly_4": {
+          "target": 44333333.0,
+          "actual": 31924171.0,
+          "pct": 0.72
+        },
+        "weekly_4_1": {
+          "target": 44333333.0,
+          "actual": 32383503.0,
+          "pct": 0.73
+        },
+        "weekly_4_2": {
+          "target": 44333333.0,
+          "actual": 31868316.0,
+          "pct": 0.72
+        },
+        "weekly_4_3": {
+          "target": 44333333.0,
+          "actual": 33345961.0,
+          "pct": 0.75
+        },
+        "weekly_4_4": {
+          "target": 44333333.0
+        },
+        "weekly_4_5": {
+          "actual": 200000000.0,
+          "pct": 145055048.0
+        },
+        "monthly_5": {
+          "target": 50000000.0,
+          "actual": 33906492.0,
+          "pct": 0.68
+        },
+        "weekly_5_1": {
+          "target": 50000000.0,
+          "actual": 33912343.0,
+          "pct": 0.68
+        },
+        "weekly_5_2": {
+          "target": 50000000.0,
+          "actual": 33348580.0,
+          "pct": 0.67
+        },
+        "weekly_5_3": {
+          "target": 50000000.0,
+          "actual": 31238029.0
+        },
+        "weekly_5_5": {
+          "actual": 250000000.0,
+          "pct": 136302005.0
+        },
+        "monthly_6": {
+          "target": 62500000.0,
+          "actual": 31150449.0,
+          "pct": 0.5
+        },
+        "weekly_6_1": {
+          "target": 62500000.0,
+          "actual": 31632197.0,
+          "pct": 0.51
+        },
+        "weekly_6_2": {
+          "target": 62500000.0,
+          "actual": 34077748.0,
+          "pct": 0.55
+        },
+        "weekly_6_3": {
+          "target": 62500000.0,
+          "actual": 33632036.0,
+          "pct": 0.54
+        },
+        "weekly_6_5": {
+          "actual": 260000000.0
+        },
+        "monthly_7": {
+          "target": 62500000.0,
+          "actual": 28761294.0,
+          "pct": 0.46
+        },
+        "weekly_7_1": {
+          "target": 62500000.0,
+          "actual": 40289689.0,
+          "pct": 0.64
+        },
+        "weekly_7_2": {
+          "target": 62500000.0,
+          "actual": 32781482.0,
+          "pct": 0.52
+        },
+        "weekly_7_3": {
+          "target": 62500000.0
+        }
       }
     },
     "Kinh doanh Traffic Long": {
       "title": "Số lượt view youtube SCVN",
       "unit": "",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 705000000.0,
-        "quarterly_1": 1000000000.0,
-        "weekly_1_5": 260000000.0,
-        "monthly_2": 65000000.0,
-        "weekly_2_1": 65000000.0,
-        "weekly_2_2": 65000000.0,
-        "weekly_2_3": 65000000.0,
-        "weekly_2_5": 280000000.0,
-        "monthly_3": 70000000.0,
-        "weekly_3_1": 70000000.0,
-        "weekly_3_2": 70000000.0,
-        "weekly_3_3": 70000000.0,
-        "weekly_3_4": 70000000.0,
-        "weekly_3_5": 330000000.0,
-        "monthly_4": 77000000.0,
-        "weekly_4_1": 77000000.0,
-        "weekly_4_2": 77000000.0,
-        "weekly_4_3": 77000000.0,
-        "weekly_4_4": 77000000.0,
-        "weekly_4_5": 360000000.0,
-        "monthly_5": 90000000.0,
-        "weekly_5_1": 90000000.0,
-        "weekly_5_2": 90000000.0,
-        "weekly_5_3": 90000000.0,
-        "weekly_5_5": 300000000.0,
-        "monthly_6": 75000000.0,
-        "weekly_6_1": 75000000.0,
-        "weekly_6_2": 75000000.0,
-        "weekly_6_3": 75000000.0,
-        "weekly_6_5": 300000000.0,
-        "monthly_7": 75000000.0,
-        "weekly_7_1": 75000000.0,
-        "weekly_7_2": 75000000.0,
-        "weekly_7_3": 75000000.0
+        "yearly_2026": {
+          "target": 705000000.0,
+          "actual": 650094935.0,
+          "pct": 0.92
+        },
+        "quarterly_1": {
+          "target": 1000000000.0,
+          "actual": 720567450.0,
+          "pct": 0.72
+        },
+        "weekly_1_5": {
+          "actual": 260000000.0,
+          "pct": 161000000.0
+        },
+        "monthly_2": {
+          "target": 65000000.0,
+          "actual": 34413775.0,
+          "pct": 0.53
+        },
+        "weekly_2_1": {
+          "target": 65000000.0,
+          "actual": 37845611.0,
+          "pct": 0.58
+        },
+        "weekly_2_2": {
+          "target": 65000000.0,
+          "actual": 41740534.0,
+          "pct": 0.64
+        },
+        "weekly_2_3": {
+          "target": 65000000.0,
+          "actual": 47908991.0,
+          "pct": 0.74
+        },
+        "weekly_2_5": {
+          "actual": 280000000.0,
+          "pct": 275189705.0
+        },
+        "monthly_3": {
+          "target": 70000000.0,
+          "actual": 65834089.0,
+          "pct": 0.94
+        },
+        "weekly_3_1": {
+          "target": 70000000.0,
+          "actual": 59424096.0,
+          "pct": 0.85
+        },
+        "weekly_3_2": {
+          "target": 70000000.0,
+          "actual": 57827901.0,
+          "pct": 0.83
+        },
+        "weekly_3_3": {
+          "target": 70000000.0,
+          "actual": 53494860.0,
+          "pct": 0.76
+        },
+        "weekly_3_4": {
+          "target": 70000000.0
+        },
+        "weekly_3_5": {
+          "actual": 330000000.0,
+          "pct": 216101243.0
+        },
+        "monthly_4": {
+          "target": 77000000.0,
+          "actual": 62345628.0,
+          "pct": 0.81
+        },
+        "weekly_4_1": {
+          "target": 77000000.0,
+          "actual": 61767892.0,
+          "pct": 0.8
+        },
+        "weekly_4_2": {
+          "target": 77000000.0,
+          "actual": 68294644.0,
+          "pct": 0.89
+        },
+        "weekly_4_3": {
+          "target": 77000000.0,
+          "actual": 56600945.0,
+          "pct": 0.74
+        },
+        "weekly_4_4": {
+          "target": 77000000.0
+        },
+        "weekly_4_5": {
+          "actual": 360000000.0,
+          "pct": 234635445.0
+        },
+        "monthly_5": {
+          "target": 90000000.0,
+          "actual": 74120817.0,
+          "pct": 0.82
+        },
+        "weekly_5_1": {
+          "target": 90000000.0,
+          "actual": 66318695.0,
+          "pct": 0.74
+        },
+        "weekly_5_2": {
+          "target": 90000000.0,
+          "actual": 34966946.0,
+          "pct": 0.39
+        },
+        "weekly_5_3": {
+          "target": 90000000.0,
+          "actual": 38429719.0
+        },
+        "weekly_5_5": {
+          "actual": 300000000.0,
+          "pct": 186912206.0
+        },
+        "monthly_6": {
+          "target": 75000000.0,
+          "actual": 47601787.0,
+          "pct": 0.63
+        },
+        "weekly_6_1": {
+          "target": 75000000.0,
+          "actual": 51091123.0,
+          "pct": 0.68
+        },
+        "weekly_6_2": {
+          "target": 75000000.0,
+          "actual": 56819430.0,
+          "pct": 0.76
+        },
+        "weekly_6_3": {
+          "target": 75000000.0,
+          "actual": 45907474.0,
+          "pct": 0.61
+        },
+        "weekly_6_5": {
+          "actual": 300000000.0
+        },
+        "monthly_7": {
+          "target": 75000000.0,
+          "actual": 31885726.0,
+          "pct": 0.43
+        },
+        "weekly_7_1": {
+          "target": 75000000.0,
+          "actual": 42817480.0,
+          "pct": 0.57
+        },
+        "weekly_7_2": {
+          "target": 75000000.0,
+          "actual": 50933057.0,
+          "pct": 0.68
+        },
+        "weekly_7_3": {
+          "target": 75000000.0
+        }
       }
     },
     "VM3-I01.04": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM3-I01.05": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "Kinh doanh Traffic Short": {
       "title": "Số lượt tiếp cận (Impression)",
       "unit": "Imp",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 8000000000.0,
-        "quarterly_1": 902848888.0,
-        "weekly_1_5": 1500000000.0,
-        "monthly_2": 375000000.0,
-        "weekly_2_1": 375000000.0,
-        "weekly_2_2": 375000000.0,
-        "weekly_2_3": 375000000.0,
-        "weekly_2_5": 1500000000.0,
-        "monthly_3": 338709677.0,
-        "weekly_3_1": 338709677.0,
-        "weekly_3_2": 338709677.0,
-        "weekly_3_3": 338709677.0,
-        "weekly_3_4": 338709677.0,
-        "weekly_3_5": 1150000000.0,
-        "monthly_4": 268333333.0,
-        "weekly_4_1": 268333333.0,
-        "weekly_4_2": 268333333.0,
-        "weekly_4_3": 268333333.0,
-        "weekly_4_5": 1700000000.0,
-        "monthly_5": 425000000.0,
-        "weekly_5_1": 425000000.0,
-        "weekly_5_2": 425000000.0,
-        "weekly_5_3": 425000000.0,
-        "weekly_5_5": 1200000000.0,
-        "weekly_6_5": 1200000000.0
+        "yearly_2026": {
+          "target": 8000000000.0,
+          "actual": 2803562210.0,
+          "pct": 0.35
+        },
+        "weekly_1_5": {
+          "actual": 1500000000.0,
+          "pct": 952633293.0
+        },
+        "monthly_2": {
+          "target": 375000000.0,
+          "actual": 211834031.0,
+          "pct": 0.56
+        },
+        "weekly_2_1": {
+          "target": 375000000.0,
+          "actual": 246384118.0,
+          "pct": 0.66
+        },
+        "weekly_2_2": {
+          "target": 375000000.0,
+          "actual": 260855096.0,
+          "pct": 0.7
+        },
+        "weekly_2_3": {
+          "target": 375000000.0,
+          "actual": 211692829.0,
+          "pct": 0.56
+        },
+        "weekly_2_5": {
+          "actual": 1500000000.0,
+          "pct": 948080029.0
+        },
+        "monthly_3": {
+          "target": 338709677.0,
+          "actual": 240838878.0,
+          "pct": 0.71
+        },
+        "weekly_3_1": {
+          "target": 338709677.0,
+          "actual": 208047127.0,
+          "pct": 0.61
+        },
+        "weekly_3_2": {
+          "target": 338709677.0,
+          "actual": 200240976.0,
+          "pct": 0.59
+        },
+        "weekly_3_3": {
+          "target": 338709677.0,
+          "actual": 227455787.0,
+          "pct": 0.67
+        },
+        "weekly_3_4": {
+          "target": 338709677.0
+        },
+        "weekly_3_5": {
+          "actual": 1150000000.0,
+          "pct": 703464051.0
+        },
+        "monthly_4": {
+          "target": 268333333.0,
+          "actual": 204770694.0,
+          "pct": 0.76
+        },
+        "weekly_4_1": {
+          "target": 268333333.0,
+          "actual": 189750787.0,
+          "pct": 0.71
+        },
+        "weekly_4_2": {
+          "target": 268333333.0,
+          "actual": 177524445.0,
+          "pct": 0.66
+        },
+        "weekly_4_3": {
+          "target": 268333333.0,
+          "actual": 178995305.0,
+          "pct": 0.67
+        },
+        "weekly_4_5": {
+          "actual": 1700000000.0,
+          "pct": 900000000.0
+        },
+        "monthly_5": {
+          "target": 425000000.0,
+          "actual": 225252465.0,
+          "pct": 0.53
+        },
+        "weekly_5_1": {
+          "target": 425000000.0,
+          "actual": 196248075.0,
+          "pct": 0.46
+        },
+        "weekly_5_2": {
+          "target": 425000000.0
+        },
+        "weekly_5_3": {
+          "target": 425000000.0
+        },
+        "weekly_5_5": {
+          "actual": 1200000000.0,
+          "pct": 841216556.0
+        },
+        "weekly_6_5": {
+          "actual": 1200000000.0
+        }
       }
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "M4": {
       "title": "",
       "unit": "",
-      "periods": {
-        "quarterly_1": 0.1
-      }
+      "formula": "",
+      "pic": "",
+      "periods": {}
     },
     "TM4-I01.01": {
       "title": "Độ phủ thương hiệu",
       "unit": "TM3-I01.06",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 250000000.0
+        "yearly_2026": {
+          "target": 250000000.0
+        }
       }
     },
     "Số lượt tiếp cận khách hàng mới trên các nền tảng": {
       "title": "VM4-I01.01",
       "unit": "Subs/Followers",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1875000.0,
-        "quarterly_1": 1500000.0,
-        "weekly_1_5": 323735.0,
-        "weekly_2_5": 400000.0,
-        "weekly_3_5": 400000.0,
-        "weekly_4_5": 400000.0,
-        "weekly_5_5": 350000.0,
-        "weekly_6_5": 250000.0
+        "yearly_2026": {
+          "target": 1875000.0,
+          "actual": 842523.0,
+          "pct": 0.45
+        },
+        "quarterly_1": {
+          "target": 1500000.0,
+          "actual": 600000.0,
+          "pct": 0.4
+        },
+        "weekly_1_5": {
+          "actual": 323735.0,
+          "pct": 283363.0
+        },
+        "weekly_2_5": {
+          "actual": 400000.0,
+          "pct": 289381.0
+        },
+        "weekly_3_5": {
+          "actual": 400000.0
+        },
+        "weekly_4_5": {
+          "actual": 400000.0,
+          "pct": 260000.0
+        },
+        "weekly_5_5": {
+          "actual": 350000.0,
+          "pct": 170434.0
+        },
+        "weekly_6_5": {
+          "actual": 250000.0
+        }
       }
     },
     "TM4-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Phát triển hệ thống kênh kinh doanh": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 3.0,
-        "quarterly_1": 2.0,
-        "weekly_1_5": 2.0,
-        "weekly_2_5": 2.0,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0
+        "yearly_2026": {
+          "target": 3.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        }
       }
     },
     "Tổng số subcribers/Followers tăng trưởng": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt ngưỡng 5k$/ tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 8.0,
-        "quarterly_1": 6.0,
-        "weekly_1_5": 6.0,
-        "weekly_2_5": 6.0,
-        "weekly_3_5": 6.0,
-        "weekly_4_5": 6.0,
-        "weekly_5_5": 6.0,
-        "weekly_6_5": 6.0
+        "yearly_2026": {
+          "target": 8.0,
+          "actual": 4.0,
+          "pct": 0.5
+        },
+        "quarterly_1": {
+          "target": 6.0,
+          "actual": 4.0,
+          "pct": 0.67
+        },
+        "weekly_1_5": {
+          "actual": 6.0,
+          "pct": 3.0
+        },
+        "weekly_2_5": {
+          "actual": 6.0,
+          "pct": 6.0
+        },
+        "weekly_3_5": {
+          "actual": 6.0
+        },
+        "weekly_4_5": {
+          "actual": 6.0,
+          "pct": 3.0
+        },
+        "weekly_5_5": {
+          "actual": 6.0,
+          "pct": 4.0
+        },
+        "weekly_6_5": {
+          "actual": 6.0
+        }
       }
     },
     "TM4-I02.02": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 2.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        }
       }
     },
     "TM4-I02.03": {
       "title": "ROI",
       "unit": "Tỷ lệ kênh đạt chuẩn an toàn (toàn bộ hệ thống)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 1.0,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0,
+          "pct": 0.97
+        },
+        "weekly_3_5": {
+          "actual": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "SL",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 2.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 3.0,
+          "pct": 1.5
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM4-I02.03": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh mở mới",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 5.0,
-        "quarterly_1": 4.0,
-        "weekly_1_5": 3.0,
-        "weekly_2_5": 3.0,
-        "weekly_3_5": 2.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 2.0
+        "yearly_2026": {
+          "target": 5.0,
+          "actual": 6.0,
+          "pct": 1.2
+        },
+        "quarterly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "weekly_2_5": {
+          "actual": 3.0
+        },
+        "weekly_3_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_4_5": {
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "pct": 2.0
+        }
       }
     },
     "Số kênh kinh doanh mở mới trong kỳ": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh trả lại",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 3.0,
-        "quarterly_1": 3.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0
+        "yearly_2026": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.33
+        },
+        "quarterly_1": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.33
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M5": {
       "title": "",
       "unit": "",
-      "periods": {
-        "quarterly_1": 0.05
-      }
+      "formula": "",
+      "pic": "",
+      "periods": {}
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0
+        "yearly_2026": {
+          "target": 2.0
+        }
       }
     },
     "VM5-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.01": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 6.5,
-        "quarterly_1": 6.5,
-        "weekly_1_5": 7.2,
-        "weekly_2_5": 7.0,
-        "weekly_3_5": 6.3,
-        "weekly_4_5": 6.0,
-        "weekly_5_5": 6.0
+        "yearly_2026": {
+          "target": 6.5,
+          "actual": 6.5,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 6.5,
+          "actual": 5.8,
+          "pct": 1.12
+        },
+        "weekly_1_5": {
+          "actual": 7.2,
+          "pct": 7.0
+        },
+        "weekly_2_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_3_5": {
+          "actual": 6.3
+        },
+        "weekly_4_5": {
+          "pct": 6.0
+        },
+        "weekly_5_5": {
+          "actual": 6.0,
+          "pct": 5.8
+        }
       }
     },
     "VM5-I02.02": {
       "title": "Hiệu suất sản xuất",
       "unit": "ND",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 2.0,
-        "weekly_1_5": 7.2,
-        "weekly_2_5": 7.0,
-        "weekly_3_5": 2.8,
-        "weekly_4_5": 3.0,
-        "weekly_5_5": 3.0,
-        "weekly_6_5": 3.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 2.47,
+          "pct": 1.23
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 2.55,
+          "pct": 1.28
+        },
+        "weekly_1_5": {
+          "actual": 7.2,
+          "pct": 7.0
+        },
+        "weekly_2_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_3_5": {
+          "actual": 2.8,
+          "pct": 3.17
+        },
+        "weekly_4_5": {
+          "actual": 3.0,
+          "pct": 3.36
+        },
+        "weekly_5_5": {
+          "actual": 3.0,
+          "pct": 3.27
+        },
+        "weekly_6_5": {
+          "actual": 3.0
+        }
       }
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 130810000.0,
-        "quarterly_1": 130810000.0,
-        "weekly_1_5": 100000000.0,
-        "weekly_2_5": 100000000.0,
-        "weekly_3_5": 111516900.0,
-        "weekly_4_5": 111516900.0,
-        "weekly_5_5": 111516900.0,
-        "weekly_6_5": 111516900.0
+        "yearly_2026": {
+          "target": 130810000.0,
+          "actual": 101987827.0,
+          "pct": 0.78
+        },
+        "quarterly_1": {
+          "target": 130810000.0,
+          "actual": 160304147.0,
+          "pct": 1.23
+        },
+        "weekly_1_5": {
+          "actual": 100000000.0,
+          "pct": 101987827.0
+        },
+        "weekly_2_5": {
+          "actual": 100000000.0,
+          "pct": 92930750.0
+        },
+        "weekly_3_5": {
+          "actual": 111516900.0
+        },
+        "weekly_4_5": {
+          "actual": 111516900.0
+        },
+        "weekly_5_5": {
+          "actual": 111516900.0
+        },
+        "weekly_6_5": {
+          "actual": 111516900.0
+        }
       }
     },
     "VM5-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 391815000.0,
-        "quarterly_1": 350815000.0,
-        "weekly_1_5": 250000000.0,
-        "weekly_2_5": 250000000.0,
-        "weekly_3_5": 278792250.0,
-        "weekly_4_5": 278792250.0,
-        "weekly_5_5": 278792250.0,
-        "weekly_6_5": 278792250.0
+        "yearly_2026": {
+          "target": 391815000.0,
+          "actual": 195225059.0,
+          "pct": 0.5
+        },
+        "quarterly_1": {
+          "target": 350815000.0,
+          "actual": 218960201.0,
+          "pct": 0.62
+        },
+        "weekly_1_5": {
+          "actual": 250000000.0,
+          "pct": 220973625.0
+        },
+        "weekly_2_5": {
+          "actual": 250000000.0,
+          "pct": 232326875.0
+        },
+        "weekly_3_5": {
+          "actual": 278792250.0
+        },
+        "weekly_4_5": {
+          "actual": 278792250.0
+        },
+        "weekly_5_5": {
+          "actual": 278792250.0
+        },
+        "weekly_6_5": {
+          "actual": 278792250.0
+        }
       }
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chi phí Tb sản xuất 1 sản phẩm": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "CP SX Sản phẩm Wolfoo": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số lượng đầu mục công việc/ quy trình được số hóa": {
       "title": "ROI",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
-      "periods": {
-        "quarterly_1": 0.05
-      }
+      "formula": "",
+      "pic": "",
+      "periods": {}
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "Số buổi đào tạo được tổ chức",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 12.0,
-        "quarterly_1": 12.0
+        "yearly_2026": {
+          "target": 12.0,
+          "actual": 12.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 12.0,
+          "actual": 12.0,
+          "pct": 1.0
+        }
       }
     },
     "TM6-I01.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.7,
-        "quarterly_1": 0.7,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 1.0
+        "yearly_2026": {
+          "target": 0.7,
+          "actual": 1.0,
+          "pct": 1.43
+        },
+        "quarterly_1": {
+          "target": 0.7,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.1,
-        "quarterly_1": 0.1
+        "yearly_2026": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 10.0
+        },
+        "quarterly_1": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "M7": {
       "title": "",
       "unit": "",
-      "periods": {
-        "quarterly_1": 0.05
-      }
+      "formula": "",
+      "pic": "",
+      "periods": {}
     },
     "TM7-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.2,
-        "quarterly_1": 0.2
+        "yearly_2026": {
+          "target": 0.2,
+          "actual": 0.2,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 0.2,
+          "actual": 0.2,
+          "pct": 1.0
+        }
       }
     },
     "TM7-I02": {
       "title": "ROI",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I02.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.1,
-        "quarterly_1": 0.1
+        "yearly_2026": {
+          "target": 0.1,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.1,
+          "actual": 0.1,
+          "pct": 1.0
+        }
       }
     },
     "VM7-I02.02": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "VM7-I02.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.95,
-        "weekly_1_5": 0.95,
-        "weekly_2_5": 0.95,
-        "weekly_3_5": 0.95,
-        "weekly_4_5": 0.95,
-        "weekly_5_5": 0.95,
-        "weekly_6_5": 0.95
+        "yearly_2026": {
+          "target": 0.95,
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 0.95,
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.95,
+          "pct": 0.96
+        },
+        "weekly_2_5": {
+          "actual": 0.95
+        },
+        "weekly_3_5": {
+          "actual": 0.95,
+          "pct": 0.96
+        },
+        "weekly_4_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.95
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 15.0,
-        "quarterly_1": 15.0,
-        "weekly_1_5": 10.0,
-        "weekly_2_5": 10.0,
-        "weekly_3_5": 4.0,
-        "weekly_4_5": 3.0,
-        "weekly_5_5": 4.0
+        "yearly_2026": {
+          "target": 15.0,
+          "actual": 28.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 15.0,
+          "actual": 18.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 10.0,
+          "pct": 12.0
+        },
+        "weekly_2_5": {
+          "actual": 10.0
+        },
+        "weekly_3_5": {
+          "pct": 4.0
+        },
+        "weekly_4_5": {
+          "pct": 3.0
+        },
+        "weekly_5_5": {
+          "pct": 4.0
+        }
       }
     }
   },
@@ -2462,1415 +7929,4644 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.434,
-        "quarterly_1": 0.8511,
-        "weekly_1_5": 0.4058,
-        "weekly_2_5": 0.4058,
-        "weekly_3_5": 0.4058,
-        "weekly_4_5": 0.4058,
-        "weekly_5_5": 0.4058,
-        "weekly_6_5": 1.192
+        "yearly_2026": {
+          "target": 0.434,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.8511,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.4058
+        },
+        "weekly_2_5": {
+          "actual": 0.4058
+        },
+        "weekly_3_5": {
+          "actual": 0.4058
+        },
+        "weekly_4_5": {
+          "actual": 0.4058
+        },
+        "weekly_5_5": {
+          "actual": 0.4058,
+          "pct": 0.3062
+        },
+        "weekly_6_5": {
+          "actual": 1.192,
+          "pct": -0.2454
+        }
       }
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.3027,
-        "quarterly_1": 0.4598,
-        "weekly_1_5": 0.2887,
-        "weekly_2_5": 0.2887,
-        "weekly_3_5": 0.2887,
-        "weekly_4_5": 0.2887,
-        "weekly_5_5": 0.2887,
-        "weekly_6_1": 0.0881,
-        "weekly_6_2": 0.1371,
-        "weekly_6_3": 0.0241,
-        "weekly_6_5": 0.5438
+        "yearly_2026": {
+          "target": 0.3027,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.4598,
+          "actual": -0.1289,
+          "pct": -0.2804
+        },
+        "weekly_1_5": {
+          "actual": 0.2887
+        },
+        "weekly_2_5": {
+          "actual": 0.2887
+        },
+        "weekly_3_5": {
+          "actual": 0.2887
+        },
+        "weekly_4_5": {
+          "actual": 0.2887
+        },
+        "weekly_5_5": {
+          "actual": 0.2887,
+          "pct": -0.042
+        },
+        "weekly_6_1": {
+          "actual": 0.0881,
+          "pct": 0.0347
+        },
+        "weekly_6_2": {
+          "actual": 0.1371,
+          "pct": -0.0383
+        },
+        "weekly_6_3": {
+          "actual": 0.0241
+        },
+        "weekly_6_5": {
+          "actual": 0.5438,
+          "pct": -0.2973
+        }
       }
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 1.0,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 1.0,
-        "weekly_3_5": 1.0,
-        "monthly_4": 0.885,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0,
-        "weekly_7_1": -0.12
+        "weekly_1_5": {
+          "target": 1.0
+        },
+        "weekly_2_5": {
+          "target": 1.0
+        },
+        "weekly_3_5": {
+          "target": 1.0
+        },
+        "monthly_4": {
+          "actual": 0.885
+        },
+        "weekly_4_5": {
+          "target": 1.0
+        },
+        "weekly_5_5": {
+          "target": 1.0
+        },
+        "weekly_6_5": {
+          "target": 1.0
+        },
+        "weekly_7_1": {
+          "actual": -0.12
+        }
       }
     },
     "2.1": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 4274010000.0,
-        "quarterly_1": 5929170000.0,
-        "monthly_1": 257455840.0,
-        "weekly_1_1": 184491290.0,
-        "weekly_1_2": 246287696.0,
-        "weekly_1_3": 261216192.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 1382002500.0,
-        "monthly_2": 255450000.0,
-        "weekly_2_1": 255450000.0,
-        "weekly_2_2": 250770000.0,
-        "weekly_2_3": 293124000.0,
-        "weekly_2_5": 1542944000.0,
-        "monthly_3": 296660000.0,
-        "weekly_3_1": 256984000.0,
-        "weekly_3_2": 270556000.0,
-        "weekly_3_3": 293748000.0,
-        "weekly_3_4": 93808000.0,
-        "weekly_3_5": 1785940000.0,
-        "monthly_4": 257218000.0,
-        "weekly_4_1": 322114000.0,
-        "weekly_4_2": 251628000.0,
-        "weekly_4_3": 246844000.0,
-        "weekly_4_4": 256880000.0,
-        "weekly_4_5": 1901578490.0,
-        "monthly_5": 366285716.0,
-        "weekly_5_1": 333593702.0,
-        "weekly_5_2": 351157766.0,
-        "weekly_5_3": 351157766.0,
-        "weekly_5_5": 1964830030.0,
-        "monthly_6": 377164081.0,
-        "weekly_6_1": 340807514.0,
-        "weekly_6_2": 360697771.0,
-        "weekly_6_3": 252464454.0,
-        "weekly_6_5": 2038560600.0,
-        "monthly_7": 171314000.0,
-        "weekly_7_1": 281944000.0,
-        "weekly_7_2": 278772000.0,
-        "weekly_7_3": 253136000.0
+        "yearly_2026": {
+          "target": 4274010000.0,
+          "actual": 4099904035.0,
+          "pct": 0.9593
+        },
+        "quarterly_1": {
+          "target": 5929170000.0,
+          "actual": 3716024056.0,
+          "pct": 0.6267
+        },
+        "monthly_1": {
+          "target": 257455840.0,
+          "actual": 241598226.0,
+          "pct": 0.9384
+        },
+        "weekly_1_1": {
+          "target": 184491290.0,
+          "actual": 208836962.0,
+          "pct": 1.132
+        },
+        "weekly_1_2": {
+          "target": 246287696.0,
+          "actual": 234138072.0,
+          "pct": 0.9507
+        },
+        "weekly_1_3": {
+          "target": 261216192.0,
+          "actual": 214939370.0,
+          "pct": 0.8228
+        },
+        "weekly_1_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 1382002500.0,
+          "pct": 1333301800.0
+        },
+        "monthly_2": {
+          "target": 255450000.0,
+          "actual": 194958880.0,
+          "pct": 0.7632
+        },
+        "weekly_2_1": {
+          "target": 255450000.0,
+          "actual": 211508960.0,
+          "pct": 0.828
+        },
+        "weekly_2_2": {
+          "target": 250770000.0,
+          "actual": 259417080.0,
+          "pct": 1.0345
+        },
+        "weekly_2_3": {
+          "target": 293124000.0,
+          "actual": 239846880.0,
+          "pct": 0.8182
+        },
+        "weekly_2_5": {
+          "actual": 1542944000.0,
+          "pct": 1385445880.0
+        },
+        "monthly_3": {
+          "target": 296660000.0,
+          "actual": 214766240.0,
+          "pct": 0.7239
+        },
+        "weekly_3_1": {
+          "target": 256984000.0,
+          "actual": 228855640.0,
+          "pct": 0.8905
+        },
+        "weekly_3_2": {
+          "target": 270556000.0,
+          "actual": 251134000.0,
+          "pct": 0.9282
+        },
+        "weekly_3_3": {
+          "target": 293748000.0,
+          "actual": 229866000.0,
+          "pct": 0.7825
+        },
+        "weekly_3_4": {
+          "actual": 93808000.0
+        },
+        "weekly_3_5": {
+          "actual": 1785940000.0,
+          "pct": 1295884140.0
+        },
+        "monthly_4": {
+          "target": 257218000.0,
+          "actual": 203424000.0,
+          "pct": 0.7909
+        },
+        "weekly_4_1": {
+          "target": 322114000.0,
+          "actual": 189291960.0,
+          "pct": 0.5877
+        },
+        "weekly_4_2": {
+          "target": 251628000.0,
+          "actual": 194391000.0,
+          "pct": 0.7725
+        },
+        "weekly_4_3": {
+          "target": 246844000.0,
+          "actual": 210849600.0,
+          "pct": 0.8542
+        },
+        "weekly_4_4": {
+          "target": 256880000.0,
+          "actual": 144828320.0,
+          "pct": 0.5638
+        },
+        "weekly_4_5": {
+          "actual": 1901578490.0,
+          "pct": 1219590347.0
+        },
+        "monthly_5": {
+          "target": 366285716.0,
+          "actual": 259973285.0,
+          "pct": 0.7098
+        },
+        "weekly_5_1": {
+          "target": 333593702.0,
+          "actual": 200311694.0,
+          "pct": 0.6005
+        },
+        "weekly_5_2": {
+          "target": 351157766.0,
+          "actual": 189676209.0,
+          "pct": 0.5401
+        },
+        "weekly_5_3": {
+          "target": 351157766.0,
+          "actual": 212206303.0,
+          "pct": 0.6043
+        },
+        "weekly_5_5": {
+          "actual": 1964830030.0,
+          "pct": 1240853162.0
+        },
+        "monthly_6": {
+          "target": 377164081.0,
+          "actual": 186409084.0,
+          "pct": 0.4942
+        },
+        "weekly_6_1": {
+          "target": 340807514.0,
+          "actual": 192880952.0,
+          "pct": 0.566
+        },
+        "weekly_6_2": {
+          "target": 360697771.0,
+          "actual": 189615019.0,
+          "pct": 0.5257
+        },
+        "weekly_6_3": {
+          "target": 252464454.0,
+          "actual": 199296682.0,
+          "pct": 0.7894
+        },
+        "weekly_6_5": {
+          "actual": 2038560600.0,
+          "pct": 716852540.0
+        },
+        "monthly_7": {
+          "target": 171314000.0,
+          "actual": 176477024.0,
+          "pct": 1.0301
+        },
+        "weekly_7_1": {
+          "target": 281944000.0,
+          "actual": 154934000.0,
+          "pct": 0.5495
+        },
+        "weekly_7_2": {
+          "target": 278772000.0,
+          "actual": 158886000.0,
+          "pct": 0.5699
+        },
+        "weekly_7_3": {
+          "target": 253136000.0,
+          "actual": 0.0
+        }
       }
     },
     "VM1-I02.02": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu nội bộ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 4071210000.0,
-        "quarterly_1": 5695170000.0,
-        "monthly_1": 247055840.0,
-        "weekly_1_1": 174091290.0,
-        "weekly_1_2": 235887696.0,
-        "weekly_1_3": 250816192.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 1.0,
-        "monthly_2": 238550000.0,
-        "weekly_2_1": 238550000.0,
-        "weekly_2_2": 233870000.0,
-        "weekly_2_3": 276224000.0,
-        "weekly_2_5": 1.0,
-        "monthly_3": 279760000.0,
-        "weekly_3_1": 240084000.0,
-        "weekly_3_2": 253656000.0,
-        "weekly_3_3": 276848000.0,
-        "weekly_3_4": 93808000.0,
-        "weekly_3_5": 1.0,
-        "monthly_4": 243698000.0,
-        "weekly_4_1": 308594000.0,
-        "weekly_4_2": 238108000.0,
-        "weekly_4_3": 233324000.0,
-        "weekly_4_4": 243360000.0,
-        "weekly_4_5": 1.0,
-        "monthly_5": 346785716.0,
-        "weekly_5_1": 320073702.0,
-        "weekly_5_2": 337637766.0,
-        "weekly_5_3": 337637766.0,
-        "weekly_5_5": 1.0,
-        "monthly_6": 363644081.0,
-        "weekly_6_1": 327287514.0,
-        "weekly_6_2": 347177771.0,
-        "weekly_6_3": 238944454.0,
-        "weekly_6_5": 1.0,
-        "monthly_7": 155714000.0,
-        "weekly_7_1": 266344000.0,
-        "weekly_7_2": 263172000.0,
-        "weekly_7_3": 253136000.0,
-        "weekly_7_4": 0.0
+        "yearly_2026": {
+          "target": 4071210000.0,
+          "actual": 4053730773.0,
+          "pct": 0.9957
+        },
+        "quarterly_1": {
+          "target": 5695170000.0,
+          "actual": 3611081250.0,
+          "pct": 0.6341
+        },
+        "monthly_1": {
+          "target": 247055840.0,
+          "actual": 237216990.0,
+          "pct": 0.9602
+        },
+        "weekly_1_1": {
+          "target": 174091290.0,
+          "actual": 205103856.0,
+          "pct": 1.1781
+        },
+        "weekly_1_2": {
+          "target": 235887696.0,
+          "actual": 229587072.0,
+          "pct": 0.9733
+        },
+        "weekly_1_3": {
+          "target": 250816192.0,
+          "actual": 209476250.0,
+          "pct": 0.8352
+        },
+        "weekly_1_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "target": 1.0,
+          "actual": 1325792000.0,
+          "pct": 1314600880.0
+        },
+        "monthly_2": {
+          "target": 238550000.0,
+          "actual": 190958880.0,
+          "pct": 0.8005
+        },
+        "weekly_2_1": {
+          "target": 238550000.0,
+          "actual": 207142000.0,
+          "pct": 0.8683
+        },
+        "weekly_2_2": {
+          "target": 233870000.0,
+          "actual": 253786000.0,
+          "pct": 1.0852
+        },
+        "weekly_2_3": {
+          "target": 276224000.0,
+          "actual": 235144000.0,
+          "pct": 0.8513
+        },
+        "weekly_2_5": {
+          "target": 1.0,
+          "actual": 1475344000.0,
+          "pct": 1376102000.0
+        },
+        "monthly_3": {
+          "target": 279760000.0,
+          "actual": 210470000.0,
+          "pct": 0.7523
+        },
+        "weekly_3_1": {
+          "target": 240084000.0,
+          "actual": 223808000.0,
+          "pct": 0.9322
+        },
+        "weekly_3_2": {
+          "target": 253656000.0,
+          "actual": 251134000.0,
+          "pct": 0.9901
+        },
+        "weekly_3_3": {
+          "target": 276848000.0,
+          "actual": 229866000.0,
+          "pct": 0.8303
+        },
+        "weekly_3_4": {
+          "actual": 93808000.0
+        },
+        "weekly_3_5": {
+          "target": 1.0,
+          "actual": 1718340000.0,
+          "pct": 1285884140.0
+        },
+        "monthly_4": {
+          "target": 243698000.0,
+          "actual": 203424000.0,
+          "pct": 0.8347
+        },
+        "weekly_4_1": {
+          "target": 308594000.0,
+          "actual": 184262000.0,
+          "pct": 0.5971
+        },
+        "weekly_4_2": {
+          "target": 238108000.0,
+          "actual": 190086000.0,
+          "pct": 0.7983
+        },
+        "weekly_4_3": {
+          "target": 233324000.0,
+          "actual": 206960000.0,
+          "pct": 0.887
+        },
+        "weekly_4_4": {
+          "target": 243360000.0,
+          "actual": 140868000.0,
+          "pct": 0.5788
+        },
+        "weekly_4_5": {
+          "target": 1.0,
+          "actual": 1823578490.0,
+          "pct": 1197229148.0
+        },
+        "monthly_5": {
+          "target": 346785716.0,
+          "actual": 256273285.0,
+          "pct": 0.739
+        },
+        "weekly_5_1": {
+          "target": 320073702.0,
+          "actual": 200311694.0,
+          "pct": 0.6258
+        },
+        "weekly_5_2": {
+          "target": 337637766.0,
+          "actual": 189676209.0,
+          "pct": 0.5618
+        },
+        "weekly_5_3": {
+          "target": 337637766.0,
+          "actual": 212206303.0,
+          "pct": 0.6285
+        },
+        "weekly_5_5": {
+          "target": 1.0,
+          "actual": 1886830030.0,
+          "pct": 1156795236.0
+        },
+        "monthly_6": {
+          "target": 363644081.0,
+          "actual": 186409084.0,
+          "pct": 0.5126
+        },
+        "weekly_6_1": {
+          "target": 327287514.0,
+          "actual": 192880952.0,
+          "pct": 0.5893
+        },
+        "weekly_6_2": {
+          "target": 347177771.0,
+          "actual": 189615019.0,
+          "pct": 0.5462
+        },
+        "weekly_6_3": {
+          "target": 238944454.0,
+          "actual": 199296682.0,
+          "pct": 0.8341
+        },
+        "weekly_6_5": {
+          "target": 1.0,
+          "actual": 1960560600.0,
+          "pct": 716852540.0
+        },
+        "monthly_7": {
+          "target": 155714000.0,
+          "actual": 176477024.0,
+          "pct": 1.1333
+        },
+        "weekly_7_1": {
+          "target": 266344000.0,
+          "actual": 154934000.0,
+          "pct": 0.5817
+        },
+        "weekly_7_2": {
+          "target": 263172000.0,
+          "actual": 158886000.0,
+          "pct": 0.6037
+        },
+        "weekly_7_3": {
+          "target": 253136000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_4": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "VM6-I03.02": {
       "title": "Tổng doanh thu",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 1960560600.0,
-        "monthly_7": 155714000.0,
-        "weekly_7_1": 266344000.0,
-        "weekly_7_2": 263172000.0,
-        "weekly_7_3": 253136000.0,
-        "weekly_7_4": 0.0
+        "weekly_6_5": {
+          "actual": 1960560600.0,
+          "pct": 716852540.0
+        },
+        "monthly_7": {
+          "target": 155714000.0,
+          "actual": 176477024.0,
+          "pct": 1.1333
+        },
+        "weekly_7_1": {
+          "target": 266344000.0,
+          "actual": 154934000.0,
+          "pct": 0.5817
+        },
+        "weekly_7_2": {
+          "target": 263172000.0,
+          "actual": 158886000.0,
+          "pct": 0.6037
+        },
+        "weekly_7_3": {
+          "target": 253136000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_4": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "DT nhóm MDA": {
       "title": "Tổng doanh thu",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 0.0
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "DT nhóm English Stories": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 504400000.0,
-        "quarterly_1": 879580000.0,
-        "monthly_1": 34425600.0,
-        "weekly_1_1": 34458285.0,
-        "weekly_1_2": 70594128.0,
-        "weekly_1_3": 44385792.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 208000000.0,
-        "monthly_2": 52000000.0,
-        "weekly_2_1": 52000000.0,
-        "weekly_2_2": 47320000.0,
-        "weekly_2_3": 60658000.0,
-        "weekly_2_5": 260000000.0,
-        "monthly_3": 65000000.0,
-        "weekly_3_1": 42900000.0,
-        "weekly_3_2": 42276000.0,
-        "weekly_3_3": 49270000.0,
-        "weekly_3_4": 14638000.0,
-        "weekly_3_5": 257140000.0,
-        "monthly_4": 64298000.0,
-        "weekly_4_1": 46228000.0,
-        "weekly_4_2": 38480000.0,
-        "weekly_4_3": 29926000.0,
-        "weekly_4_4": 32266000.0,
-        "weekly_4_5": 0.709,
-        "monthly_5": 73523381.0,
-        "weekly_5_1": 55070659.0,
-        "weekly_5_2": 55070659.0,
-        "weekly_5_3": 55070659.0,
-        "weekly_5_5": 331678530.0,
-        "monthly_6": 82932701.0,
-        "weekly_6_1": 59540086.0,
-        "weekly_6_2": 59540086.0,
-        "weekly_6_3": 37454321.0,
-        "weekly_6_5": 392055000.0,
-        "monthly_7": 78411000.0,
-        "weekly_7_1": 78411000.0
+        "yearly_2026": {
+          "target": 504400000.0,
+          "actual": 583828038.0,
+          "pct": 1.1575
+        },
+        "quarterly_1": {
+          "target": 879580000.0,
+          "actual": 422011606.0,
+          "pct": 0.4798
+        },
+        "monthly_1": {
+          "target": 34425600.0,
+          "actual": 43092420.0,
+          "pct": 1.2518
+        },
+        "weekly_1_1": {
+          "target": 34458285.0,
+          "actual": 61385064.0,
+          "pct": 1.7814
+        },
+        "weekly_1_2": {
+          "target": 70594128.0,
+          "actual": 50090304.0,
+          "pct": 0.7096
+        },
+        "weekly_1_3": {
+          "target": 44385792.0,
+          "actual": 45294250.0,
+          "pct": 1.0205
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 208000000.0,
+          "pct": 202928000.0
+        },
+        "monthly_2": {
+          "target": 52000000.0,
+          "actual": 39284000.0,
+          "pct": 0.7555
+        },
+        "weekly_2_1": {
+          "target": 52000000.0,
+          "actual": 48802000.0,
+          "pct": 0.9385
+        },
+        "weekly_2_2": {
+          "target": 47320000.0,
+          "actual": 66326000.0,
+          "pct": 1.4016
+        },
+        "weekly_2_3": {
+          "target": 60658000.0,
+          "actual": 48516000.0,
+          "pct": 0.7998
+        },
+        "weekly_2_5": {
+          "actual": 260000000.0,
+          "pct": 181038000.0
+        },
+        "monthly_3": {
+          "target": 65000000.0,
+          "actual": 39000000.0,
+          "pct": 0.6
+        },
+        "weekly_3_1": {
+          "target": 42900000.0,
+          "actual": 40014000.0,
+          "pct": 0.9327
+        },
+        "weekly_3_2": {
+          "target": 42276000.0,
+          "actual": 53248000.0,
+          "pct": 1.2595
+        },
+        "weekly_3_3": {
+          "target": 49270000.0,
+          "actual": 34138000.0,
+          "pct": 0.6929
+        },
+        "weekly_3_4": {
+          "actual": 14638000.0
+        },
+        "weekly_3_5": {
+          "actual": 257140000.0,
+          "pct": 128284000.0
+        },
+        "monthly_4": {
+          "target": 64298000.0,
+          "actual": 33150000.0,
+          "pct": 0.5156
+        },
+        "weekly_4_1": {
+          "target": 46228000.0,
+          "actual": 29796000.0,
+          "pct": 0.6445
+        },
+        "weekly_4_2": {
+          "target": 38480000.0,
+          "actual": 24310000.0,
+          "pct": 0.6318
+        },
+        "weekly_4_3": {
+          "target": 29926000.0,
+          "actual": 30316000.0,
+          "pct": 1.013
+        },
+        "weekly_4_4": {
+          "target": 32266000.0,
+          "actual": 25350000.0,
+          "pct": 0.7857
+        },
+        "weekly_4_5": {
+          "target": 0.709,
+          "actual": 294041250.0,
+          "pct": 156822000.0
+        },
+        "monthly_5": {
+          "target": 73523381.0,
+          "actual": 54966111.0,
+          "pct": 0.7476
+        },
+        "weekly_5_1": {
+          "target": 55070659.0,
+          "actual": 35206539.0,
+          "pct": 0.6393
+        },
+        "weekly_5_2": {
+          "target": 55070659.0,
+          "actual": 33638319.0,
+          "pct": 0.6108
+        },
+        "weekly_5_3": {
+          "target": 55070659.0,
+          "actual": 33011031.0,
+          "pct": 0.5994
+        },
+        "weekly_5_5": {
+          "actual": 331678530.0,
+          "pct": 136905606.0
+        },
+        "monthly_6": {
+          "target": 82932701.0,
+          "actual": 30710975.0,
+          "pct": 0.3703
+        },
+        "weekly_6_1": {
+          "target": 59540086.0,
+          "actual": 23460918.0,
+          "pct": 0.394
+        },
+        "weekly_6_2": {
+          "target": 59540086.0,
+          "actual": 26676961.0,
+          "pct": 0.4481
+        },
+        "weekly_6_3": {
+          "target": 37454321.0,
+          "actual": 32438074.0,
+          "pct": 0.8661
+        },
+        "weekly_6_5": {
+          "actual": 392055000.0,
+          "pct": 23863081.0
+        },
+        "monthly_7": {
+          "target": 78411000.0,
+          "actual": 23863081.0,
+          "pct": 0.3043
+        },
+        "weekly_7_1": {
+          "target": 78411000.0,
+          "pct": 0.0
+        }
       }
     },
     "Kênh thương hiệu 1": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 91000000.0,
-        "quarterly_1": 356200000.0,
-        "weekly_1_5": 13000000.0,
-        "weekly_2_5": 39000000.0,
-        "weekly_3_5": 52000000.0,
-        "monthly_4": 10400000.0,
-        "weekly_4_1": 10400000.0,
-        "weekly_4_2": 10400000.0,
-        "weekly_4_3": 10400000.0,
-        "weekly_4_4": 10400000.0,
-        "weekly_4_5": 70569900.0,
-        "monthly_5": 14113980.0,
-        "weekly_5_1": 14113980.0,
-        "weekly_5_2": 14113980.0,
-        "weekly_5_3": 14113980.0,
-        "weekly_5_5": 91479500.0,
-        "monthly_6": 14113980.0,
-        "weekly_6_1": 14113980.0,
-        "weekly_6_2": 14113980.0,
-        "weekly_6_3": 14113980.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 91000000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 356200000.0,
+          "actual": 50000.0,
+          "pct": 0.0001
+        },
+        "weekly_1_5": {
+          "actual": 13000000.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 39000000.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 52000000.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_2": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 70569900.0,
+          "pct": 50000.0
+        },
+        "monthly_5": {
+          "target": 14113980.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_1": {
+          "target": 14113980.0,
+          "actual": 50000.0,
+          "pct": 0.0035
+        },
+        "weekly_5_2": {
+          "target": 14113980.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 14113980.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 91479500.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 14113980.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 14113980.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 14113980.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 14113980.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        }
       }
     },
     "Kênh sản phẩm AI": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 2136810000.0,
-        "quarterly_1": 3003390000.0,
-        "monthly_1": 212630240.0,
-        "weekly_1_1": 139633005.0,
-        "weekly_1_2": 165293568.0,
-        "weekly_1_3": 206430400.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 686400000.0,
-        "monthly_2": 186550000.0,
-        "weekly_2_1": 186550000.0,
-        "weekly_2_2": 186550000.0,
-        "weekly_2_3": 215566000.0,
-        "weekly_2_5": 825240000.0,
-        "monthly_3": 214760000.0,
-        "weekly_3_1": 197184000.0,
-        "weekly_3_2": 211380000.0,
-        "weekly_3_3": 227578000.0,
-        "weekly_3_4": 79170000.0,
-        "weekly_3_5": 993200000.0,
-        "monthly_4": 169000000.0,
-        "weekly_4_1": 251966000.0,
-        "weekly_4_2": 189228000.0,
-        "weekly_4_3": 192998000.0,
-        "weekly_4_4": 200694000.0,
-        "weekly_4_5": 0.85,
-        "monthly_5": 259148355.0,
-        "weekly_5_1": 250889063.0,
-        "weekly_5_2": 268453127.0,
-        "weekly_5_3": 268453127.0,
-        "weekly_5_5": 1045480000.0,
-        "monthly_6": 266597400.0,
-        "weekly_6_1": 253633448.0,
-        "weekly_6_2": 273523705.0,
-        "weekly_6_3": 187376153.0,
-        "weekly_6_5": 1048093700.0,
-        "monthly_7": 209618740.0,
-        "weekly_7_1": 209618740.0
+        "yearly_2026": {
+          "target": 66550000.0,
+          "actual": 48972938.0,
+          "pct": 0.7359
+        },
+        "quarterly_1": {
+          "target": 72650000.0,
+          "actual": 48363990.0,
+          "pct": 0.6657
+        },
+        "monthly_1": {
+          "target": 5848899.0,
+          "actual": 5461548.0,
+          "pct": 0.9338
+        },
+        "weekly_1_1": {
+          "target": 4369238.0,
+          "actual": 3576050.0,
+          "pct": 0.8185
+        },
+        "weekly_1_2": {
+          "target": 4112458.0,
+          "actual": 3840563.0,
+          "pct": 0.9339
+        },
+        "weekly_1_3": {
+          "target": 4416647.0,
+          "actual": 3758675.0,
+          "pct": 0.851
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 20233334.0,
+          "pct": 15359575.0
+        },
+        "monthly_2": {
+          "target": 5162500.0,
+          "actual": 3568809.0,
+          "pct": 0.6913
+        },
+        "weekly_2_1": {
+          "target": 3925690.0,
+          "actual": 3618111.0,
+          "pct": 0.9216
+        },
+        "weekly_2_2": {
+          "target": 4160828.0,
+          "actual": 4232934.0,
+          "pct": 1.0173
+        },
+        "weekly_2_3": {
+          "target": 4867874.0,
+          "actual": 3939721.0,
+          "pct": 0.8093
+        },
+        "weekly_2_5": {
+          "actual": 22600000.0,
+          "pct": 16976527.0
+        },
+        "monthly_3": {
+          "target": 5337500.0,
+          "actual": 3866956.0,
+          "pct": 0.7245
+        },
+        "weekly_3_1": {
+          "target": 3651170.0,
+          "actual": 3694635.0,
+          "pct": 1.0119
+        },
+        "weekly_3_2": {
+          "target": 4248830.0,
+          "actual": 3844750.0,
+          "pct": 0.9049
+        },
+        "weekly_3_3": {
+          "target": 4421462.0,
+          "actual": 3899130.0,
+          "pct": 0.8819
+        },
+        "weekly_3_4": {
+          "actual": 1671056.0
+        },
+        "weekly_3_5": {
+          "actual": 22600000.0,
+          "pct": 15870502.0
+        },
+        "monthly_4": {
+          "target": 5337500.0,
+          "actual": 3799735.0,
+          "pct": 0.7119
+        },
+        "weekly_4_1": {
+          "target": 5737500.0,
+          "actual": 3712668.0,
+          "pct": 0.6471
+        },
+        "weekly_4_2": {
+          "target": 4323208.0,
+          "actual": 3590918.0,
+          "pct": 0.8306
+        },
+        "weekly_4_3": {
+          "target": 4129556.0,
+          "actual": 3766250.0,
+          "pct": 0.912
+        },
+        "weekly_4_4": {
+          "target": 4331188.0,
+          "actual": 2671987.0,
+          "pct": 0.6169
+        },
+        "weekly_4_5": {
+          "target": 0.85,
+          "actual": 22500000.0,
+          "pct": 16425498.0
+        },
+        "monthly_5": {
+          "target": 5625000.0,
+          "actual": 4563377.0,
+          "pct": 0.8113
+        },
+        "weekly_5_1": {
+          "target": 5625000.0,
+          "actual": 3615736.0,
+          "pct": 0.6428
+        },
+        "weekly_5_2": {
+          "target": 5625000.0,
+          "actual": 3515620.0,
+          "pct": 0.625
+        },
+        "weekly_5_3": {
+          "target": 5625000.0,
+          "actual": 4058514.0,
+          "pct": 0.7215
+        },
+        "weekly_5_5": {
+          "actual": 22150000.0,
+          "pct": 16067990.0
+        },
+        "monthly_6": {
+          "target": 5537500.0,
+          "actual": 3593814.0,
+          "pct": 0.649
+        },
+        "weekly_6_1": {
+          "target": 5537500.0,
+          "actual": 3750191.0,
+          "pct": 0.6772
+        },
+        "weekly_6_2": {
+          "target": 5537500.0,
+          "actual": 3570776.0,
+          "pct": 0.6448
+        },
+        "weekly_6_3": {
+          "target": 5537500.0,
+          "actual": 3607246.0,
+          "pct": 0.6514
+        },
+        "weekly_6_5": {
+          "actual": 22200000.0,
+          "pct": 3706260.0
+        },
+        "monthly_7": {
+          "target": 4440000.0,
+          "actual": 3706260.0,
+          "pct": 0.8347
+        },
+        "weekly_7_1": {
+          "target": 4440000.0,
+          "pct": 0.0
+        }
       }
     },
     "Kênh khai thác": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1339000000.0,
-        "quarterly_1": 1456000000.0,
-        "weekly_1_5": 418392000.0,
-        "weekly_2_5": 351104000.0,
-        "weekly_3_5": 416000000.0,
-        "weekly_4_5": 418192000.0,
-        "weekly_5_5": 418192000.0,
-        "weekly_6_5": 522740000.0
+        "yearly_2026": {
+          "target": 1339000000.0,
+          "actual": 1214030640.0,
+          "pct": 0.9067
+        },
+        "quarterly_1": {
+          "target": 1456000000.0,
+          "actual": 1057516649.0,
+          "pct": 0.7263
+        },
+        "weekly_1_5": {
+          "actual": 418392000.0,
+          "pct": 427570000.0
+        },
+        "weekly_2_5": {
+          "actual": 351104000.0,
+          "pct": 367016000.0
+        },
+        "weekly_3_5": {
+          "actual": 416000000.0,
+          "pct": 394238000.0
+        },
+        "weekly_4_5": {
+          "actual": 418192000.0,
+          "pct": 338761657.0
+        },
+        "weekly_5_5": {
+          "actual": 418192000.0,
+          "pct": 324516992.0
+        },
+        "weekly_6_5": {
+          "actual": 522740000.0
+        }
       }
     },
     "VM1-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu chéo",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 148200000.0,
-        "quarterly_1": 156000000.0,
-        "monthly_1": 5850000.0,
-        "weekly_1_1": 5850000.0,
-        "weekly_1_2": 5850000.0,
-        "weekly_1_3": 5850000.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 49400000.0,
-        "monthly_2": 12350000.0,
-        "weekly_2_1": 12350000.0,
-        "weekly_2_2": 12350000.0,
-        "weekly_2_3": 12350000.0,
-        "weekly_2_5": 49400000.0,
-        "monthly_3": 12350000.0,
-        "weekly_3_1": 12350000.0,
-        "weekly_3_2": 12350000.0,
-        "weekly_3_3": 12350000.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 49400000.0,
-        "monthly_4": 9880000.0,
-        "weekly_4_1": 9880000.0,
-        "weekly_4_2": 9880000.0,
-        "weekly_4_3": 9880000.0,
-        "weekly_4_4": 9880000.0,
-        "weekly_4_5": 52000000.0,
-        "monthly_5": 13000000.0,
-        "weekly_5_1": 9880000.0,
-        "weekly_5_2": 9880000.0,
-        "weekly_5_3": 9880000.0,
-        "weekly_5_5": 52000000.0,
-        "monthly_6": 9880000.0,
-        "weekly_6_1": 9880000.0,
-        "weekly_6_2": 9880000.0,
-        "weekly_6_3": 9880000.0,
-        "weekly_6_5": 52000000.0,
-        "monthly_7": 10400000.0,
-        "weekly_7_1": 10400000.0,
-        "weekly_7_2": 10400000.0
+        "yearly_2026": {
+          "target": 148200000.0,
+          "actual": 43329537.0,
+          "pct": 0.2924
+        },
+        "quarterly_1": {
+          "target": 156000000.0,
+          "actual": 83434334.0,
+          "pct": 0.5348
+        },
+        "monthly_1": {
+          "target": 5850000.0,
+          "actual": 3618511.0,
+          "pct": 0.6185
+        },
+        "weekly_1_1": {
+          "target": 5850000.0,
+          "actual": 2652106.0,
+          "pct": 0.4534
+        },
+        "weekly_1_2": {
+          "target": 5850000.0,
+          "actual": 3551000.0,
+          "pct": 0.607
+        },
+        "weekly_1_3": {
+          "target": 5850000.0,
+          "actual": 5463120.0,
+          "pct": 0.9339
+        },
+        "weekly_1_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 49400000.0,
+          "pct": 18700920.0
+        },
+        "monthly_2": {
+          "target": 12350000.0,
+          "actual": 4000000.0,
+          "pct": 0.3239
+        },
+        "weekly_2_1": {
+          "target": 12350000.0,
+          "actual": 4366960.0,
+          "pct": 0.3536
+        },
+        "weekly_2_2": {
+          "target": 12350000.0,
+          "actual": 5631080.0,
+          "pct": 0.456
+        },
+        "weekly_2_3": {
+          "target": 12350000.0,
+          "actual": 4702880.0,
+          "pct": 0.3808
+        },
+        "weekly_2_5": {
+          "actual": 49400000.0,
+          "pct": 9343880.0
+        },
+        "monthly_3": {
+          "target": 12350000.0,
+          "actual": 4296240.0,
+          "pct": 0.3479
+        },
+        "weekly_3_1": {
+          "target": 12350000.0,
+          "actual": 5047640.0,
+          "pct": 0.4087
+        },
+        "weekly_3_2": {
+          "target": 12350000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 12350000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_4": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 49400000.0,
+          "pct": 17184880.0
+        },
+        "monthly_4": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 9880000.0,
+          "actual": 5029960.0,
+          "pct": 0.5091
+        },
+        "weekly_4_2": {
+          "target": 9880000.0,
+          "actual": 4305000.0,
+          "pct": 0.4357
+        },
+        "weekly_4_3": {
+          "target": 9880000.0,
+          "actual": 3889600.0,
+          "pct": 0.3937
+        },
+        "weekly_4_4": {
+          "target": 9880000.0,
+          "actual": 3960320.0,
+          "pct": 0.4008
+        },
+        "weekly_4_5": {
+          "actual": 52000000.0,
+          "pct": 3700000.0
+        },
+        "monthly_5": {
+          "target": 13000000.0,
+          "actual": 3700000.0,
+          "pct": 0.2846
+        },
+        "weekly_5_1": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 52000000.0,
+          "pct": 62549454.0
+        },
+        "monthly_6": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 9880000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 52000000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 10400000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_2": {
+          "target": 10400000.0
+        }
       }
     },
     "Spotify": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 70200000.0,
-        "quarterly_1": 78000000.0,
-        "monthly_1": 5850000.0,
-        "weekly_1_1": 5850000.0,
-        "weekly_1_2": 5850000.0,
-        "weekly_1_3": 5850000.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 23400000.0,
-        "monthly_2": 5850000.0,
-        "weekly_2_1": 5850000.0,
-        "weekly_2_2": 5850000.0,
-        "weekly_2_3": 5850000.0,
-        "weekly_2_5": 23400000.0,
-        "monthly_3": 5850000.0,
-        "weekly_3_1": 5850000.0,
-        "weekly_3_2": 5850000.0,
-        "weekly_3_3": 5850000.0,
-        "weekly_3_5": 23400000.0,
-        "monthly_4": 4680000.0,
-        "weekly_4_1": 4680000.0,
-        "weekly_4_2": 4680000.0,
-        "weekly_4_3": 4680000.0,
-        "weekly_4_4": 4680000.0,
-        "weekly_4_5": 26000000.0,
-        "monthly_5": 6500000.0,
-        "weekly_5_1": 4680000.0,
-        "weekly_5_2": 4680000.0,
-        "weekly_5_3": 4680000.0,
-        "weekly_5_5": 26000000.0,
-        "monthly_6": 4680000.0,
-        "weekly_6_1": 4680000.0,
-        "weekly_6_2": 4680000.0,
-        "weekly_6_3": 4680000.0,
-        "weekly_6_5": 26000000.0,
-        "monthly_7": 5200000.0,
-        "weekly_7_1": 5200000.0
+        "yearly_2026": {
+          "target": 70200000.0,
+          "actual": 43329537.0,
+          "pct": 0.6172
+        },
+        "quarterly_1": {
+          "target": 78000000.0,
+          "actual": 83434334.0,
+          "pct": 1.0697
+        },
+        "monthly_1": {
+          "target": 5850000.0,
+          "actual": 3618511.0,
+          "pct": 0.6185
+        },
+        "weekly_1_1": {
+          "target": 5850000.0,
+          "actual": 2652106.0,
+          "pct": 0.4534
+        },
+        "weekly_1_2": {
+          "target": 5850000.0,
+          "actual": 3551000.0,
+          "pct": 0.607
+        },
+        "weekly_1_3": {
+          "target": 5850000.0,
+          "actual": 5463120.0,
+          "pct": 0.9339
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 23400000.0,
+          "pct": 18700920.0
+        },
+        "monthly_2": {
+          "target": 5850000.0,
+          "actual": 4000000.0,
+          "pct": 0.6838
+        },
+        "weekly_2_1": {
+          "target": 5850000.0,
+          "actual": 4366960.0,
+          "pct": 0.7465
+        },
+        "weekly_2_2": {
+          "target": 5850000.0,
+          "actual": 5631080.0,
+          "pct": 0.9626
+        },
+        "weekly_2_3": {
+          "target": 5850000.0,
+          "actual": 4702880.0,
+          "pct": 0.8039
+        },
+        "weekly_2_5": {
+          "actual": 23400000.0,
+          "pct": 9343880.0
+        },
+        "monthly_3": {
+          "target": 5850000.0,
+          "actual": 4296240.0,
+          "pct": 0.7344
+        },
+        "weekly_3_1": {
+          "target": 5850000.0,
+          "actual": 5047640.0,
+          "pct": 0.8628
+        },
+        "weekly_3_2": {
+          "target": 5850000.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 5850000.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 23400000.0,
+          "pct": 17184880.0
+        },
+        "monthly_4": {
+          "target": 4680000.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 4680000.0,
+          "actual": 5029960.0,
+          "pct": 1.0748
+        },
+        "weekly_4_2": {
+          "target": 4680000.0,
+          "actual": 4305000.0,
+          "pct": 0.9199
+        },
+        "weekly_4_3": {
+          "target": 4680000.0,
+          "actual": 3889600.0,
+          "pct": 0.8311
+        },
+        "weekly_4_4": {
+          "target": 4680000.0,
+          "actual": 3960320.0,
+          "pct": 0.8462
+        },
+        "weekly_4_5": {
+          "actual": 26000000.0,
+          "pct": 3700000.0
+        },
+        "monthly_5": {
+          "target": 6500000.0,
+          "actual": 3700000.0,
+          "pct": 0.5692
+        },
+        "weekly_5_1": {
+          "target": 4680000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 4680000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 4680000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 26000000.0,
+          "pct": 62549454.0
+        },
+        "monthly_6": {
+          "target": 4680000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 4680000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 4680000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 4680000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 26000000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 5200000.0,
+          "pct": 0.0
+        }
       }
     },
     "Doanh thu từ nền tảng youtube": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 78000000.0,
-        "quarterly_1": 78000000.0,
-        "weekly_1_5": 26000000.0,
-        "monthly_2": 6500000.0,
-        "weekly_2_1": 6500000.0,
-        "weekly_2_2": 6500000.0,
-        "weekly_2_3": 6500000.0,
-        "weekly_2_5": 26000000.0,
-        "monthly_3": 6500000.0,
-        "weekly_3_1": 6500000.0,
-        "weekly_3_2": 6500000.0,
-        "weekly_3_3": 6500000.0,
-        "weekly_3_5": 26000000.0,
-        "monthly_4": 5200000.0,
-        "weekly_4_1": 5200000.0,
-        "weekly_4_2": 5200000.0,
-        "weekly_4_3": 5200000.0,
-        "weekly_4_4": 5200000.0,
-        "weekly_4_5": 26000000.0,
-        "monthly_5": 6500000.0,
-        "weekly_5_1": 5200000.0,
-        "weekly_5_2": 5200000.0,
-        "weekly_5_3": 5200000.0,
-        "weekly_5_5": 26000000.0,
-        "monthly_6": 5200000.0,
-        "weekly_6_1": 5200000.0,
-        "weekly_6_2": 5200000.0,
-        "weekly_6_3": 5200000.0,
-        "weekly_6_5": 26000000.0,
-        "monthly_7": 5200000.0,
-        "weekly_7_1": 5200000.0
+        "yearly_2026": {
+          "target": 78000000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 78000000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 26000000.0
+        },
+        "monthly_2": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_2_1": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 26000000.0
+        },
+        "monthly_3": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_3_2": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 26000000.0
+        },
+        "monthly_4": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_4_2": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 26000000.0
+        },
+        "monthly_5": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_5_1": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 26000000.0
+        },
+        "monthly_6": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 26000000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 5200000.0,
+          "pct": 0.0
+        }
       }
     },
     "VM1-I02.04": {
       "title": "",
       "unit": "Doanh thu đối tác",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 54600000.0,
-        "quarterly_1": 78000000.0,
-        "monthly_1": 4550000.0,
-        "weekly_1_1": 4550000.0,
-        "weekly_1_2": 4550000.0,
-        "weekly_1_3": 4550000.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 18200000.0,
-        "monthly_2": 4550000.0,
-        "weekly_2_1": 4550000.0,
-        "weekly_2_2": 4550000.0,
-        "weekly_2_3": 4550000.0,
-        "weekly_2_5": 18200000.0,
-        "monthly_3": 4550000.0,
-        "weekly_3_1": 4550000.0,
-        "weekly_3_2": 4550000.0,
-        "weekly_3_3": 4550000.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 18200000.0,
-        "monthly_4": 3640000.0,
-        "weekly_4_1": 3640000.0,
-        "weekly_4_2": 3640000.0,
-        "weekly_4_3": 3640000.0,
-        "weekly_4_4": 3640000.0,
-        "weekly_4_5": 26000000.0,
-        "monthly_5": 6500000.0,
-        "weekly_5_1": 3640000.0,
-        "weekly_5_2": 3640000.0,
-        "weekly_5_3": 3640000.0,
-        "weekly_5_5": 26000000.0,
-        "monthly_6": 3640000.0,
-        "weekly_6_1": 3640000.0,
-        "weekly_6_2": 3640000.0,
-        "weekly_6_3": 3640000.0,
-        "weekly_6_5": 26000000.0,
-        "monthly_7": 5200000.0,
-        "weekly_7_1": 5200000.0,
-        "weekly_7_2": 5200000.0
+        "yearly_2026": {
+          "target": 54600000.0,
+          "actual": 2843725.0,
+          "pct": 0.0521
+        },
+        "quarterly_1": {
+          "target": 78000000.0,
+          "actual": 21508472.0,
+          "pct": 0.2757
+        },
+        "monthly_1": {
+          "target": 4550000.0,
+          "actual": 762725.0,
+          "pct": 0.1676
+        },
+        "weekly_1_1": {
+          "target": 4550000.0,
+          "actual": 1081000.0,
+          "pct": 0.2376
+        },
+        "weekly_1_2": {
+          "target": 4550000.0,
+          "actual": 1000000.0,
+          "pct": 0.2198
+        },
+        "weekly_1_3": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 18200000.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_1": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 18200000.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_2": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_4": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 18200000.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_2": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 26000000.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 6500000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_1": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 26000000.0,
+          "pct": 21508472.0
+        },
+        "monthly_6": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 3640000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 26000000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 5200000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 5200000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_2": {
+          "target": 5200000.0
+        }
       }
     },
     "Doanh thu từ nguồn OTT": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 54600000.0,
-        "quarterly_1": 78000000.0,
-        "monthly_1": 4550000.0,
-        "weekly_1_1": 4550000.0,
-        "weekly_1_2": 4550000.0,
-        "weekly_1_3": 4550000.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 18200000.0,
-        "monthly_2": 4550000.0,
-        "weekly_2_1": 4550000.0,
-        "weekly_2_2": 4550000.0,
-        "weekly_2_3": 4550000.0,
-        "weekly_2_5": 18200000.0,
-        "monthly_3": 4550000.0,
-        "weekly_3_1": 4550000.0,
-        "weekly_3_2": 4550000.0,
-        "weekly_3_3": 4550000.0,
-        "weekly_3_5": 18200000.0,
-        "monthly_4": 3640000.0,
-        "weekly_4_1": 3640000.0,
-        "weekly_4_2": 3640000.0,
-        "weekly_4_3": 3640000.0,
-        "weekly_4_4": 3640000.0,
-        "weekly_4_5": 26000000.0,
-        "monthly_5": 6500000.0,
-        "weekly_5_1": 3640000.0,
-        "weekly_5_2": 3640000.0,
-        "weekly_5_3": 3640000.0,
-        "weekly_5_5": 26000000.0,
-        "monthly_6": 3640000.0,
-        "weekly_6_1": 3640000.0,
-        "weekly_6_2": 3640000.0,
-        "weekly_6_3": 3640000.0,
-        "weekly_6_5": 26000000.0,
-        "monthly_7": 5200000.0,
-        "weekly_7_1": 5200000.0
+        "yearly_2026": {
+          "target": 54600000.0,
+          "actual": 2843725.0,
+          "pct": 0.0521
+        },
+        "quarterly_1": {
+          "target": 78000000.0,
+          "actual": 21508472.0,
+          "pct": 0.2757
+        },
+        "monthly_1": {
+          "target": 4550000.0,
+          "actual": 762725.0,
+          "pct": 0.1676
+        },
+        "weekly_1_1": {
+          "target": 4550000.0,
+          "actual": 1081000.0,
+          "pct": 0.2376
+        },
+        "weekly_1_2": {
+          "target": 4550000.0,
+          "actual": 1000000.0,
+          "pct": 0.2198
+        },
+        "weekly_1_3": {
+          "target": 4550000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 18200000.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_2_1": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 18200000.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_3_2": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 4550000.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 18200000.0
+        },
+        "monthly_4": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_4_2": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 26000000.0
+        },
+        "monthly_5": {
+          "target": 6500000.0,
+          "pct": 0.0
+        },
+        "weekly_5_1": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 26000000.0,
+          "pct": 21508472.0
+        },
+        "monthly_6": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 3640000.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 26000000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 5200000.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 5200000.0,
+          "pct": 0.0
+        }
       }
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.01": {
       "title": "ROI",
       "unit": "Tối ưu chi phí nhân sự",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.02": {
       "title": "ROI",
       "unit": "Tối ưu chi phí sản xuất",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 5000000.0
+        "weekly_6_5": {
+          "actual": 5000000.0,
+          "pct": 0.0
+        }
       }
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí CTV (Cộng tác viên)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 148200000.0
+        "weekly_6_5": {
+          "actual": 148200000.0,
+          "pct": 0.0
+        }
       }
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.25,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25,
-        "weekly_3_5": 0.25,
-        "weekly_4_5": 0.25,
-        "weekly_5_5": 0.25,
-        "weekly_6_5": 0.25
+        "weekly_1_5": {
+          "target": 0.25
+        },
+        "weekly_2_5": {
+          "target": 0.25
+        },
+        "weekly_3_5": {
+          "target": 0.25
+        },
+        "weekly_4_5": {
+          "target": 0.25
+        },
+        "weekly_5_5": {
+          "target": 0.25
+        },
+        "weekly_6_5": {
+          "target": 0.25
+        }
       }
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.6,
-        "weekly_1_5": 0.6,
-        "weekly_2_5": 0.6,
-        "weekly_3_5": 0.6,
-        "weekly_4_5": 0.6,
-        "weekly_5_5": 0.6,
-        "weekly_6_5": 0.6
+        "weekly_1_5": {
+          "target": 0.6
+        },
+        "weekly_2_5": {
+          "target": 0.6
+        },
+        "weekly_3_5": {
+          "target": 0.6
+        },
+        "weekly_4_5": {
+          "target": 0.6
+        },
+        "weekly_5_5": {
+          "target": 0.6
+        },
+        "weekly_6_5": {
+          "target": 0.6
+        }
       }
     },
     "VM2-I01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Chi phí CTV",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 84.0,
-        "quarterly_1": 95.0,
-        "monthly_1": 6.0,
-        "weekly_1_1": 6.0,
-        "weekly_1_2": 7.0,
-        "weekly_1_3": 8.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 18.0,
-        "monthly_2": 6.0,
-        "weekly_2_1": 6.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 7.0,
-        "weekly_2_5": 21.0,
-        "monthly_3": 3.0,
-        "weekly_3_1": 7.0,
-        "weekly_3_2": 6.0,
-        "weekly_3_3": 6.0,
-        "weekly_3_4": 2.0,
-        "weekly_3_5": 25.0,
-        "monthly_4": 3.0,
-        "weekly_4_1": 6.0,
-        "weekly_4_2": 7.0,
-        "weekly_4_3": 8.0,
-        "weekly_4_4": 4.0,
-        "weekly_4_5": 23.0,
-        "monthly_5": 3.0,
-        "weekly_5_1": 5.0,
-        "weekly_5_2": 6.0,
-        "weekly_5_3": 8.0,
-        "weekly_5_5": 31.0,
-        "monthly_6": 2.0,
-        "weekly_6_1": 6.0,
-        "weekly_6_2": 9.0,
-        "weekly_6_3": 9.0,
-        "weekly_6_4": 5.0,
-        "weekly_6_5": 33.0,
-        "monthly_7": 3.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 7.0,
-        "weekly_7_3": 8.0,
-        "weekly_7_4": 7.0
+        "yearly_2026": {
+          "target": 84.0,
+          "actual": 64.0,
+          "pct": 0.7619
+        },
+        "quarterly_1": {
+          "target": 95.0,
+          "actual": 68.0,
+          "pct": 0.7158
+        },
+        "monthly_1": {
+          "target": 6.0,
+          "actual": 8.0,
+          "pct": 1.3333
+        },
+        "weekly_1_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 8.0,
+          "actual": 5.0,
+          "pct": 0.625
+        },
+        "weekly_1_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 18.0,
+          "pct": 17.0
+        },
+        "monthly_2": {
+          "target": 6.0,
+          "actual": 3.0,
+          "pct": 0.5
+        },
+        "weekly_2_1": {
+          "target": 6.0,
+          "actual": 7.0,
+          "pct": 1.1667
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 21.0,
+          "pct": 21.0
+        },
+        "monthly_3": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "weekly_3_1": {
+          "target": 7.0,
+          "actual": 6.0,
+          "pct": 0.8571
+        },
+        "weekly_3_2": {
+          "target": 6.0,
+          "actual": 5.0,
+          "pct": 0.8333
+        },
+        "weekly_3_3": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "actual": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 25.0,
+          "pct": 26.0
+        },
+        "monthly_4": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 23.0,
+          "pct": 19.0
+        },
+        "monthly_5": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "weekly_5_1": {
+          "target": 5.0,
+          "actual": 3.0,
+          "pct": 0.6
+        },
+        "weekly_5_2": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 31.0,
+          "pct": 23.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 6.0,
+          "actual": 5.0,
+          "pct": 0.8333
+        },
+        "weekly_6_2": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 9.0,
+          "actual": 4.0,
+          "pct": 0.4444
+        },
+        "weekly_6_4": {
+          "target": 5.0,
+          "actual": 3.0,
+          "pct": 0.6
+        },
+        "weekly_6_5": {
+          "actual": 33.0,
+          "pct": 20.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 8.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_4": {
+          "target": 7.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Doanh thu từ nền tảng youtube / facebook": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 44.0,
-        "quarterly_1": 45.0,
-        "monthly_1": 3.0,
-        "weekly_1_1": 3.0,
-        "weekly_1_2": 4.0,
-        "weekly_1_3": 5.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 0.9,
-        "monthly_2": 3.0,
-        "weekly_2_1": 3.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 4.0,
-        "weekly_2_5": 0.9,
-        "monthly_3": 1.0,
-        "weekly_3_1": 4.0,
-        "weekly_3_2": 4.0,
-        "weekly_3_3": 4.0,
-        "weekly_3_4": 1.0,
-        "weekly_3_5": 0.9,
-        "monthly_4": 1.0,
-        "weekly_4_1": 3.0,
-        "weekly_4_2": 4.0,
-        "weekly_4_3": 5.0,
-        "weekly_4_4": 2.0,
-        "weekly_4_5": 0.9,
-        "monthly_5": 1.0,
-        "weekly_5_1": 3.0,
-        "weekly_5_2": 4.0,
-        "weekly_5_3": 6.0,
-        "weekly_5_5": 0.9,
-        "monthly_6": 2.0,
-        "weekly_6_1": 3.0,
-        "weekly_6_2": 3.0,
-        "weekly_6_3": 4.0,
-        "weekly_6_4": 3.0,
-        "weekly_6_5": 0.9,
-        "monthly_7": 0.0,
-        "weekly_7_1": 5.0,
-        "weekly_7_2": 4.0,
-        "weekly_7_3": 5.0,
-        "weekly_7_4": 4.0
+        "yearly_2026": {
+          "target": 44.0,
+          "actual": 35.0,
+          "pct": 0.7955
+        },
+        "quarterly_1": {
+          "target": 45.0,
+          "actual": 45.0,
+          "pct": 1.0
+        },
+        "monthly_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 5.0,
+          "actual": 4.0,
+          "pct": 0.8
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.9,
+          "actual": 8.0,
+          "pct": 8.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.3333
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.9,
+          "actual": 13.0,
+          "pct": 13.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 4.0,
+          "actual": 3.0,
+          "pct": 0.75
+        },
+        "weekly_3_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.9,
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "target": 0.9,
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 6.0,
+          "actual": 7.0,
+          "pct": 1.1667
+        },
+        "weekly_5_5": {
+          "target": 0.9,
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_4": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "target": 0.9,
+          "actual": 18.0,
+          "pct": 9.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 5.0,
+          "pct": 0.0
+        },
+        "weekly_7_4": {
+          "target": 4.0,
+          "pct": 0.0
+        }
       }
     },
     "Số lượng video hoàn thành sản xuất sản phẩm MDA": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 40.0,
-        "quarterly_1": 50.0,
-        "monthly_1": 3.0,
-        "weekly_1_1": 3.0,
-        "weekly_1_2": 3.0,
-        "weekly_1_3": 3.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 0.1,
-        "monthly_2": 3.0,
-        "weekly_2_1": 3.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 3.0,
-        "weekly_2_5": 0.1,
-        "monthly_3": 2.0,
-        "weekly_3_1": 3.0,
-        "weekly_3_2": 2.0,
-        "weekly_3_3": 2.0,
-        "weekly_3_4": 1.0,
-        "weekly_3_5": 0.1,
-        "monthly_4": 2.0,
-        "weekly_4_1": 3.0,
-        "weekly_4_2": 3.0,
-        "weekly_4_3": 3.0,
-        "weekly_4_4": 2.0,
-        "weekly_4_5": 0.1,
-        "monthly_5": 2.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 2.0,
-        "weekly_5_3": 2.0,
-        "weekly_5_5": 0.1,
-        "monthly_6": 0.0,
-        "weekly_6_1": 3.0,
-        "weekly_6_2": 6.0,
-        "weekly_6_3": 5.0,
-        "weekly_6_4": 2.0,
-        "weekly_6_5": 0.1,
-        "monthly_7": 3.0,
-        "weekly_7_1": 3.0,
-        "weekly_7_2": 3.0,
-        "weekly_7_3": 3.0,
-        "weekly_7_4": 3.0
+        "yearly_2026": {
+          "target": 40.0,
+          "actual": 29.0,
+          "pct": 0.725
+        },
+        "quarterly_1": {
+          "target": 50.0,
+          "actual": 23.0,
+          "pct": 0.46
+        },
+        "monthly_1": {
+          "target": 3.0,
+          "actual": 5.0,
+          "pct": 1.6667
+        },
+        "weekly_1_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.3333
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.1,
+          "actual": 10.0,
+          "pct": 9.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.3333
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.1,
+          "actual": 8.0,
+          "pct": 8.0
+        },
+        "monthly_3": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_3_1": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "weekly_3_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.1,
+          "actual": 10.0,
+          "pct": 11.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "target": 0.1,
+          "actual": 8.0,
+          "pct": 4.0
+        },
+        "monthly_5": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_5_5": {
+          "target": 0.1,
+          "actual": 16.0,
+          "pct": 8.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "weekly_6_2": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 5.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_4": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.1,
+          "actual": 15.0,
+          "pct": 11.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 3.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_4": {
+          "target": 3.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM2-I01.3": {
       "title": "Số lượng ý tưởng mới",
       "unit": "Số lượng video hoàn thành sản xuất dự án English Stories",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 36.0,
-        "monthly_7": 7.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 7.0,
-        "weekly_7_3": 9.0
+        "weekly_6_5": {
+          "actual": 36.0,
+          "pct": 20.0
+        },
+        "monthly_7": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_2": {
+          "target": 7.0,
+          "actual": 5.0
+        },
+        "weekly_7_3": {
+          "target": 9.0,
+          "actual": 0.0
+        }
       }
     },
     "Số lượng ý tưởng mới sx trong kỳ (áp dụng cho đơn vị sx có biên kịch)": {
       "title": "Số lượng ý tưởng mới",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "weekly_6_5": 18.0,
-        "monthly_7": 2.0,
-        "weekly_7_1": 4.0,
-        "weekly_7_2": 4.0,
-        "weekly_7_3": 6.0
+        "weekly_6_5": {
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 2.0,
+          "pct": 0.5
+        },
+        "weekly_7_3": {
+          "target": 6.0
+        }
       }
     },
     "Sản phẩm MDA": {
       "title": "Số lượng ý tưởng mới",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "weekly_6_5": 18.0,
-        "monthly_7": 5.0,
-        "weekly_7_1": 4.0,
-        "weekly_7_2": 3.0,
-        "weekly_7_3": 3.0,
-        "weekly_7_4": 3.0
+        "weekly_6_5": {
+          "actual": 5.0,
+          "pct": 11.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 3.0,
+          "actual": 5.0,
+          "pct": 1.6667
+        },
+        "weekly_7_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 3.0,
+          "pct": 0.0
+        },
+        "weekly_7_4": {
+          "target": 3.0,
+          "pct": 0.0
+        }
       }
     },
     "VM2-I01.4": {
       "title": "Số lượng ý tưởng mới",
       "unit": "Sản phẩm English Stories",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 36.0,
-        "monthly_7": 7.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 7.0,
-        "weekly_7_3": 9.0
+        "weekly_6_5": {
+          "actual": 36.0,
+          "pct": 20.0
+        },
+        "monthly_7": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_2": {
+          "target": 7.0,
+          "actual": 5.0
+        },
+        "weekly_7_3": {
+          "target": 9.0,
+          "actual": 0.0
+        }
       }
     },
     "VM2-I01.5": {
       "title": "ROI",
       "unit": "Tỷ lệ chọn ý tưởng",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 0.9,
-        "monthly_7": 1.0,
-        "weekly_7_1": 1.0,
-        "weekly_7_2": 1.0,
-        "weekly_7_3": 1.0
+        "weekly_6_5": {
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "VM2-I01.6": {
       "title": "SL Kịch bản mới SX",
       "unit": "Kịch bản",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 33.0,
-        "monthly_7": 3.0,
-        "weekly_7_1": 3.0,
-        "weekly_7_2": 3.0,
-        "weekly_7_3": 3.0
+        "weekly_6_5": {
+          "actual": 33.0,
+          "pct": 11.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_7_1": {
+          "target": 3.0,
+          "actual": 5.0
+        },
+        "weekly_7_2": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_7_3": {
+          "target": 3.0,
+          "actual": 0.0
+        }
       }
     },
     "TM2-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.4,
-        "weekly_1_5": 0.4,
-        "weekly_2_5": 0.4,
-        "weekly_3_5": 0.4,
-        "weekly_4_5": 0.4,
-        "weekly_5_5": 0.4,
-        "weekly_6_5": 0.4
+        "weekly_1_5": {
+          "target": 0.4
+        },
+        "weekly_2_5": {
+          "target": 0.4,
+          "actual": 10.0
+        },
+        "weekly_3_5": {
+          "target": 0.4,
+          "actual": 10.0
+        },
+        "weekly_4_5": {
+          "target": 0.4,
+          "actual": 10.0
+        },
+        "weekly_5_5": {
+          "target": 0.4,
+          "actual": 10.0
+        },
+        "weekly_6_5": {
+          "target": 0.4,
+          "actual": 10.0
+        }
       }
     },
     "TM2-I02.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng 1 triệu views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM2-I02.02": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng X views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 20.0,
-        "quarterly_1": 20.0,
-        "weekly_1_5": 0.75,
-        "weekly_2_5": 0.75,
-        "weekly_3_5": 0.5,
-        "weekly_4_5": 0.5,
-        "weekly_5_5": 0.5,
-        "weekly_6_5": 0.5
+        "yearly_2026": {
+          "target": 20.0,
+          "actual": 29.0,
+          "pct": 1.45
+        },
+        "quarterly_1": {
+          "target": 20.0,
+          "actual": 8.0
+        },
+        "weekly_1_5": {
+          "target": 0.75,
+          "actual": 8.0,
+          "pct": 9.0
+        },
+        "weekly_2_5": {
+          "target": 0.75,
+          "actual": 11.0,
+          "pct": 7.0
+        },
+        "weekly_3_5": {
+          "target": 0.5,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "target": 0.5,
+          "actual": 5.0,
+          "pct": 4.0
+        },
+        "weekly_5_5": {
+          "target": 0.5,
+          "actual": 6.0,
+          "pct": 3.0
+        },
+        "weekly_6_5": {
+          "target": 0.5,
+          "actual": 6.0
+        }
       }
     },
     "Số lượng ý tưởng được chọn sx trong kỳ (áp dụng cho đơn vị sx có biên kịch)": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng X views (youtube)",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 6.0,
-        "weekly_3_5": 0.25,
-        "weekly_4_5": 0.25,
-        "weekly_5_5": 0.25,
-        "weekly_6_5": 0.25
+        "quarterly_1": {
+          "target": 6.0,
+          "actual": 3.0
+        },
+        "weekly_3_5": {
+          "target": 0.25,
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "target": 0.25,
+          "actual": 1.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "target": 0.25,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "target": 0.25,
+          "actual": 3.0
+        }
       }
     },
     "TM3-I01.03": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng video upload",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 42.0,
-        "quarterly_1": 51.0,
-        "monthly_1": 4.0,
-        "weekly_1_1": 4.0,
-        "weekly_1_2": 4.0,
-        "weekly_1_3": 3.0,
-        "weekly_1_5": 0.25,
-        "monthly_2": 4.0,
-        "weekly_2_1": 3.0,
-        "weekly_2_2": 4.0,
-        "weekly_2_3": 3.0,
-        "weekly_2_5": 0.25,
-        "monthly_3": 3.0,
-        "weekly_3_1": 3.0,
-        "weekly_3_2": 3.0,
-        "weekly_3_3": 3.0,
-        "weekly_3_4": 1.0,
-        "weekly_3_5": 0.25,
-        "monthly_4": 3.0,
-        "weekly_4_1": 3.0,
-        "weekly_4_2": 3.0,
-        "weekly_4_3": 3.0,
-        "weekly_4_4": 3.0,
-        "weekly_4_5": 0.25,
-        "monthly_5": 4.0,
-        "weekly_5_1": 4.0,
-        "weekly_5_2": 3.0,
-        "weekly_5_3": 4.0,
-        "weekly_5_5": 0.25,
-        "monthly_6": 3.0,
-        "weekly_6_1": 4.0,
-        "weekly_6_2": 3.0,
-        "weekly_6_3": 4.0,
-        "weekly_6_4": 4.0,
-        "weekly_6_5": 0.25,
-        "monthly_7": 3.0,
-        "weekly_7_1": 4.0
+        "yearly_2026": {
+          "target": 42.0,
+          "actual": 41.0,
+          "pct": 0.9762
+        },
+        "quarterly_1": {
+          "target": 51.0,
+          "actual": 42.0
+        },
+        "monthly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.25,
+          "actual": 14.0,
+          "pct": 13.0
+        },
+        "monthly_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "weekly_2_5": {
+          "target": 0.25,
+          "actual": 13.0,
+          "pct": 13.0
+        },
+        "monthly_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.25,
+          "actual": 15.0,
+          "pct": 13.0
+        },
+        "monthly_4": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "weekly_4_5": {
+          "target": 0.25,
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_5": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "target": 0.25,
+          "actual": 15.0,
+          "pct": 14.0
+        },
+        "monthly_6": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_4": {
+          "target": 4.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.25,
+          "actual": 15.0,
+          "pct": 3.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_7_1": {
+          "target": 4.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.25,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25,
-        "weekly_3_5": 0.25,
-        "weekly_4_5": 0.25,
-        "weekly_5_5": 0.25,
-        "weekly_6_5": 0.25
+        "weekly_1_5": {
+          "target": 0.25
+        },
+        "weekly_2_5": {
+          "target": 0.25
+        },
+        "weekly_3_5": {
+          "target": 0.25
+        },
+        "weekly_4_5": {
+          "target": 0.25
+        },
+        "weekly_5_5": {
+          "target": 0.25
+        },
+        "weekly_6_5": {
+          "target": 0.25
+        }
       }
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "weekly_4_5": 0.0305
+        "weekly_4_5": {
+          "pct": 0.0305
+        }
       }
     },
     "SL video đạt ngưỡng đột biến Y views (youtube)": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Traffic BP WF",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 80116665.0,
-        "quarterly_1": 92607738.0,
-        "monthly_1": 6778066.0,
-        "weekly_1_1": 5502890.0,
-        "weekly_1_2": 5605973.0,
-        "weekly_1_3": 5585864.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 0.6,
-        "monthly_2": 6641667.0,
-        "weekly_2_1": 4884284.0,
-        "weekly_2_2": 5191735.0,
-        "weekly_2_3": 6159958.0,
-        "weekly_2_5": 0.6,
-        "monthly_3": 6900000.0,
-        "weekly_3_1": 4458675.0,
-        "weekly_3_2": 5107958.0,
-        "weekly_3_3": 5422534.0,
-        "weekly_3_4": 1968485.0,
-        "weekly_3_5": 0.6,
-        "monthly_4": 6900000.0,
-        "weekly_4_1": 7225000.0,
-        "weekly_4_2": 5613723.0,
-        "weekly_4_3": 5203008.0,
-        "weekly_4_4": 5463547.0,
-        "weekly_4_5": 0.6,
-        "monthly_5": 7012500.0,
-        "weekly_5_1": 7012500.0,
-        "weekly_5_2": 7012500.0,
-        "weekly_5_3": 7012500.0,
-        "weekly_5_5": 0.6,
-        "monthly_6": 7295833.0,
-        "weekly_6_1": 7295833.0,
-        "weekly_6_2": 7295833.0,
-        "weekly_6_3": 7295833.0,
-        "weekly_6_5": 0.6,
-        "monthly_7": 3539286.0,
-        "weekly_7_1": 6800000.0,
-        "weekly_7_2": 6800000.0,
-        "weekly_7_3": 6800000.0,
-        "weekly_7_4": 0.0
+        "yearly_2026": {
+          "target": 80116665.0,
+          "actual": 60207021.0,
+          "pct": 0.7515
+        },
+        "quarterly_1": {
+          "target": 92607738.0,
+          "actual": 57660142.0,
+          "pct": 0.6226
+        },
+        "monthly_1": {
+          "target": 6778066.0,
+          "actual": 6750774.0,
+          "pct": 0.996
+        },
+        "weekly_1_1": {
+          "target": 5502890.0,
+          "actual": 4784179.0,
+          "pct": 0.8694
+        },
+        "weekly_1_2": {
+          "target": 5605973.0,
+          "actual": 4766693.0,
+          "pct": 0.8503
+        },
+        "weekly_1_3": {
+          "target": 5585864.0,
+          "actual": 4659718.0,
+          "pct": 0.8342
+        },
+        "weekly_1_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.6,
+          "actual": 26150000.0,
+          "pct": 18926040.0
+        },
+        "monthly_2": {
+          "target": 6641667.0,
+          "actual": 4347170.0,
+          "pct": 0.6545
+        },
+        "weekly_2_1": {
+          "target": 4884284.0,
+          "actual": 4423972.0,
+          "pct": 0.9058
+        },
+        "weekly_2_2": {
+          "target": 5191735.0,
+          "actual": 5265905.0,
+          "pct": 1.0143
+        },
+        "weekly_2_3": {
+          "target": 6159958.0,
+          "actual": 4888993.0,
+          "pct": 0.7937
+        },
+        "weekly_2_5": {
+          "target": 0.6,
+          "actual": 28850000.0,
+          "pct": 20319617.0
+        },
+        "monthly_3": {
+          "target": 6900000.0,
+          "actual": 4601051.0,
+          "pct": 0.6668
+        },
+        "weekly_3_1": {
+          "target": 4458675.0,
+          "actual": 4441703.0,
+          "pct": 0.9962
+        },
+        "weekly_3_2": {
+          "target": 5107958.0,
+          "actual": 4715247.0,
+          "pct": 0.9231
+        },
+        "weekly_3_3": {
+          "target": 5422534.0,
+          "actual": 4593131.0,
+          "pct": 0.847
+        },
+        "weekly_3_4": {
+          "actual": 1968485.0
+        },
+        "weekly_3_5": {
+          "target": 0.6,
+          "actual": 28850000.0,
+          "pct": 19101023.0
+        },
+        "monthly_4": {
+          "target": 6900000.0,
+          "actual": 4567742.0,
+          "pct": 0.662
+        },
+        "weekly_4_1": {
+          "target": 7225000.0,
+          "actual": 4563116.0,
+          "pct": 0.6316
+        },
+        "weekly_4_2": {
+          "target": 5613723.0,
+          "actual": 4252615.0,
+          "pct": 0.7575
+        },
+        "weekly_4_3": {
+          "target": 5203008.0,
+          "actual": 4479171.0,
+          "pct": 0.8609
+        },
+        "weekly_4_4": {
+          "target": 5463547.0,
+          "actual": 3206864.0,
+          "pct": 0.587
+        },
+        "weekly_4_5": {
+          "target": 0.6,
+          "actual": 28600000.0,
+          "pct": 19682948.0
+        },
+        "monthly_5": {
+          "target": 7012500.0,
+          "actual": 5636243.0,
+          "pct": 0.8037
+        },
+        "weekly_5_1": {
+          "target": 7012500.0,
+          "actual": 4288093.0,
+          "pct": 0.6115
+        },
+        "weekly_5_2": {
+          "target": 7012500.0,
+          "actual": 4197818.0,
+          "pct": 0.5986
+        },
+        "weekly_5_3": {
+          "target": 7012500.0,
+          "actual": 4787295.0,
+          "pct": 0.6827
+        },
+        "weekly_5_5": {
+          "target": 0.6,
+          "actual": 29183333.0,
+          "pct": 18876171.0
+        },
+        "monthly_6": {
+          "target": 7295833.0,
+          "actual": 4199970.0,
+          "pct": 0.5757
+        },
+        "weekly_6_1": {
+          "target": 7295833.0,
+          "actual": 4311162.0,
+          "pct": 0.5909
+        },
+        "weekly_6_2": {
+          "target": 7295833.0,
+          "actual": 4213442.0,
+          "pct": 0.5775
+        },
+        "weekly_6_3": {
+          "target": 7295833.0,
+          "actual": 4330206.0,
+          "pct": 0.5935
+        },
+        "weekly_6_5": {
+          "target": 0.6,
+          "actual": 29700000.0,
+          "pct": 29700000.0
+        },
+        "monthly_7": {
+          "target": 3539286.0,
+          "actual": 4715704.0,
+          "pct": 1.3324
+        },
+        "weekly_7_1": {
+          "target": 6800000.0,
+          "actual": 4075191.0,
+          "pct": 0.5993
+        },
+        "weekly_7_2": {
+          "target": 6800000.0,
+          "actual": 4049347.0,
+          "pct": 0.5955
+        },
+        "weekly_7_3": {
+          "target": 6800000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_4": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "Traffic BP": {
       "title": "Số lượt view youtube SCVN",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 10900000.0,
-        "quarterly_1": 13500000.0,
-        "monthly_1": 825000.0,
-        "weekly_1_1": 1029485.0,
-        "weekly_1_2": 1389348.0,
-        "weekly_1_3": 1065050.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 5500000.0,
-        "monthly_2": 1375000.0,
-        "weekly_2_1": 854427.0,
-        "weekly_2_2": 926740.0,
-        "weekly_2_3": 1187917.0,
-        "weekly_2_5": 5000000.0,
-        "monthly_3": 1250000.0,
-        "weekly_3_1": 807505.0,
-        "weekly_3_2": 859128.0,
-        "weekly_3_3": 1001072.0,
-        "weekly_3_4": 297429.0,
-        "weekly_3_5": 5000000.0,
-        "monthly_4": 1250000.0,
-        "weekly_4_1": 1175000.0,
-        "weekly_4_2": 978015.0,
-        "weekly_4_3": 760952.0,
-        "weekly_4_4": 819859.0,
-        "weekly_4_5": 4300000.0,
-        "monthly_5": 1075000.0,
-        "weekly_5_1": 1075000.0,
-        "weekly_5_2": 1075000.0,
-        "weekly_5_3": 1075000.0,
-        "weekly_5_5": 4700000.0,
-        "monthly_6": 1175000.0,
-        "weekly_6_1": 1175000.0,
-        "weekly_6_2": 1175000.0,
-        "weekly_6_3": 1175000.0,
-        "weekly_6_5": 5000000.0,
-        "monthly_7": 1000000.0,
-        "weekly_7_1": 1000000.0
+        "yearly_2026": {
+          "target": 10900000.0,
+          "actual": 11230104.0,
+          "pct": 1.0303
+        },
+        "quarterly_1": {
+          "target": 13500000.0,
+          "actual": 9296152.0,
+          "pct": 0.6886
+        },
+        "monthly_1": {
+          "target": 825000.0,
+          "actual": 1286856.0,
+          "pct": 1.5598
+        },
+        "weekly_1_1": {
+          "target": 1029485.0,
+          "actual": 1208129.0,
+          "pct": 1.1735
+        },
+        "weekly_1_2": {
+          "target": 1389348.0,
+          "actual": 926130.0,
+          "pct": 0.6666
+        },
+        "weekly_1_3": {
+          "target": 1065050.0,
+          "actual": 901043.0,
+          "pct": 0.846
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 5500000.0,
+          "pct": 3564856.0
+        },
+        "monthly_2": {
+          "target": 1375000.0,
+          "actual": 776752.0,
+          "pct": 0.5649
+        },
+        "weekly_2_1": {
+          "target": 854427.0,
+          "actual": 805861.0,
+          "pct": 0.9432
+        },
+        "weekly_2_2": {
+          "target": 926740.0,
+          "actual": 1032971.0,
+          "pct": 1.1146
+        },
+        "weekly_2_3": {
+          "target": 1187917.0,
+          "actual": 949272.0,
+          "pct": 0.7991
+        },
+        "weekly_2_5": {
+          "actual": 5000000.0,
+          "pct": 3343090.0
+        },
+        "monthly_3": {
+          "target": 1250000.0,
+          "actual": 734095.0,
+          "pct": 0.5873
+        },
+        "weekly_3_1": {
+          "target": 807505.0,
+          "actual": 747068.0,
+          "pct": 0.9252
+        },
+        "weekly_3_2": {
+          "target": 859128.0,
+          "actual": 870497.0,
+          "pct": 1.0132
+        },
+        "weekly_3_3": {
+          "target": 1001072.0,
+          "actual": 694001.0,
+          "pct": 0.6933
+        },
+        "weekly_3_4": {
+          "actual": 297429.0
+        },
+        "weekly_3_5": {
+          "actual": 5000000.0,
+          "pct": 3230521.0
+        },
+        "monthly_4": {
+          "target": 1250000.0,
+          "actual": 768007.0,
+          "pct": 0.6144
+        },
+        "weekly_4_1": {
+          "target": 1175000.0,
+          "actual": 850448.0,
+          "pct": 0.7238
+        },
+        "weekly_4_2": {
+          "target": 978015.0,
+          "actual": 661697.0,
+          "pct": 0.6766
+        },
+        "weekly_4_3": {
+          "target": 760952.0,
+          "actual": 712921.0,
+          "pct": 0.9369
+        },
+        "weekly_4_4": {
+          "target": 819859.0,
+          "actual": 534877.0,
+          "pct": 0.6524
+        },
+        "weekly_4_5": {
+          "actual": 4300000.0,
+          "pct": 3257450.0
+        },
+        "monthly_5": {
+          "target": 1075000.0,
+          "actual": 1072866.0,
+          "pct": 0.998
+        },
+        "weekly_5_1": {
+          "target": 1075000.0,
+          "actual": 672357.0,
+          "pct": 0.6254
+        },
+        "weekly_5_2": {
+          "target": 1075000.0,
+          "actual": 682198.0,
+          "pct": 0.6346
+        },
+        "weekly_5_3": {
+          "target": 1075000.0,
+          "actual": 728781.0,
+          "pct": 0.6779
+        },
+        "weekly_5_5": {
+          "actual": 4700000.0,
+          "pct": 2808181.0
+        },
+        "monthly_6": {
+          "target": 1175000.0,
+          "actual": 606156.0,
+          "pct": 0.5159
+        },
+        "weekly_6_1": {
+          "target": 1175000.0,
+          "actual": 560971.0,
+          "pct": 0.4774
+        },
+        "weekly_6_2": {
+          "target": 1175000.0,
+          "actual": 642666.0,
+          "pct": 0.5469
+        },
+        "weekly_6_3": {
+          "target": 1175000.0,
+          "actual": 722960.0,
+          "pct": 0.6153
+        },
+        "weekly_6_5": {
+          "actual": 5000000.0,
+          "pct": 1009444.0
+        },
+        "monthly_7": {
+          "target": 1000000.0,
+          "actual": 1009444.0,
+          "pct": 1.0094
+        },
+        "weekly_7_1": {
+          "target": 1000000.0,
+          "pct": 0.0
+        }
       }
     },
     "Kênh thương hiệu": {
       "title": "Số lượt view youtube SCVN",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 2666665.0,
-        "quarterly_1": 6457738.0,
-        "monthly_1": 104167.0,
-        "weekly_1_1": 104167.0,
-        "weekly_1_2": 104167.0,
-        "weekly_1_3": 104167.0,
-        "weekly_1_4": 0.0,
-        "weekly_1_5": 416666.0,
-        "monthly_2": 104167.0,
-        "weekly_2_1": 104167.0,
-        "weekly_2_2": 104167.0,
-        "weekly_2_3": 104167.0,
-        "weekly_2_5": 1250000.0,
-        "monthly_3": 312500.0,
-        "weekly_3_5": 1250000.0,
-        "monthly_4": 312500.0,
-        "weekly_4_1": 312500.0,
-        "weekly_4_2": 312500.0,
-        "weekly_4_3": 312500.0,
-        "weekly_4_4": 312500.0,
-        "weekly_4_5": 1800000.0,
-        "monthly_5": 312500.0,
-        "weekly_5_1": 312500.0,
-        "weekly_5_2": 312500.0,
-        "weekly_5_3": 312500.0,
-        "weekly_5_5": 2333333.0,
-        "monthly_6": 583333.0,
-        "weekly_6_1": 583333.0,
-        "weekly_6_2": 583333.0,
-        "weekly_6_3": 583333.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 2666665.0,
+          "actual": 3979.0,
+          "pct": 0.0015
+        },
+        "quarterly_1": {
+          "target": 6457738.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_1": {
+          "target": 104167.0,
+          "actual": 2370.0,
+          "pct": 0.0228
+        },
+        "weekly_1_1": {
+          "target": 104167.0,
+          "pct": 0.0
+        },
+        "weekly_1_2": {
+          "target": 104167.0,
+          "pct": 0.0
+        },
+        "weekly_1_3": {
+          "target": 104167.0,
+          "pct": 0.0
+        },
+        "weekly_1_4": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 416666.0,
+          "pct": 1609.0
+        },
+        "monthly_2": {
+          "target": 104167.0,
+          "actual": 1609.0,
+          "pct": 0.0154
+        },
+        "weekly_2_1": {
+          "target": 104167.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 104167.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 104167.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 1250000.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 312500.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1250000.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_4_2": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 1800000.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_5_1": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_5_2": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_5_3": {
+          "target": 312500.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 2333333.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 583333.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_1": {
+          "target": 583333.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_2": {
+          "target": 583333.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 583333.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Kênh AI": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Traffic sản phẩm MDA",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 29700000.0,
-        "monthly_7": 3539286.0,
-        "weekly_7_1": 6800000.0,
-        "weekly_7_2": 6800000.0,
-        "weekly_7_3": 6800000.0
+        "weekly_6_5": {
+          "actual": 29700000.0,
+          "pct": 29700000.0
+        },
+        "monthly_7": {
+          "target": 3539286.0,
+          "actual": 4715704.0,
+          "pct": 0.691
+        },
+        "weekly_7_1": {
+          "target": 6800000.0,
+          "actual": 4075191.0,
+          "pct": 0.5993
+        },
+        "weekly_7_2": {
+          "target": 6800000.0,
+          "actual": 4049347.0,
+          "pct": 0.5955
+        },
+        "weekly_7_3": {
+          "target": 6800000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Traffic long form video": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Traffic sản phẩm MDA",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 0.0
+        "weekly_6_5": {
+          "actual": 0.0
+        }
       }
     },
     "Traffic sản phẩm English Stories": {
       "title": "Số lượt view youtube SCVN",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM3-I01.04": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 0.2,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 8.0
+        },
+        "weekly_3_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 6.0
+        },
+        "weekly_4_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_5_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.2,
+          "actual": 0.07,
+          "pct": 0.0
+        }
       }
     },
     "VM3-I01.05": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 0.2,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 6.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_3_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 5.0
+        },
+        "weekly_4_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 6.0
+        },
+        "weekly_5_5": {
+          "target": 0.2,
+          "actual": 7.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.2,
+          "actual": 0.07,
+          "pct": 0.0
+        }
       }
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.1,
-        "weekly_1_5": 0.1,
-        "weekly_2_5": 0.1,
-        "weekly_3_5": 0.1,
-        "weekly_4_5": 0.1,
-        "weekly_5_5": 0.1,
-        "weekly_6_5": 0.1
+        "weekly_1_5": {
+          "target": 0.1
+        },
+        "weekly_2_5": {
+          "target": 0.1
+        },
+        "weekly_3_5": {
+          "target": 0.1
+        },
+        "weekly_4_5": {
+          "target": 0.1
+        },
+        "weekly_5_5": {
+          "target": 0.1
+        },
+        "weekly_6_5": {
+          "target": 0.1
+        }
       }
     },
     "TM4-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Phát triển hệ thống kênh kinh doanh": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 0.1,
-        "weekly_2_5": 0.1,
-        "weekly_3_5": 0.1,
-        "weekly_4_5": 0.1,
-        "weekly_5_5": 0.1,
-        "weekly_6_5": 0.1
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "target": 0.1,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "target": 0.1,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Traffic short": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt ngưỡng 5k$/ tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 4.0,
-        "quarterly_1": 8.0,
-        "weekly_1_5": 0.9,
-        "weekly_2_5": 0.9,
-        "weekly_3_5": 0.9,
-        "weekly_4_5": 0.9,
-        "weekly_5_5": 0.9,
-        "weekly_6_5": 0.9
+        "yearly_2026": {
+          "target": 4.0,
+          "actual": 8.0,
+          "pct": 2.0
+        },
+        "quarterly_1": {
+          "target": 8.0,
+          "actual": 7.0,
+          "pct": 0.875
+        },
+        "weekly_1_5": {
+          "target": 0.9,
+          "actual": 6.0,
+          "pct": 8.0
+        },
+        "weekly_2_5": {
+          "target": 0.9,
+          "actual": 8.0,
+          "pct": 7.0
+        },
+        "weekly_3_5": {
+          "target": 0.9,
+          "actual": 8.0,
+          "pct": 7.0
+        },
+        "weekly_4_5": {
+          "target": 0.9,
+          "actual": 8.0,
+          "pct": 6.0
+        },
+        "weekly_5_5": {
+          "target": 0.9,
+          "actual": 8.0,
+          "pct": 6.0
+        },
+        "weekly_6_5": {
+          "target": 0.9,
+          "actual": 8.0,
+          "pct": 6.0
+        }
       }
     },
     "TM4-I02.02": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "weekly_1_5": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "TM4-I02.03": {
       "title": "ROI",
       "unit": "Tỷ lệ kênh đạt chuẩn an toàn (toàn bộ hệ thống)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 1.0,
-        "weekly_6_5": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.6154,
+          "pct": 0.6154
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "SL",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 7.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM4-I02.03": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh mở mới",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "weekly_1_5": 3.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "weekly_1_5": {
+          "actual": 3.0,
+          "pct": 3.0
+        }
       }
     },
     "Số kênh kinh doanh mở mới trong kỳ": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh trả lại",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "weekly_1_5": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 23.0
+        "weekly_6_5": {
+          "actual": 23.0,
+          "pct": 23.0
+        }
       }
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 23.0
+        "weekly_6_5": {
+          "actual": 23.0,
+          "pct": 23.0
+        }
       }
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05,
-        "weekly_3_5": 0.05,
-        "weekly_4_5": 0.05,
-        "weekly_5_5": 0.05,
-        "weekly_6_5": 0.05
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        },
+        "weekly_3_5": {
+          "target": 0.05
+        },
+        "weekly_4_5": {
+          "target": 0.05
+        },
+        "weekly_5_5": {
+          "target": 0.05
+        },
+        "weekly_6_5": {
+          "target": 0.05
+        }
       }
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM5-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 1.0,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 1.0,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0
+        "weekly_1_5": {
+          "target": 1.0
+        },
+        "weekly_2_5": {
+          "target": 1.0
+        },
+        "weekly_3_5": {
+          "target": 1.0
+        },
+        "weekly_4_5": {
+          "target": 1.0
+        },
+        "weekly_5_5": {
+          "target": 1.0
+        },
+        "weekly_6_5": {
+          "target": 1.0
+        }
       }
     },
     "VM5-I02.01": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 21.0,
-        "quarterly_1": 19.0,
-        "weekly_1_5": 0.5,
-        "weekly_2_5": 0.5,
-        "weekly_3_5": 0.5,
-        "weekly_4_5": 0.5,
-        "weekly_5_5": 0.5,
-        "weekly_6_5": 0.5
+        "yearly_2026": {
+          "target": 21.0,
+          "actual": 22.0
+        },
+        "quarterly_1": {
+          "target": 19.0,
+          "actual": 19.5
+        },
+        "weekly_1_5": {
+          "target": 0.5,
+          "actual": 22.0,
+          "pct": 22.0
+        },
+        "weekly_2_5": {
+          "target": 0.5,
+          "actual": 22.0,
+          "pct": 22.0
+        },
+        "weekly_3_5": {
+          "target": 0.5,
+          "actual": 22.0,
+          "pct": 21.0
+        },
+        "weekly_4_5": {
+          "target": 0.5,
+          "actual": 20.0,
+          "pct": 19.5
+        },
+        "weekly_5_5": {
+          "target": 0.5,
+          "actual": 20.0,
+          "pct": 19.5
+        },
+        "weekly_6_5": {
+          "target": 0.5,
+          "actual": 20.0
+        }
       }
     },
     "VM5-I02.02": {
       "title": "Hiệu suất sản xuất",
       "unit": "ND",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 203560500.0,
-        "quarterly_1": 284758500.0,
-        "weekly_1_5": 0.3,
-        "weekly_2_5": 0.3,
-        "weekly_3_5": 0.3,
-        "weekly_4_5": 0.3,
-        "weekly_5_5": 0.3,
-        "weekly_6_5": 0.3
+        "yearly_2026": {
+          "target": 203560500.0,
+          "actual": 202686539.0,
+          "pct": 0.9957
+        },
+        "quarterly_1": {
+          "target": 284758500.0,
+          "actual": 240738750.0
+        },
+        "weekly_1_5": {
+          "target": 0.3,
+          "actual": 63132952.0,
+          "pct": 87640059.0
+        },
+        "weekly_2_5": {
+          "target": 0.3,
+          "actual": 70254476.0,
+          "pct": 91740133.0
+        },
+        "weekly_3_5": {
+          "target": 0.3,
+          "actual": 81825714.0,
+          "pct": 85725609.0
+        },
+        "weekly_4_5": {
+          "target": 0.3,
+          "actual": 86837071.0,
+          "pct": 79815277.0
+        },
+        "weekly_5_5": {
+          "target": 0.3,
+          "actual": 89849049.0,
+          "pct": 77119682.0
+        },
+        "weekly_6_5": {
+          "target": 0.3,
+          "actual": 85241765.0,
+          "pct": 31167502.0
+        }
       }
     },
     "VM5-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 814242000.0,
-        "quarterly_1": 1139034000.0,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2
+        "yearly_2026": {
+          "target": 814242000.0,
+          "actual": 1351243591.0,
+          "pct": 1.6595
+        },
+        "quarterly_1": {
+          "target": 1139034000.0,
+          "actual": 1203693750.0
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 441930667.0,
+          "pct": 438200293.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 491781333.0,
+          "pct": 458700667.0
+        },
+        "weekly_3_5": {
+          "target": 0.2,
+          "actual": 572780000.0,
+          "pct": 428628047.0
+        },
+        "weekly_4_5": {
+          "target": 0.2,
+          "actual": 607859497.0,
+          "pct": 399076383.0
+        },
+        "weekly_5_5": {
+          "target": 0.2,
+          "actual": 628943343.0,
+          "pct": 385598412.0
+        },
+        "weekly_6_5": {
+          "target": 0.2,
+          "actual": 653520200.0,
+          "pct": 238950847.0
+        }
       }
     },
     "Số kênh đạt ngưỡng X$/ tháng": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu/người",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.07": {
       "title": "Số vi phạm chính sách",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05,
-        "weekly_3_5": 0.05,
-        "weekly_4_5": 0.05,
-        "weekly_5_5": 0.05,
-        "weekly_6_5": 0.05
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        },
+        "weekly_3_5": {
+          "target": 0.05
+        },
+        "weekly_4_5": {
+          "target": 0.05
+        },
+        "weekly_5_5": {
+          "target": 0.05
+        },
+        "weekly_6_5": {
+          "target": 0.05
+        }
       }
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "Số buổi đào tạo được tổ chức",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 4.0,
-        "quarterly_1": 0.8,
-        "weekly_1_5": 0.8,
-        "weekly_2_5": 0.8,
-        "weekly_3_5": 0.8,
-        "weekly_4_5": 0.8,
-        "weekly_5_5": 0.8,
-        "weekly_6_5": 0.8
+        "yearly_2026": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.8,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.8,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.8,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "target": 0.8,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "target": 0.8,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "target": 0.8,
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "TM6-I01.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.8,
-        "quarterly_1": 0.2,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2
+        "yearly_2026": {
+          "target": 0.8,
+          "actual": 1.0,
+          "pct": 1.25
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 0.75,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 0.75,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.2,
+          "actual": 0.75,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "target": 0.2,
+          "actual": 0.75,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "target": 0.2,
+          "actual": 0.75,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "target": 0.2,
+          "actual": 0.75,
+          "pct": 1.0
+        }
       }
     },
     "VM6-I02": {
       "title": "",
       "unit": "Số lượng nhân sự fulltime",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 15.0
+        "weekly_6_5": {
+          "actual": 15.0,
+          "pct": 0.0
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05,
-        "weekly_3_5": 0.05,
-        "weekly_4_5": 0.05,
-        "weekly_5_5": 0.05,
-        "weekly_6_5": 0.05
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        },
+        "weekly_3_5": {
+          "target": 0.05
+        },
+        "weekly_4_5": {
+          "target": 0.05
+        },
+        "weekly_5_5": {
+          "target": 0.05
+        },
+        "weekly_6_5": {
+          "target": 0.05
+        }
       }
     },
     "TM7-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.3
+        "yearly_2026": {
+          "target": 0.3
+        }
       }
     },
     "TM7-I02": {
       "title": "ROI",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I02.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.3
+        "yearly_2026": {
+          "target": 0.3
+        }
       }
     },
     "VM7-I02.02": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "VM7-I02.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.85,
-        "quarterly_1": 0.85,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 1.0,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0
+        "yearly_2026": {
+          "target": 0.85,
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "quarterly_1": {
+          "target": 0.85
+        },
+        "weekly_1_5": {
+          "target": 1.0,
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "weekly_2_5": {
+          "target": 1.0,
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "target": 1.0,
+          "actual": 0.95,
+          "pct": 0.96
+        },
+        "weekly_4_5": {
+          "target": 1.0,
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "target": 1.0,
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "target": 1.0,
+          "actual": 0.95
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 15.0,
-        "quarterly_1": 10.0,
-        "weekly_1_5": 5.0,
-        "weekly_2_5": 5.0,
-        "weekly_3_5": 5.0,
-        "weekly_4_5": 5.0,
-        "weekly_5_5": 5.0,
-        "weekly_6_5": 5.0
+        "yearly_2026": {
+          "target": 15.0,
+          "actual": 19.0
+        },
+        "quarterly_1": {
+          "target": 10.0
+        },
+        "weekly_1_5": {
+          "actual": 5.0,
+          "pct": 9.0
+        },
+        "weekly_2_5": {
+          "actual": 5.0
+        },
+        "weekly_3_5": {
+          "actual": 5.0,
+          "pct": 6.0
+        },
+        "weekly_4_5": {
+          "actual": 5.0,
+          "pct": 6.0
+        },
+        "weekly_5_5": {
+          "actual": 5.0,
+          "pct": 7.0
+        },
+        "weekly_6_5": {
+          "actual": 5.0
+        }
       }
     }
   },
@@ -3878,920 +12574,2737 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "Mức độ ứng dụng AI trong sản xuất",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.6904,
-        "monthly_7": 0.9856
+        "yearly_2026": {
+          "target": 0.6904,
+          "actual": -42.25,
+          "pct": -61.2
+        },
+        "monthly_7": {
+          "actual": 0.9856
+        }
       }
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "Mức độ ứng dụng AI trong sản xuất",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.4084,
-        "weekly_1_5": 1.1576,
-        "weekly_5_5": 1.3544
+        "yearly_2026": {
+          "target": 0.4084,
+          "actual": 549984878.0,
+          "pct": 463793165.0
+        },
+        "weekly_1_5": {
+          "actual": 1.1576
+        },
+        "weekly_5_5": {
+          "target": 1.3544
+        }
       }
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "2.1": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "Mức độ ứng dụng AI trong sản xuất",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 2406200581.0,
-        "quarterly_1": 2685828360.0,
-        "monthly_1": 190263422.0,
-        "weekly_1_1": 190263422.0,
-        "weekly_1_2": 190263422.0,
-        "weekly_1_3": 190263422.0,
-        "weekly_1_5": 805269899.0,
-        "monthly_2": 201317474.8,
-        "weekly_2_1": 201317474.8,
-        "weekly_2_2": 201317474.8,
-        "weekly_2_3": 201317474.8,
-        "weekly_2_4": 421000000.0,
-        "weekly_2_5": 839164994.0,
-        "monthly_3": 209791249.0,
-        "weekly_3_1": 209791249.0,
-        "weekly_3_2": 209791249.0,
-        "weekly_3_3": 209791249.0,
-        "weekly_3_5": 864756172.0,
-        "monthly_4": 294650023.0,
-        "weekly_4_1": 294650023.0,
-        "weekly_4_2": 294650023.0,
-        "weekly_4_3": 294650023.0,
-        "weekly_4_4": 294650023.0,
-        "weekly_4_5": 890638235.0,
-        "monthly_5": 222659559.0,
-        "weekly_5_1": 222659559.0,
-        "weekly_5_2": 222676563.0,
-        "weekly_5_3": 222676563.0,
-        "weekly_5_4": 276027193.0,
-        "weekly_5_5": 930365937.0,
-        "monthly_6": 232591484.0,
-        "weekly_6_1": 232591484.0,
-        "weekly_6_2": 232591484.0,
-        "weekly_6_3": 232591484.0,
-        "weekly_6_5": 550000000.0,
-        "monthly_7": 137500000.0,
-        "weekly_7_1": 137500000.0,
-        "weekly_7_2": 137500000.0,
-        "weekly_7_3": 137500000.0
+        "yearly_2026": {
+          "target": 2406200581.0,
+          "actual": 1051927424.0,
+          "pct": 0.44
+        },
+        "quarterly_1": {
+          "target": 2685828360.0,
+          "actual": 933521834.0,
+          "pct": 0.35
+        },
+        "monthly_1": {
+          "target": 190263422.0,
+          "actual": 65807272.0,
+          "pct": 0.35
+        },
+        "weekly_1_1": {
+          "target": 190263422.0,
+          "actual": 63996000.0,
+          "pct": 0.34
+        },
+        "weekly_1_2": {
+          "target": 190263422.0,
+          "actual": 57917934.0,
+          "pct": 0.3
+        },
+        "weekly_1_3": {
+          "target": 190263422.0,
+          "pct": 0.4
+        },
+        "weekly_1_5": {
+          "actual": 805269899.0,
+          "pct": 367315387.0
+        },
+        "monthly_2": {
+          "target": 201317474.8,
+          "actual": 86134545.0,
+          "pct": 0.4279
+        },
+        "weekly_2_1": {
+          "target": 201317474.8,
+          "actual": 84653528.0,
+          "pct": 0.4205
+        },
+        "weekly_2_2": {
+          "target": 201317474.8,
+          "actual": 101578648.0,
+          "pct": 0.5
+        },
+        "weekly_2_3": {
+          "target": 201317474.8,
+          "actual": 87964211.0,
+          "pct": 0.4369
+        },
+        "weekly_2_4": {
+          "pct": 421000000.0
+        },
+        "weekly_2_5": {
+          "actual": 839164994.0,
+          "pct": 447062668.0
+        },
+        "monthly_3": {
+          "target": 209791249.0,
+          "actual": 89312668.0,
+          "pct": 0.43
+        },
+        "weekly_3_1": {
+          "target": 209791249.0,
+          "actual": 101199609.0,
+          "pct": 0.48
+        },
+        "weekly_3_2": {
+          "target": 209791249.0,
+          "actual": 111040447.0,
+          "pct": 0.53
+        },
+        "weekly_3_3": {
+          "target": 209791249.0,
+          "actual": 81227181.0,
+          "pct": 0.3872
+        },
+        "weekly_3_5": {
+          "actual": 864756172.0,
+          "pct": 307136660.0
+        },
+        "monthly_4": {
+          "target": 294650023.0,
+          "actual": 110663518.0,
+          "pct": 0.3756
+        },
+        "weekly_4_1": {
+          "target": 294650023.0,
+          "actual": 95045595.0,
+          "pct": 0.3226
+        },
+        "weekly_4_2": {
+          "target": 294650023.0,
+          "actual": 72163437.0,
+          "pct": 0.2449
+        },
+        "weekly_4_3": {
+          "target": 294650023.0,
+          "actual": 66163437.0,
+          "pct": 0.2245
+        },
+        "weekly_4_4": {
+          "target": 294650023.0,
+          "pct": 373430200.0
+        },
+        "weekly_4_5": {
+          "actual": 890638235.0,
+          "pct": 276027193.0
+        },
+        "monthly_5": {
+          "target": 222659559.0,
+          "actual": 72626982.0,
+          "pct": 0.3262
+        },
+        "weekly_5_1": {
+          "target": 222659559.0,
+          "actual": 75725568.0,
+          "pct": 0.3401
+        },
+        "weekly_5_2": {
+          "target": 222676563.0,
+          "actual": 66577269.0,
+          "pct": 0.299
+        },
+        "weekly_5_3": {
+          "target": 222676563.0
+        },
+        "weekly_5_4": {
+          "pct": 276027193.0
+        },
+        "weekly_5_5": {
+          "actual": 930365937.0,
+          "pct": 373844969.0
+        },
+        "monthly_6": {
+          "target": 232591484.0,
+          "actual": 70300000.0,
+          "pct": 0.3022
+        },
+        "weekly_6_1": {
+          "target": 232591484.0,
+          "actual": 81117039.0,
+          "pct": 0.3488
+        },
+        "weekly_6_2": {
+          "target": 232591484.0,
+          "actual": 105419227.0,
+          "pct": 0.4532
+        },
+        "weekly_6_3": {
+          "target": 232591484.0,
+          "actual": 103000000.0,
+          "pct": 0.4428
+        },
+        "weekly_6_5": {
+          "actual": 550000000.0
+        },
+        "monthly_7": {
+          "target": 137500000.0,
+          "actual": 96801406.0,
+          "pct": 0.704
+        },
+        "weekly_7_1": {
+          "target": 137500000.0,
+          "actual": 110425866.0,
+          "pct": 0.803
+        },
+        "weekly_7_2": {
+          "target": 137500000.0,
+          "actual": 110532786.0,
+          "pct": 0.8039
+        },
+        "weekly_7_3": {
+          "target": 137500000.0
+        }
       }
     },
     "TBP": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 793302541.0,
-        "quarterly_1": 84999735.0,
-        "monthly_1": 64610002.0,
-        "weekly_1_1": 64610002.0,
-        "weekly_1_2": 64610002.0,
-        "weekly_1_3": 64610002.0,
-        "weekly_1_5": 262918219.0,
-        "monthly_2": 65729554.75,
-        "weekly_2_1": 65729554.75,
-        "weekly_2_2": 65729554.75,
-        "weekly_2_3": 65729554.75,
-        "weekly_2_4": 0.5017,
-        "weekly_2_5": 271944314.0,
-        "monthly_3": 67986079.0,
-        "weekly_3_1": 67986079.0,
-        "weekly_3_2": 67986079.0,
-        "weekly_3_3": 67986079.0,
-        "weekly_3_5": 587284172.0,
-        "monthly_4": 146821043.0,
-        "weekly_4_1": 225282023.0,
-        "weekly_4_2": 146821043.0,
-        "weekly_4_3": 146821043.0,
-        "weekly_4_4": 146821043.0,
-        "weekly_4_5": 564850332.0,
-        "monthly_5": 141212583.0,
-        "weekly_5_1": 141212583.0,
-        "weekly_5_2": 141212583.0,
-        "weekly_5_3": 141212583.0,
-        "weekly_5_5": 580690767.0,
-        "monthly_6": 145172692.0,
-        "weekly_6_1": 145172692.0,
-        "weekly_6_2": 145172692.0,
-        "weekly_6_3": 145172692.0,
-        "weekly_6_5": 550000000.0,
-        "monthly_7": 137500000.0,
-        "weekly_7_1": 137500000.0,
-        "weekly_7_2": 137500000.0,
-        "weekly_7_3": 137500000.0
+        "yearly_2026": {
+          "target": 70105000.0,
+          "actual": 128802179.0,
+          "pct": 1.84
+        },
+        "quarterly_1": {
+          "target": 74279000.0
+        },
+        "monthly_1": {
+          "target": 6750000.0,
+          "actual": 6026758.0,
+          "pct": 0.89
+        },
+        "weekly_1_1": {
+          "target": 6750000.0,
+          "actual": 5447329.0,
+          "pct": 0.81
+        },
+        "weekly_1_2": {
+          "target": 6750000.0,
+          "actual": 6418666.0,
+          "pct": 0.95
+        },
+        "weekly_1_3": {
+          "target": 6750000.0,
+          "pct": 0.99,
+          "actual": 6685231.0
+        },
+        "weekly_1_5": {
+          "actual": 30000000.0,
+          "pct": 38905526.0
+        },
+        "monthly_2": {
+          "target": 7500000.0,
+          "actual": 7144312.0,
+          "pct": 0.9526
+        },
+        "weekly_2_1": {
+          "target": 7500000.0,
+          "actual": 11706413.0,
+          "pct": 1.5609
+        },
+        "weekly_2_2": {
+          "target": 7500000.0,
+          "actual": 10698965.0,
+          "pct": 1.43
+        },
+        "weekly_2_3": {
+          "target": 7500000.0,
+          "actual": 11329196.0,
+          "pct": 1.51
+        },
+        "weekly_2_4": {
+          "pct": 0.5017
+        },
+        "weekly_2_5": {
+          "actual": 43000000.0,
+          "pct": 58257892.0
+        },
+        "monthly_3": {
+          "target": 10750000.0,
+          "actual": 19381145.0,
+          "pct": 1.8029
+        },
+        "weekly_3_1": {
+          "target": 10750000.0,
+          "actual": 20004362.0,
+          "pct": 1.8609
+        },
+        "weekly_3_2": {
+          "target": 10750000.0,
+          "actual": 11940844.0,
+          "pct": 1.1108
+        },
+        "weekly_3_3": {
+          "target": 10750000.0,
+          "actual": 5827325.0,
+          "pct": 0.5421
+        },
+        "weekly_3_5": {
+          "actual": 43000000.0,
+          "pct": 40856142.0
+        },
+        "monthly_4": {
+          "target": 10750000.0,
+          "actual": 7874184.0,
+          "pct": 0.7325
+        },
+        "weekly_4_1": {
+          "target": 10750000.0,
+          "actual": 11743075.0,
+          "pct": 1.0924
+        },
+        "weekly_4_2": {
+          "target": 10750000.0,
+          "actual": 10733305.0,
+          "pct": 0.9984
+        },
+        "weekly_4_3": {
+          "target": 10750000.0,
+          "actual": 11071546.0,
+          "pct": 1.0299
+        },
+        "weekly_4_4": {
+          "target": 10750000.0,
+          "pct": 48593741.0
+        },
+        "weekly_4_5": {
+          "actual": 50000000.0,
+          "pct": 31242840.0
+        },
+        "monthly_5": {
+          "target": 12500000.0,
+          "actual": 9220884.0,
+          "pct": 0.7377
+        },
+        "weekly_5_1": {
+          "target": 12500000.0,
+          "actual": 10733305.0,
+          "pct": 0.8587
+        },
+        "weekly_5_2": {
+          "target": 12500000.0,
+          "actual": 7872456.0,
+          "pct": 0.6298
+        },
+        "weekly_5_3": {
+          "target": 12500000.0
+        },
+        "weekly_5_5": {
+          "actual": 50000000.0,
+          "pct": 48593741.0
+        },
+        "monthly_6": {
+          "target": 12500000.0,
+          "actual": 10470915.0,
+          "pct": 0.8377
+        },
+        "weekly_6_1": {
+          "target": 12500000.0,
+          "actual": 12152738.0,
+          "pct": 0.9722
+        },
+        "weekly_6_2": {
+          "target": 12500000.0,
+          "actual": 13772567.0,
+          "pct": 1.1
+        },
+        "weekly_6_3": {
+          "target": 12500000.0,
+          "actual": 12766980.0,
+          "pct": 1.0214
+        },
+        "weekly_6_5": {
+          "actual": 53500000.0
+        },
+        "monthly_7": {
+          "target": 14250000.0,
+          "actual": 11426470.0,
+          "pct": 0.8
+        },
+        "weekly_7_1": {
+          "target": 14250000.0,
+          "actual": 13952408.0,
+          "pct": 0.9791
+        },
+        "weekly_7_2": {
+          "target": 14250000.0,
+          "actual": 13367418.0,
+          "pct": 0.9381
+        },
+        "weekly_7_3": {
+          "target": 14250000.0
+        }
       }
     },
     "36,011,890 ₫": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 855557040.0,
-        "quarterly_1": 989375010.0,
-        "monthly_1": 61000000.0,
-        "weekly_1_1": 61000000.0,
-        "weekly_1_2": 61000000.0,
-        "weekly_1_3": 61000000.0,
-        "weekly_1_5": 245596000.0,
-        "monthly_2": 61399000.0,
-        "weekly_2_1": 61399000.0,
-        "weekly_2_2": 61399000.0,
-        "weekly_2_3": 61399000.0,
-        "weekly_2_5": 267033000.0,
-        "monthly_3": 66758250.0,
-        "weekly_3_1": 66758250.0,
-        "weekly_3_2": 66758250.0,
-        "weekly_3_3": 66758250.0,
-        "weekly_3_5": 313843920.0,
-        "monthly_4": 78460980.0,
-        "weekly_4_5": 325855920.0,
-        "monthly_5": 81463980.0,
-        "weekly_5_1": 81463980.0,
-        "weekly_5_2": 81463980.0,
-        "weekly_5_3": 81463980.0,
-        "weekly_6_2": 0.0,
-        "weekly_4_4": 48593741.0,
-        "monthly_6": 1000000.0,
-        "weekly_6_1": 1000000.0,
-        "weekly_6_3": 1000000.0,
-        "weekly_6_5": 0.832
+        "yearly_2026": {
+          "target": 27500000.0,
+          "actual": 6296547.0,
+          "pct": 0.23
+        },
+        "quarterly_1": {
+          "target": 989375010.0
+        },
+        "monthly_1": {
+          "target": 900000.0,
+          "actual": 626927.0,
+          "pct": 0.7
+        },
+        "weekly_1_1": {
+          "target": 900000.0,
+          "actual": 542103.0,
+          "pct": 0.6
+        },
+        "weekly_1_2": {
+          "target": 900000.0,
+          "actual": 429944.0,
+          "pct": 0.48
+        },
+        "weekly_1_3": {
+          "target": 900000.0,
+          "pct": 0.5,
+          "actual": 448422.0
+        },
+        "weekly_1_5": {
+          "actual": 3865000.0,
+          "pct": 1935645.0
+        },
+        "monthly_2": {
+          "target": 966250.0,
+          "actual": 364748.0,
+          "pct": 0.3775
+        },
+        "weekly_2_1": {
+          "target": 966250.0,
+          "actual": 442874.0,
+          "pct": 0.4583
+        },
+        "weekly_2_2": {
+          "target": 966250.0,
+          "actual": 424307.0,
+          "pct": 0.44
+        },
+        "weekly_2_3": {
+          "target": 966250.0,
+          "actual": 429810.0,
+          "pct": 0.44
+        },
+        "weekly_2_5": {
+          "actual": 4209500.0,
+          "pct": 2215318.0
+        },
+        "monthly_3": {
+          "target": 1052375.0,
+          "actual": 535023.0,
+          "pct": 0.5084
+        },
+        "weekly_3_1": {
+          "target": 1052375.0,
+          "actual": 444573.0,
+          "pct": 0.4224
+        },
+        "weekly_3_2": {
+          "target": 1052375.0,
+          "actual": 499836.0,
+          "pct": 0.475
+        },
+        "weekly_3_3": {
+          "target": 1052375.0,
+          "actual": 393540.0,
+          "pct": 0.374
+        },
+        "weekly_3_5": {
+          "actual": 313843920.0
+        },
+        "monthly_4": {
+          "target": 78460980.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 325855920.0
+        },
+        "monthly_5": {
+          "target": 81463980.0
+        },
+        "weekly_5_1": {
+          "target": 81463980.0
+        },
+        "weekly_5_2": {
+          "target": 81463980.0
+        },
+        "weekly_5_3": {
+          "target": 81463980.0
+        },
+        "weekly_6_2": {
+          "pct": 1.33,
+          "target": 1000000.0,
+          "actual": 1334041.0
+        },
+        "weekly_4_4": {
+          "pct": 48593741.0
+        },
+        "monthly_6": {
+          "target": 1000000.0,
+          "actual": 551254.0,
+          "pct": 0.5513
+        },
+        "weekly_6_1": {
+          "target": 1000000.0,
+          "actual": 726032.0,
+          "pct": 0.726
+        },
+        "weekly_6_3": {
+          "target": 1000000.0,
+          "actual": 967556.0,
+          "pct": 0.9676
+        }
       }
     },
     "12,512,783 ₫": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 757341000.0,
-        "quarterly_1": 846456000.0,
-        "monthly_1": 64653420.0,
-        "weekly_1_1": 64653420.0,
-        "weekly_1_2": 64653420.0,
-        "weekly_1_3": 64653420.0,
-        "weekly_1_5": 296755680.0,
-        "monthly_2": 74188920.0,
-        "weekly_2_1": 74188920.0,
-        "weekly_2_2": 74188920.0,
-        "weekly_2_3": 74188920.0,
-        "weekly_2_5": 300187680.0,
-        "monthly_3": 75046920.0,
-        "weekly_3_1": 75046920.0,
-        "weekly_3_2": 75046920.0,
-        "weekly_3_3": 75046920.0,
-        "weekly_3_5": 277472000.0,
-        "monthly_4": 69368000.0,
-        "weekly_4_1": 69368000.0,
-        "weekly_4_2": 69368000.0,
-        "weekly_4_3": 69368000.0,
-        "weekly_4_4": 69368000.0,
-        "weekly_4_5": 325855920.0,
-        "monthly_5": 81463980.0,
-        "weekly_5_1": 81463980.0,
-        "weekly_5_2": 81463980.0,
-        "weekly_5_3": 81463980.0,
-        "weekly_6_2": 0.0
+        "yearly_2026": {
+          "target": 11674500.0,
+          "actual": 6752264.0,
+          "pct": 0.58
+        },
+        "quarterly_1": {
+          "target": 16412346.0
+        },
+        "monthly_1": {
+          "target": 1950000.0,
+          "actual": 1353575.0,
+          "pct": 0.69
+        },
+        "weekly_1_1": {
+          "target": 1950000.0,
+          "actual": 472019.0,
+          "pct": 0.24
+        },
+        "weekly_1_2": {
+          "target": 1950000.0,
+          "actual": 439307.0,
+          "pct": 0.23
+        },
+        "weekly_1_3": {
+          "target": 1950000.0,
+          "pct": 0.39,
+          "actual": 763909.0
+        },
+        "weekly_1_5": {
+          "actual": 6000000.0,
+          "pct": 4638928.0
+        },
+        "monthly_2": {
+          "target": 1500000.0,
+          "actual": 997839.0,
+          "pct": 0.6652
+        },
+        "weekly_2_1": {
+          "target": 1500000.0,
+          "actual": 1318463.0,
+          "pct": 0.879
+        },
+        "weekly_2_2": {
+          "target": 1500000.0,
+          "actual": 1486716.0,
+          "pct": 0.99
+        },
+        "weekly_2_3": {
+          "target": 1500000.0,
+          "actual": 1234288.0,
+          "pct": 0.82
+        },
+        "weekly_2_5": {
+          "actual": 8000000.0,
+          "pct": 4385826.0
+        },
+        "monthly_3": {
+          "target": 2000000.0,
+          "actual": 877224.0,
+          "pct": 0.4386
+        },
+        "weekly_3_1": {
+          "target": 2000000.0,
+          "actual": 886780.0,
+          "pct": 0.4434
+        },
+        "weekly_3_2": {
+          "target": 2000000.0,
+          "actual": 1542825.0,
+          "pct": 0.7714
+        },
+        "weekly_3_3": {
+          "target": 2000000.0,
+          "actual": 1078997.0,
+          "pct": 0.5395
+        },
+        "weekly_3_5": {
+          "actual": 5500000.0,
+          "pct": 2233573.0
+        },
+        "monthly_4": {
+          "target": 1375000.0,
+          "actual": 867831.0,
+          "pct": 0.6311
+        },
+        "weekly_4_1": {
+          "target": 1375000.0,
+          "actual": 648874.0,
+          "pct": 0.4719
+        },
+        "weekly_4_2": {
+          "target": 1375000.0,
+          "actual": 335028.0,
+          "pct": 0.2437
+        },
+        "weekly_4_3": {
+          "target": 1375000.0,
+          "actual": 518686.0,
+          "pct": 0.3772
+        },
+        "weekly_4_4": {
+          "target": 1375000.0,
+          "pct": 48593741.0
+        },
+        "weekly_4_5": {
+          "actual": 4000000.0,
+          "pct": 2404858.0
+        },
+        "monthly_5": {
+          "target": 1000000.0,
+          "actual": 500000.0,
+          "pct": 0.5
+        },
+        "weekly_5_1": {
+          "target": 1000000.0,
+          "actual": 335028.0,
+          "pct": 0.335
+        },
+        "weekly_5_2": {
+          "target": 1000000.0,
+          "actual": 345559.0,
+          "pct": 0.3456
+        },
+        "weekly_5_3": {
+          "target": 1000000.0
+        },
+        "weekly_6_2": {
+          "pct": 0.0
+        }
       }
     },
     "VM1-I02.02": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu nội bộ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 2406200581.0,
-        "quarterly_1": 2685828360.0,
-        "monthly_1": 190263422.0,
-        "weekly_1_1": 190263422.0,
-        "weekly_1_2": 190263422.0,
-        "weekly_1_3": 190263422.0,
-        "weekly_1_5": 805269899.0,
-        "monthly_2": 201317474.8,
-        "weekly_2_1": 201317474.8,
-        "weekly_2_2": 201317474.8,
-        "weekly_2_3": 201317474.8,
-        "weekly_2_5": 839164994.0,
-        "monthly_3": 209791249.0,
-        "weekly_3_1": 209791249.0,
-        "weekly_3_2": 209791249.0,
-        "weekly_3_3": 209791249.0,
-        "weekly_3_5": 864756172.0,
-        "monthly_4": 294650023.0,
-        "weekly_4_1": 216189043.0,
-        "weekly_4_2": 216189043.0,
-        "weekly_4_3": 216189043.0,
-        "weekly_4_4": 216189043.0,
-        "weekly_4_5": 890638235.0,
-        "monthly_5": 222659559.0,
-        "weekly_5_1": 222659559.0,
-        "weekly_5_2": 222676563.0,
-        "weekly_5_3": 222676563.0,
-        "weekly_5_5": 930365937.0,
-        "monthly_6": 232591484.0,
-        "weekly_6_1": 232591484.0,
-        "weekly_6_2": 232591484.0,
-        "weekly_6_3": 232591484.0,
-        "weekly_6_5": 550000000.0,
-        "monthly_7": 137500000.0,
-        "weekly_7_1": 137500000.0,
-        "weekly_7_2": 137500000.0,
-        "weekly_7_3": 137500000.0
+        "yearly_2026": {
+          "target": 2406200581.0,
+          "actual": 1051927424.0,
+          "pct": 0.44
+        },
+        "quarterly_1": {
+          "target": 2685828360.0,
+          "actual": 933521834.0,
+          "pct": 0.3476
+        },
+        "monthly_1": {
+          "target": 190263422.0,
+          "actual": 65807272.0
+        },
+        "weekly_1_1": {
+          "target": 190263422.0,
+          "actual": 63996000.0,
+          "pct": 0.34
+        },
+        "weekly_1_2": {
+          "target": 190263422.0,
+          "actual": 57917934.0,
+          "pct": 0.3
+        },
+        "weekly_1_3": {
+          "target": 190263422.0
+        },
+        "weekly_1_5": {
+          "actual": 805269899.0,
+          "pct": 367315387.0
+        },
+        "monthly_2": {
+          "target": 201317474.8,
+          "actual": 86134545.0,
+          "pct": 0.4279
+        },
+        "weekly_2_1": {
+          "target": 201317474.8,
+          "actual": 84653528.0,
+          "pct": 0.4205
+        },
+        "weekly_2_2": {
+          "target": 201317474.8,
+          "actual": 101578648.0,
+          "pct": 0.5
+        },
+        "weekly_2_3": {
+          "target": 201317474.8,
+          "actual": 87964211.0,
+          "pct": 0.4369
+        },
+        "weekly_2_5": {
+          "actual": 839164994.0,
+          "pct": 447062668.0
+        },
+        "monthly_3": {
+          "target": 209791249.0,
+          "actual": 89312668.0,
+          "pct": 0.43
+        },
+        "weekly_3_1": {
+          "target": 209791249.0,
+          "actual": 101199609.0,
+          "pct": 0.48
+        },
+        "weekly_3_2": {
+          "target": 209791249.0,
+          "actual": 111040447.0,
+          "pct": 0.53
+        },
+        "weekly_3_3": {
+          "target": 209791249.0,
+          "actual": 81227181.0,
+          "pct": 0.3872
+        },
+        "weekly_3_5": {
+          "actual": 864756172.0,
+          "pct": 307136660.0
+        },
+        "monthly_4": {
+          "target": 294650023.0,
+          "actual": 110663518.0,
+          "pct": 0.3756
+        },
+        "weekly_4_1": {
+          "target": 216189043.0,
+          "actual": 95045595.0
+        },
+        "weekly_4_2": {
+          "target": 216189043.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 216189043.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 216189043.0
+        },
+        "weekly_4_5": {
+          "actual": 890638235.0,
+          "pct": 276027193.0
+        },
+        "monthly_5": {
+          "target": 222659559.0,
+          "actual": 72626982.0,
+          "pct": 0.3262
+        },
+        "weekly_5_1": {
+          "target": 222659559.0,
+          "actual": 75725568.0,
+          "pct": 0.3401
+        },
+        "weekly_5_2": {
+          "target": 222676563.0,
+          "actual": 66577269.0,
+          "pct": 0.299
+        },
+        "weekly_5_3": {
+          "target": 222676563.0
+        },
+        "weekly_5_5": {
+          "actual": 930365937.0,
+          "pct": 373430200.0
+        },
+        "monthly_6": {
+          "target": 232591484.0,
+          "actual": 70300000.0,
+          "pct": 0.3022
+        },
+        "weekly_6_1": {
+          "target": 232591484.0,
+          "actual": 81117039.0,
+          "pct": 0.3488
+        },
+        "weekly_6_2": {
+          "target": 232591484.0,
+          "actual": 105419227.0,
+          "pct": 0.4532
+        },
+        "weekly_6_3": {
+          "target": 232591484.0,
+          "actual": 103000000.0,
+          "pct": 0.4428
+        },
+        "weekly_6_5": {
+          "actual": 550000000.0
+        },
+        "monthly_7": {
+          "target": 137500000.0,
+          "actual": 96801406.0
+        },
+        "weekly_7_1": {
+          "target": 137500000.0,
+          "actual": 110425866.0,
+          "pct": 0.803
+        },
+        "weekly_7_2": {
+          "target": 137500000.0,
+          "actual": 110532786.0,
+          "pct": 0.8039
+        },
+        "weekly_7_3": {
+          "target": 137500000.0
+        }
       }
     },
     "VM1-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu chéo",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 244000000.0,
-        "monthly_1": 61000000.0,
-        "weekly_1_1": 61000000.0,
-        "weekly_1_2": 61000000.0
+        "monthly_1": {
+          "target": 61000000.0,
+          "actual": 20761850.0
+        },
+        "weekly_1_1": {
+          "target": 61000000.0,
+          "actual": 25540000.0
+        },
+        "weekly_1_2": {
+          "target": 61000000.0,
+          "actual": 20239250.0
+        }
       }
     },
     "VM1-I02.04": {
       "title": "",
       "unit": "Doanh thu đối tác",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 1821775577.0,
-        "quarterly_1": 1477571208.0
+        "yearly_2026": {
+          "actual": 1821775577.0
+        },
+        "quarterly_1": {
+          "actual": 1477571208.0
+        }
       }
     },
     "VM1-I05.01": {
       "title": "ROI",
       "unit": "Tối ưu chi phí nhân sự",
+      "formula": "Mức độ ứng dụng AI trong sản xuất",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 1007113182.0,
-        "quarterly_1": 1406681011.0
+        "yearly_2026": {
+          "target": 1007113182.0,
+          "actual": 1119272774.0,
+          "pct": 0.9
+        },
+        "quarterly_1": {
+          "target": 1406681011.0,
+          "actual": 0.6902
+        }
       }
     },
     "VM1-I05.02": {
       "title": "ROI",
       "unit": "Tối ưu chi phí sản xuất",
+      "formula": "Mức độ ứng dụng AI trong sản xuất",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 3970681.0
+        "yearly_2026": {
+          "actual": 3970681.0
+        }
       }
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí mua công cụ AI phân bổ hàng tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM2-I01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 107.0,
-        "quarterly_1": 66.0,
-        "monthly_1": 9.0,
-        "weekly_1_1": 9.0,
-        "weekly_1_2": 9.0,
-        "weekly_1_3": 9.0,
-        "weekly_1_5": 32.0,
-        "monthly_2": 8.0,
-        "weekly_2_1": 8.0,
-        "weekly_2_2": 8.0,
-        "weekly_2_3": 8.0,
-        "weekly_2_5": 32.0,
-        "monthly_3": 8.0,
-        "weekly_3_1": 8.0,
-        "weekly_3_2": 8.0,
-        "weekly_3_3": 8.0,
-        "weekly_3_5": 28.0,
-        "monthly_4": 7.0,
-        "weekly_4_1": 7.0,
-        "weekly_4_2": 7.0,
-        "weekly_4_3": 7.0,
-        "weekly_4_4": 7.0,
-        "weekly_4_5": 49.0,
-        "monthly_5": 4.0,
-        "weekly_5_1": 4.0,
-        "weekly_5_2": 4.0,
-        "weekly_5_3": 4.0,
-        "weekly_5_5": 16.0,
-        "monthly_6": 4.0,
-        "weekly_6_1": 5.0,
-        "weekly_6_2": 2.0,
-        "weekly_6_3": 2.0,
-        "weekly_6_5": 11.0,
-        "monthly_7": 2.75,
-        "weekly_7_1": 3.0,
-        "weekly_7_2": 3.0,
-        "weekly_7_3": 2.0
+        "yearly_2026": {
+          "target": 107.0,
+          "actual": 107.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 66.0,
+          "actual": 98.0,
+          "pct": 1.4848
+        },
+        "monthly_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 9.0,
+          "actual": 5.0,
+          "pct": 0.56
+        },
+        "weekly_1_2": {
+          "target": 9.0,
+          "actual": 12.0,
+          "pct": 1.33
+        },
+        "weekly_1_3": {
+          "target": 9.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 32.0,
+          "pct": 34.0
+        },
+        "monthly_2": {
+          "target": 8.0,
+          "actual": 9.0,
+          "pct": 1.13
+        },
+        "weekly_2_1": {
+          "target": 8.0,
+          "actual": 10.0
+        },
+        "weekly_2_2": {
+          "target": 8.0,
+          "actual": 12.0,
+          "pct": 1.5
+        },
+        "weekly_2_3": {
+          "target": 8.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 32.0,
+          "pct": 33.0
+        },
+        "monthly_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 28.0,
+          "pct": 32.0
+        },
+        "monthly_4": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 7.0,
+          "actual": 8.0,
+          "pct": 1.1429
+        },
+        "weekly_4_2": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 7.0
+        },
+        "weekly_4_5": {
+          "actual": 49.0,
+          "pct": 50.0
+        },
+        "monthly_5": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 4.0
+        },
+        "weekly_5_5": {
+          "actual": 16.0,
+          "pct": 16.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 2.0,
+          "actual": 3.0,
+          "pct": 1.5
+        },
+        "weekly_6_5": {
+          "actual": 11.0
+        },
+        "monthly_7": {
+          "target": 2.75,
+          "actual": 3.0,
+          "pct": 1.09
+        },
+        "weekly_7_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 2.0
+        }
       }
     },
     "14,272,453 ₫": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng video hoàn thành biên tập",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1390.0,
-        "quarterly_1": 1300.0,
-        "monthly_1": 117.0,
-        "weekly_1_1": 117.0,
-        "weekly_1_2": 117.0,
-        "weekly_1_3": 117.0,
-        "weekly_1_5": 450.0,
-        "monthly_2": 112.5,
-        "weekly_2_1": 112.5,
-        "weekly_2_2": 112.5,
-        "weekly_2_3": 112.5,
-        "weekly_2_5": 420.0,
-        "monthly_3": 105.0,
-        "weekly_3_1": 105.0,
-        "weekly_3_2": 105.0,
-        "weekly_3_3": 105.0,
-        "weekly_3_5": 381.0,
-        "monthly_4": 95.0,
-        "weekly_4_1": 95.0,
-        "weekly_4_2": 95.0,
-        "weekly_4_3": 95.0,
-        "weekly_4_4": 95.0,
-        "weekly_4_5": 320.0,
-        "monthly_5": 80.0,
-        "weekly_5_1": 80.0,
-        "weekly_5_2": 80.0,
-        "weekly_5_3": 80.0,
-        "weekly_5_5": 414.0,
-        "monthly_6": 104.0,
-        "weekly_6_1": 104.0,
-        "weekly_6_2": 104.0,
-        "weekly_6_3": 112.0,
-        "weekly_6_5": 420.0,
-        "monthly_7": 105.0,
-        "weekly_7_1": 100.0,
-        "weekly_7_2": 105.0,
-        "weekly_7_3": 113.0
+        "yearly_2026": {
+          "target": 1390.0,
+          "actual": 1568.0,
+          "pct": 1.13
+        },
+        "quarterly_1": {
+          "target": 1300.0,
+          "actual": 1450.0,
+          "pct": 1.1154
+        },
+        "monthly_1": {
+          "target": 117.0,
+          "actual": 125.0,
+          "pct": 1.07
+        },
+        "weekly_1_1": {
+          "target": 117.0,
+          "actual": 126.0,
+          "pct": 1.08
+        },
+        "weekly_1_2": {
+          "target": 117.0,
+          "actual": 133.0,
+          "pct": 1.14
+        },
+        "weekly_1_3": {
+          "target": 117.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 450.0,
+          "pct": 516.0
+        },
+        "monthly_2": {
+          "target": 112.5,
+          "actual": 130.0,
+          "pct": 1.16
+        },
+        "weekly_2_1": {
+          "target": 112.5,
+          "actual": 126.0
+        },
+        "weekly_2_2": {
+          "target": 112.5,
+          "actual": 132.0,
+          "pct": 1.17
+        },
+        "weekly_2_3": {
+          "target": 112.5,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 420.0,
+          "pct": 443.0
+        },
+        "monthly_3": {
+          "target": 105.0,
+          "actual": 105.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 105.0,
+          "actual": 105.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 105.0,
+          "actual": 105.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 105.0,
+          "actual": 105.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 381.0,
+          "pct": 447.0
+        },
+        "monthly_4": {
+          "target": 95.0,
+          "actual": 98.0,
+          "pct": 1.0316
+        },
+        "weekly_4_1": {
+          "target": 95.0,
+          "actual": 100.0,
+          "pct": 1.0526
+        },
+        "weekly_4_2": {
+          "target": 95.0,
+          "actual": 104.0,
+          "pct": 1.0947
+        },
+        "weekly_4_3": {
+          "target": 95.0,
+          "actual": 104.0,
+          "pct": 1.0947
+        },
+        "weekly_4_4": {
+          "target": 95.0
+        },
+        "weekly_4_5": {
+          "actual": 320.0,
+          "pct": 500.0
+        },
+        "monthly_5": {
+          "target": 80.0,
+          "actual": 108.0,
+          "pct": 1.35
+        },
+        "weekly_5_1": {
+          "target": 80.0,
+          "actual": 111.0,
+          "pct": 1.3875
+        },
+        "weekly_5_2": {
+          "target": 80.0,
+          "actual": 120.0,
+          "pct": 1.5
+        },
+        "weekly_5_3": {
+          "target": 80.0
+        },
+        "weekly_5_5": {
+          "actual": 414.0,
+          "pct": 456.0
+        },
+        "monthly_6": {
+          "target": 104.0,
+          "actual": 114.0,
+          "pct": 1.0962
+        },
+        "weekly_6_1": {
+          "target": 104.0,
+          "actual": 119.0,
+          "pct": 1.1442
+        },
+        "weekly_6_2": {
+          "target": 104.0,
+          "actual": 113.0,
+          "pct": 1.0865
+        },
+        "weekly_6_3": {
+          "target": 112.0,
+          "actual": 113.0,
+          "pct": 1.0089
+        },
+        "weekly_6_5": {
+          "actual": 420.0
+        },
+        "monthly_7": {
+          "target": 105.0,
+          "actual": 105.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 100.0,
+          "actual": 105.0,
+          "pct": 1.05
+        },
+        "weekly_7_2": {
+          "target": 105.0,
+          "actual": 116.0,
+          "pct": 1.1048
+        },
+        "weekly_7_3": {
+          "target": 113.0
+        }
       }
     },
     "Số lượng video BIÊN TẬP hoàn thành": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng video hoàn thành TOCA",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 45.0,
-        "quarterly_1": 42.0,
-        "monthly_1": 4.0,
-        "weekly_1_1": 4.0,
-        "weekly_1_2": 4.0,
-        "weekly_1_3": 4.0,
-        "weekly_1_5": 12.0,
-        "monthly_2": 3.0,
-        "weekly_2_1": 3.0,
-        "weekly_2_2": 3.0,
-        "weekly_2_3": 3.0,
-        "weekly_2_5": 8.0,
-        "monthly_3": 2.0,
-        "weekly_3_1": 2.0,
-        "weekly_3_2": 2.0,
-        "weekly_3_3": 2.0,
-        "weekly_3_5": 13.0,
-        "monthly_4": 3.0,
-        "weekly_4_1": 3.0,
-        "weekly_4_2": 3.0,
-        "weekly_4_3": 3.0,
-        "weekly_4_4": 3.0,
-        "weekly_4_5": 13.0,
-        "monthly_5": 3.25,
-        "weekly_5_1": 4.0,
-        "weekly_5_2": 4.0,
-        "weekly_5_3": 4.0,
-        "weekly_5_5": 16.0,
-        "monthly_6": 4.0,
-        "weekly_6_1": 3.0,
-        "weekly_6_2": 3.0,
-        "weekly_6_3": 3.0,
-        "weekly_6_5": 14.0,
-        "monthly_7": 3.5,
-        "weekly_7_1": 5.0,
-        "weekly_7_2": 4.0,
-        "weekly_7_3": 4.0
+        "yearly_2026": {
+          "target": 45.0,
+          "actual": 45.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 42.0,
+          "actual": 50.0,
+          "pct": 1.1905
+        },
+        "monthly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.14
+        },
+        "weekly_1_1": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.14
+        },
+        "weekly_1_3": {
+          "target": 4.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 12.0,
+          "pct": 14.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.33
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 5.0
+        },
+        "weekly_2_2": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.33
+        },
+        "weekly_2_3": {
+          "target": 3.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 8.0,
+          "pct": 14.0
+        },
+        "monthly_3": {
+          "target": 2.0,
+          "actual": 4.0,
+          "pct": 2.0
+        },
+        "weekly_3_1": {
+          "target": 2.0,
+          "actual": 3.0,
+          "pct": 1.5
+        },
+        "weekly_3_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 13.0,
+          "pct": 17.0
+        },
+        "monthly_4": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.3333
+        },
+        "weekly_4_2": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.3333
+        },
+        "weekly_4_3": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.3333
+        },
+        "weekly_4_4": {
+          "target": 3.0
+        },
+        "weekly_4_5": {
+          "actual": 13.0,
+          "pct": 17.0
+        },
+        "monthly_5": {
+          "target": 3.25,
+          "actual": 4.0,
+          "pct": 1.2308
+        },
+        "weekly_5_1": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_5_2": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_5_3": {
+          "target": 4.0
+        },
+        "weekly_5_5": {
+          "actual": 16.0,
+          "pct": 20.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 14.0
+        },
+        "monthly_7": {
+          "target": 3.5,
+          "actual": 4.0,
+          "pct": 1.14
+        },
+        "weekly_7_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 4.0
+        }
       }
     },
     "TM2-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I02.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng 1 triệu views (youtube)",
+      "formula": "Mức độ ứng dụng AI trong sản xuất",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 5.0,
-        "quarterly_1": 15.0,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 2.0,
-        "weekly_3_5": 4.0,
-        "weekly_4_5": 3.0,
-        "weekly_5_5": 2.0,
-        "weekly_6_5": 3.0
+        "yearly_2026": {
+          "target": 5.0,
+          "actual": 8.0,
+          "pct": 1.6
+        },
+        "quarterly_1": {
+          "target": 15.0,
+          "actual": 4.0,
+          "pct": 0.2667
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 5.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 3.0
+        }
       }
     },
     "Số lượng video hoàn thành Doll AI": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng X views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 35.0,
-        "quarterly_1": 100.0,
-        "weekly_1_5": 12.0,
-        "weekly_2_5": 25.0,
-        "weekly_3_5": 20.0,
-        "weekly_4_5": 25.0,
-        "weekly_5_5": 25.0,
-        "weekly_6_5": 30.0
+        "yearly_2026": {
+          "target": 35.0,
+          "actual": 60.0,
+          "pct": 1.71
+        },
+        "quarterly_1": {
+          "target": 100.0,
+          "actual": 80.0,
+          "pct": 0.8
+        },
+        "weekly_1_5": {
+          "actual": 12.0,
+          "pct": 30.0
+        },
+        "weekly_2_5": {
+          "actual": 25.0,
+          "pct": 25.0
+        },
+        "weekly_3_5": {
+          "actual": 20.0,
+          "pct": 25.0
+        },
+        "weekly_4_5": {
+          "actual": 25.0,
+          "pct": 21.0
+        },
+        "weekly_5_5": {
+          "actual": 25.0,
+          "pct": 31.0
+        },
+        "weekly_6_5": {
+          "actual": 30.0
+        }
       }
     },
     "TM3-I01.03": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng video upload",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1542.0,
-        "quarterly_1": 60.0,
-        "weekly_1_5": 30.0,
-        "weekly_2_5": 30.0,
-        "monthly_3": 7.0,
-        "weekly_3_5": 25.0,
-        "monthly_4": 7.0,
-        "weekly_4_5": 20.0,
-        "monthly_5": 5.0,
-        "weekly_5_5": 16.0,
-        "monthly_6": 4.0,
-        "weekly_6_1": 5.0,
-        "weekly_6_2": 5.0,
-        "weekly_6_3": 5.0,
-        "weekly_6_5": 16.0,
-        "monthly_7": 4.0,
-        "weekly_7_1": 4.0,
-        "weekly_7_2": 4.0,
-        "weekly_7_3": 4.0
+        "yearly_2026": {
+          "target": 1542.0,
+          "actual": 1568.0,
+          "pct": 1.02
+        },
+        "quarterly_1": {
+          "target": 60.0,
+          "actual": 65.0,
+          "pct": 1.0833
+        },
+        "weekly_1_5": {
+          "actual": 30.0,
+          "pct": 30.0
+        },
+        "weekly_2_5": {
+          "actual": 30.0,
+          "pct": 30.0
+        },
+        "monthly_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 25.0,
+          "pct": 25.0
+        },
+        "monthly_4": {
+          "target": 7.0
+        },
+        "weekly_4_5": {
+          "actual": 20.0,
+          "pct": 30.0
+        },
+        "monthly_5": {
+          "target": 5.0,
+          "actual": 5.0
+        },
+        "weekly_5_5": {
+          "actual": 16.0,
+          "pct": 16.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_6_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 5.0
+        },
+        "weekly_6_5": {
+          "actual": 16.0
+        },
+        "monthly_7": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_7_1": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_7_3": {
+          "target": 4.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 241770846.0,
-        "quarterly_1": 1.043
+        "yearly_2026": {
+          "pct": 241770846.0
+        },
+        "quarterly_1": {
+          "target": 1.043,
+          "actual": 252163726.0
+        }
       }
     },
     "SL video đạt ngưỡng đột biến Y views (youtube)": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Traffic BP WF",
+      "formula": "Mức độ ứng dụng AI trong sản xuất",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 109279500.0,
-        "quarterly_1": 132491346.0,
-        "monthly_1": 9600000.0,
-        "weekly_1_1": 9600000.0,
-        "weekly_1_2": 9600000.0,
-        "weekly_1_3": 9600000.0,
-        "weekly_1_5": 39865000.0,
-        "monthly_2": 9966250.0,
-        "weekly_2_1": 9966250.0,
-        "weekly_2_2": 9966250.0,
-        "weekly_2_3": 9966250.0,
-        "weekly_2_5": 55209500.0,
-        "monthly_3": 13802375.0,
-        "weekly_3_1": 13802375.0,
-        "weekly_3_2": 13802375.0,
-        "weekly_3_3": 13802375.0,
-        "weekly_3_5": 49000000.0,
-        "monthly_4": 12250000.0,
-        "weekly_4_1": 12250000.0,
-        "weekly_4_2": 12250000.0,
-        "weekly_4_3": 12250000.0,
-        "weekly_4_4": 12250000.0,
-        "weekly_4_5": 1.4442,
-        "monthly_5": 13500000.0,
-        "weekly_5_1": 13500000.0,
-        "weekly_5_2": 13500000.0,
-        "weekly_5_3": 13500000.0,
-        "weekly_5_5": 50000000.0,
-        "monthly_6": 12500000.0,
-        "weekly_6_1": 12500000.0,
-        "weekly_6_2": 12500000.0,
-        "weekly_6_3": 12500000.0,
-        "weekly_6_5": 53500000.0,
-        "monthly_7": 14250000.0,
-        "weekly_7_1": 14250000.0,
-        "weekly_7_2": 14250000.0,
-        "weekly_7_3": 14250000.0
+        "yearly_2026": {
+          "target": 109279500.0,
+          "actual": 136163726.0,
+          "pct": 1.25
+        },
+        "quarterly_1": {
+          "target": 132491346.0,
+          "actual": 116000000.0,
+          "pct": 0.88
+        },
+        "monthly_1": {
+          "target": 9600000.0,
+          "actual": 8007260.0,
+          "pct": 0.83
+        },
+        "weekly_1_1": {
+          "target": 9600000.0,
+          "actual": 6461451.0,
+          "pct": 0.67
+        },
+        "weekly_1_2": {
+          "target": 9600000.0,
+          "actual": 7287917.0,
+          "pct": 0.76
+        },
+        "weekly_1_3": {
+          "target": 9600000.0,
+          "actual": 7897562.0,
+          "pct": 0.82
+        },
+        "weekly_1_5": {
+          "actual": 39865000.0,
+          "pct": 45480099.0
+        },
+        "monthly_2": {
+          "target": 9966250.0,
+          "actual": 8506899.0,
+          "pct": 0.8536
+        },
+        "weekly_2_1": {
+          "target": 9966250.0,
+          "actual": 13467750.0,
+          "pct": 1.3513
+        },
+        "weekly_2_2": {
+          "target": 9966250.0,
+          "actual": 12609988.0,
+          "pct": 1.27
+        },
+        "weekly_2_3": {
+          "target": 9966250.0,
+          "actual": 12993294.0,
+          "pct": 1.3
+        },
+        "weekly_2_5": {
+          "actual": 55209500.0,
+          "pct": 64859036.0
+        },
+        "monthly_3": {
+          "target": 13802375.0,
+          "actual": 20793392.0,
+          "pct": 1.5065
+        },
+        "weekly_3_1": {
+          "target": 13802375.0,
+          "actual": 21335715.0,
+          "pct": 1.5458
+        },
+        "weekly_3_2": {
+          "target": 13802375.0,
+          "actual": 13983505.0,
+          "pct": 1.0131
+        },
+        "weekly_3_3": {
+          "target": 13802375.0,
+          "actual": 7299862.0,
+          "pct": 0.5289
+        },
+        "weekly_3_5": {
+          "actual": 49000000.0,
+          "pct": 43089715.0
+        },
+        "monthly_4": {
+          "target": 12250000.0,
+          "actual": 8742015.0,
+          "pct": 0.7136
+        },
+        "weekly_4_1": {
+          "target": 12250000.0,
+          "actual": 12391949.0,
+          "pct": 1.0116
+        },
+        "weekly_4_2": {
+          "target": 12250000.0,
+          "actual": 11068333.0,
+          "pct": 0.9035
+        },
+        "weekly_4_3": {
+          "target": 12250000.0,
+          "actual": 11590232.0,
+          "pct": 0.9461
+        },
+        "weekly_4_4": {
+          "target": 12250000.0
+        },
+        "weekly_4_5": {
+          "target": 1.4442,
+          "actual": 54000000.0,
+          "pct": 33647698.0
+        },
+        "monthly_5": {
+          "target": 13500000.0,
+          "actual": 9720884.0,
+          "pct": 0.7201
+        },
+        "weekly_5_1": {
+          "target": 13500000.0,
+          "actual": 11068333.0,
+          "pct": 0.8199
+        },
+        "weekly_5_2": {
+          "target": 13500000.0,
+          "actual": 8218015.0,
+          "pct": 0.6087
+        },
+        "weekly_5_3": {
+          "target": 13500000.0
+        },
+        "weekly_5_5": {
+          "actual": 50000000.0,
+          "pct": 48593741.0
+        },
+        "monthly_6": {
+          "target": 12500000.0,
+          "actual": 11022169.0,
+          "pct": 0.8818
+        },
+        "weekly_6_1": {
+          "target": 12500000.0,
+          "actual": 12878770.0,
+          "pct": 1.0303
+        },
+        "weekly_6_2": {
+          "target": 12500000.0,
+          "actual": 15106608.0,
+          "pct": 1.21
+        },
+        "weekly_6_3": {
+          "target": 12500000.0,
+          "actual": 13734536.0,
+          "pct": 1.0988
+        },
+        "weekly_6_5": {
+          "actual": 53500000.0
+        },
+        "monthly_7": {
+          "target": 14250000.0,
+          "actual": 11426470.0,
+          "pct": 0.8
+        },
+        "weekly_7_1": {
+          "target": 14250000.0,
+          "actual": 13952408.0,
+          "pct": 0.9791
+        },
+        "weekly_7_2": {
+          "target": 14250000.0,
+          "actual": 13367418.0,
+          "pct": 0.9381
+        },
+        "weekly_7_3": {
+          "target": 14250000.0
+        }
       }
     },
     "41.800.000": {
       "title": "Số lượt view youtube SCVN",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 250000000.0,
-        "quarterly_1": 0.6666666667,
-        "monthly_1": 12500000.0,
-        "weekly_1_1": 12500000.0,
-        "weekly_1_2": 12500000.0,
-        "weekly_1_3": 12500000.0,
-        "weekly_1_5": 50000000.0,
-        "monthly_2": 12500000.0,
-        "weekly_2_1": 12500000.0,
-        "weekly_2_2": 12500000.0,
-        "weekly_2_3": 12500000.0,
-        "weekly_2_5": 50000000.0,
-        "monthly_3": 12500000.0,
-        "weekly_3_1": 12500000.0,
-        "weekly_3_2": 12500000.0,
-        "weekly_3_3": 12500000.0
+        "yearly_2026": {
+          "target": 250000000.0,
+          "actual": 94829212.0,
+          "pct": 0.38
+        },
+        "monthly_1": {
+          "target": 12500000.0,
+          "actual": 7794602.0,
+          "pct": 0.62
+        },
+        "weekly_1_1": {
+          "target": 12500000.0,
+          "actual": 8598447.0,
+          "pct": 0.69
+        },
+        "weekly_1_2": {
+          "target": 12500000.0,
+          "actual": 7290248.0,
+          "pct": 0.58
+        },
+        "weekly_1_3": {
+          "target": 12500000.0,
+          "actual": 10393357.0,
+          "pct": 0.83
+        },
+        "weekly_1_5": {
+          "actual": 50000000.0,
+          "pct": 39755655.0
+        },
+        "monthly_2": {
+          "target": 12500000.0,
+          "actual": 7629345.0,
+          "pct": 0.6103
+        },
+        "weekly_2_1": {
+          "target": 12500000.0,
+          "actual": 8849034.0,
+          "pct": 0.7079
+        },
+        "weekly_2_2": {
+          "target": 12500000.0,
+          "actual": 6971562.0,
+          "pct": 0.56
+        },
+        "weekly_2_3": {
+          "target": 12500000.0,
+          "actual": 14130169.0,
+          "pct": 1.13
+        },
+        "weekly_2_5": {
+          "actual": 50000000.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 12500000.0,
+          "actual": 14296000.0,
+          "pct": 1.1437
+        },
+        "weekly_3_1": {
+          "target": 12500000.0,
+          "actual": 10283498.0,
+          "pct": 0.8227
+        },
+        "weekly_3_2": {
+          "target": 12500000.0,
+          "actual": 11242988.0,
+          "pct": 0.8994
+        },
+        "weekly_3_3": {
+          "target": 12500000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "View shorts": {
       "title": "Số lượt view youtube SCVN",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 1575000.0,
-        "quarterly_1": 1200000.0,
-        "monthly_1": 100000.0,
-        "weekly_1_1": 100000.0,
-        "weekly_1_2": 100000.0,
-        "weekly_1_3": 100000.0,
-        "weekly_1_5": 400000.0,
-        "monthly_2": 100000.0,
-        "weekly_2_1": 100000.0,
-        "weekly_2_2": 100000.0,
-        "weekly_2_3": 100000.0,
-        "weekly_2_5": 400000.0,
-        "monthly_3": 100000.0,
-        "weekly_3_1": 100000.0,
-        "weekly_3_2": 100000.0,
-        "weekly_3_3": 100000.0,
-        "weekly_3_5": 500000.0,
-        "monthly_4": 125000.0,
-        "weekly_4_1": 125000.0,
-        "weekly_4_2": 125000.0,
-        "weekly_4_3": 125000.0,
-        "weekly_4_4": 125000.0,
-        "weekly_4_5": 500000.0,
-        "monthly_5": 125000.0,
-        "weekly_5_1": 125000.0,
-        "weekly_5_2": 125000.0,
-        "weekly_5_3": 125000.0,
-        "weekly_5_5": 500000.0,
-        "monthly_6": 125000.0,
-        "weekly_6_1": 125000.0,
-        "weekly_6_2": 125000.0,
-        "weekly_6_3": 125000.0,
-        "weekly_6_5": 500.0,
-        "monthly_7": 500000.0,
-        "weekly_7_1": 500000.0,
-        "weekly_7_2": 500000.0,
-        "weekly_7_3": 500000.0
+        "yearly_2026": {
+          "target": 1575000.0,
+          "actual": 1065000.0,
+          "pct": 0.68
+        },
+        "quarterly_1": {
+          "target": 1200000.0,
+          "actual": 800000.0,
+          "pct": 0.6667
+        },
+        "monthly_1": {
+          "target": 100000.0,
+          "actual": 105000.0,
+          "pct": 1.05
+        },
+        "weekly_1_1": {
+          "target": 100000.0,
+          "actual": 107000.0,
+          "pct": 1.07
+        },
+        "weekly_1_2": {
+          "target": 100000.0,
+          "actual": 105000.0,
+          "pct": 1.05
+        },
+        "weekly_1_3": {
+          "target": 100000.0,
+          "actual": 110000.0,
+          "pct": 1.1
+        },
+        "weekly_1_5": {
+          "actual": 400000.0,
+          "pct": 392000.0
+        },
+        "monthly_2": {
+          "target": 100000.0,
+          "actual": 115000.0,
+          "pct": 1.15
+        },
+        "weekly_2_1": {
+          "target": 100000.0,
+          "actual": 100000.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 100000.0,
+          "actual": 95000.0,
+          "pct": 0.95
+        },
+        "weekly_2_3": {
+          "target": 100000.0,
+          "actual": 92000.0,
+          "pct": 0.92
+        },
+        "weekly_2_5": {
+          "actual": 400000.0,
+          "pct": 330000.0
+        },
+        "monthly_3": {
+          "target": 100000.0,
+          "actual": 95000.0,
+          "pct": 0.95
+        },
+        "weekly_3_1": {
+          "target": 100000.0,
+          "actual": 90000.0,
+          "pct": 0.9
+        },
+        "weekly_3_2": {
+          "target": 100000.0,
+          "actual": 70000.0,
+          "pct": 0.7
+        },
+        "weekly_3_3": {
+          "target": 100000.0,
+          "actual": 68033.0,
+          "pct": 0.6803
+        },
+        "weekly_3_5": {
+          "actual": 500000.0,
+          "pct": 287900.0
+        },
+        "monthly_4": {
+          "target": 125000.0,
+          "actual": 74655.0,
+          "pct": 0.5972
+        },
+        "weekly_4_1": {
+          "target": 125000.0,
+          "actual": 71449.0,
+          "pct": 0.5716
+        },
+        "weekly_4_2": {
+          "target": 125000.0,
+          "actual": 63648.0,
+          "pct": 0.5092
+        },
+        "weekly_4_3": {
+          "target": 125000.0,
+          "actual": 64149.0,
+          "pct": 0.5132
+        },
+        "weekly_4_4": {
+          "target": 125000.0
+        },
+        "weekly_4_5": {
+          "actual": 500000.0,
+          "pct": 286350.0
+        },
+        "monthly_5": {
+          "target": 125000.0,
+          "actual": 105299.0,
+          "pct": 0.8424
+        },
+        "weekly_5_1": {
+          "target": 125000.0,
+          "actual": 57263.0,
+          "pct": 0.4581
+        },
+        "weekly_5_2": {
+          "target": 125000.0,
+          "actual": 43271.0,
+          "pct": 0.3462
+        },
+        "weekly_5_3": {
+          "target": 125000.0
+        },
+        "weekly_5_5": {
+          "actual": 500000.0,
+          "pct": 234917.0
+        },
+        "monthly_6": {
+          "target": 125000.0,
+          "actual": 218112.0,
+          "pct": 0.0174
+        },
+        "weekly_6_1": {
+          "target": 125000.0,
+          "actual": 60000.0,
+          "pct": 0.48
+        },
+        "weekly_6_2": {
+          "target": 125000.0,
+          "actual": 49685.0,
+          "pct": 0.05
+        },
+        "weekly_6_3": {
+          "target": 125000.0,
+          "actual": 61640.0,
+          "pct": 0.0616
+        },
+        "weekly_6_5": {
+          "actual": 500.0
+        },
+        "monthly_7": {
+          "target": 500000.0,
+          "actual": 235712.0,
+          "pct": 0.47
+        },
+        "weekly_7_1": {
+          "target": 500000.0
+        },
+        "weekly_7_2": {
+          "target": 500000.0,
+          "actual": 106650.0,
+          "pct": 0.2133
+        },
+        "weekly_7_3": {
+          "target": 500000.0
+        }
       }
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM4-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Phát triển hệ thống kênh kinh doanh": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.0
+        }
       }
     },
     "View Spotify": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt ngưỡng 5k$/ tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 10.0,
-        "quarterly_1": 7.0,
-        "weekly_1_5": 7.0,
-        "weekly_2_5": 7.0
+        "yearly_2026": {
+          "target": 10.0,
+          "actual": 5.0,
+          "pct": 0.5
+        },
+        "quarterly_1": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_1_5": {
+          "actual": 7.0,
+          "pct": 6.0
+        },
+        "weekly_2_5": {
+          "actual": 7.0
+        }
       }
     },
     "Số kênh đạt ngưỡng 1$/ tháng": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.0
+        }
       }
     },
     "TM4-I02.03": {
       "title": "ROI",
       "unit": "Tỷ lệ kênh đạt chuẩn an toàn (toàn bộ hệ thống)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.9,
-        "quarterly_1": 0.9,
-        "weekly_1_5": 0.9
+        "yearly_2026": {
+          "target": 0.9
+        },
+        "quarterly_1": {
+          "target": 0.9
+        },
+        "weekly_1_5": {
+          "actual": 0.9,
+          "pct": 0.9
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "SL",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 4.0,
-        "weekly_1_5": 2.0,
-        "weekly_2_5": 2.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 5.0,
+          "pct": 2.5
+        },
+        "quarterly_1": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_1_5": {
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0
+        }
       }
     },
     "Số kênh đạt nút Bạc mới": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh mở mới",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 5.0,
-        "quarterly_1": 7.0,
-        "weekly_1_5": 3.0,
-        "weekly_2_5": 2.0
+        "yearly_2026": {
+          "target": 5.0,
+          "actual": 10.0,
+          "pct": 2.0
+        },
+        "quarterly_1": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_1_5": {
+          "actual": 3.0,
+          "pct": 4.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0
+        }
       }
     },
     "Số kênh mở mới YT": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh mở mới",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Số kênh mở mới FB": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh mở mới",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 0.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Số kênh kinh doanh mở mới trong kỳ": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh trả lại",
-      "periods": {
-        "quarterly_1": 0.0
-      }
+      "formula": "",
+      "pic": "Ngày",
+      "periods": {}
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        }
       }
     },
     "VM5-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.01": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "Số kênh mở mới Tiktok",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 3.5,
-        "quarterly_1": 2.0
+        "yearly_2026": {
+          "target": 3.5,
+          "actual": 2.0,
+          "pct": 0.5714
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 2.0
+        }
       }
     },
     "VM5-I02.02": {
       "title": "Hiệu suất sản xuất",
       "unit": "ND",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 13.0,
-        "quarterly_1": 15.0
+        "yearly_2026": {
+          "target": 13.0,
+          "actual": 15.0,
+          "pct": 1.1538
+        },
+        "quarterly_1": {
+          "target": 15.0
+        }
       }
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 160413372.0,
-        "quarterly_1": 179055224.0,
-        "weekly_1_5": 40263495.0,
-        "weekly_2_5": 41958250.0,
-        "weekly_3_5": 43237809.0,
-        "weekly_4_5": 44531912.0,
-        "weekly_5_5": 46518297.0,
-        "weekly_6_5": 27500000.0
+        "yearly_2026": {
+          "target": 160413372.0,
+          "actual": 70128495.0,
+          "pct": 0.4372
+        },
+        "quarterly_1": {
+          "target": 179055224.0,
+          "actual": 62234788.93,
+          "pct": 0.3476
+        },
+        "weekly_1_5": {
+          "actual": 40263495.0,
+          "pct": 18365769.0
+        },
+        "weekly_2_5": {
+          "actual": 41958250.0
+        },
+        "weekly_3_5": {
+          "actual": 43237809.0,
+          "pct": 15356833.0
+        },
+        "weekly_4_5": {
+          "actual": 44531912.0,
+          "pct": 13801360.0
+        },
+        "weekly_5_5": {
+          "actual": 46518297.0,
+          "pct": 18692248.0
+        },
+        "weekly_6_5": {
+          "actual": 27500000.0
+        }
       }
     },
     "VM5-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 343742940.0,
-        "quarterly_1": 244166214.5,
-        "weekly_1_5": 73206354.0,
-        "weekly_2_5": 76287727.0,
-        "weekly_3_5": 78614197.0,
-        "weekly_4_5": 80967112.0,
-        "weekly_5_5": 84578722.0,
-        "weekly_6_5": 78571429.0
+        "yearly_2026": {
+          "target": 343742940.0,
+          "actual": 95629765.82,
+          "pct": 0.2782
+        },
+        "quarterly_1": {
+          "target": 244166214.5,
+          "actual": 93352183.4,
+          "pct": 0.3823
+        },
+        "weekly_1_5": {
+          "actual": 73206354.0,
+          "pct": 33392308.0
+        },
+        "weekly_2_5": {
+          "actual": 76287727.0
+        },
+        "weekly_3_5": {
+          "actual": 78614197.0,
+          "pct": 27921515.0
+        },
+        "weekly_4_5": {
+          "actual": 80967112.0,
+          "pct": 25093381.0
+        },
+        "weekly_5_5": {
+          "actual": 84578722.0,
+          "pct": 33985906.0
+        },
+        "weekly_6_5": {
+          "actual": 78571429.0
+        }
       }
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Thời gian sản xuất TB 1 video( Ngày)": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "CP SX Sản phẩm A": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số lượng đầu mục công việc/ quy trình được số hóa": {
       "title": "ROI",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "Số buổi đào tạo được tổ chức",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 2.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 2.0
+        }
       }
     },
     "TM6-I01.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.9,
-        "quarterly_1": 0.9
+        "yearly_2026": {
+          "target": 0.9,
+          "actual": 1.0,
+          "pct": 1.1111
+        },
+        "quarterly_1": {
+          "target": 0.9
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0
+        }
       }
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.3,
-        "quarterly_1": 0.2
+        "yearly_2026": {
+          "target": 0.3,
+          "actual": 0.3,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 0.2
+        }
       }
     },
     "CP SX Sản phẩm B": {
       "title": "",
       "unit": "Nhân sự tuyển dụng mới",
-      "periods": {
-        "quarterly_1": 1.0
-      }
+      "formula": "",
+      "pic": "",
+      "periods": {}
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM7-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.5,
-        "quarterly_1": 0.3
+        "yearly_2026": {
+          "target": 0.5
+        },
+        "quarterly_1": {
+          "target": 0.3
+        }
       }
     },
     "TM7-I02": {
       "title": "ROI",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số nhân sự tăng": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.3,
-        "quarterly_1": 0.3
+        "yearly_2026": {
+          "target": 0.3
+        },
+        "quarterly_1": {
+          "target": 0.3
+        }
       }
     },
     "VM7-I02.02": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "VM7-I02.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 0.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.85,
-        "quarterly_1": 0.85,
-        "weekly_1_5": 0.95,
-        "weekly_2_5": 0.95,
-        "weekly_3_5": 0.95,
-        "weekly_4_5": 0.95,
-        "weekly_5_5": 0.95,
-        "weekly_6_5": 0.95
+        "yearly_2026": {
+          "target": 0.85
+        },
+        "quarterly_1": {
+          "target": 0.85
+        },
+        "weekly_1_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 0.95
+        },
+        "weekly_3_5": {
+          "actual": 0.95,
+          "pct": 0.94
+        },
+        "weekly_4_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.95
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 6.0,
-        "quarterly_1": 10.0,
-        "weekly_1_5": 5.0,
-        "weekly_3_5": 5.0,
-        "weekly_4_5": 5.0,
-        "weekly_5_5": 3.0,
-        "weekly_6_5": 3.0
+        "yearly_2026": {
+          "target": 6.0,
+          "actual": 15.0
+        },
+        "quarterly_1": {
+          "target": 10.0
+        },
+        "weekly_1_5": {
+          "pct": 5.0
+        },
+        "weekly_3_5": {
+          "actual": 5.0,
+          "pct": 10.0
+        },
+        "weekly_4_5": {
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 3.0,
+          "pct": 7.0
+        },
+        "weekly_6_5": {
+          "actual": 3.0
+        }
       }
     }
   },
@@ -4799,796 +15312,2628 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "DM1-I01.01",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "DM1-I01.01",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 976888913.0,
-        "quarterly_1": 1422724199.0,
-        "monthly_1": 0.91,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 81812065.0,
-        "weekly_1_3": 97044321.0,
-        "weekly_1_5": 329265250.0,
-        "monthly_2": 109437500.0,
-        "weekly_2_1": 109437500.0,
-        "weekly_2_2": 109437500.0,
-        "weekly_2_3": 109437500.0,
-        "weekly_2_5": 323254250.0,
-        "monthly_3": 80813563.0,
-        "weekly_3_1": 80813563.0,
-        "weekly_3_2": 80813563.0,
-        "weekly_3_3": 80813563.0,
-        "weekly_3_5": 498323375.0,
-        "monthly_4": 110738528.0,
-        "weekly_4_1": 110738528.0,
-        "weekly_4_2": 158586500.0,
-        "weekly_4_3": 171022500.0,
-        "weekly_4_4": 171022500.0,
-        "weekly_4_5": 521453100.0,
-        "monthly_5": 167283200.0,
-        "weekly_5_1": 167283200.0,
-        "weekly_5_2": 167283200.0,
-        "weekly_5_3": 167283200.0,
-        "weekly_5_5": 537752012.0,
-        "monthly_6": 204336500.0,
-        "weekly_6_1": 204336500.0,
-        "weekly_6_2": 204336500.0,
-        "weekly_6_3": 204336500.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 130380000.0,
-        "weekly_7_1": 130380000.0,
-        "weekly_7_2": 130380000.0,
-        "weekly_7_3": 130380000.0
+        "yearly_2026": {
+          "target": 976888913.0,
+          "actual": 949000000.0,
+          "pct": 0.97
+        },
+        "quarterly_1": {
+          "actual": 1422724199.0,
+          "pct": 0.71
+        },
+        "monthly_1": {
+          "pct": 0.91
+        },
+        "weekly_1_1": {
+          "pct": 0.0
+        },
+        "weekly_1_2": {
+          "actual": 81812065.0,
+          "pct": 1.15
+        },
+        "weekly_1_3": {
+          "actual": 97044321.0,
+          "pct": 1.36
+        },
+        "weekly_1_5": {
+          "actual": 329265250.0,
+          "pct": 318521374.0
+        },
+        "monthly_2": {
+          "target": 109437500.0,
+          "actual": 90273063.0,
+          "pct": 0.82
+        },
+        "weekly_2_1": {
+          "target": 109437500.0,
+          "actual": 98872533.0,
+          "pct": 0.9
+        },
+        "weekly_2_2": {
+          "target": 109437500.0,
+          "actual": 94430400.0,
+          "pct": 0.86
+        },
+        "weekly_2_3": {
+          "target": 109437500.0,
+          "actual": 108811003.0,
+          "pct": 0.99
+        },
+        "weekly_2_5": {
+          "actual": 323254250.0,
+          "pct": 363562011.0
+        },
+        "monthly_3": {
+          "target": 80813563.0,
+          "actual": 76469879.0,
+          "pct": 0.95
+        },
+        "weekly_3_1": {
+          "target": 80813563.0,
+          "actual": 73976702.0,
+          "pct": 0.92
+        },
+        "weekly_3_2": {
+          "target": 80813563.0,
+          "actual": 70624889.0,
+          "pct": 0.87
+        },
+        "weekly_3_3": {
+          "target": 80813563.0,
+          "actual": 79324616.0,
+          "pct": 0.98
+        },
+        "weekly_3_5": {
+          "actual": 498323375.0,
+          "pct": 351055557.0
+        },
+        "monthly_4": {
+          "target": 110738528.0,
+          "actual": 84522501.0,
+          "pct": 0.76
+        },
+        "weekly_4_1": {
+          "target": 110738528.0,
+          "actual": 67366725.0,
+          "pct": 0.61
+        },
+        "weekly_4_2": {
+          "target": 158586500.0,
+          "actual": 84221436.0,
+          "pct": 0.53
+        },
+        "weekly_4_3": {
+          "target": 171022500.0,
+          "actual": 85767985.0,
+          "pct": 0.5
+        },
+        "weekly_4_4": {
+          "target": 171022500.0,
+          "actual": 110366457.0,
+          "pct": 0.65
+        },
+        "weekly_4_5": {
+          "actual": 521453100.0,
+          "pct": 363273491.0
+        },
+        "monthly_5": {
+          "target": 167283200.0,
+          "actual": 130860411.0,
+          "pct": 0.78
+        },
+        "weekly_5_1": {
+          "target": 167283200.0,
+          "actual": 129716147.0,
+          "pct": 0.78
+        },
+        "weekly_5_2": {
+          "target": 167283200.0,
+          "actual": 114812429.0,
+          "pct": 0.69
+        },
+        "weekly_5_3": {
+          "target": 167283200.0,
+          "actual": 120270502.0,
+          "pct": 0.72
+        },
+        "weekly_5_5": {
+          "pct": 537752012.0
+        },
+        "monthly_6": {
+          "target": 204336500.0,
+          "actual": 71568026.0,
+          "pct": 0.35
+        },
+        "weekly_6_1": {
+          "target": 204336500.0,
+          "actual": 72995231.0,
+          "pct": 0.36
+        },
+        "weekly_6_2": {
+          "target": 204336500.0,
+          "actual": 152585428.0,
+          "pct": 0.75
+        },
+        "weekly_6_3": {
+          "target": 204336500.0,
+          "actual": 124846942.0,
+          "pct": 0.61
+        },
+        "monthly_7": {
+          "target": 130380000.0,
+          "actual": 110592732.0,
+          "pct": 0.85
+        },
+        "weekly_7_1": {
+          "target": 130380000.0,
+          "actual": 158605237.0,
+          "pct": 1.22
+        },
+        "weekly_7_2": {
+          "target": 130380000.0,
+          "actual": 155407347.0,
+          "pct": 1.19
+        },
+        "weekly_7_3": {
+          "target": 130380000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "0 ₫": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "Dự án nhóm 1",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 984744000.0,
-        "quarterly_1": 1085700000.0,
-        "monthly_1": 78486000.0,
-        "weekly_1_1": 78486000.0,
-        "weekly_1_2": 78486000.0,
-        "weekly_1_3": 78486000.0,
-        "weekly_1_5": 334750000.0,
-        "monthly_2": 83687500.0,
-        "weekly_2_1": 83687500.0,
-        "weekly_2_2": 83687500.0,
-        "weekly_2_3": 83687500.0,
-        "weekly_2_5": 336050000.0,
-        "monthly_3": 84012500.0,
-        "weekly_3_1": 84077500.0,
-        "weekly_3_2": 84077500.0,
-        "weekly_3_3": 84077500.0,
-        "weekly_3_5": 418240000.0,
-        "monthly_4": 104560000.0,
-        "weekly_4_1": 104560000.0,
-        "weekly_4_2": 104560000.0,
-        "weekly_4_3": 104560000.0,
-        "weekly_4_4": 104560000.0,
-        "weekly_4_5": 418208000.0,
-        "monthly_5": 104552000.0,
-        "weekly_5_1": 104552000.0,
-        "weekly_5_2": 104552000.0,
-        "weekly_5_3": 104552000.0,
-        "weekly_5_5": 444346000.0,
-        "monthly_6": 111086500.0,
-        "weekly_6_1": 111086500.0,
-        "weekly_6_2": 111086500.0,
-        "weekly_6_3": 111086500.0,
-        "weekly_6_5": 282290400.0,
-        "monthly_7": 56458080.0,
-        "weekly_7_1": 67958800.0,
-        "weekly_7_2": 67958800.0,
-        "weekly_7_3": 67958800.0,
-        "weekly_7_4": 67958800.0
+        "yearly_2026": {
+          "target": 700000000.0,
+          "actual": 1431986083.0,
+          "pct": 2.0457
+        },
+        "quarterly_1": {
+          "target": 1350000000.0,
+          "actual": 1014656106.0,
+          "pct": 0.75
+        },
+        "monthly_1": {
+          "target": 100000000.0,
+          "actual": 144588283.0,
+          "pct": 1.45
+        },
+        "weekly_1_1": {
+          "target": 100000000.0,
+          "actual": 106522292.0,
+          "pct": 1.07
+        },
+        "weekly_1_2": {
+          "target": 100000000.0,
+          "actual": 99009006.0,
+          "pct": 0.99
+        },
+        "weekly_1_3": {
+          "target": 100000000.0,
+          "actual": 112742896.0,
+          "pct": 1.13
+        },
+        "weekly_1_5": {
+          "actual": 535400000.0,
+          "pct": 418996772.0
+        },
+        "monthly_2": {
+          "target": 100000000.0,
+          "actual": 110297823.0,
+          "pct": 1.1
+        },
+        "weekly_2_1": {
+          "target": 100000000.0,
+          "actual": 107480668.0,
+          "pct": 1.07
+        },
+        "weekly_2_2": {
+          "target": 100000000.0,
+          "actual": 88995453.0,
+          "pct": 0.89
+        },
+        "weekly_2_3": {
+          "target": 100000000.0,
+          "actual": 111857174.0,
+          "pct": 1.12
+        },
+        "weekly_2_5": {
+          "actual": 500000000.0,
+          "pct": 480604698.0
+        },
+        "monthly_3": {
+          "target": 125000000.0,
+          "actual": 116725818.0,
+          "pct": 0.93
+        },
+        "weekly_3_1": {
+          "target": 125000000.0,
+          "actual": 103300740.0,
+          "pct": 0.83
+        },
+        "weekly_3_2": {
+          "target": 125000000.0,
+          "actual": 102024381.0,
+          "pct": 0.82
+        },
+        "weekly_3_3": {
+          "target": 125000000.0,
+          "actual": 104033973.0,
+          "pct": 0.83
+        },
+        "weekly_3_5": {
+          "actual": 500000000.0,
+          "pct": 449449422.0
+        },
+        "monthly_4": {
+          "target": 125000000.0,
+          "actual": 123206728.0,
+          "pct": 0.99
+        },
+        "weekly_4_1": {
+          "target": 125000000.0,
+          "actual": 101343428.0,
+          "pct": 0.81
+        },
+        "weekly_4_2": {
+          "target": 125000000.0,
+          "actual": 109223232.0,
+          "pct": 0.87
+        },
+        "weekly_4_3": {
+          "target": 125000000.0,
+          "actual": 97652994.0,
+          "pct": 0.78
+        },
+        "weekly_4_4": {
+          "target": 125000000.0,
+          "actual": 108182114.0,
+          "pct": 0.87
+        },
+        "weekly_4_5": {
+          "actual": 500000000.0,
+          "pct": 405206684.0
+        },
+        "monthly_5": {
+          "target": 125000000.0,
+          "actual": 112166594.0,
+          "pct": 0.9
+        },
+        "weekly_5_1": {
+          "target": 125000000.0,
+          "actual": 93646914.0,
+          "pct": 0.75
+        },
+        "weekly_5_2": {
+          "target": 125000000.0,
+          "actual": 60861425.0,
+          "pct": 0.49
+        },
+        "weekly_5_3": {
+          "target": 125000000.0,
+          "actual": 86505523.0,
+          "pct": 0.69
+        },
+        "weekly_5_5": {
+          "actual": 500000000.0,
+          "pct": 160000000.0
+        },
+        "monthly_6": {
+          "target": 125000000.0,
+          "actual": 52245978.0,
+          "pct": 0.42
+        },
+        "weekly_6_1": {
+          "target": 125000000.0,
+          "actual": 8443575.0,
+          "pct": 0.07
+        },
+        "weekly_6_2": {
+          "target": 125000000.0,
+          "actual": 25257706.0,
+          "pct": 0.2
+        },
+        "weekly_6_3": {
+          "target": 125000000.0,
+          "actual": 26297536.0,
+          "pct": 0.21
+        },
+        "weekly_6_5": {
+          "actual": 288570000.0
+        },
+        "monthly_7": {
+          "target": 57714000.0,
+          "actual": 80336227.0,
+          "pct": 1.39
+        },
+        "weekly_7_1": {
+          "target": 57714000.0,
+          "actual": 92650912.0,
+          "pct": 1.61
+        },
+        "weekly_7_2": {
+          "target": 57714000.0,
+          "actual": 100660761.8,
+          "pct": 1.74
+        },
+        "weekly_7_3": {
+          "target": 57714000.0
+        },
+        "weekly_7_4": {
+          "target": 67958800.0
+        }
       }
     },
     "LanNP": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "Dự án nhóm 3",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 96013000.0,
-        "quarterly_1": 77550000.0,
-        "monthly_1": 9810750.0,
-        "weekly_1_1": 9810750.0,
-        "weekly_1_2": 9810750.0,
-        "weekly_1_3": 9810750.0,
-        "weekly_1_5": 25750000.0,
-        "monthly_2": 6437500.0,
-        "weekly_2_1": 6437500.0,
-        "weekly_2_2": 6437500.0,
-        "weekly_2_3": 6437500.0,
-        "weekly_2_5": 31020000.0,
-        "monthly_3": 7755000.0,
-        "weekly_3_1": 7755000.0,
-        "weekly_3_2": 7755000.0,
-        "weekly_3_3": 7755000.0,
-        "weekly_3_5": 25850000.0,
-        "monthly_4": 6462500.0,
-        "weekly_4_1": 6462500.0,
-        "weekly_4_2": 6462500.0,
-        "weekly_4_3": 6462500.0,
-        "weekly_4_4": 6462500.0,
-        "weekly_4_5": 31365600.0,
-        "monthly_5": 7841400.0,
-        "weekly_5_1": 7841400.0,
-        "weekly_5_2": 7841400.0,
-        "weekly_5_3": 7841400.0,
-        "weekly_5_5": 33000000.0,
-        "monthly_6": 8250000.0,
-        "weekly_6_1": 8250000.0,
-        "weekly_6_2": 8250000.0,
-        "weekly_6_3": 8250000.0,
-        "weekly_6_5": 135917600.0,
-        "monthly_7": 27183520.0,
-        "weekly_7_1": 27183520.0,
-        "weekly_7_2": 27183520.0,
-        "weekly_7_3": 27183520.0,
-        "weekly_7_4": 27183520.0
+        "yearly_2026": {
+          "target": 100316666.0,
+          "actual": 31373530.0,
+          "pct": 0.3127
+        },
+        "quarterly_1": {
+          "target": 1200000.0,
+          "actual": 123005465.0,
+          "pct": 8.66
+        },
+        "monthly_1": {
+          "target": 4447813.0,
+          "actual": 2435610.0,
+          "pct": 0.55
+        },
+        "weekly_1_1": {
+          "target": 4447813.0,
+          "actual": 2119921.0,
+          "pct": 0.48
+        },
+        "weekly_1_2": {
+          "target": 4447813.0,
+          "actual": 1968433.0,
+          "pct": 0.44
+        },
+        "weekly_1_3": {
+          "target": 4447813.0,
+          "actual": 1720569.0,
+          "pct": 0.39
+        },
+        "weekly_1_5": {
+          "actual": 10418818.0,
+          "pct": 8740664.0
+        },
+        "monthly_2": {
+          "target": 2604705.0,
+          "actual": 1612505.0,
+          "pct": 0.62
+        },
+        "weekly_2_1": {
+          "target": 2604705.0,
+          "actual": 2251887.0,
+          "pct": 0.86
+        },
+        "weekly_2_2": {
+          "target": 2604705.0,
+          "actual": 2242877.0,
+          "pct": 0.86
+        },
+        "weekly_2_3": {
+          "target": 2604705.0,
+          "actual": 2719406.0,
+          "pct": 1.04
+        },
+        "weekly_2_5": {
+          "actual": 14003267.0,
+          "pct": 13003267.0
+        },
+        "monthly_3": {
+          "target": 3500817.0,
+          "actual": 3571577.0,
+          "pct": 1.02
+        },
+        "weekly_3_1": {
+          "target": 3500817.0,
+          "actual": 2741555.0,
+          "pct": 0.78
+        },
+        "weekly_3_2": {
+          "target": 3500817.0,
+          "actual": 2739918.0,
+          "pct": 0.78
+        },
+        "weekly_3_3": {
+          "target": 3500817.0,
+          "actual": 7964775.0,
+          "pct": 2.28
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 11286455.0
+        },
+        "monthly_4": {
+          "target": 4000000.0,
+          "actual": 4042039.0,
+          "pct": 1.01
+        },
+        "weekly_4_1": {
+          "target": 4200000.0,
+          "actual": 3140485.0,
+          "pct": 0.75
+        },
+        "weekly_4_2": {
+          "target": 4200000.0,
+          "actual": 2813779.0,
+          "pct": 0.67
+        },
+        "weekly_4_3": {
+          "target": 3000000.0,
+          "actual": 2663332.0,
+          "pct": 0.89
+        },
+        "weekly_4_4": {
+          "target": 3000000.0,
+          "actual": 2676055.0,
+          "pct": 0.89
+        },
+        "weekly_4_5": {
+          "actual": 13000000.0,
+          "pct": 40845447.0
+        },
+        "monthly_5": {
+          "target": 3250000.0,
+          "actual": 3327449.0,
+          "pct": 1.02
+        },
+        "weekly_5_1": {
+          "target": 3250000.0,
+          "actual": 12737978.0,
+          "pct": 3.92
+        },
+        "weekly_5_2": {
+          "target": 15000000.0,
+          "actual": 13187476.0,
+          "pct": 0.88
+        },
+        "weekly_5_3": {
+          "target": 15000000.0,
+          "actual": 10640074.0,
+          "pct": 0.71
+        },
+        "weekly_5_5": {
+          "actual": 42000000.0,
+          "pct": 70873563.0
+        },
+        "monthly_6": {
+          "target": 10500000.0,
+          "actual": 18548453.0,
+          "pct": 1.77
+        },
+        "weekly_6_1": {
+          "target": 19000000.0,
+          "actual": 16625974.0,
+          "pct": 0.88
+        },
+        "weekly_6_2": {
+          "target": 19000000.0,
+          "actual": 16035032.0,
+          "pct": 0.84
+        },
+        "weekly_6_3": {
+          "target": 19000000.0,
+          "actual": 16432859.0,
+          "pct": 0.86
+        },
+        "weekly_6_5": {
+          "actual": 71000000.0
+        },
+        "monthly_7": {
+          "target": 14200000.0,
+          "actual": 8514712.0,
+          "pct": 0.6
+        },
+        "weekly_7_1": {
+          "target": 14200000.0,
+          "actual": 19113395.0,
+          "pct": 1.35
+        },
+        "weekly_7_2": {
+          "target": 19000000.0,
+          "actual": 29996669.0,
+          "pct": 1.58
+        },
+        "weekly_7_3": {
+          "target": 30000000.0
+        },
+        "weekly_7_4": {
+          "target": 27183520.0
+        }
       }
     },
     "LinhDT": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "Dự án nhóm 2",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 272061000.0,
-        "quarterly_1": 668222500.0,
-        "monthly_1": 19621500.0,
-        "weekly_1_1": 19621500.0,
-        "weekly_1_2": 19621500.0,
-        "weekly_1_3": 19621500.0,
-        "weekly_1_5": 77250000.0,
-        "monthly_2": 19312500.0,
-        "weekly_2_1": 19312500.0,
-        "weekly_2_2": 19312500.0,
-        "weekly_2_3": 19312500.0,
-        "weekly_2_5": 116325000.0,
-        "monthly_3": 29081250.0,
-        "weekly_3_1": 29081250.0,
-        "weekly_3_2": 29081250.0,
-        "weekly_3_3": 29081250.0,
-        "weekly_3_5": 190256000.0,
-        "monthly_4": 38051200.0,
-        "weekly_4_1": 47564000.0,
-        "weekly_4_2": 47564000.0,
-        "weekly_4_3": 60000000.0,
-        "weekly_4_4": 60000000.0,
-        "weekly_4_5": 219559200.0,
-        "monthly_5": 54889800.0,
-        "weekly_5_1": 54889800.0,
-        "weekly_5_2": 54889800.0,
-        "weekly_5_3": 54889800.0,
-        "weekly_5_5": 340000000.0,
-        "monthly_6": 85000000.0,
-        "weekly_6_1": 85000000.0,
-        "weekly_6_2": 85000000.0,
-        "weekly_6_3": 85000000.0,
-        "weekly_6_5": 392070000.0,
-        "monthly_7": 78414000.0,
-        "weekly_7_1": 78414000.0,
-        "weekly_7_2": 78414000.0,
-        "weekly_7_3": 78414000.0,
-        "weekly_7_4": 78414000.0
+        "yearly_2026": {
+          "target": 272061000.0,
+          "actual": 240124524.0,
+          "pct": 0.88
+        },
+        "quarterly_1": {
+          "target": 668222500.0,
+          "actual": 799298972.0,
+          "pct": 1.2
+        },
+        "monthly_1": {
+          "target": 19621500.0,
+          "actual": 13452841.0,
+          "pct": 0.69
+        },
+        "weekly_1_1": {
+          "target": 19621500.0,
+          "actual": 14441311.0,
+          "pct": 0.74
+        },
+        "weekly_1_2": {
+          "target": 19621500.0,
+          "actual": 15976177.0,
+          "pct": 0.81
+        },
+        "weekly_1_3": {
+          "target": 19621500.0,
+          "actual": 21803455.0,
+          "pct": 1.11
+        },
+        "weekly_1_5": {
+          "actual": 77250000.0,
+          "pct": 76928898.0
+        },
+        "monthly_2": {
+          "target": 19312500.0,
+          "actual": 20492365.0,
+          "pct": 1.06
+        },
+        "weekly_2_1": {
+          "target": 19312500.0,
+          "actual": 19250185.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 19312500.0,
+          "actual": 20113840.0,
+          "pct": 1.04
+        },
+        "weekly_2_3": {
+          "target": 19312500.0,
+          "actual": 20398120.0,
+          "pct": 1.06
+        },
+        "weekly_2_5": {
+          "actual": 116325000.0,
+          "pct": 90969252.0
+        },
+        "monthly_3": {
+          "target": 29081250.0,
+          "actual": 17398084.0,
+          "pct": 0.6
+        },
+        "weekly_3_1": {
+          "target": 29081250.0,
+          "actual": 17316398.0,
+          "pct": 0.6
+        },
+        "weekly_3_2": {
+          "target": 29081250.0,
+          "actual": 17823834.0,
+          "pct": 0.61
+        },
+        "weekly_3_3": {
+          "target": 29081250.0,
+          "actual": 24881142.0,
+          "pct": 0.86
+        },
+        "weekly_3_5": {
+          "actual": 190256000.0,
+          "pct": 106804380.0
+        },
+        "monthly_4": {
+          "target": 38051200.0,
+          "actual": 10906915.0,
+          "pct": 0.29
+        },
+        "weekly_4_1": {
+          "target": 47564000.0,
+          "actual": 10216035.0,
+          "pct": 0.21
+        },
+        "weekly_4_2": {
+          "target": 47564000.0,
+          "actual": 18884059.0,
+          "pct": 0.4
+        },
+        "weekly_4_3": {
+          "target": 60000000.0,
+          "actual": 37945347.0,
+          "pct": 0.63
+        },
+        "weekly_4_4": {
+          "target": 60000000.0,
+          "actual": 40067392.0,
+          "pct": 0.67
+        },
+        "weekly_4_5": {
+          "actual": 219559200.0,
+          "pct": 337017792.0
+        },
+        "monthly_5": {
+          "target": 54889800.0,
+          "actual": 85686637.0,
+          "pct": 1.56
+        },
+        "weekly_5_1": {
+          "target": 54889800.0,
+          "actual": 87665022.0,
+          "pct": 1.6
+        },
+        "weekly_5_2": {
+          "target": 54889800.0,
+          "actual": 67788642.0,
+          "pct": 1.23
+        },
+        "weekly_5_3": {
+          "target": 54889800.0,
+          "actual": 77290589.0,
+          "pct": 1.41
+        },
+        "weekly_5_5": {
+          "actual": 340000000.0,
+          "pct": 355476800.0
+        },
+        "monthly_6": {
+          "target": 85000000.0,
+          "actual": 35945323.0,
+          "pct": 0.42
+        },
+        "weekly_6_1": {
+          "target": 85000000.0,
+          "actual": 71120801.0,
+          "pct": 0.84
+        },
+        "weekly_6_2": {
+          "target": 85000000.0,
+          "actual": 139676476.0,
+          "pct": 1.64
+        },
+        "weekly_6_3": {
+          "target": 85000000.0,
+          "actual": 88042657.0,
+          "pct": 1.04
+        },
+        "weekly_6_5": {
+          "actual": 392070000.0
+        },
+        "monthly_7": {
+          "target": 78414000.0,
+          "actual": 63496861.0,
+          "pct": 0.81
+        },
+        "weekly_7_1": {
+          "target": 78414000.0,
+          "actual": 108785833.0,
+          "pct": 1.39
+        },
+        "weekly_7_2": {
+          "target": 78414000.0,
+          "actual": 100975015.0,
+          "pct": 1.29
+        },
+        "weekly_7_3": {
+          "target": 78414000.0
+        },
+        "weekly_7_4": {
+          "target": 78414000.0
+        }
       }
     },
     "TM1-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ sử dụng ngân sách",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.95,
-        "monthly_1": 0.95,
-        "weekly_1_5": 0.95,
-        "monthly_2": 0.95,
-        "weekly_2_5": 0.95
+        "yearly_2026": {
+          "target": 0.95,
+          "actual": 1.0,
+          "pct": 0.95
+        },
+        "quarterly_1": {
+          "target": 0.95,
+          "actual": 1.0,
+          "pct": 0.95
+        },
+        "monthly_1": {
+          "target": 0.95,
+          "actual": 1220132.0
+        },
+        "weekly_1_5": {
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "monthly_2": {
+          "target": 0.95
+        },
+        "weekly_2_5": {
+          "actual": 0.95,
+          "pct": 0.95
+        }
       }
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "DM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.95,
-        "weekly_1_5": 0.95,
-        "monthly_2": 0.95,
-        "weekly_2_5": 0.95,
-        "monthly_3": 0.95,
-        "weekly_3_5": 1631627495.0
+        "yearly_2026": {
+          "target": 0.95,
+          "actual": 1.0,
+          "pct": 0.95
+        },
+        "quarterly_1": {
+          "target": 0.95,
+          "actual": 1.0,
+          "pct": 0.95
+        },
+        "weekly_1_5": {
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "monthly_2": {
+          "target": 0.95
+        },
+        "weekly_2_5": {
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "monthly_3": {
+          "target": 0.95,
+          "pct": 0.0
+        }
       }
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí mua công cụ AI phân bổ hàng tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM2-I01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1349.0,
-        "quarterly_1": 1230.0,
-        "monthly_1": 210.0,
-        "weekly_1_1": 210.0,
-        "weekly_1_2": 210.0,
-        "weekly_1_3": 134.0,
-        "weekly_1_5": 59.0,
-        "monthly_2": 11.0,
-        "weekly_2_1": 26.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 19.0,
-        "weekly_2_5": 239.0,
-        "monthly_3": 62.0,
-        "weekly_3_1": 100.0,
-        "weekly_3_2": 93.0,
-        "weekly_3_3": 95.0,
-        "weekly_3_5": 463.0,
-        "monthly_4": 114.0,
-        "weekly_4_1": 160.0,
-        "weekly_4_2": 49.0,
-        "weekly_4_3": 49.0,
-        "weekly_4_4": 26.0,
-        "weekly_4_5": 157.0,
-        "monthly_5": 34.0,
-        "weekly_5_1": 37.0,
-        "weekly_5_2": 36.0,
-        "weekly_5_3": 37.0,
-        "weekly_5_5": 92.0,
-        "monthly_6": 23.0,
-        "weekly_6_1": 26.0,
-        "weekly_6_2": 26.0,
-        "weekly_6_3": 24.0,
-        "weekly_6_5": 92.0,
-        "monthly_7": 17.0,
-        "weekly_7_1": 22.0,
-        "weekly_7_2": 19.0,
-        "weekly_7_3": 19.0
+        "yearly_2026": {
+          "target": 1349.0,
+          "actual": 1520.0,
+          "pct": 1.13
+        },
+        "quarterly_1": {
+          "target": 1230.0,
+          "actual": 732.0,
+          "pct": 0.6
+        },
+        "monthly_1": {
+          "target": 210.0,
+          "actual": 361.0,
+          "pct": 1.72
+        },
+        "weekly_1_1": {
+          "target": 210.0,
+          "actual": 268.0,
+          "pct": 1.28
+        },
+        "weekly_1_2": {
+          "target": 210.0,
+          "actual": 131.0,
+          "pct": 0.62
+        },
+        "weekly_1_3": {
+          "target": 134.0,
+          "actual": 174.0,
+          "pct": 1.3
+        },
+        "weekly_1_5": {
+          "actual": 59.0,
+          "pct": 59.0
+        },
+        "monthly_2": {
+          "target": 11.0,
+          "actual": 11.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 26.0,
+          "actual": 27.0,
+          "pct": 1.04
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 19.0,
+          "actual": 14.0,
+          "pct": 0.74
+        },
+        "weekly_2_5": {
+          "actual": 239.0,
+          "pct": 486.0
+        },
+        "monthly_3": {
+          "target": 62.0,
+          "actual": 90.0,
+          "pct": 1.45
+        },
+        "weekly_3_1": {
+          "target": 100.0,
+          "actual": 97.0,
+          "pct": 0.97
+        },
+        "weekly_3_2": {
+          "target": 93.0,
+          "actual": 162.0,
+          "pct": 1.74
+        },
+        "weekly_3_3": {
+          "target": 95.0,
+          "actual": 121.0
+        },
+        "weekly_3_5": {
+          "actual": 463.0,
+          "pct": 488.0
+        },
+        "monthly_4": {
+          "target": 114.0,
+          "actual": 204.0,
+          "pct": 1.79
+        },
+        "weekly_4_1": {
+          "target": 160.0,
+          "actual": 323.0,
+          "pct": 2.02
+        },
+        "weekly_4_2": {
+          "target": 49.0,
+          "actual": 52.0,
+          "pct": 1.06
+        },
+        "weekly_4_3": {
+          "target": 49.0,
+          "actual": 41.0,
+          "pct": 0.84
+        },
+        "weekly_4_4": {
+          "target": 26.0,
+          "actual": 25.0,
+          "pct": 0.96
+        },
+        "weekly_4_5": {
+          "actual": 157.0,
+          "pct": 153.0
+        },
+        "monthly_5": {
+          "target": 34.0,
+          "actual": 33.0,
+          "pct": 0.97
+        },
+        "weekly_5_1": {
+          "target": 37.0,
+          "actual": 36.0,
+          "pct": 0.97
+        },
+        "weekly_5_2": {
+          "target": 36.0,
+          "actual": 35.0,
+          "pct": 0.97
+        },
+        "weekly_5_3": {
+          "target": 37.0,
+          "actual": 40.0,
+          "pct": 1.08
+        },
+        "weekly_5_5": {
+          "actual": 92.0,
+          "pct": 91.0
+        },
+        "monthly_6": {
+          "target": 23.0,
+          "actual": 18.0,
+          "pct": 0.8
+        },
+        "weekly_6_1": {
+          "target": 26.0,
+          "actual": 27.0,
+          "pct": 1.04
+        },
+        "weekly_6_2": {
+          "target": 26.0,
+          "actual": 25.0,
+          "pct": 0.96
+        },
+        "weekly_6_3": {
+          "target": 24.0,
+          "actual": 25.0,
+          "pct": 1.04
+        },
+        "weekly_6_5": {
+          "actual": 92.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 17.0,
+          "actual": 9.0,
+          "pct": 0.53
+        },
+        "weekly_7_1": {
+          "target": 22.0,
+          "actual": 21.0,
+          "pct": 0.94
+        },
+        "weekly_7_2": {
+          "target": 19.0,
+          "actual": 18.0,
+          "pct": 0.93
+        },
+        "weekly_7_3": {
+          "target": 19.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "DM1-I03.01": {
       "title": "",
       "unit": "VM2-I01.01",
+      "formula": "Dự án nhóm 1",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 14.0,
-        "monthly_1": 3.0,
-        "weekly_1_1": 3.0,
-        "weekly_1_2": 3.0,
-        "weekly_1_3": 2.0,
-        "monthly_2": 0.0
+        "monthly_1": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.33
+        },
+        "weekly_1_1": {
+          "target": 3.0,
+          "actual": 4.0,
+          "pct": 1.33
+        },
+        "weekly_1_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "DM2-I01.01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "Dự án nhóm 1",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 840.0,
-        "quarterly_1": 60.0,
-        "monthly_1": 200.0,
-        "weekly_1_1": 200.0,
-        "weekly_1_2": 200.0,
-        "weekly_1_3": 125.0,
-        "weekly_1_5": 18.0,
-        "monthly_2": 5.0,
-        "weekly_2_1": 9.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 5.0,
-        "weekly_2_5": 22.0,
-        "monthly_3": 6.0,
-        "weekly_3_1": 6.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 5.0,
-        "weekly_3_5": 28.0,
-        "monthly_4": 5.0,
-        "weekly_4_1": 5.0,
-        "weekly_4_2": 5.0,
-        "weekly_4_3": 5.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 42.0,
-        "monthly_5": 7.0,
-        "weekly_5_1": 9.0,
-        "weekly_5_2": 9.0,
-        "weekly_5_3": 9.0,
-        "weekly_5_5": 42.0,
-        "monthly_6": 10.0,
-        "weekly_6_1": 11.0,
-        "weekly_6_2": 11.0,
-        "weekly_6_3": 11.0,
-        "weekly_6_5": 52.0,
-        "monthly_7": 10.0,
-        "weekly_7_1": 10.0,
-        "weekly_7_2": 10.0,
-        "weekly_7_3": 10.0
+        "yearly_2026": {
+          "target": 840.0,
+          "actual": 931.0,
+          "pct": 1.11
+        },
+        "quarterly_1": {
+          "target": 60.0,
+          "actual": 142.0,
+          "pct": 2.37
+        },
+        "monthly_1": {
+          "target": 200.0,
+          "actual": 350.0,
+          "pct": 1.75
+        },
+        "weekly_1_1": {
+          "target": 200.0,
+          "actual": 255.0,
+          "pct": 1.28
+        },
+        "weekly_1_2": {
+          "target": 200.0,
+          "actual": 120.0,
+          "pct": 0.6
+        },
+        "weekly_1_3": {
+          "target": 125.0,
+          "actual": 163.0,
+          "pct": 1.3
+        },
+        "weekly_1_5": {
+          "actual": 18.0,
+          "pct": 18.0
+        },
+        "monthly_2": {
+          "target": 5.0,
+          "actual": 4.0,
+          "pct": 0.8
+        },
+        "weekly_2_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 5.0
+        },
+        "weekly_2_5": {
+          "actual": 22.0,
+          "pct": 29.0
+        },
+        "monthly_3": {
+          "target": 6.0,
+          "actual": 5.0,
+          "pct": 0.83
+        },
+        "weekly_3_1": {
+          "target": 6.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 5.0
+        },
+        "weekly_3_3": {
+          "target": 5.0,
+          "actual": 3.0
+        },
+        "weekly_3_5": {
+          "actual": 28.0,
+          "pct": 43.0
+        },
+        "monthly_4": {
+          "target": 5.0,
+          "actual": 6.0,
+          "pct": 1.2
+        },
+        "weekly_4_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 5.0,
+          "actual": 8.0,
+          "pct": 1.6
+        },
+        "weekly_4_3": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 42.0,
+          "pct": 49.0
+        },
+        "monthly_5": {
+          "target": 7.0,
+          "actual": 8.0,
+          "pct": 1.14
+        },
+        "weekly_5_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 9.0,
+          "actual": 11.0,
+          "pct": 1.22
+        },
+        "weekly_5_3": {
+          "target": 9.0,
+          "actual": 12.0,
+          "pct": 1.33
+        },
+        "weekly_5_5": {
+          "actual": 42.0,
+          "pct": 50.0
+        },
+        "monthly_6": {
+          "target": 10.0,
+          "actual": 10.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 11.0,
+          "actual": 14.0,
+          "pct": 1.27
+        },
+        "weekly_6_2": {
+          "target": 11.0,
+          "actual": 13.0,
+          "pct": 1.18
+        },
+        "weekly_6_3": {
+          "target": 11.0,
+          "actual": 15.0,
+          "pct": 1.36
+        },
+        "weekly_6_5": {
+          "actual": 52.0
+        },
+        "monthly_7": {
+          "target": 10.0,
+          "actual": 5.0,
+          "pct": 0.5
+        },
+        "weekly_7_1": {
+          "target": 10.0,
+          "actual": 11.0,
+          "pct": 1.06
+        },
+        "weekly_7_2": {
+          "target": 10.0,
+          "actual": 12.0,
+          "pct": 1.15
+        },
+        "weekly_7_3": {
+          "target": 10.0
+        }
       }
     },
     "Dự án 2 (sản phẩm AI)": {
       "title": "",
       "unit": "VM2-I01.01",
+      "formula": "Dự án nhóm 3",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 66.0,
-        "quarterly_1": 72.0,
-        "monthly_1": 3.0,
-        "weekly_1_1": 3.0,
-        "weekly_1_2": 3.0,
-        "weekly_1_3": 3.0,
-        "weekly_1_5": 23.0,
-        "monthly_2": 2.0,
-        "weekly_2_1": 13.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 7.0,
-        "weekly_2_5": 22.0,
-        "monthly_3": 7.0
+        "yearly_2026": {
+          "target": 66.0
+        },
+        "quarterly_1": {
+          "target": 72.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.67
+        },
+        "weekly_1_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 23.0,
+          "pct": 23.0
+        },
+        "monthly_2": {
+          "target": 2.0,
+          "actual": 3.0,
+          "pct": 1.5
+        },
+        "weekly_2_1": {
+          "target": 13.0,
+          "actual": 13.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 22.0
+        },
+        "monthly_3": {
+          "target": 7.0,
+          "pct": 0.0
+        }
       }
     },
     "DM2-I01.01.02": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "Dự án nhóm 3",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 395.0,
-        "quarterly_1": 666.0,
-        "weekly_2_5": 185.0,
-        "monthly_3": 46.0,
-        "weekly_3_1": 90.0,
-        "weekly_3_2": 90.0,
-        "weekly_3_3": 90.0,
-        "weekly_3_5": 280.0,
-        "monthly_4": 70.0,
-        "weekly_4_1": 120.0,
-        "weekly_4_2": 7.0,
-        "weekly_4_3": 8.0,
-        "weekly_4_4": 5.0,
-        "weekly_4_5": 20.0,
-        "monthly_5": 5.0,
-        "weekly_5_1": 5.0,
-        "weekly_5_2": 5.0,
-        "weekly_5_3": 5.0,
-        "weekly_5_5": 20.0,
-        "monthly_6": 5.0,
-        "weekly_6_1": 6.0,
-        "weekly_6_2": 6.0,
-        "weekly_6_3": 6.0,
-        "weekly_6_5": 20.0,
-        "monthly_7": 3.0,
-        "weekly_7_1": 6.0,
-        "weekly_7_2": 5.0,
-        "weekly_7_3": 5.0
+        "yearly_2026": {
+          "target": 395.0,
+          "actual": 539.0,
+          "pct": 1.36
+        },
+        "quarterly_1": {
+          "target": 666.0,
+          "actual": 327.0,
+          "pct": 0.49
+        },
+        "weekly_2_5": {
+          "actual": 185.0,
+          "pct": 447.0
+        },
+        "monthly_3": {
+          "target": 46.0,
+          "actual": 82.0,
+          "pct": 1.78
+        },
+        "weekly_3_1": {
+          "target": 90.0,
+          "actual": 93.0,
+          "pct": 1.03
+        },
+        "weekly_3_2": {
+          "target": 90.0,
+          "actual": 154.0,
+          "pct": 1.71
+        },
+        "weekly_3_3": {
+          "target": 90.0,
+          "actual": 118.0,
+          "pct": 1.31
+        },
+        "weekly_3_5": {
+          "actual": 280.0,
+          "pct": 299.0
+        },
+        "monthly_4": {
+          "target": 70.0,
+          "actual": 158.0,
+          "pct": 2.26
+        },
+        "weekly_4_1": {
+          "target": 120.0,
+          "actual": 285.0,
+          "pct": 2.38
+        },
+        "weekly_4_2": {
+          "target": 7.0,
+          "actual": 8.0,
+          "pct": 1.14
+        },
+        "weekly_4_3": {
+          "target": 8.0,
+          "actual": 5.0,
+          "pct": 0.63
+        },
+        "weekly_4_4": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 20.0,
+          "pct": 17.0
+        },
+        "monthly_5": {
+          "target": 5.0,
+          "actual": 3.0,
+          "pct": 0.6
+        },
+        "weekly_5_1": {
+          "target": 5.0,
+          "actual": 4.0,
+          "pct": 0.8
+        },
+        "weekly_5_2": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 20.0,
+          "pct": 11.0
+        },
+        "monthly_6": {
+          "target": 5.0,
+          "actual": 1.0,
+          "pct": 0.2
+        },
+        "weekly_6_1": {
+          "target": 6.0,
+          "actual": 4.0,
+          "pct": 0.67
+        },
+        "weekly_6_2": {
+          "target": 6.0,
+          "actual": 3.0,
+          "pct": 0.5
+        },
+        "weekly_6_3": {
+          "target": 6.0,
+          "actual": 3.0,
+          "pct": 0.5
+        },
+        "weekly_6_5": {
+          "actual": 20.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.33
+        },
+        "weekly_7_1": {
+          "target": 6.0,
+          "actual": 4.0,
+          "pct": 0.67
+        },
+        "weekly_7_2": {
+          "target": 5.0,
+          "actual": 2.0,
+          "pct": 0.4
+        },
+        "weekly_7_3": {
+          "target": 5.0
+        }
       }
     },
     "Dự án 3 (nội dung 3D Kids Songs)": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "Dự án nhóm 2",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 48.0,
-        "quarterly_1": 432.0,
-        "monthly_1": 4.0,
-        "weekly_1_1": 4.0,
-        "weekly_1_2": 4.0,
-        "weekly_1_3": 4.0,
-        "weekly_1_5": 18.0,
-        "monthly_2": 4.0,
-        "weekly_2_1": 4.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 7.0,
-        "weekly_2_5": 10.0,
-        "monthly_3": 3.0,
-        "weekly_3_1": 4.0,
-        "weekly_3_2": 3.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 155.0,
-        "monthly_4": 38.75,
-        "weekly_4_1": 35.0,
-        "weekly_4_2": 37.0,
-        "weekly_4_3": 36.0,
-        "weekly_4_4": 21.0,
-        "weekly_4_5": 95.0,
-        "monthly_5": 22.0,
-        "weekly_5_1": 23.0,
-        "weekly_5_2": 22.0,
-        "weekly_5_3": 23.0,
-        "weekly_5_5": 30.0,
-        "monthly_6": 8.0,
-        "weekly_6_1": 9.0,
-        "weekly_6_2": 9.0,
-        "weekly_6_3": 7.0,
-        "weekly_6_5": 20.0,
-        "monthly_7": 4.0,
-        "weekly_7_1": 6.0,
-        "weekly_7_2": 4.0,
-        "weekly_7_3": 4.0,
-        "weekly_7_4": 4.0
+        "yearly_2026": {
+          "target": 48.0,
+          "actual": 50.0,
+          "pct": 1.04
+        },
+        "quarterly_1": {
+          "target": 432.0,
+          "actual": 263.0,
+          "pct": 0.61
+        },
+        "monthly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 4.0,
+          "actual": 6.0,
+          "pct": 1.5
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 6.0,
+          "pct": 1.5
+        },
+        "weekly_1_3": {
+          "target": 4.0,
+          "actual": 6.0,
+          "pct": 1.5
+        },
+        "weekly_1_5": {
+          "actual": 18.0,
+          "pct": 18.0
+        },
+        "monthly_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 10.0,
+          "pct": 10.0
+        },
+        "monthly_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 155.0,
+          "pct": 146.0
+        },
+        "monthly_4": {
+          "target": 38.75,
+          "actual": 40.0,
+          "pct": 1.03
+        },
+        "weekly_4_1": {
+          "target": 35.0,
+          "actual": 33.0,
+          "pct": 0.94
+        },
+        "weekly_4_2": {
+          "target": 37.0,
+          "actual": 36.0,
+          "pct": 0.97
+        },
+        "weekly_4_3": {
+          "target": 36.0,
+          "actual": 31.0,
+          "pct": 0.86
+        },
+        "weekly_4_4": {
+          "target": 21.0,
+          "actual": 20.0,
+          "pct": 0.95
+        },
+        "weekly_4_5": {
+          "actual": 95.0,
+          "pct": 87.0
+        },
+        "monthly_5": {
+          "target": 22.0,
+          "actual": 22.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 23.0,
+          "actual": 23.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 22.0,
+          "actual": 19.0,
+          "pct": 0.86
+        },
+        "weekly_5_3": {
+          "target": 23.0,
+          "actual": 23.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 30.0,
+          "pct": 30.0
+        },
+        "monthly_6": {
+          "target": 8.0,
+          "actual": 7.0,
+          "pct": 0.93
+        },
+        "weekly_6_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 20.0
+        },
+        "monthly_7": {
+          "target": 4.0,
+          "actual": 3.0,
+          "pct": 0.75
+        },
+        "weekly_7_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 4.0
+        },
+        "weekly_7_4": {
+          "target": 4.0
+        }
       }
     },
     "Dự án 4 (sản phẩm AI Spotify)": {
       "title": "SL video đạt ngưỡng 1 triệu views (youtube long)",
       "unit": "Video",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0
+        }
       }
     },
     "Số lượng video đạt >=1 Triệu view trên nền tảng Youtube trong kỳ": {
       "title": "Số vi phạm chính sách",
       "unit": "Dự án 2",
+      "formula": "Dự án nhóm 3",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0
+        "yearly_2026": {
+          "target": 2.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 2.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Số lượng video đạt ngưỡng 1M views": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Số lượt view youtube DA01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 833966666.0,
-        "quarterly_1": 1368398391.0,
-        "monthly_1": 107197813.0,
-        "weekly_1_1": 107197813.0,
-        "weekly_1_2": 107283975.0,
-        "weekly_1_3": 107283975.0,
-        "weekly_1_5": 552855182.0,
-        "monthly_2": 104509706.0,
-        "weekly_2_1": 104509706.0,
-        "weekly_2_2": 104509706.0,
-        "weekly_2_3": 104509706.0,
-        "weekly_2_5": 518292811.0,
-        "monthly_3": 129739812.0,
-        "weekly_3_1": 129790812.0,
-        "weekly_3_2": 130679445.0,
-        "weekly_3_3": 129679445.0,
-        "weekly_3_5": 507000000.0,
-        "monthly_4": 129000000.0,
-        "weekly_4_1": 129200000.0,
-        "weekly_4_2": 129200000.0,
-        "weekly_4_3": 128000000.0,
-        "weekly_4_4": 128000000.0,
-        "weekly_4_5": 513000000.0,
-        "monthly_5": 128250000.0,
-        "weekly_5_1": 128250000.0,
-        "weekly_5_2": 140000000.0,
-        "weekly_5_3": 140000000.0,
-        "weekly_5_5": 542000000.0,
-        "monthly_6": 135500000.0,
-        "weekly_6_1": 144000000.0,
-        "weekly_6_2": 144000000.0,
-        "weekly_6_3": 144000000.0,
-        "weekly_6_5": 359570000.0,
-        "monthly_7": 71914000.0,
-        "weekly_7_1": 71914000.0,
-        "weekly_7_2": 71914000.0,
-        "weekly_7_3": 71914000.0
+        "yearly_2026": {
+          "target": 833966666.0,
+          "actual": 1479664437.0,
+          "pct": 1.77
+        },
+        "quarterly_1": {
+          "target": 1368398391.0,
+          "actual": 1137661571.0,
+          "pct": 0.83
+        },
+        "monthly_1": {
+          "target": 107197813.0,
+          "actual": 148796480.0,
+          "pct": 1.39
+        },
+        "weekly_1_1": {
+          "target": 107197813.0,
+          "actual": 109787158.0,
+          "pct": 1.02
+        },
+        "weekly_1_2": {
+          "target": 107283975.0,
+          "actual": 102118944.0,
+          "pct": 0.95
+        },
+        "weekly_1_3": {
+          "target": 107283975.0,
+          "actual": 115441437.0,
+          "pct": 1.08
+        },
+        "weekly_1_5": {
+          "actual": 552855182.0,
+          "pct": 433726215.0
+        },
+        "monthly_2": {
+          "target": 104509706.0,
+          "actual": 113265309.0,
+          "pct": 1.08
+        },
+        "weekly_2_1": {
+          "target": 104509706.0,
+          "actual": 111180402.0,
+          "pct": 1.06
+        },
+        "weekly_2_2": {
+          "target": 104509706.0,
+          "actual": 92960312.0,
+          "pct": 0.89
+        },
+        "weekly_2_3": {
+          "target": 104509706.0,
+          "actual": 116473792.0,
+          "pct": 1.11
+        },
+        "weekly_2_5": {
+          "actual": 518292811.0,
+          "pct": 497749698.0
+        },
+        "monthly_3": {
+          "target": 129739812.0,
+          "actual": 120936673.0,
+          "pct": 0.93
+        },
+        "weekly_3_1": {
+          "target": 129790812.0,
+          "actual": 108068726.0,
+          "pct": 0.83
+        },
+        "weekly_3_2": {
+          "target": 130679445.0,
+          "actual": 105870505.0,
+          "pct": 0.81
+        },
+        "weekly_3_3": {
+          "target": 129679445.0
+        },
+        "weekly_3_5": {
+          "actual": 507000000.0,
+          "pct": 460735877.0
+        },
+        "monthly_4": {
+          "target": 129000000.0,
+          "actual": 127248767.0,
+          "pct": 0.99
+        },
+        "weekly_4_1": {
+          "target": 129200000.0,
+          "actual": 104483913.0,
+          "pct": 0.81
+        },
+        "weekly_4_2": {
+          "target": 129200000.0,
+          "actual": 112037011.0,
+          "pct": 0.87
+        },
+        "weekly_4_3": {
+          "target": 128000000.0,
+          "actual": 100316326.0,
+          "pct": 0.78
+        },
+        "weekly_4_4": {
+          "target": 128000000.0,
+          "actual": 110858169.0,
+          "pct": 0.87
+        },
+        "weekly_4_5": {
+          "actual": 513000000.0,
+          "pct": 446052131.0
+        },
+        "monthly_5": {
+          "target": 128250000.0,
+          "actual": 115494043.0,
+          "pct": 0.9
+        },
+        "weekly_5_1": {
+          "target": 128250000.0,
+          "actual": 106384892.0,
+          "pct": 0.83
+        },
+        "weekly_5_2": {
+          "target": 140000000.0,
+          "actual": 74048901.0,
+          "pct": 0.53
+        },
+        "weekly_5_3": {
+          "target": 140000000.0,
+          "actual": 97145597.0,
+          "pct": 0.69
+        },
+        "weekly_5_5": {
+          "actual": 542000000.0,
+          "pct": 230873563.0
+        },
+        "monthly_6": {
+          "target": 135500000.0,
+          "actual": 70794431.0,
+          "pct": 0.52
+        },
+        "weekly_6_1": {
+          "target": 144000000.0,
+          "actual": 25069549.0,
+          "pct": 0.1741
+        },
+        "weekly_6_2": {
+          "target": 144000000.0,
+          "actual": 41292738.0,
+          "pct": 0.2868
+        },
+        "weekly_6_3": {
+          "target": 144000000.0,
+          "actual": 42730395.0,
+          "pct": 0.2967
+        },
+        "weekly_6_5": {
+          "actual": 359570000.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 71914000.0,
+          "actual": 88850939.0,
+          "pct": 1.2355
+        },
+        "weekly_7_1": {
+          "target": 71914000.0,
+          "actual": 111764307.0,
+          "pct": 1.5541
+        },
+        "weekly_7_2": {
+          "target": 71914000.0,
+          "actual": 130657431.0,
+          "pct": 1.8169
+        },
+        "weekly_7_3": {
+          "target": 71914000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "DM3-I01.04": {
       "title": "Số lượt play Spotify",
       "unit": "Stream",
+      "formula": "Dự án nhóm 2",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 650000.0,
-        "quarterly_1": 3000000.0,
-        "monthly_1": 86162.0,
-        "weekly_1_1": 86162.0,
-        "weekly_1_2": 86162.0,
-        "weekly_1_3": 86162.0,
-        "weekly_1_5": 583643.0,
-        "monthly_2": 145911.0,
-        "weekly_2_1": 145911.0,
-        "weekly_2_2": 145911.0,
-        "weekly_2_3": 145911.0,
-        "weekly_2_5": 714511.0,
-        "monthly_3": 178628.0,
-        "weekly_3_1": 178628.0,
-        "weekly_3_2": 178628.0,
-        "weekly_3_3": 178628.0,
-        "weekly_3_5": 1888569.0,
-        "monthly_4": 472142.0,
-        "weekly_4_1": 472142.0,
-        "weekly_4_2": 583517.0,
-        "weekly_4_3": 592597.0,
-        "weekly_4_4": 539267.0,
-        "weekly_4_5": 2300000.0,
-        "monthly_5": 557950.0,
-        "weekly_5_1": 557950.0,
-        "weekly_5_2": 557950.0,
-        "weekly_5_3": 557950.0,
-        "weekly_5_5": 4000000.0,
-        "monthly_6": 840000.0,
-        "weekly_6_1": 1000000.0,
-        "weekly_6_2": 1000000.0,
-        "weekly_6_3": 1000000.0,
-        "weekly_6_5": 2400000.0,
-        "monthly_7": 480000.0,
-        "weekly_7_1": 480000.0,
-        "weekly_7_2": 480000.0,
-        "weekly_7_3": 480000.0
+        "yearly_2026": {
+          "target": 650000.0,
+          "actual": 1413968.0,
+          "pct": 2.1753
+        },
+        "quarterly_1": {
+          "target": 3000000.0,
+          "actual": 8463391.0,
+          "pct": 2.82
+        },
+        "monthly_1": {
+          "target": 86162.0,
+          "actual": 106579.0,
+          "pct": 1.24
+        },
+        "weekly_1_1": {
+          "target": 86162.0,
+          "actual": 111057.0,
+          "pct": 1.29
+        },
+        "weekly_1_2": {
+          "target": 86162.0,
+          "actual": 124771.0,
+          "pct": 1.45
+        },
+        "weekly_1_3": {
+          "target": 86162.0,
+          "actual": 151894.0,
+          "pct": 1.76
+        },
+        "weekly_1_5": {
+          "actual": 583643.0,
+          "pct": 399303.0
+        },
+        "monthly_2": {
+          "target": 145911.0,
+          "actual": 119288.0,
+          "pct": 0.82
+        },
+        "weekly_2_1": {
+          "target": 145911.0,
+          "actual": 111295.0,
+          "pct": 0.76
+        },
+        "weekly_2_2": {
+          "target": 145911.0,
+          "actual": 99721.0,
+          "pct": 0.68
+        },
+        "weekly_2_3": {
+          "target": 145911.0,
+          "actual": 102939.0,
+          "pct": 0.71
+        },
+        "weekly_2_5": {
+          "actual": 714511.0,
+          "pct": 463405.5
+        },
+        "monthly_3": {
+          "target": 178628.0,
+          "actual": 147354.0,
+          "pct": 0.82
+        },
+        "weekly_3_1": {
+          "target": 178628.0,
+          "actual": 144689.0,
+          "pct": 0.81
+        },
+        "weekly_3_2": {
+          "target": 178628.0,
+          "actual": 108440.0,
+          "pct": 0.61
+        },
+        "weekly_3_3": {
+          "target": 178628.0,
+          "actual": 123101.0,
+          "pct": 0.69
+        },
+        "weekly_3_5": {
+          "actual": 1888569.0,
+          "pct": 1952509.0
+        },
+        "monthly_4": {
+          "target": 472142.0,
+          "actual": 209991.0,
+          "pct": 0.44
+        },
+        "weekly_4_1": {
+          "target": 472142.0,
+          "actual": 264197.0,
+          "pct": 0.56
+        },
+        "weekly_4_2": {
+          "target": 583517.0,
+          "actual": 589904.0,
+          "pct": 1.01
+        },
+        "weekly_4_3": {
+          "target": 592597.0,
+          "actual": 548024.0,
+          "pct": 0.92
+        },
+        "weekly_4_4": {
+          "target": 539267.0,
+          "actual": 800727.0,
+          "pct": 1.48
+        },
+        "weekly_4_5": {
+          "actual": 2300000.0,
+          "pct": 3710882.0
+        },
+        "monthly_5": {
+          "target": 557950.0,
+          "actual": 1031083.0,
+          "pct": 1.85
+        },
+        "weekly_5_1": {
+          "target": 557950.0,
+          "actual": 981651.0,
+          "pct": 1.76
+        },
+        "weekly_5_2": {
+          "target": 557950.0,
+          "actual": 759647.0,
+          "pct": 1.36
+        },
+        "weekly_5_3": {
+          "target": 557950.0,
+          "actual": 826399.0,
+          "pct": 1.48
+        },
+        "weekly_5_5": {
+          "actual": 4000000.0,
+          "pct": 2800000.0
+        },
+        "monthly_6": {
+          "target": 840000.0,
+          "actual": 585097.0,
+          "pct": 0.7
+        },
+        "weekly_6_1": {
+          "target": 1000000.0,
+          "actual": 667372.0,
+          "pct": 0.67
+        },
+        "weekly_6_2": {
+          "target": 1000000.0,
+          "actual": 671795.0,
+          "pct": 0.67
+        },
+        "weekly_6_3": {
+          "target": 1000000.0,
+          "actual": 517089.0,
+          "pct": 0.52
+        },
+        "weekly_6_5": {
+          "actual": 2400000.0
+        },
+        "monthly_7": {
+          "target": 480000.0,
+          "actual": 415451.0,
+          "pct": 0.87
+        },
+        "weekly_7_1": {
+          "target": 480000.0,
+          "actual": 560737.0,
+          "pct": 1.17
+        },
+        "weekly_7_2": {
+          "target": 480000.0,
+          "actual": 571622.0,
+          "pct": 1.19
+        },
+        "weekly_7_3": {
+          "target": 480000.0
+        }
       }
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "Số lượng view trên nền tảng Spotify": {
       "title": "ROI",
       "unit": "Tăng trưởng cộng đồng theo kế hoạch",
+      "formula": "Dự án nhóm 2",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 66751.0,
-        "quarterly_1": 67976.0,
-        "monthly_1": 8130.0,
-        "weekly_1_1": 8130.0,
-        "weekly_1_2": 8130.0,
-        "weekly_1_3": 8130.0,
-        "weekly_1_5": 16399.0,
-        "monthly_2": 4100.0,
-        "weekly_2_1": 4100.0,
-        "weekly_2_2": 4100.0,
-        "weekly_2_3": 4100.0,
-        "weekly_2_5": 17832.0,
-        "monthly_3": 4458.0,
-        "weekly_3_1": 4458.0,
-        "weekly_3_2": 4458.0,
-        "weekly_3_3": 4458.0,
-        "weekly_3_5": 22659.0,
-        "monthly_4": 5665.0
+        "yearly_2026": {
+          "target": 66751.0,
+          "actual": 64739.0,
+          "pct": 0.9699
+        },
+        "quarterly_1": {
+          "target": 67976.0
+        },
+        "monthly_1": {
+          "target": 8130.0,
+          "actual": 5305.0,
+          "pct": 0.65
+        },
+        "weekly_1_1": {
+          "target": 8130.0,
+          "actual": 4336.0,
+          "pct": 0.53
+        },
+        "weekly_1_2": {
+          "target": 8130.0,
+          "actual": 3510.0,
+          "pct": 0.43
+        },
+        "weekly_1_3": {
+          "target": 8130.0,
+          "actual": 3050.0,
+          "pct": 0.38
+        },
+        "weekly_1_5": {
+          "actual": 16399.0,
+          "pct": 18810.0
+        },
+        "monthly_2": {
+          "target": 4100.0,
+          "actual": 3350.0,
+          "pct": 0.82
+        },
+        "weekly_2_1": {
+          "target": 4100.0,
+          "actual": 3867.0,
+          "pct": 0.94
+        },
+        "weekly_2_2": {
+          "target": 4100.0,
+          "actual": 4718.0,
+          "pct": 1.15
+        },
+        "weekly_2_3": {
+          "target": 4100.0,
+          "actual": 7018.0,
+          "pct": 1.71
+        },
+        "weekly_2_5": {
+          "actual": 17832.0,
+          "pct": 29530.0
+        },
+        "monthly_3": {
+          "target": 4458.0,
+          "actual": 13249.0,
+          "pct": 2.97
+        },
+        "weekly_3_1": {
+          "target": 4458.0,
+          "actual": 7829.0,
+          "pct": 1.76
+        },
+        "weekly_3_2": {
+          "target": 4458.0,
+          "actual": 8452.0,
+          "pct": 1.9
+        },
+        "weekly_3_3": {
+          "target": 4458.0,
+          "actual": 16704.0,
+          "pct": 3.75
+        },
+        "weekly_3_5": {
+          "actual": 22659.0
+        },
+        "monthly_4": {
+          "target": 5665.0
+        }
       }
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM4-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Phát triển hệ thống kênh kinh doanh": {
       "title": "Số vi phạm chính sách",
       "unit": "Kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        }
       }
     },
     "Phát triển thương hiệu Tổng Công ty": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh đạt ngưỡng 2k $/ tháng",
+      "formula": "DM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 1.0,
-        "monthly_1": 1.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 1.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "monthly_1": {
+          "target": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0
+        }
       }
     },
     "TM4-I02.02": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "DM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 2.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 2.0,
-        "weekly_5_5": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh đạt ngưỡng 2k $/ tháng toàn hệ thống",
+      "formula": "DM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 5.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Số vi phạm trên kênh : TKT, gậy CĐ, gậy BQ, chết kênh...do đơn vị quản lý": {
       "title": "Số vi phạm chính sách",
       "unit": "",
+      "formula": "Dự án nhóm 1",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 1.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Dự án 1": {
       "title": "Số vi phạm chính sách",
       "unit": "",
+      "formula": "Dự án nhóm 3",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0
+        "yearly_2026": {
+          "target": 1.5
+        },
+        "quarterly_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 1.5,
+          "pct": 1.5
+        },
+        "weekly_2_5": {
+          "actual": 1.5
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM4-I02.03": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh mở mới",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 4.0,
-        "quarterly_1": 5.0,
-        "weekly_1_5": 2.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 4.0,
-        "weekly_5_5": 4.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 4.0,
+          "actual": 1.0
+        },
+        "quarterly_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 2.0
+        },
+        "weekly_4_5": {
+          "actual": 4.0,
+          "pct": 3.0
+        },
+        "weekly_5_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Số kênh kinh doanh mở mới trong kỳ": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh trả lại",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "TM4-I02.03": {
       "title": "ROI",
       "unit": "Tỷ lệ kênh đạt chuẩn an toàn (toàn bộ hệ thống)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.95,
-        "weekly_1_5": 0.9,
-        "weekly_2_5": 0.95,
-        "weekly_3_5": 0.95,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0
+        "yearly_2026": {
+          "target": 0.95,
+          "actual": 0.98,
+          "pct": 1.0316
+        },
+        "quarterly_1": {
+          "target": 0.95,
+          "actual": 0.67,
+          "pct": 0.7
+        },
+        "weekly_1_5": {
+          "actual": 0.9,
+          "pct": 0.94
+        },
+        "weekly_2_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 0.95,
+          "pct": 0.74
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        }
       }
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 0.0
+        "yearly_2026": {
+          "target": 2.0
+        }
       }
     },
     "VM5-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.01": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.75,
-        "quarterly_1": 1.75,
-        "weekly_1_5": 1.75,
-        "weekly_2_5": 1.75
+        "yearly_2026": {
+          "target": 1.75
+        },
+        "weekly_1_5": {
+          "actual": 1.75,
+          "pct": 1.5
+        },
+        "weekly_2_5": {
+          "actual": 1.75
+        }
       }
     },
     "VM5-I02.02": {
       "title": "Hiệu suất sản xuất",
       "unit": "ND",
+      "formula": "DM4-I02.03",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "DM4-I02.03",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "DM4-I02.03",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh đạt ngưỡng X$/ tháng": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu/người",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.07": {
       "title": "Số vi phạm chính sách",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     }
   },
@@ -5596,1499 +17941,4623 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.2672,
-        "quarterly_1": 0.5471,
-        "weekly_1_5": 0.2916,
-        "weekly_2_5": 0.3657,
-        "weekly_3_5": -0.2386,
-        "weekly_4_5": -0.0534,
-        "weekly_5_5": -0.2719
+        "yearly_2026": {
+          "target": 0.2672,
+          "actual": -0.2949,
+          "pct": -1.1036
+        },
+        "quarterly_1": {
+          "target": 0.5471,
+          "actual": -0.1913,
+          "pct": -0.3496
+        },
+        "weekly_1_5": {
+          "actual": 0.2916,
+          "pct": -0.35
+        },
+        "weekly_2_5": {
+          "actual": 0.3657,
+          "pct": -0.3822
+        },
+        "weekly_3_5": {
+          "pct": -0.2386
+        },
+        "weekly_4_5": {
+          "pct": -0.0534
+        },
+        "weekly_5_5": {
+          "pct": -0.2719
+        }
       }
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.2109,
-        "quarterly_1": 0.3536,
-        "weekly_1_5": 0.2258,
-        "weekly_2_5": 0.2678,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0,
-        "weekly_7_5": 1.0,
-        "weekly_8_5": 1.0,
-        "weekly_9_5": 1.0,
-        "weekly_10_5": 1.0,
-        "weekly_11_5": 1.0
+        "yearly_2026": {
+          "target": 0.2109,
+          "actual": -0.4182,
+          "pct": -1.9833
+        },
+        "quarterly_1": {
+          "target": 0.3536,
+          "actual": -0.2365,
+          "pct": -0.6688
+        },
+        "weekly_1_5": {
+          "actual": 0.2258,
+          "pct": -0.5384
+        },
+        "weekly_2_5": {
+          "actual": 0.2678,
+          "pct": -0.6186
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": -0.3133
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": -0.0564
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": -0.3735
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 1.0
+        },
+        "weekly_8_5": {
+          "actual": 1.0
+        },
+        "weekly_9_5": {
+          "actual": 1.0
+        },
+        "weekly_10_5": {
+          "actual": 1.0
+        },
+        "weekly_11_5": {
+          "actual": 1.0
+        }
       }
     },
     "TM1-I01.03": {
       "title": "ROI",
       "unit": "ROI (Không tính CPC)",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.409,
-        "quarterly_1": 0.268,
-        "weekly_1_5": 0.4304,
-        "weekly_2_5": 0.5401,
-        "weekly_3_5": 0.1636
+        "yearly_2026": {
+          "target": 0.409,
+          "actual": 0.0646,
+          "pct": 0.158
+        },
+        "weekly_1_5": {
+          "actual": 0.4304,
+          "pct": -0.0216
+        },
+        "weekly_2_5": {
+          "actual": 0.5401,
+          "pct": -0.0733
+        },
+        "weekly_3_5": {
+          "pct": 0.1636
+        }
       }
     },
     "TM1-I01.04": {
       "title": "ROI",
       "unit": "ROS (Không tính CPC)",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.2903,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 0.3009,
-        "weekly_2_5": 0.3507,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0,
-        "weekly_7_5": 1.0,
-        "weekly_8_5": 1.0,
-        "weekly_9_5": 1.0,
-        "weekly_10_5": 1.0,
-        "weekly_11_5": 1.0
+        "yearly_2026": {
+          "target": 0.2903,
+          "actual": 0.0607,
+          "pct": 0.2092
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.3009,
+          "pct": -0.022
+        },
+        "weekly_2_5": {
+          "actual": 0.3507,
+          "pct": -0.0791
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 0.1406
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 1.0
+        },
+        "weekly_8_5": {
+          "actual": 1.0
+        },
+        "weekly_9_5": {
+          "actual": 1.0
+        },
+        "weekly_10_5": {
+          "actual": 1.0
+        },
+        "weekly_11_5": {
+          "actual": 1.0
+        }
       }
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "2.1": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 1592211349.0,
-        "quarterly_1": 1933443957.0,
-        "monthly_1": 108437581.0,
-        "weekly_1_1": 108437581.0,
-        "weekly_1_2": 108437581.0,
-        "weekly_1_3": 108437581.0,
-        "weekly_1_5": 532532660.0,
-        "monthly_2": 133133165.0,
-        "weekly_2_1": 137534313.0,
-        "weekly_2_2": 137534313.0,
-        "weekly_2_3": 137534313.0,
-        "weekly_2_5": 559618895.0,
-        "monthly_3": 76673945.0,
-        "weekly_3_1": 130577742.0,
-        "weekly_3_2": 125709387.0,
-        "weekly_3_3": 125709387.0,
-        "weekly_3_4": 53875452.0,
-        "weekly_3_5": 600129530.0,
-        "monthly_4": 150488285.0,
-        "weekly_4_1": 169072458.0,
-        "weekly_4_2": 169072458.0,
-        "weekly_4_3": 169072458.0,
-        "weekly_4_4": 120766042.0,
-        "weekly_4_5": 653064987.0,
-        "monthly_5": 163266247.0,
-        "weekly_5_1": 163266247.0,
-        "weekly_5_2": 163266247.0,
-        "weekly_5_3": 163266247.0,
-        "weekly_5_5": 680249440.0,
-        "monthly_6": 170062360.0,
-        "weekly_6_1": 170062360.0,
-        "weekly_6_2": 170062360.0,
-        "weekly_6_3": 170062360.0,
-        "weekly_6_5": 699925005.0,
-        "monthly_7": 86668234.0,
-        "weekly_7_1": 151669409.0,
-        "weekly_7_2": 151669409.0,
-        "weekly_7_3": 151669409.0,
-        "weekly_7_5": 750100325.0,
-        "weekly_8_5": 779894505.0,
-        "weekly_9_5": 800415265.0,
-        "weekly_10_5": 849974223.0,
-        "weekly_11_5": 879964833.0
+        "yearly_2026": {
+          "target": 1592211349.0,
+          "actual": 915909207.0,
+          "pct": 0.5752
+        },
+        "quarterly_1": {
+          "target": 1933443957.0,
+          "actual": 817127556.0,
+          "pct": 0.4226
+        },
+        "monthly_1": {
+          "target": 108437581.0,
+          "actual": 77764672.0,
+          "pct": 0.7171
+        },
+        "weekly_1_1": {
+          "target": 108437581.0,
+          "actual": 77809772.0,
+          "pct": 0.7176
+        },
+        "weekly_1_2": {
+          "target": 108437581.0,
+          "actual": 83894513.0,
+          "pct": 0.7737
+        },
+        "weekly_1_3": {
+          "target": 108437581.0,
+          "actual": 98394410.0,
+          "pct": 0.9074
+        },
+        "weekly_1_5": {
+          "actual": 532532660.0,
+          "pct": 275203508.0
+        },
+        "monthly_2": {
+          "target": 133133165.0,
+          "actual": 77673945.0,
+          "pct": 0.5834
+        },
+        "weekly_2_1": {
+          "target": 137534313.0,
+          "actual": 72433922.0,
+          "pct": 0.5267
+        },
+        "weekly_2_2": {
+          "target": 137534313.0,
+          "actual": 62797268.0,
+          "pct": 0.4566
+        },
+        "weekly_2_3": {
+          "target": 137534313.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 559618895.0,
+          "pct": 259480295.0
+        },
+        "monthly_3": {
+          "target": 76673945.0,
+          "actual": 43568059.0,
+          "pct": 0.568
+        },
+        "weekly_3_1": {
+          "target": 130577742.0,
+          "actual": 52196405.0,
+          "pct": 0.4
+        },
+        "weekly_3_2": {
+          "target": 125709387.0,
+          "actual": 55467894.0,
+          "pct": 0.441
+        },
+        "weekly_3_3": {
+          "target": 125709387.0,
+          "actual": 47385715.0,
+          "pct": 0.377
+        },
+        "weekly_3_4": {
+          "target": 53875452.0
+        },
+        "weekly_3_5": {
+          "actual": 600129530.0,
+          "pct": 285296775.0
+        },
+        "monthly_4": {
+          "target": 150488285.0,
+          "actual": 37001602.0,
+          "pct": 0.2459
+        },
+        "weekly_4_1": {
+          "target": 169072458.0,
+          "actual": 28000618.0,
+          "pct": 0.1656
+        },
+        "weekly_4_2": {
+          "target": 169072458.0,
+          "actual": 33160357.0,
+          "pct": 0.1961
+        },
+        "weekly_4_3": {
+          "target": 169072458.0,
+          "actual": 29978297.0,
+          "pct": 0.1773
+        },
+        "weekly_4_4": {
+          "target": 120766042.0,
+          "actual": 18583377.0,
+          "pct": 0.1539
+        },
+        "weekly_4_5": {
+          "actual": 653064987.0,
+          "pct": 298843085.0
+        },
+        "monthly_5": {
+          "target": 163266247.0,
+          "actual": 27902950.0,
+          "pct": 0.1709
+        },
+        "weekly_5_1": {
+          "target": 163266247.0,
+          "actual": 35428471.0,
+          "pct": 0.217
+        },
+        "weekly_5_2": {
+          "target": 163266247.0,
+          "actual": 25641499.0,
+          "pct": 0.1571
+        },
+        "weekly_5_3": {
+          "target": 163266247.0
+        },
+        "weekly_5_5": {
+          "actual": 680249440.0,
+          "pct": 232987696.0
+        },
+        "monthly_6": {
+          "target": 170062360.0,
+          "actual": 37396807.0,
+          "pct": 0.2199
+        },
+        "weekly_6_1": {
+          "target": 170062360.0,
+          "actual": 39011048.0,
+          "pct": 0.2294
+        },
+        "weekly_6_2": {
+          "target": 170062360.0,
+          "actual": 40150050.0,
+          "pct": 0.2361
+        },
+        "weekly_6_3": {
+          "target": 170062360.0,
+          "actual": 44287985.0,
+          "pct": 0.2604
+        },
+        "weekly_6_5": {
+          "actual": 699925005.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 86668234.0,
+          "actual": 23223070.0,
+          "pct": 0.268
+        },
+        "weekly_7_1": {
+          "target": 151669409.0,
+          "actual": 35624541.0,
+          "pct": 0.2349
+        },
+        "weekly_7_2": {
+          "target": 151669409.0,
+          "actual": 35123985.0,
+          "pct": 0.2316
+        },
+        "weekly_7_3": {
+          "target": 151669409.0
+        },
+        "weekly_7_5": {
+          "actual": 750100325.0,
+          "pct": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 779894505.0,
+          "pct": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 800415265.0,
+          "pct": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 849974223.0,
+          "pct": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 879964833.0,
+          "pct": 0.0
+        }
       }
     },
     "VM1-I02.02": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu nội bộ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1592211349.0,
-        "quarterly_1": 1933443957.0,
-        "monthly_1": 108437581.0,
-        "weekly_1_1": 108437581.0,
-        "weekly_1_2": 108437581.0,
-        "weekly_1_3": 108437581.0,
-        "weekly_1_5": 1.0,
-        "monthly_2": 133133165.0,
-        "weekly_2_1": 137534313.0,
-        "weekly_2_2": 137534313.0,
-        "weekly_2_3": 137534313.0,
-        "weekly_2_5": 1.0,
-        "monthly_3": 76673945.0,
-        "weekly_3_1": 130577742.0,
-        "weekly_3_2": 125709387.0,
-        "weekly_3_3": 125709387.0,
-        "weekly_3_4": 53875452.0,
-        "weekly_3_5": 600129530.0,
-        "monthly_4": 150488285.0,
-        "weekly_4_1": 169072458.0,
-        "weekly_4_2": 169072458.0,
-        "weekly_4_3": 169072458.0,
-        "weekly_4_4": 120766042.0,
-        "weekly_4_5": 653064987.0,
-        "monthly_5": 163266247.0,
-        "weekly_5_1": 163266247.0,
-        "weekly_5_2": 163266247.0,
-        "weekly_5_3": 163266247.0,
-        "weekly_5_5": 680249440.0,
-        "monthly_6": 170062360.0,
-        "weekly_6_1": 170062360.0,
-        "weekly_6_2": 170062360.0,
-        "weekly_6_3": 170062360.0,
-        "weekly_6_4": 356750.0,
-        "weekly_6_5": 699925005.0,
-        "monthly_7": 86668234.0,
-        "weekly_7_1": 151669409.0,
-        "weekly_7_2": 151669409.0,
-        "weekly_7_3": 151669409.0,
-        "weekly_7_5": 750100325.0,
-        "weekly_8_5": 779894505.0,
-        "weekly_9_5": 800415265.0,
-        "weekly_10_5": 849974223.0,
-        "weekly_11_5": 879964833.0
+        "yearly_2026": {
+          "target": 1592211349.0,
+          "actual": 915909207.0,
+          "pct": 0.5752
+        },
+        "quarterly_1": {
+          "target": 1933443957.0,
+          "actual": 395285336.0,
+          "pct": 0.2044
+        },
+        "monthly_1": {
+          "target": 108437581.0,
+          "actual": 77764672.0,
+          "pct": 0.7171
+        },
+        "weekly_1_1": {
+          "target": 108437581.0,
+          "actual": 77809772.0,
+          "pct": 0.7176
+        },
+        "weekly_1_2": {
+          "target": 108437581.0,
+          "actual": 83894513.0,
+          "pct": 0.7737
+        },
+        "weekly_1_3": {
+          "target": 108437581.0,
+          "actual": 98394410.0,
+          "pct": 0.9074
+        },
+        "weekly_1_5": {
+          "target": 1.0,
+          "actual": 532532660.0,
+          "pct": 275203508.0
+        },
+        "monthly_2": {
+          "target": 133133165.0,
+          "actual": 77673945.0,
+          "pct": 0.5834
+        },
+        "weekly_2_1": {
+          "target": 137534313.0,
+          "actual": 72433922.0,
+          "pct": 0.5267
+        },
+        "weekly_2_2": {
+          "target": 137534313.0,
+          "actual": 62797268.0,
+          "pct": 0.4566
+        },
+        "weekly_2_3": {
+          "target": 137534313.0,
+          "actual": 61333511.0,
+          "pct": 0.446
+        },
+        "weekly_2_5": {
+          "target": 1.0,
+          "actual": 559618895.0,
+          "pct": 259480295.0
+        },
+        "monthly_3": {
+          "target": 76673945.0,
+          "actual": 43568059.0,
+          "pct": 0.568
+        },
+        "weekly_3_1": {
+          "target": 130577742.0,
+          "actual": 52196405.0,
+          "pct": 0.4
+        },
+        "weekly_3_2": {
+          "target": 125709387.0,
+          "actual": 55467894.0,
+          "pct": 0.441
+        },
+        "weekly_3_3": {
+          "target": 125709387.0,
+          "actual": 47385715.0,
+          "pct": 0.377
+        },
+        "weekly_3_4": {
+          "target": 53875452.0
+        },
+        "weekly_3_5": {
+          "actual": 600129530.0,
+          "pct": 144903844.0
+        },
+        "monthly_4": {
+          "target": 150488285.0,
+          "actual": 37001602.0,
+          "pct": 0.2459
+        },
+        "weekly_4_1": {
+          "target": 169072458.0,
+          "actual": 28000618.0,
+          "pct": 0.1656
+        },
+        "weekly_4_2": {
+          "target": 169072458.0,
+          "actual": 33160357.0,
+          "pct": 0.1961
+        },
+        "weekly_4_3": {
+          "target": 169072458.0,
+          "actual": 29978297.0,
+          "pct": 0.1773
+        },
+        "weekly_4_4": {
+          "target": 120766042.0,
+          "actual": 18583377.0,
+          "pct": 0.1539
+        },
+        "weekly_4_5": {
+          "actual": 653064987.0,
+          "pct": 138843085.0
+        },
+        "monthly_5": {
+          "target": 163266247.0,
+          "actual": 27902950.0,
+          "pct": 0.1709
+        },
+        "weekly_5_1": {
+          "target": 163266247.0,
+          "actual": 35428471.0,
+          "pct": 0.217
+        },
+        "weekly_5_2": {
+          "target": 163266247.0,
+          "actual": 25641499.0,
+          "pct": 0.1571
+        },
+        "weekly_5_3": {
+          "target": 163266247.0
+        },
+        "weekly_5_5": {
+          "actual": 680249440.0,
+          "pct": 111538407.0
+        },
+        "monthly_6": {
+          "target": 170062360.0,
+          "actual": 22396807.0,
+          "pct": 0.1317
+        },
+        "weekly_6_1": {
+          "target": 170062360.0,
+          "actual": 24011048.0,
+          "pct": 0.1412
+        },
+        "weekly_6_2": {
+          "target": 170062360.0,
+          "actual": 25150050.0,
+          "pct": 0.1479
+        },
+        "weekly_6_3": {
+          "target": 170062360.0,
+          "actual": 29287985.0,
+          "pct": 0.1722
+        },
+        "weekly_6_4": {
+          "target": 356750.0
+        },
+        "weekly_6_5": {
+          "actual": 699925005.0
+        },
+        "monthly_7": {
+          "target": 86668234.0,
+          "actual": 15223070.0,
+          "pct": 0.1756
+        },
+        "weekly_7_1": {
+          "target": 151669409.0,
+          "actual": 20624541.0,
+          "pct": 0.136
+        },
+        "weekly_7_2": {
+          "target": 151669409.0,
+          "actual": 17123985.0,
+          "pct": 0.1129
+        },
+        "weekly_7_3": {
+          "target": 151669409.0
+        },
+        "weekly_7_5": {
+          "actual": 750100325.0
+        },
+        "weekly_8_5": {
+          "actual": 779894505.0
+        },
+        "weekly_9_5": {
+          "actual": 800415265.0
+        },
+        "weekly_10_5": {
+          "actual": 849974223.0
+        },
+        "weekly_11_5": {
+          "actual": 879964833.0
+        }
       }
     },
     "VM1-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu chéo",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 381225404.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "target": 381225404.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM1-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu đối tác",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 15000000.0,
-        "weekly_6_1": 15000000.0,
-        "weekly_6_2": 15000000.0,
-        "weekly_6_3": 15000000.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 8000000.0,
-        "weekly_7_1": 15000000.0,
-        "weekly_7_2": 18000000.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 421842220.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 140392931.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 160000000.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 121449289.0
+        },
+        "monthly_6": {
+          "actual": 15000000.0
+        },
+        "weekly_6_1": {
+          "actual": 15000000.0
+        },
+        "weekly_6_2": {
+          "actual": 15000000.0
+        },
+        "weekly_6_3": {
+          "actual": 15000000.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "monthly_7": {
+          "actual": 8000000.0
+        },
+        "weekly_7_1": {
+          "actual": 15000000.0
+        },
+        "weekly_7_2": {
+          "actual": 18000000.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I05.01": {
       "title": "ROI",
       "unit": "Tối ưu chi phí nhân sự",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.6923,
-        "quarterly_1": 0.671,
-        "weekly_1_5": 0.7015,
-        "weekly_2_5": 0.6719,
-        "weekly_3_5": 0.5578,
-        "weekly_4_5": 0.5206,
-        "weekly_5_5": 0.5
+        "yearly_2026": {
+          "target": 0.6923,
+          "actual": 0.5356,
+          "pct": 0.7736
+        },
+        "quarterly_1": {
+          "target": 0.671,
+          "actual": 0.5279,
+          "pct": 0.7867
+        },
+        "weekly_1_5": {
+          "actual": 0.7015,
+          "pct": 0.5543
+        },
+        "weekly_2_5": {
+          "actual": 0.6719,
+          "pct": 0.5141
+        },
+        "weekly_3_5": {
+          "pct": 0.5578
+        },
+        "weekly_4_5": {
+          "pct": 0.5206
+        },
+        "weekly_5_5": {
+          "pct": 0.5
+        }
       }
     },
     "ROS = [Tổng doanh thu - tổng chi phí (-CPC)]/Tổng doanh thu": {
       "title": "ROI",
       "unit": "Tối ưu chi phí sản xuất",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0347,
-        "weekly_4_5": 0.0327,
-        "weekly_5_5": 0.0313
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0125
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.011
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0512
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0365
+        },
+        "weekly_3_5": {
+          "pct": 0.0347
+        },
+        "weekly_4_5": {
+          "pct": 0.0327
+        },
+        "weekly_5_5": {
+          "pct": 0.0313
+        }
       }
     },
     "Tối ưu chi phí sản xuất (Thường)": {
       "title": "ROI",
       "unit": "Tối ưu chi phí sản xuất",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0186,
-        "weekly_4_5": 0.0175,
-        "weekly_5_5": 0.0162
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0075
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0058
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.032
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0203
+        },
+        "weekly_3_5": {
+          "pct": 0.0186
+        },
+        "weekly_4_5": {
+          "pct": 0.0175
+        },
+        "weekly_5_5": {
+          "pct": 0.0162
+        }
       }
     },
     "Tối ưu chi phí sản xuất (Thường + AI)": {
       "title": "Tổng doanh thu",
       "unit": "Tổng chi phí nhân sự",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 869901114.0,
-        "quarterly_1": 838568182.0,
-        "weekly_1_5": 289251098.0,
-        "weekly_2_5": 275321009.0,
-        "weekly_3_5": 209004982.0,
-        "weekly_4_5": 164347474.0,
-        "weekly_5_5": 160000000.0
+        "yearly_2026": {
+          "target": 869901114.0,
+          "actual": 695728464.0,
+          "pct": 0.7998
+        },
+        "quarterly_1": {
+          "target": 838568182.0,
+          "actual": 533352456.0,
+          "pct": 0.636
+        },
+        "weekly_1_5": {
+          "actual": 289251098.0,
+          "pct": 234661301.0
+        },
+        "weekly_2_5": {
+          "actual": 275321009.0,
+          "pct": 215916171.0
+        },
+        "weekly_3_5": {
+          "pct": 209004982.0
+        },
+        "weekly_4_5": {
+          "pct": 164347474.0
+        },
+        "weekly_5_5": {
+          "pct": 160000000.0
+        }
       }
     },
     "VM1-I05.05": {
       "title": "Tổng doanh thu",
       "unit": "Giá vốn bán hàng",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 683555221.0,
-        "quarterly_1": 500000000.0,
-        "weekly_1_5": 216569120.0,
-        "weekly_2_5": 230000000.0,
-        "weekly_3_5": 195000000.0,
-        "weekly_4_5": 155000000.0,
-        "weekly_5_5": 150000000.0
+        "yearly_2026": {
+          "actual": 683555221.0
+        },
+        "quarterly_1": {
+          "actual": 500000000.0
+        },
+        "weekly_1_5": {
+          "pct": 216569120.0
+        },
+        "weekly_2_5": {
+          "pct": 230000000.0
+        },
+        "weekly_3_5": {
+          "pct": 195000000.0
+        },
+        "weekly_4_5": {
+          "pct": 155000000.0
+        },
+        "weekly_5_5": {
+          "pct": 150000000.0
+        }
       }
     },
     "VM1-I05.06": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sản xuất 1 ND (Thường)",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 16275124.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 11111111.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 21656912.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 15333333.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 13000000.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 10333333.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 10000000.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM1-I05.07": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sản xuất 1 ND (Thường)",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 9765075.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 5882353.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 13535570.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 8518519.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 6964286.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 5535714.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 5172414.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM1-I05.08": {
       "title": "Tổng doanh thu",
       "unit": "Tổng chi phí đơn vị",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1256461824.0,
-        "quarterly_1": 1249716208.0,
-        "weekly_1_5": 412311767.0,
-        "weekly_2_5": 409766577.0,
-        "weekly_3_5": 374690630.0,
-        "weekly_4_5": 315686227.0,
-        "weekly_5_5": 320000000.0
+        "yearly_2026": {
+          "target": 1256461824.0,
+          "actual": 1298960192.0,
+          "pct": 1.0338
+        },
+        "quarterly_1": {
+          "target": 1249716208.0,
+          "actual": 1010376857.0,
+          "pct": 0.8085
+        },
+        "weekly_1_5": {
+          "actual": 412311767.0,
+          "pct": 423375395.0
+        },
+        "weekly_2_5": {
+          "actual": 409766577.0,
+          "pct": 420000000.0
+        },
+        "weekly_3_5": {
+          "pct": 374690630.0
+        },
+        "weekly_4_5": {
+          "pct": 315686227.0
+        },
+        "weekly_5_5": {
+          "pct": 320000000.0
+        }
       }
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí CTV (Cộng tác viên)",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM1-I05.09": {
       "title": "Tổng doanh thu",
       "unit": "Tổng chi phí đơn vị (Không tính CPC)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1130044710.0,
-        "quarterly_1": 394378696.0,
-        "weekly_1_5": 372306983.0,
-        "weekly_2_5": 363359031.0,
-        "weekly_3_5": 245191141.0
+        "yearly_2026": {
+          "target": 1130044710.0,
+          "actual": 860303571.0,
+          "pct": 0.7613
+        },
+        "weekly_1_5": {
+          "actual": 372306983.0,
+          "pct": 281265214.0
+        },
+        "weekly_2_5": {
+          "actual": 363359031.0,
+          "pct": 280000000.0
+        },
+        "weekly_3_5": {
+          "pct": 245191141.0
+        }
       }
     },
     "VM1-I05.11": {
       "title": "Tổng doanh thu",
       "unit": "Tổng lợi nhuận đơn vị (Không tính CPC)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 462166639.0,
-        "quarterly_1": 1933443957.0,
-        "weekly_1_5": 160225677.0,
-        "weekly_2_5": 196259864.0,
-        "weekly_3_5": 600129530.0,
-        "weekly_4_5": 653064987.0,
-        "weekly_5_5": 680249440.0,
-        "weekly_6_5": 699925005.0,
-        "weekly_7_5": 750100325.0,
-        "weekly_8_5": 779894505.0,
-        "weekly_9_5": 800415265.0,
-        "weekly_10_5": 849974223.0,
-        "weekly_11_5": 879964833.0
+        "yearly_2026": {
+          "target": 462166639.0,
+          "actual": 55605636.0,
+          "pct": 0.12
+        },
+        "quarterly_1": {
+          "target": 1933443957.0,
+          "actual": 817127556.0,
+          "pct": 0.423
+        },
+        "weekly_1_5": {
+          "actual": 160225677.0,
+          "pct": -6061706.0
+        },
+        "weekly_2_5": {
+          "actual": 196259864.0,
+          "pct": -20519705.0
+        },
+        "weekly_3_5": {
+          "actual": 600129530.0,
+          "pct": 40105634.0
+        },
+        "weekly_4_5": {
+          "actual": 653064987.0,
+          "pct": 298843085.0
+        },
+        "weekly_5_5": {
+          "actual": 680249440.0,
+          "pct": 232987696.0
+        },
+        "weekly_6_5": {
+          "actual": 699925005.0,
+          "pct": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 750100325.0,
+          "pct": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 779894505.0,
+          "pct": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 800415265.0,
+          "pct": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 849974223.0,
+          "pct": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 879964833.0,
+          "pct": 0.0
+        }
       }
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.25,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25
+        "weekly_1_5": {
+          "target": 0.25
+        },
+        "weekly_2_5": {
+          "target": 0.25
+        }
       }
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM2-I01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 38.0,
-        "quarterly_1": 45.0,
-        "monthly_1": 3.0,
-        "weekly_1_1": 4.0,
-        "weekly_1_2": 4.0,
-        "weekly_1_3": 4.0,
-        "weekly_1_5": 0.6,
-        "monthly_2": 3.0,
-        "weekly_2_1": 3.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 2.0,
-        "weekly_2_5": 0.6,
-        "monthly_3": 3.0,
-        "weekly_3_1": 3.0,
-        "weekly_3_2": 3.0,
-        "weekly_3_3": 4.0,
-        "weekly_3_4": 2.0,
-        "weekly_3_5": 15.0,
-        "monthly_4": 2.0,
-        "weekly_4_1": 3.0,
-        "weekly_4_2": 3.0,
-        "weekly_4_3": 3.0,
-        "weekly_4_4": 4.0,
-        "weekly_4_5": 15.0,
-        "monthly_5": 3.0,
-        "weekly_5_1": 5.0,
-        "weekly_5_2": 4.0,
-        "weekly_5_3": 4.0,
-        "weekly_5_5": 15.0,
-        "monthly_6": 4.0,
-        "weekly_6_1": 4.0,
-        "weekly_6_2": 4.0,
-        "weekly_6_3": 4.0,
-        "weekly_6_4": 1.0,
-        "weekly_6_5": 16.0,
-        "monthly_7": 3.0,
-        "weekly_7_1": 4.0,
-        "weekly_7_2": 4.0,
-        "weekly_7_3": 4.0,
-        "weekly_7_5": 16.0,
-        "weekly_8_5": 17.0,
-        "weekly_9_5": 17.0,
-        "weekly_10_5": 18.0,
-        "weekly_11_5": 18.0
+        "yearly_2026": {
+          "target": 38.0,
+          "actual": 42.0,
+          "pct": 1.105
+        },
+        "quarterly_1": {
+          "target": 45.0,
+          "actual": 45.0,
+          "pct": 1.0
+        },
+        "monthly_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 4.0,
+          "actual": 6.0,
+          "pct": 1.5
+        },
+        "weekly_1_5": {
+          "target": 0.6,
+          "actual": 8.0,
+          "pct": 10.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 2.0,
+          "actual": 4.0,
+          "pct": 2.0
+        },
+        "weekly_2_5": {
+          "target": 0.6,
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_5": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 4.0
+        },
+        "weekly_5_5": {
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_4": {
+          "target": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 16.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 4.0
+        },
+        "weekly_7_5": {
+          "actual": 16.0
+        },
+        "weekly_8_5": {
+          "actual": 17.0
+        },
+        "weekly_9_5": {
+          "actual": 17.0
+        },
+        "weekly_10_5": {
+          "actual": 18.0
+        },
+        "weekly_11_5": {
+          "actual": 18.0
+        }
       }
     },
     "VM2-I01.04": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 13.0,
-        "quarterly_1": 15.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 3.0,
-        "monthly_2": 1.0,
-        "weekly_2_1": 1.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 1.0,
-        "weekly_2_5": 5.0,
-        "monthly_3": 1.0,
-        "weekly_3_1": 1.0,
-        "weekly_3_2": 1.0,
-        "weekly_3_3": 2.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 5.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 1.0,
-        "weekly_4_2": 1.0,
-        "weekly_4_3": 1.0,
-        "weekly_4_4": 1.0,
-        "weekly_4_5": 5.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 1.0,
-        "weekly_5_5": 5.0,
-        "monthly_6": 1.0,
-        "weekly_6_1": 2.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_4": 0.0,
-        "weekly_6_5": 5.0,
-        "monthly_7": 1.0,
-        "weekly_7_1": 1.0,
-        "weekly_7_2": 1.0,
-        "weekly_7_3": 1.0,
-        "weekly_7_5": 5.0,
-        "weekly_8_5": 5.0,
-        "weekly_9_5": 5.0,
-        "weekly_10_5": 5.0,
-        "weekly_11_5": 5.0
+        "yearly_2026": {
+          "target": 13.0,
+          "actual": 10.0,
+          "pct": 0.769
+        },
+        "quarterly_1": {
+          "target": 15.0,
+          "actual": 15.0,
+          "pct": 1.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 3.0,
+          "pct": 2.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "monthly_6": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_4": {
+          "target": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 5.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 5.0
+        },
+        "weekly_8_5": {
+          "actual": 5.0
+        },
+        "weekly_9_5": {
+          "actual": 5.0
+        },
+        "weekly_10_5": {
+          "actual": 5.0
+        },
+        "weekly_11_5": {
+          "actual": 5.0
+        }
       }
     },
     "Số lượng video AI PET hoàn thành sản xuất": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 19.0,
-        "quarterly_1": 25.0,
-        "monthly_1": 3.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 1.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 5.0,
-        "monthly_2": 1.0,
-        "weekly_2_1": 2.0,
-        "weekly_2_2": 1.0,
-        "weekly_2_3": 1.0,
-        "weekly_2_5": 7.0,
-        "monthly_3": 2.0,
-        "weekly_3_1": 2.0,
-        "weekly_3_2": 2.0,
-        "weekly_3_3": 1.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 8.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 2.0,
-        "weekly_4_2": 2.0,
-        "weekly_4_3": 2.0,
-        "weekly_4_4": 1.0,
-        "weekly_4_5": 8.0,
-        "monthly_5": 2.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 2.0,
-        "weekly_5_3": 2.0,
-        "weekly_5_5": 9.0,
-        "monthly_6": 2.0,
-        "weekly_6_1": 3.0,
-        "weekly_6_2": 2.0,
-        "weekly_6_3": 2.0,
-        "weekly_6_4": 0.0,
-        "weekly_6_5": 9.0,
-        "monthly_7": 1.0,
-        "weekly_7_1": 3.0,
-        "weekly_7_2": 3.0,
-        "weekly_7_3": 1.0,
-        "weekly_7_5": 9.0,
-        "weekly_8_5": 9.0,
-        "weekly_9_5": 9.0,
-        "weekly_10_5": 10.0,
-        "weekly_11_5": 10.0
+        "yearly_2026": {
+          "target": 19.0,
+          "actual": 18.0,
+          "pct": 0.947
+        },
+        "quarterly_1": {
+          "target": 25.0,
+          "actual": 25.0,
+          "pct": 1.0
+        },
+        "monthly_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 5.0,
+          "pct": 4.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "monthly_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 8.0,
+          "pct": 8.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 8.0,
+          "pct": 8.0
+        },
+        "monthly_5": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 9.0,
+          "pct": 9.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_6_4": {
+          "target": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 9.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 9.0
+        },
+        "weekly_8_5": {
+          "actual": 9.0
+        },
+        "weekly_9_5": {
+          "actual": 9.0
+        },
+        "weekly_10_5": {
+          "actual": 10.0
+        },
+        "weekly_11_5": {
+          "actual": 10.0
+        }
       }
     },
     "Số lượng video AI TĐH hoàn thành sản xuất": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 70.0,
-        "quarterly_1": 85.0,
-        "monthly_1": 6.0,
-        "weekly_1_1": 6.0,
-        "weekly_1_2": 7.0,
-        "weekly_1_3": 8.0,
-        "weekly_1_5": 16.0,
-        "monthly_2": 5.0,
-        "weekly_2_1": 6.0,
-        "weekly_2_2": 1.0,
-        "weekly_2_3": 4.0,
-        "weekly_2_5": 27.0,
-        "monthly_3": 6.0,
-        "weekly_3_1": 6.0,
-        "weekly_3_2": 6.0,
-        "weekly_3_3": 7.0,
-        "weekly_3_4": 2.0,
-        "weekly_3_5": 28.0,
-        "monthly_4": 4.0,
-        "weekly_4_1": 6.0,
-        "weekly_4_2": 6.0,
-        "weekly_4_3": 6.0,
-        "weekly_4_4": 6.0,
-        "weekly_4_5": 28.0,
-        "monthly_5": 6.0,
-        "weekly_5_1": 9.0,
-        "weekly_5_2": 7.0,
-        "weekly_5_3": 7.0,
-        "weekly_5_5": 29.0,
-        "monthly_6": 7.0,
-        "weekly_6_1": 9.0,
-        "weekly_6_2": 7.0,
-        "weekly_6_3": 7.0,
-        "weekly_6_4": 1.0,
-        "weekly_6_5": 30.0,
-        "monthly_7": 5.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 8.0,
-        "weekly_7_3": 6.0,
-        "weekly_7_5": 30.0,
-        "weekly_8_5": 31.0,
-        "weekly_9_5": 31.0,
-        "weekly_10_5": 33.0,
-        "weekly_11_5": 33.0
+        "yearly_2026": {
+          "target": 70.0,
+          "actual": 70.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 85.0,
+          "actual": 85.0,
+          "pct": 1.0
+        },
+        "monthly_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 7.0,
+          "actual": 5.0,
+          "pct": 0.7143
+        },
+        "weekly_1_3": {
+          "target": 8.0,
+          "actual": 10.0,
+          "pct": 1.25
+        },
+        "weekly_1_5": {
+          "actual": 16.0,
+          "pct": 16.0
+        },
+        "monthly_2": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 27.0,
+          "pct": 27.0
+        },
+        "monthly_3": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 28.0,
+          "pct": 28.0
+        },
+        "monthly_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 28.0,
+          "pct": 28.0
+        },
+        "monthly_5": {
+          "target": 6.0,
+          "actual": 6.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 7.0
+        },
+        "weekly_5_5": {
+          "actual": 29.0,
+          "pct": 29.0
+        },
+        "monthly_6": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 7.0,
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "weekly_6_4": {
+          "target": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 30.0
+        },
+        "monthly_7": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 6.0
+        },
+        "weekly_7_5": {
+          "actual": 30.0
+        },
+        "weekly_8_5": {
+          "actual": 31.0
+        },
+        "weekly_9_5": {
+          "actual": 31.0
+        },
+        "weekly_10_5": {
+          "actual": 33.0
+        },
+        "weekly_11_5": {
+          "actual": 33.0
+        }
       }
     },
     "TM2-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I02.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng 1 triệu views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM2-I02.02": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng X views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 16.0,
-        "quarterly_1": 21.0,
-        "weekly_1_5": 0.3,
-        "weekly_2_5": 0.3,
-        "weekly_3_5": 7.0,
-        "weekly_4_5": 7.0,
-        "weekly_5_5": 7.0,
-        "weekly_6_5": 7.0,
-        "weekly_7_5": 7.0,
-        "weekly_8_5": 8.0,
-        "weekly_9_5": 8.0,
-        "weekly_10_5": 8.0,
-        "weekly_11_5": 8.0
+        "yearly_2026": {
+          "target": 16.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 21.0,
+          "actual": 21.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.3,
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.3,
+          "actual": 6.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_4_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_5_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_6_5": {
+          "actual": 7.0
+        },
+        "weekly_7_5": {
+          "actual": 7.0
+        },
+        "weekly_8_5": {
+          "actual": 8.0
+        },
+        "weekly_9_5": {
+          "actual": 8.0
+        },
+        "weekly_10_5": {
+          "actual": 8.0
+        },
+        "weekly_11_5": {
+          "actual": 8.0
+        }
       }
     },
     "TM3-I01.03": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng video upload",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 42.0,
-        "quarterly_1": 42.0,
-        "monthly_1": 4.0,
-        "weekly_1_1": 4.0,
-        "weekly_1_2": 4.0,
-        "weekly_1_3": 4.0,
-        "weekly_1_5": 0.1,
-        "monthly_2": 2.0,
-        "weekly_2_1": 4.0,
-        "weekly_2_2": 4.0,
-        "weekly_2_3": 4.0,
-        "weekly_2_5": 0.1,
-        "monthly_3": 3.0,
-        "weekly_3_1": 4.0,
-        "weekly_3_2": 3.0,
-        "weekly_3_3": 4.0,
-        "weekly_3_4": 0.0,
-        "weekly_3_5": 14.0,
-        "monthly_4": 4.0,
-        "weekly_4_1": 4.0,
-        "weekly_4_2": 4.0,
-        "weekly_4_3": 4.0,
-        "weekly_4_4": 4.0,
-        "weekly_4_5": 14.0,
-        "monthly_5": 4.0,
-        "weekly_5_1": 4.0,
-        "weekly_5_2": 4.0,
-        "weekly_5_3": 4.0,
-        "weekly_5_5": 14.0,
-        "monthly_6": 4.0,
-        "weekly_6_1": 4.0,
-        "weekly_6_2": 4.0,
-        "weekly_6_3": 4.0,
-        "weekly_6_4": 1.0,
-        "weekly_6_5": 14.0,
-        "monthly_7": 3.0,
-        "weekly_7_1": 4.0,
-        "weekly_7_2": 4.0,
-        "weekly_7_3": 4.0,
-        "weekly_7_5": 14.0,
-        "weekly_8_5": 14.0,
-        "weekly_9_5": 14.0,
-        "weekly_10_5": 14.0,
-        "weekly_11_5": 14.0
+        "yearly_2026": {
+          "target": 42.0,
+          "actual": 46.0,
+          "pct": 1.095
+        },
+        "quarterly_1": {
+          "target": 42.0,
+          "actual": 46.0,
+          "pct": 1.095
+        },
+        "monthly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.1,
+          "actual": 14.0,
+          "pct": 14.0
+        },
+        "monthly_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.1,
+          "actual": 14.0,
+          "pct": 14.0
+        },
+        "monthly_3": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_3_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_3_4": {
+          "target": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 14.0,
+          "pct": 14.0
+        },
+        "monthly_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 14.0,
+          "pct": 18.0
+        },
+        "monthly_5": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_5_3": {
+          "target": 4.0
+        },
+        "weekly_5_5": {
+          "actual": 14.0,
+          "pct": 14.0
+        },
+        "monthly_6": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_3": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_6_4": {
+          "target": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 14.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_3": {
+          "target": 4.0
+        },
+        "weekly_7_5": {
+          "actual": 14.0
+        },
+        "weekly_8_5": {
+          "actual": 14.0
+        },
+        "weekly_9_5": {
+          "actual": 14.0
+        },
+        "weekly_10_5": {
+          "actual": 14.0
+        },
+        "weekly_11_5": {
+          "actual": 14.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.25,
-        "weekly_1_5": 0.25,
-        "weekly_2_5": 0.25
+        "weekly_1_5": {
+          "target": 0.25
+        },
+        "weekly_2_5": {
+          "target": 0.25
+        }
       }
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Số lượng video (Thường + AI) hoàn thành sản xuất": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Traffic BP WF",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 70721500.0,
-        "quarterly_1": 72175850.0,
-        "monthly_1": 5152903.0,
-        "weekly_1_1": 5152903.0,
-        "weekly_1_2": 5152903.0,
-        "weekly_1_3": 5152903.0,
-        "weekly_1_5": 0.6,
-        "monthly_2": 5963775.0,
-        "weekly_2_1": 5963775.0,
-        "weekly_2_2": 5963775.0,
-        "weekly_2_3": 5963775.0,
-        "weekly_2_5": 0.6,
-        "monthly_3": 5603553.0,
-        "weekly_3_1": 5603553.0,
-        "weekly_3_2": 5603553.0,
-        "weekly_3_3": 5603553.0,
-        "weekly_3_4": 2326969.0,
-        "weekly_3_5": 22955300.0,
-        "monthly_4": 5228747.0,
-        "weekly_4_1": 5356237.0,
-        "weekly_4_2": 5356237.0,
-        "weekly_4_3": 5356237.0,
-        "weekly_4_4": 3825883.0,
-        "weekly_4_5": 24385200.0,
-        "monthly_5": 6096300.0,
-        "weekly_5_1": 6096300.0,
-        "weekly_5_2": 6096300.0,
-        "weekly_5_3": 6096300.0,
-        "weekly_5_5": 24835350.0,
-        "monthly_6": 6208839.0,
-        "weekly_6_1": 6208839.0,
-        "weekly_6_2": 6208839.0,
-        "weekly_6_3": 6208839.0,
-        "weekly_6_4": 208000.0,
-        "weekly_6_5": 25425050.0,
-        "monthly_7": 3280652.0,
-        "weekly_7_1": 5741140.0,
-        "weekly_7_2": 5741140.0,
-        "weekly_7_3": 5741140.0,
-        "weekly_7_5": 25705750.0,
-        "weekly_8_5": 25986550.0,
-        "weekly_9_5": 26036800.0,
-        "weekly_10_5": 27317700.0,
-        "weekly_11_5": 27988500.0
+        "yearly_2026": {
+          "target": 70721500.0,
+          "actual": 84792956.0,
+          "pct": 1.199
+        },
+        "quarterly_1": {
+          "target": 72175850.0,
+          "actual": 5913665.0,
+          "pct": 0.082
+        },
+        "monthly_1": {
+          "target": 5152903.0,
+          "actual": 11092720.0,
+          "pct": 2.1527
+        },
+        "weekly_1_1": {
+          "target": 5152903.0,
+          "actual": 8855567.0,
+          "pct": 1.7186
+        },
+        "weekly_1_2": {
+          "target": 5152903.0,
+          "actual": 11201833.0,
+          "pct": 2.1739
+        },
+        "weekly_1_3": {
+          "target": 5152903.0,
+          "actual": 8662066.0,
+          "pct": 1.681
+        },
+        "weekly_1_5": {
+          "target": 0.6,
+          "actual": 23855100.0,
+          "pct": 23547217.0
+        },
+        "monthly_2": {
+          "target": 5963775.0,
+          "actual": 5603553.0,
+          "pct": 0.9396
+        },
+        "weekly_2_1": {
+          "target": 5963775.0,
+          "actual": 7545374.0,
+          "pct": 1.2652
+        },
+        "weekly_2_2": {
+          "target": 5963775.0,
+          "actual": 6971876.0,
+          "pct": 1.169
+        },
+        "weekly_2_3": {
+          "target": 5963775.0,
+          "actual": 3871305.0,
+          "pct": 0.6491
+        },
+        "weekly_2_5": {
+          "target": 0.6,
+          "actual": 24045350.0,
+          "pct": 15000000.0
+        },
+        "monthly_3": {
+          "target": 5603553.0,
+          "actual": 3822822.0,
+          "pct": 0.682
+        },
+        "weekly_3_1": {
+          "target": 5603553.0,
+          "actual": 2286611.0,
+          "pct": 0.408
+        },
+        "weekly_3_2": {
+          "target": 5603553.0,
+          "actual": 1989755.0,
+          "pct": 0.355
+        },
+        "weekly_3_3": {
+          "target": 5603553.0,
+          "actual": 2749705.0,
+          "pct": 0.491
+        },
+        "weekly_3_4": {
+          "target": 2326969.0
+        },
+        "weekly_3_5": {
+          "actual": 22955300.0,
+          "pct": 2023914.0
+        },
+        "monthly_4": {
+          "target": 5228747.0,
+          "actual": 1517490.0,
+          "pct": 0.2902
+        },
+        "weekly_4_1": {
+          "target": 5356237.0,
+          "actual": 465860.0,
+          "pct": 0.087
+        },
+        "weekly_4_2": {
+          "target": 5356237.0,
+          "actual": 580152.0,
+          "pct": 0.1083
+        },
+        "weekly_4_3": {
+          "target": 5356237.0,
+          "actual": 525667.0,
+          "pct": 0.0981
+        },
+        "weekly_4_4": {
+          "target": 3825883.0,
+          "actual": 310246.0,
+          "pct": 0.0811
+        },
+        "weekly_4_5": {
+          "actual": 24385200.0,
+          "pct": 2048422.0
+        },
+        "monthly_5": {
+          "target": 6096300.0,
+          "actual": 448161.0,
+          "pct": 0.0735
+        },
+        "weekly_5_1": {
+          "target": 6096300.0,
+          "actual": 474071.0,
+          "pct": 0.0778
+        },
+        "weekly_5_2": {
+          "target": 6096300.0,
+          "actual": 404053.0,
+          "pct": 0.0663
+        },
+        "weekly_5_3": {
+          "target": 6096300.0
+        },
+        "weekly_5_5": {
+          "actual": 24835350.0,
+          "pct": 1841329.0
+        },
+        "monthly_6": {
+          "target": 6208839.0,
+          "actual": 435892.0,
+          "pct": 0.0702
+        },
+        "weekly_6_1": {
+          "target": 6208839.0,
+          "actual": 443115.0,
+          "pct": 0.0714
+        },
+        "weekly_6_2": {
+          "target": 6208839.0,
+          "actual": 389855.0,
+          "pct": 0.0628
+        },
+        "weekly_6_3": {
+          "target": 6208839.0,
+          "actual": 490454.0,
+          "pct": 0.079
+        },
+        "weekly_6_4": {
+          "target": 208000.0
+        },
+        "weekly_6_5": {
+          "actual": 25425050.0
+        },
+        "monthly_7": {
+          "target": 3280652.0,
+          "actual": 280201.0,
+          "pct": 0.0854
+        },
+        "weekly_7_1": {
+          "target": 5741140.0,
+          "actual": 391141.0,
+          "pct": 0.0681
+        },
+        "weekly_7_2": {
+          "target": 5741140.0,
+          "actual": 392644.0,
+          "pct": 0.0684
+        },
+        "weekly_7_3": {
+          "target": 5741140.0
+        },
+        "weekly_7_5": {
+          "actual": 25705750.0
+        },
+        "weekly_8_5": {
+          "actual": 25986550.0
+        },
+        "weekly_9_5": {
+          "actual": 26036800.0
+        },
+        "weekly_10_5": {
+          "actual": 27317700.0
+        },
+        "weekly_11_5": {
+          "actual": 27988500.0
+        }
       }
     },
     "Traffic sản phẩm English Stories": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Traffic Lego",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {}
     },
     "VM3-I01.04": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 8.0,
-        "quarterly_1": 8.2,
-        "monthly_1": 7.8,
-        "weekly_1_1": 7.8,
-        "weekly_1_2": 7.8,
-        "weekly_1_3": 7.8,
-        "weekly_1_5": 0.2,
-        "monthly_2": 7.9,
-        "weekly_2_1": 7.9,
-        "weekly_2_2": 7.9,
-        "weekly_2_3": 7.9,
-        "weekly_2_5": 0.2,
-        "monthly_3": 8.0,
-        "weekly_3_1": 8.0,
-        "weekly_3_2": 8.0,
-        "weekly_3_5": 8.0,
-        "monthly_4": 8.0,
-        "weekly_4_1": 8.0,
-        "weekly_4_5": 8.1,
-        "weekly_5_5": 8.2,
-        "weekly_6_5": 8.2,
-        "weekly_7_5": 8.3,
-        "weekly_8_5": 8.4,
-        "weekly_9_5": 8.5,
-        "weekly_10_5": 8.6,
-        "weekly_11_5": 8.7
+        "yearly_2026": {
+          "target": 8.0,
+          "actual": 7.5,
+          "pct": 0.931
+        },
+        "quarterly_1": {
+          "target": 8.2,
+          "actual": 8.8,
+          "pct": 1.073
+        },
+        "monthly_1": {
+          "target": 7.8,
+          "actual": 7.675
+        },
+        "weekly_1_1": {
+          "target": 7.8,
+          "actual": 6.525
+        },
+        "weekly_1_2": {
+          "target": 7.8,
+          "actual": 7.925
+        },
+        "weekly_1_3": {
+          "target": 7.8,
+          "actual": 6.5
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 7.9,
+          "pct": 6.1
+        },
+        "monthly_2": {
+          "target": 7.9,
+          "actual": 7.8,
+          "pct": 0.9873
+        },
+        "weekly_2_1": {
+          "target": 7.9,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 7.9,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 7.9,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 8.0,
+          "pct": 9.0
+        },
+        "monthly_3": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 8.0,
+          "actual": 7.9,
+          "pct": 0.988
+        },
+        "weekly_3_2": {
+          "target": 8.0
+        },
+        "weekly_3_5": {
+          "actual": 8.0,
+          "pct": 8.8
+        },
+        "monthly_4": {
+          "target": 8.0,
+          "actual": 9.0,
+          "pct": 1.125
+        },
+        "weekly_4_1": {
+          "target": 8.0
+        },
+        "weekly_4_5": {
+          "actual": 8.1,
+          "pct": 8.8
+        },
+        "weekly_5_5": {
+          "actual": 8.2,
+          "pct": 8.8
+        },
+        "weekly_6_5": {
+          "actual": 8.2
+        },
+        "weekly_7_5": {
+          "actual": 8.3
+        },
+        "weekly_8_5": {
+          "actual": 8.4
+        },
+        "weekly_9_5": {
+          "actual": 8.5
+        },
+        "weekly_10_5": {
+          "actual": 8.6
+        },
+        "weekly_11_5": {
+          "actual": 8.7
+        }
       }
     },
     "VM3-I01.03": {
       "title": "ROI",
       "unit": "Tỉ lệ chuyển đổi (CTR)- 24h",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 48.0,
-        "quarterly_1": 50.0,
-        "monthly_1": 48.0,
-        "weekly_1_1": 48.0,
-        "weekly_1_2": 48.0,
-        "weekly_1_3": 48.0,
-        "weekly_1_5": 0.2,
-        "monthly_2": 48.0,
-        "weekly_2_1": 48.0,
-        "weekly_2_2": 48.0,
-        "weekly_2_3": 48.0,
-        "weekly_2_5": 0.2,
-        "monthly_3": 48.0,
-        "weekly_3_1": 48.0,
-        "weekly_3_2": 48.0,
-        "weekly_3_5": 48.0,
-        "monthly_4": 48.0,
-        "weekly_4_1": 48.0,
-        "weekly_4_5": 49.0,
-        "weekly_5_5": 50.0,
-        "weekly_6_5": 0.5,
-        "weekly_7_5": 50.0,
-        "weekly_8_5": 50.0,
-        "weekly_9_5": 50.0,
-        "weekly_10_5": 51.0,
-        "weekly_11_5": 52.0
+        "yearly_2026": {
+          "target": 48.0,
+          "actual": 38.4,
+          "pct": 0.799
+        },
+        "quarterly_1": {
+          "target": 50.0,
+          "actual": 49.3,
+          "pct": 0.987
+        },
+        "monthly_1": {
+          "target": 48.0,
+          "actual": 47.5
+        },
+        "weekly_1_1": {
+          "target": 48.0,
+          "actual": 51.5
+        },
+        "weekly_1_2": {
+          "target": 48.0,
+          "actual": 41.25
+        },
+        "weekly_1_3": {
+          "target": 48.0,
+          "actual": 28.25
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 48.0,
+          "pct": 33.0
+        },
+        "monthly_2": {
+          "target": 48.0,
+          "actual": 38.5,
+          "pct": 0.8021
+        },
+        "weekly_2_1": {
+          "target": 48.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 48.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 48.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 48.0,
+          "pct": 40.0
+        },
+        "monthly_3": {
+          "target": 48.0,
+          "actual": 48.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 48.0,
+          "actual": 46.0,
+          "pct": 0.958
+        },
+        "weekly_3_2": {
+          "target": 48.0
+        },
+        "weekly_3_5": {
+          "actual": 48.0,
+          "pct": 50.0
+        },
+        "monthly_4": {
+          "target": 48.0,
+          "actual": 35.0,
+          "pct": 0.7292
+        },
+        "weekly_4_1": {
+          "target": 48.0
+        },
+        "weekly_4_5": {
+          "actual": 49.0,
+          "pct": 50.0
+        },
+        "weekly_5_5": {
+          "actual": 50.0,
+          "pct": 48.0
+        },
+        "weekly_6_5": {
+          "actual": 0.5
+        },
+        "weekly_7_5": {
+          "actual": 50.0
+        },
+        "weekly_8_5": {
+          "actual": 50.0
+        },
+        "weekly_9_5": {
+          "actual": 50.0
+        },
+        "weekly_10_5": {
+          "actual": 51.0
+        },
+        "weekly_11_5": {
+          "actual": 52.0
+        }
       }
     },
     "Tỉ lệ giữ chân khách hàng hết ND đầu (APV)- 24h": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Nội dung đạt ngưỡng tỉ lệ chuyển đổi (CTR) - 24h",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 21.0,
-        "quarterly_1": 21.0,
-        "monthly_1": 2.0,
-        "weekly_1_1": 2.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 7.0,
-        "monthly_2": 1.0,
-        "weekly_2_1": 2.0,
-        "weekly_2_2": 2.0,
-        "weekly_2_3": 2.0,
-        "weekly_2_5": 7.0,
-        "monthly_3": 1.5,
-        "weekly_3_1": 2.0,
-        "weekly_3_2": 1.5,
-        "weekly_3_5": 7.0,
-        "monthly_4": 2.0,
-        "weekly_4_1": 2.0,
-        "weekly_4_5": 7.0,
-        "weekly_5_5": 7.0,
-        "weekly_6_5": 7.0,
-        "weekly_7_5": 7.0,
-        "weekly_8_5": 7.0,
-        "weekly_9_5": 7.0,
-        "weekly_10_5": 7.0,
-        "weekly_11_5": 7.0
+        "yearly_2026": {
+          "target": 21.0,
+          "actual": 16.0,
+          "pct": 0.762
+        },
+        "quarterly_1": {
+          "target": 21.0,
+          "actual": 23.0,
+          "pct": 1.095
+        },
+        "monthly_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_1_1": {
+          "target": 2.0,
+          "actual": 1.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 7.0,
+          "pct": 2.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "monthly_3": {
+          "target": 1.5,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_2": {
+          "target": 1.5
+        },
+        "weekly_3_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 4.0,
+          "pct": 2.0
+        },
+        "weekly_4_1": {
+          "target": 2.0
+        },
+        "weekly_4_5": {
+          "actual": 7.0,
+          "pct": 9.0
+        },
+        "weekly_5_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_6_5": {
+          "actual": 7.0
+        },
+        "weekly_7_5": {
+          "actual": 7.0
+        },
+        "weekly_8_5": {
+          "actual": 7.0
+        },
+        "weekly_9_5": {
+          "actual": 7.0
+        },
+        "weekly_10_5": {
+          "actual": 7.0
+        },
+        "weekly_11_5": {
+          "actual": 7.0
+        }
       }
     },
     "Số lượng nội dung đạt ngưỡng tỉ lệ chuyển đổi (CTR) - 24h/ mục tiêu": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Nội dung đạt ngưỡng tỉ lệ giữ chân khách hàng hết ND đầu (APV) - 24h",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 21.0,
-        "quarterly_1": 21.0,
-        "monthly_1": 2.0,
-        "weekly_1_1": 2.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 7.0,
-        "monthly_2": 1.0,
-        "weekly_2_1": 2.0,
-        "weekly_2_2": 2.0,
-        "weekly_2_3": 2.0,
-        "weekly_2_5": 7.0,
-        "monthly_3": 1.5,
-        "weekly_3_1": 2.0,
-        "weekly_3_2": 1.5,
-        "weekly_3_5": 7.0,
-        "monthly_4": 2.0,
-        "weekly_4_1": 2.0,
-        "weekly_4_5": 7.0,
-        "weekly_5_5": 7.0,
-        "weekly_6_5": 7.0,
-        "weekly_7_5": 7.0,
-        "weekly_8_5": 7.0,
-        "weekly_9_5": 7.0,
-        "weekly_10_5": 7.0,
-        "weekly_11_5": 7.0
+        "yearly_2026": {
+          "target": 21.0,
+          "actual": 8.0,
+          "pct": 0.381
+        },
+        "quarterly_1": {
+          "target": 21.0,
+          "actual": 23.0,
+          "pct": 1.095
+        },
+        "monthly_1": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_1_1": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 1.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_1": {
+          "target": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_2": {
+          "target": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 2.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 7.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 1.5,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_2": {
+          "target": 1.5
+        },
+        "weekly_3_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_1": {
+          "target": 2.0
+        },
+        "weekly_4_5": {
+          "actual": 7.0,
+          "pct": 9.0
+        },
+        "weekly_5_5": {
+          "actual": 7.0,
+          "pct": 7.0
+        },
+        "weekly_6_5": {
+          "actual": 7.0
+        },
+        "weekly_7_5": {
+          "actual": 7.0
+        },
+        "weekly_8_5": {
+          "actual": 7.0
+        },
+        "weekly_9_5": {
+          "actual": 7.0
+        },
+        "weekly_10_5": {
+          "actual": 7.0
+        },
+        "weekly_11_5": {
+          "actual": 7.0
+        }
       }
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.1,
-        "weekly_1_5": 0.1,
-        "weekly_2_5": 0.1
+        "weekly_1_5": {
+          "target": 0.1
+        },
+        "weekly_2_5": {
+          "target": 0.1
+        }
       }
     },
     "TM4-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Phát triển hệ thống kênh kinh doanh": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 0.3,
-        "weekly_2_5": 0.3,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0,
-        "weekly_7_5": 1.0,
-        "weekly_8_5": 1.0,
-        "weekly_9_5": 1.0,
-        "weekly_10_5": 1.0,
-        "weekly_11_5": 1.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.3,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.3,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 1.0
+        },
+        "weekly_8_5": {
+          "actual": 1.0
+        },
+        "weekly_9_5": {
+          "actual": 1.0
+        },
+        "weekly_10_5": {
+          "actual": 1.0
+        },
+        "weekly_11_5": {
+          "actual": 1.0
+        }
       }
     },
     "Traffic short": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt ngưỡng 5k$/ tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 2.0,
-        "weekly_1_5": 0.3,
-        "weekly_2_5": 0.3,
-        "weekly_3_5": 2.0,
-        "weekly_4_5": 2.0,
-        "weekly_5_5": 2.0,
-        "weekly_6_5": 2.0,
-        "weekly_7_5": 2.0,
-        "weekly_8_5": 2.0,
-        "weekly_9_5": 2.0,
-        "weekly_10_5": 2.0,
-        "weekly_11_5": 2.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_1_5": {
+          "target": 0.3,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.3,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 2.0
+        },
+        "weekly_7_5": {
+          "actual": 2.0
+        },
+        "weekly_8_5": {
+          "actual": 2.0
+        },
+        "weekly_9_5": {
+          "actual": 2.0
+        },
+        "weekly_10_5": {
+          "actual": 2.0
+        },
+        "weekly_11_5": {
+          "actual": 2.0
+        }
       }
     },
     "TM4-I02.02": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "TM4-I02.03": {
       "title": "ROI",
       "unit": "Tỷ lệ kênh đạt chuẩn an toàn (toàn bộ hệ thống)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 90.0,
-        "quarterly_1": 90.0,
-        "weekly_1_5": 0.9,
-        "weekly_2_5": 90.0,
-        "weekly_3_5": 90.0,
-        "weekly_4_5": 0.9,
-        "weekly_5_5": 0.9,
-        "weekly_6_5": 0.9,
-        "weekly_7_5": 90.0,
-        "weekly_8_5": 90.0,
-        "weekly_9_5": 90.0,
-        "weekly_10_5": 90.0,
-        "weekly_11_5": 90.0
+        "yearly_2026": {
+          "target": 90.0,
+          "actual": 60.0,
+          "pct": 0.667
+        },
+        "quarterly_1": {
+          "target": 90.0,
+          "actual": 90.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.9,
+          "pct": 0.5
+        },
+        "weekly_2_5": {
+          "actual": 90.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 90.0,
+          "pct": 90.0
+        },
+        "weekly_4_5": {
+          "actual": 0.9,
+          "pct": 0.9
+        },
+        "weekly_5_5": {
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.9
+        },
+        "weekly_7_5": {
+          "actual": 90.0
+        },
+        "weekly_8_5": {
+          "actual": 90.0
+        },
+        "weekly_9_5": {
+          "actual": 90.0
+        },
+        "weekly_10_5": {
+          "actual": 90.0
+        },
+        "weekly_11_5": {
+          "actual": 90.0
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "SL",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.4,
-        "monthly_2": 1.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.4,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 1.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 1.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 6.0,
+          "pct": 6.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 2.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "target": 0.4,
+          "actual": 1.0,
+          "pct": 4.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 2.0
+        },
+        "weekly_2_5": {
+          "target": 0.4,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 1.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 1.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM4-I02.03": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh mở mới",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_3": 1.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 1.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 1.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_2_3": {
+          "target": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 1.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 1.0
+        }
       }
     },
     "Số kênh kinh doanh mở mới trong kỳ": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh trả lại",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 1.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 12.0,
-        "quarterly_1": 12.0,
-        "weekly_1_5": 12.0,
-        "weekly_2_5": 12.0,
-        "weekly_3_5": 12.0,
-        "weekly_4_5": 12.0,
-        "weekly_5_5": 12.0,
-        "weekly_6_5": 12.0,
-        "weekly_7_5": 12.0,
-        "weekly_8_5": 12.0,
-        "weekly_9_5": 12.0,
-        "weekly_10_5": 12.0,
-        "weekly_11_5": 12.0
+        "yearly_2026": {
+          "target": 12.0,
+          "actual": 7.0,
+          "pct": 0.583
+        },
+        "quarterly_1": {
+          "target": 12.0,
+          "actual": 6.0,
+          "pct": 0.5
+        },
+        "weekly_1_5": {
+          "actual": 12.0,
+          "pct": 7.0
+        },
+        "weekly_2_5": {
+          "actual": 12.0,
+          "pct": 7.0
+        },
+        "weekly_3_5": {
+          "actual": 12.0,
+          "pct": 4.0
+        },
+        "weekly_4_5": {
+          "actual": 12.0,
+          "pct": 5.0
+        },
+        "weekly_5_5": {
+          "actual": 12.0,
+          "pct": 6.0
+        },
+        "weekly_6_5": {
+          "actual": 12.0
+        },
+        "weekly_7_5": {
+          "actual": 12.0
+        },
+        "weekly_8_5": {
+          "actual": 12.0
+        },
+        "weekly_9_5": {
+          "actual": 12.0
+        },
+        "weekly_10_5": {
+          "actual": 12.0
+        },
+        "weekly_11_5": {
+          "actual": 12.0
+        }
       }
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        }
       }
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 2.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 1.0,
-        "weekly_9_5": 1.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 1.0
+        },
+        "weekly_9_5": {
+          "actual": 1.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 1.0
+        }
       }
     },
     "VM5-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM5-I01.03": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 16.0,
-        "quarterly_1": 15.33,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 15.5,
-        "weekly_4_5": 15.5,
-        "weekly_5_5": 15.0,
-        "weekly_6_5": 15.0,
-        "weekly_7_5": 14.5,
-        "weekly_8_5": 14.5,
-        "weekly_9_5": 14.0,
-        "weekly_10_5": 14.0,
-        "weekly_11_5": 13.0
+        "yearly_2026": {
+          "target": 16.0,
+          "actual": 15.83,
+          "pct": 0.99
+        },
+        "quarterly_1": {
+          "target": 15.33,
+          "actual": 15.0,
+          "pct": 0.978
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 16.0,
+          "pct": 16.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 16.0,
+          "pct": 15.5
+        },
+        "weekly_3_5": {
+          "actual": 15.5,
+          "pct": 15.5
+        },
+        "weekly_4_5": {
+          "actual": 15.5,
+          "pct": 15.5
+        },
+        "weekly_5_5": {
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "weekly_6_5": {
+          "actual": 15.0
+        },
+        "weekly_7_5": {
+          "actual": 14.5
+        },
+        "weekly_8_5": {
+          "actual": 14.5
+        },
+        "weekly_9_5": {
+          "actual": 14.0
+        },
+        "weekly_10_5": {
+          "actual": 14.0
+        },
+        "weekly_11_5": {
+          "actual": 13.0
+        }
       }
     },
     "VM5-I02.01a": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 5.0,
-        "quarterly_1": 4.0,
-        "weekly_1_5": 0.15,
-        "weekly_2_5": 0.15,
-        "weekly_3_5": 4.0,
-        "weekly_4_5": 4.0,
-        "weekly_5_5": 4.0,
-        "weekly_6_5": 4.0,
-        "weekly_7_5": 4.0,
-        "weekly_8_5": 4.0,
-        "weekly_9_5": 3.0,
-        "weekly_10_5": 3.0,
-        "weekly_11_5": 3.0
+        "yearly_2026": {
+          "target": 5.0,
+          "actual": 5.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.15,
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "weekly_2_5": {
+          "target": 0.15,
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "weekly_3_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "weekly_4_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "weekly_5_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "weekly_6_5": {
+          "actual": 4.0
+        },
+        "weekly_7_5": {
+          "actual": 4.0
+        },
+        "weekly_8_5": {
+          "actual": 4.0
+        },
+        "weekly_9_5": {
+          "actual": 3.0
+        },
+        "weekly_10_5": {
+          "actual": 3.0
+        },
+        "weekly_11_5": {
+          "actual": 3.0
+        }
       }
     },
     "Thời gian sản xuất TB 1 video (AI)": {
       "title": "Hiệu suất sản xuất",
       "unit": "ND",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.53,
-        "quarterly_1": 3.21,
-        "weekly_1_5": 0.3,
-        "weekly_2_5": 0.3,
-        "weekly_3_5": 1.07,
-        "weekly_4_5": 1.07,
-        "weekly_5_5": 1.07,
-        "weekly_6_5": 1.14,
-        "weekly_7_5": 1.14,
-        "weekly_8_5": 1.21,
-        "weekly_9_5": 1.21,
-        "weekly_10_5": 1.29,
-        "weekly_11_5": 1.29
+        "yearly_2026": {
+          "target": 2.53,
+          "actual": 3.23,
+          "pct": 1.275
+        },
+        "quarterly_1": {
+          "target": 3.21,
+          "actual": 4.5,
+          "pct": 1.4
+        },
+        "weekly_1_5": {
+          "target": 0.3,
+          "actual": 0.53,
+          "pct": 0.71
+        },
+        "weekly_2_5": {
+          "target": 0.3,
+          "actual": 1.07,
+          "pct": 1.15
+        },
+        "weekly_3_5": {
+          "actual": 1.07,
+          "pct": 1.36
+        },
+        "weekly_4_5": {
+          "actual": 1.07,
+          "pct": 1.5
+        },
+        "weekly_5_5": {
+          "actual": 1.07,
+          "pct": 1.5
+        },
+        "weekly_6_5": {
+          "actual": 1.14
+        },
+        "weekly_7_5": {
+          "actual": 1.14
+        },
+        "weekly_8_5": {
+          "actual": 1.21
+        },
+        "weekly_9_5": {
+          "actual": 1.21
+        },
+        "weekly_10_5": {
+          "actual": 1.29
+        },
+        "weekly_11_5": {
+          "actual": 1.29
+        }
       }
     },
     "VM5-I02.02a": {
       "title": "Hiệu suất sản xuất",
       "unit": "ND",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.87,
-        "quarterly_1": 1.07,
-        "weekly_1_5": 0.15,
-        "weekly_2_5": 0.15,
-        "weekly_3_5": 0.36,
-        "weekly_4_5": 0.36,
-        "weekly_5_5": 0.36,
-        "weekly_6_5": 0.36,
-        "weekly_7_5": 0.36,
-        "weekly_8_5": 0.36,
-        "weekly_9_5": 0.36,
-        "weekly_10_5": 0.36,
-        "weekly_11_5": 0.36
+        "yearly_2026": {
+          "target": 0.87,
+          "actual": 0.77,
+          "pct": 0.888
+        },
+        "quarterly_1": {
+          "target": 1.07,
+          "actual": 1.5,
+          "pct": 1.4
+        },
+        "weekly_1_5": {
+          "target": 0.15,
+          "actual": 0.2,
+          "pct": 0.14
+        },
+        "weekly_2_5": {
+          "target": 0.15,
+          "actual": 0.36,
+          "pct": 0.38
+        },
+        "weekly_3_5": {
+          "actual": 0.36,
+          "pct": 0.45
+        },
+        "weekly_4_5": {
+          "actual": 0.36,
+          "pct": 0.5
+        },
+        "weekly_5_5": {
+          "actual": 0.36,
+          "pct": 0.5
+        },
+        "weekly_6_5": {
+          "actual": 0.36
+        },
+        "weekly_7_5": {
+          "actual": 0.36
+        },
+        "weekly_8_5": {
+          "actual": 0.36
+        },
+        "weekly_9_5": {
+          "actual": 0.36
+        },
+        "weekly_10_5": {
+          "actual": 0.36
+        },
+        "weekly_11_5": {
+          "actual": 0.36
+        }
       }
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 132684279.0,
-        "quarterly_1": 161120330.0,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 50010794.0,
-        "weekly_4_5": 54422082.0,
-        "weekly_5_5": 56687453.0,
-        "weekly_6_5": 58327084.0,
-        "weekly_7_5": 62508360.0,
-        "weekly_8_5": 64991209.0,
-        "weekly_9_5": 66701272.0,
-        "weekly_10_5": 70831185.0,
-        "weekly_11_5": 73330403.0
+        "yearly_2026": {
+          "target": 132684279.0,
+          "actual": 130844172.0,
+          "pct": 0.986
+        },
+        "quarterly_1": {
+          "target": 161120330.0,
+          "actual": 65880889.0,
+          "pct": 0.409
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 44377722.0,
+          "pct": 39314787.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 46634908.0,
+          "pct": 37068614.0
+        },
+        "weekly_3_5": {
+          "actual": 50010794.0,
+          "pct": 36225961.0
+        },
+        "weekly_4_5": {
+          "actual": 54422082.0,
+          "pct": 27768617.0
+        },
+        "weekly_5_5": {
+          "actual": 56687453.0,
+          "pct": 18589735.0
+        },
+        "weekly_6_5": {
+          "actual": 58327084.0
+        },
+        "weekly_7_5": {
+          "actual": 62508360.0
+        },
+        "weekly_8_5": {
+          "actual": 64991209.0
+        },
+        "weekly_9_5": {
+          "actual": 66701272.0
+        },
+        "weekly_10_5": {
+          "actual": 70831185.0
+        },
+        "weekly_11_5": {
+          "actual": 73330403.0
+        }
       }
     },
     "Hiệu suất sản xuất (gồm video thường + AI)": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 796105675.0,
-        "quarterly_1": 966721979.0,
-        "weekly_1_5": 266266330.0,
-        "weekly_2_5": 279809448.0,
-        "weekly_3_5": 300064765.0,
-        "weekly_4_5": 326532494.0,
-        "weekly_5_5": 340124720.0,
-        "weekly_6_5": 349962503.0,
-        "weekly_7_5": 375050163.0,
-        "weekly_8_5": 389947253.0,
-        "weekly_9_5": 400207633.0,
-        "weekly_10_5": 424987112.0,
-        "weekly_11_5": 439982417.0
+        "yearly_2026": {
+          "target": 796105675.0,
+          "actual": 457954604.0,
+          "pct": 0.575
+        },
+        "quarterly_1": {
+          "target": 966721979.0,
+          "actual": 197642668.0,
+          "pct": 0.204
+        },
+        "weekly_1_5": {
+          "actual": 266266330.0,
+          "pct": 137601754.0
+        },
+        "weekly_2_5": {
+          "actual": 279809448.0,
+          "pct": 129740148.0
+        },
+        "weekly_3_5": {
+          "actual": 300064765.0,
+          "pct": 72451922.0
+        },
+        "weekly_4_5": {
+          "actual": 326532494.0,
+          "pct": 69421543.0
+        },
+        "weekly_5_5": {
+          "actual": 340124720.0,
+          "pct": 55769204.0
+        },
+        "weekly_6_5": {
+          "actual": 349962503.0
+        },
+        "weekly_7_5": {
+          "actual": 375050163.0
+        },
+        "weekly_8_5": {
+          "actual": 389947253.0
+        },
+        "weekly_9_5": {
+          "actual": 400207633.0
+        },
+        "weekly_10_5": {
+          "actual": 424987112.0
+        },
+        "weekly_11_5": {
+          "actual": 439982417.0
+        }
       }
     },
     "VM5-I02.04a": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 318442270.0,
-        "quarterly_1": 386688791.0,
-        "weekly_1_5": 106506532.0,
-        "weekly_2_5": 111923779.0,
-        "weekly_3_5": 120025906.0,
-        "weekly_4_5": 130612997.0,
-        "weekly_5_5": 136049888.0,
-        "weekly_6_5": 139985001.0,
-        "weekly_7_5": 150020065.0,
-        "weekly_8_5": 155978901.0,
-        "weekly_9_5": 160083053.0,
-        "weekly_10_5": 169994845.0,
-        "weekly_11_5": 175992967.0
+        "yearly_2026": {
+          "target": 318442270.0,
+          "actual": 183181841.0,
+          "pct": 0.575
+        },
+        "quarterly_1": {
+          "target": 386688791.0,
+          "actual": 79057067.0,
+          "pct": 0.204
+        },
+        "weekly_1_5": {
+          "actual": 106506532.0,
+          "pct": 55040702.0
+        },
+        "weekly_2_5": {
+          "actual": 111923779.0,
+          "pct": 51896059.0
+        },
+        "weekly_3_5": {
+          "actual": 120025906.0,
+          "pct": 28980769.0
+        },
+        "weekly_4_5": {
+          "actual": 130612997.0,
+          "pct": 27768617.0
+        },
+        "weekly_5_5": {
+          "actual": 136049888.0,
+          "pct": 22307681.0
+        },
+        "weekly_6_5": {
+          "actual": 139985001.0
+        },
+        "weekly_7_5": {
+          "actual": 150020065.0
+        },
+        "weekly_8_5": {
+          "actual": 155978901.0
+        },
+        "weekly_9_5": {
+          "actual": 160083053.0
+        },
+        "weekly_10_5": {
+          "actual": 169994845.0
+        },
+        "weekly_11_5": {
+          "actual": 175992967.0
+        }
       }
     },
     "Số kênh đạt ngưỡng X$/ tháng": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu/người",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.07": {
       "title": "Số vi phạm chính sách",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        }
       }
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "Số buổi đào tạo được tổ chức",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "TM6-I01.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.9,
-        "quarterly_1": 0.9,
-        "weekly_1_5": 0.5,
-        "weekly_2_5": 0.5,
-        "weekly_3_5": 0.9,
-        "weekly_4_5": 0.9,
-        "weekly_5_5": 0.9,
-        "weekly_6_5": 0.9,
-        "weekly_7_5": 90.0,
-        "weekly_8_5": 90.0,
-        "weekly_9_5": 90.0,
-        "weekly_10_5": 90.0,
-        "weekly_11_5": 90.0
+        "yearly_2026": {
+          "target": 0.9,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.9,
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.5,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "target": 0.5,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 0.9,
+          "pct": 0.9
+        },
+        "weekly_4_5": {
+          "actual": 0.9,
+          "pct": 0.9
+        },
+        "weekly_5_5": {
+          "actual": 0.9,
+          "pct": 0.9
+        },
+        "weekly_6_5": {
+          "actual": 0.9
+        },
+        "weekly_7_5": {
+          "actual": 90.0
+        },
+        "weekly_8_5": {
+          "actual": 90.0
+        },
+        "weekly_9_5": {
+          "actual": 90.0
+        },
+        "weekly_10_5": {
+          "actual": 90.0
+        },
+        "weekly_11_5": {
+          "actual": 90.0
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.9,
-        "quarterly_1": 0.9,
-        "weekly_1_5": 0.5,
-        "weekly_2_5": 0.5,
-        "weekly_3_5": 0.9,
-        "weekly_4_5": 0.9,
-        "weekly_5_5": 0.9,
-        "weekly_7_5": 90.0,
-        "weekly_8_5": 90.0,
-        "weekly_9_5": 90.0,
-        "weekly_10_5": 90.0,
-        "weekly_11_5": 90.0
+        "yearly_2026": {
+          "target": 0.9,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.9,
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.5,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.5,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.9
+        },
+        "weekly_4_5": {
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 90.0
+        },
+        "weekly_8_5": {
+          "actual": 90.0
+        },
+        "weekly_9_5": {
+          "actual": 90.0
+        },
+        "weekly_10_5": {
+          "actual": 90.0
+        },
+        "weekly_11_5": {
+          "actual": 90.0
+        }
       }
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.2,
-        "quarterly_1": 0.2,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_7_5": 20.0,
-        "weekly_8_5": 20.0,
-        "weekly_9_5": 20.0,
-        "weekly_10_5": 20.0,
-        "weekly_11_5": 20.0
+        "yearly_2026": {
+          "target": 0.2,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.2,
+          "actual": 0.2,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.2
+        },
+        "weekly_4_5": {
+          "actual": 0.2
+        },
+        "weekly_5_5": {
+          "actual": 0.2
+        },
+        "weekly_7_5": {
+          "actual": 20.0
+        },
+        "weekly_8_5": {
+          "actual": 20.0
+        },
+        "weekly_9_5": {
+          "actual": 20.0
+        },
+        "weekly_10_5": {
+          "actual": 20.0
+        },
+        "weekly_11_5": {
+          "actual": 20.0
+        }
       }
     },
     "VM6-I04": {
       "title": "Số lượng nhân sự (ko tính quản lý BP/DA)",
       "unit": "Nhân sự",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 15.0,
-        "quarterly_1": 14.0,
-        "weekly_1_5": 15.0,
-        "weekly_2_5": 14.0,
-        "weekly_3_5": 14.0,
-        "weekly_4_5": 14.0,
-        "weekly_5_5": 14.0,
-        "weekly_6_5": 14.0,
-        "weekly_7_5": 14.0,
-        "weekly_8_5": 14.0,
-        "weekly_9_5": 14.0,
-        "weekly_10_5": 14.0,
-        "weekly_11_5": 14.0
+        "yearly_2026": {
+          "target": 15.0,
+          "actual": 13.0,
+          "pct": 0.867
+        },
+        "quarterly_1": {
+          "target": 14.0,
+          "actual": 10.0,
+          "pct": 0.714
+        },
+        "weekly_1_5": {
+          "actual": 15.0,
+          "pct": 14.0
+        },
+        "weekly_2_5": {
+          "actual": 14.0,
+          "pct": 13.0
+        },
+        "weekly_3_5": {
+          "actual": 14.0,
+          "pct": 11.0
+        },
+        "weekly_4_5": {
+          "actual": 14.0,
+          "pct": 10.0
+        },
+        "weekly_5_5": {
+          "actual": 14.0,
+          "pct": 10.0
+        },
+        "weekly_6_5": {
+          "actual": 14.0
+        },
+        "weekly_7_5": {
+          "actual": 14.0
+        },
+        "weekly_8_5": {
+          "actual": 14.0
+        },
+        "weekly_9_5": {
+          "actual": 14.0
+        },
+        "weekly_10_5": {
+          "actual": 14.0
+        },
+        "weekly_11_5": {
+          "actual": 14.0
+        }
       }
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 0.05,
-        "weekly_1_5": 0.05,
-        "weekly_2_5": 0.05
+        "weekly_1_5": {
+          "target": 0.05
+        },
+        "weekly_2_5": {
+          "target": 0.05
+        }
       }
     },
     "TM7-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.2,
-        "quarterly_1": 0.2,
-        "weekly_1_5": 0.2,
-        "weekly_2_5": 0.2,
-        "weekly_3_5": 0.2,
-        "weekly_4_5": 0.2,
-        "weekly_5_5": 0.2,
-        "weekly_6_5": 0.2,
-        "weekly_7_5": 20.0,
-        "weekly_8_5": 20.0,
-        "weekly_9_5": 20.0,
-        "weekly_10_5": 20.0,
-        "weekly_11_5": 20.0
+        "yearly_2026": {
+          "target": 0.2,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.2,
+          "actual": 0.2,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "target": 0.2,
+          "actual": 0.2,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 0.2,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.2
+        },
+        "weekly_4_5": {
+          "actual": 0.2
+        },
+        "weekly_5_5": {
+          "actual": 0.2
+        },
+        "weekly_6_5": {
+          "actual": 0.2
+        },
+        "weekly_7_5": {
+          "actual": 20.0
+        },
+        "weekly_8_5": {
+          "actual": 20.0
+        },
+        "weekly_9_5": {
+          "actual": 20.0
+        },
+        "weekly_10_5": {
+          "actual": 20.0
+        },
+        "weekly_11_5": {
+          "actual": 20.0
+        }
       }
     },
     "TM7-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I02.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.1,
-        "quarterly_1": 0.1,
-        "weekly_1_5": 0.1,
-        "weekly_2_5": 0.1,
-        "weekly_3_5": 0.1,
-        "weekly_4_5": 0.1,
-        "weekly_5_5": 0.1,
-        "weekly_6_5": 10.0,
-        "weekly_7_5": 10.0,
-        "weekly_8_5": 10.0,
-        "weekly_9_5": 10.0,
-        "weekly_10_5": 10.0,
-        "weekly_11_5": 10.0
+        "yearly_2026": {
+          "target": 0.1,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.1,
+          "actual": 0.1,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.1,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.1,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.1
+        },
+        "weekly_4_5": {
+          "actual": 0.1
+        },
+        "weekly_5_5": {
+          "actual": 0.1
+        },
+        "weekly_6_5": {
+          "actual": 10.0
+        },
+        "weekly_7_5": {
+          "actual": 10.0
+        },
+        "weekly_8_5": {
+          "actual": 10.0
+        },
+        "weekly_9_5": {
+          "actual": 10.0
+        },
+        "weekly_10_5": {
+          "actual": 10.0
+        },
+        "weekly_11_5": {
+          "actual": 10.0
+        }
       }
     },
     "VM7-I02.02": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "VM7-I02.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 0.0,
-        "weekly_3_5": 0.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0,
-        "weekly_6_5": 0.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 0.0,
-        "weekly_9_5": 0.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 0.0
+        },
+        "weekly_9_5": {
+          "actual": 0.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 0.0
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.9,
-        "quarterly_1": 0.9,
-        "weekly_1_5": 0.8,
-        "weekly_2_5": 0.8,
-        "weekly_3_5": 0.9,
-        "weekly_4_5": 0.9,
-        "weekly_5_5": 0.9,
-        "weekly_6_5": 0.9,
-        "weekly_7_5": 90.0,
-        "weekly_8_5": 90.0,
-        "weekly_9_5": 90.0,
-        "weekly_10_5": 90.0,
-        "weekly_11_5": 90.0
+        "yearly_2026": {
+          "target": 0.9,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.9,
+          "actual": 0.97,
+          "pct": 1.078
+        },
+        "weekly_1_5": {
+          "target": 0.8,
+          "actual": 0.95,
+          "pct": 0.94
+        },
+        "weekly_2_5": {
+          "target": 0.8,
+          "actual": 0.95,
+          "pct": 0.94
+        },
+        "weekly_3_5": {
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 0.9,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.9
+        },
+        "weekly_7_5": {
+          "actual": 90.0
+        },
+        "weekly_8_5": {
+          "actual": 90.0
+        },
+        "weekly_9_5": {
+          "actual": 90.0
+        },
+        "weekly_10_5": {
+          "actual": 90.0
+        },
+        "weekly_11_5": {
+          "actual": 90.0
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 2.0,
-        "weekly_1_5": 0.0,
-        "weekly_2_5": 1.0,
-        "weekly_3_5": 1.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 1.0,
-        "weekly_6_5": 1.0,
-        "weekly_7_5": 0.0,
-        "weekly_8_5": 1.0,
-        "weekly_9_5": 1.0,
-        "weekly_10_5": 0.0,
-        "weekly_11_5": 1.0
+        "yearly_2026": {
+          "target": 2.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 6.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0,
+          "pct": 6.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        },
+        "weekly_7_5": {
+          "actual": 0.0
+        },
+        "weekly_8_5": {
+          "actual": 1.0
+        },
+        "weekly_9_5": {
+          "actual": 1.0
+        },
+        "weekly_10_5": {
+          "actual": 0.0
+        },
+        "weekly_11_5": {
+          "actual": 1.0
+        }
       }
     }
   },
@@ -7096,1453 +22565,4719 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.0423,
-        "quarterly_1": 0.356
+        "yearly_2026": {
+          "target": 0.0423,
+          "actual": -0.43
+        },
+        "quarterly_1": {
+          "target": 0.356,
+          "actual": -0.182
+        }
       }
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "yearly_2026": 0.0406,
-        "quarterly_1": 0.224
+        "yearly_2026": {
+          "target": 0.0406,
+          "actual": -0.75
+        },
+        "quarterly_1": {
+          "target": 0.224,
+          "actual": -0.315
+        }
       }
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 936940090.0,
-        "quarterly_1": 1570537903.0,
-        "monthly_1": 40000000.0,
-        "weekly_1_1": 40000000.0,
-        "weekly_1_2": 50000000.0,
-        "weekly_1_3": 124971992.0,
-        "weekly_1_5": 294504510.0,
-        "monthly_2": 40000000.0,
-        "weekly_2_1": 50000000.0,
-        "weekly_2_2": 50000000.0,
-        "weekly_2_3": 188039943.0,
-        "weekly_2_5": 425221540.0,
-        "monthly_3": 50000000.0,
-        "weekly_3_1": 80000000.0,
-        "weekly_3_2": 80000000.0,
-        "weekly_3_3": 304162806.0,
-        "weekly_3_5": 427666624.0,
-        "monthly_4": 50000000.0,
-        "weekly_4_1": 50000000.0,
-        "weekly_4_2": 100000000.0,
-        "weekly_4_3": 100000000.0,
-        "weekly_4_4": 273518810.0,
-        "weekly_4_5": 427375104.0,
-        "monthly_5": 50000000.0,
-        "weekly_5_1": 80000000.0,
-        "weekly_5_2": 80000000.0,
-        "weekly_5_3": 320733629.0,
-        "weekly_5_5": 715496175.0,
-        "monthly_6": 50000000.0,
-        "weekly_6_1": 80000000.0,
-        "weekly_6_2": 80000000.0,
-        "weekly_6_3": 542915749.0,
-        "weekly_6_5": 332709700.0,
-        "monthly_7": 50000000.0,
-        "weekly_7_1": 60000000.0,
-        "weekly_7_2": 100000000.0,
-        "weekly_7_3": 60000000.0
+        "yearly_2026": {
+          "target": 936940090.0,
+          "actual": 489812514.0,
+          "pct": 0.52
+        },
+        "quarterly_1": {
+          "target": 1570537903.0,
+          "actual": 598712571.0,
+          "pct": 0.38
+        },
+        "monthly_1": {
+          "target": 40000000.0,
+          "actual": 22581001.0,
+          "pct": 0.5645
+        },
+        "weekly_1_1": {
+          "target": 40000000.0,
+          "actual": 37561194.0,
+          "pct": 0.939
+        },
+        "weekly_1_2": {
+          "target": 50000000.0,
+          "actual": 32099853.0,
+          "pct": 0.642
+        },
+        "weekly_1_3": {
+          "target": 124971992.0,
+          "actual": 40332997.0,
+          "pct": 0.3227
+        },
+        "weekly_1_5": {
+          "actual": 294504510.0,
+          "pct": 153037866.0
+        },
+        "monthly_2": {
+          "target": 40000000.0,
+          "actual": 35887544.0,
+          "pct": 0.9
+        },
+        "weekly_2_1": {
+          "target": 50000000.0,
+          "actual": 37890464.0,
+          "pct": 0.76
+        },
+        "weekly_2_2": {
+          "target": 50000000.0,
+          "actual": 32686559.0,
+          "pct": 0.65
+        },
+        "weekly_2_3": {
+          "target": 188039943.0,
+          "actual": 31465912.0,
+          "pct": 0.17
+        },
+        "weekly_2_5": {
+          "actual": 425221540.0,
+          "pct": 172164977.0
+        },
+        "monthly_3": {
+          "target": 50000000.0,
+          "actual": 50073219.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 80000000.0,
+          "actual": 38610312.0,
+          "pct": 0.48
+        },
+        "weekly_3_2": {
+          "target": 80000000.0,
+          "actual": 32375203.0,
+          "pct": 0.4
+        },
+        "weekly_3_3": {
+          "target": 304162806.0,
+          "actual": 44517649.0,
+          "pct": 0.15
+        },
+        "weekly_3_5": {
+          "actual": 427666624.0,
+          "pct": 191170176.0
+        },
+        "monthly_4": {
+          "target": 50000000.0,
+          "actual": 17738759.0,
+          "pct": 0.35
+        },
+        "weekly_4_1": {
+          "target": 50000000.0,
+          "actual": 31355893.0,
+          "pct": 0.63
+        },
+        "weekly_4_2": {
+          "target": 100000000.0,
+          "actual": 57403189.0,
+          "pct": 0.57
+        },
+        "weekly_4_3": {
+          "target": 100000000.0,
+          "actual": 47649973.0,
+          "pct": 0.48
+        },
+        "weekly_4_4": {
+          "target": 273518810.0
+        },
+        "weekly_4_5": {
+          "actual": 427375104.0,
+          "pct": 156121252.0
+        },
+        "monthly_5": {
+          "target": 50000000.0,
+          "actual": 25758061.0,
+          "pct": 0.52
+        },
+        "weekly_5_1": {
+          "target": 80000000.0,
+          "actual": 29351589.0,
+          "pct": 0.37
+        },
+        "weekly_5_2": {
+          "target": 80000000.0,
+          "actual": 51531825.0,
+          "pct": 0.64
+        },
+        "weekly_5_3": {
+          "target": 320733629.0,
+          "actual": 34751127.0,
+          "pct": 0.11
+        },
+        "weekly_5_5": {
+          "actual": 715496175.0,
+          "pct": 251421143.0
+        },
+        "monthly_6": {
+          "target": 50000000.0,
+          "actual": 25900478.0,
+          "pct": 0.52
+        },
+        "weekly_6_1": {
+          "target": 80000000.0,
+          "actual": 95561545.0,
+          "pct": 1.19
+        },
+        "weekly_6_2": {
+          "target": 80000000.0,
+          "actual": 51118403.0,
+          "pct": 0.64
+        },
+        "weekly_6_3": {
+          "target": 542915749.0,
+          "actual": 48726897.0,
+          "pct": 0.09
+        },
+        "weekly_6_5": {
+          "actual": 332709700.0
+        },
+        "monthly_7": {
+          "target": 50000000.0,
+          "actual": 42726270.0,
+          "pct": 0.85
+        },
+        "weekly_7_1": {
+          "target": 60000000.0,
+          "actual": 28339376.0,
+          "pct": 0.47
+        },
+        "weekly_7_2": {
+          "target": 100000000.0,
+          "actual": 107491845.0,
+          "pct": 1.07
+        },
+        "weekly_7_3": {
+          "target": 60000000.0
+        }
       }
     },
     "VM1-I02.02": {
       "title": "Tổng doanh thu",
       "unit": "",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "weekly_5_5": 357748087.5,
-        "weekly_6_5": 133083880.0
+        "weekly_5_5": {
+          "actual": 357748087.5,
+          "pct": 73265876.0
+        },
+        "weekly_6_5": {
+          "actual": 133083880.0
+        }
       }
     },
     "VM1-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM1-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ sử dụng ngân sách",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.7677,
+          "pct": 0.77
+        },
+        "quarterly_1": {
+          "target": 1.0
+        }
       }
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí mua công cụ AI phân bổ hàng tháng",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 0.8179,
-        "quarterly_1": 0.8117
+        "yearly_2026": {
+          "pct": 0.8179
+        },
+        "quarterly_1": {
+          "pct": 0.8117
+        }
       }
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "MM1-I03.01": {
       "title": "Số lượng sản phẩm âm nhạc hoàn thành sản xuất",
       "unit": "sản phẩm",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1727.0,
-        "quarterly_1": 2329.0,
-        "monthly_1": 230.0,
-        "weekly_1_1": 200.0,
-        "weekly_1_2": 178.0,
-        "weekly_1_3": 155.0,
-        "weekly_1_5": 321.0,
-        "monthly_2": 55.0,
-        "weekly_2_1": 114.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 179.0,
-        "weekly_2_5": 920.0,
-        "monthly_3": 192.0,
-        "weekly_3_1": 228.0,
-        "weekly_3_2": 230.0,
-        "weekly_3_3": 352.0,
-        "weekly_3_5": 811.0,
-        "monthly_4": 241.0,
-        "weekly_4_1": 206.0,
-        "weekly_4_2": 183.0,
-        "weekly_4_3": 126.0,
-        "weekly_4_4": 7.0,
-        "weekly_4_5": 917.0,
-        "monthly_5": 214.0,
-        "weekly_5_1": 214.0,
-        "weekly_5_2": 246.0,
-        "weekly_5_3": 327.0,
-        "weekly_5_5": 816.0,
-        "monthly_6": 207.0,
-        "weekly_6_1": 198.0,
-        "weekly_6_2": 168.0,
-        "weekly_6_3": 198.0,
-        "weekly_6_5": 474.0,
-        "monthly_7": 84.0,
-        "weekly_7_1": 108.0,
-        "weekly_7_2": 64.0,
-        "weekly_7_3": 68.0
+        "yearly_2026": {
+          "target": 1727.0,
+          "actual": 2098.0,
+          "pct": 1.21
+        },
+        "quarterly_1": {
+          "target": 2329.0,
+          "actual": 2398.0,
+          "pct": 1.0296
+        },
+        "monthly_1": {
+          "target": 230.0,
+          "actual": 251.0,
+          "pct": 1.091304348
+        },
+        "weekly_1_1": {
+          "target": 200.0,
+          "actual": 194.0
+        },
+        "weekly_1_2": {
+          "target": 178.0,
+          "actual": 216.0
+        },
+        "weekly_1_3": {
+          "target": 155.0,
+          "actual": 129.0
+        },
+        "weekly_1_5": {
+          "actual": 321.0,
+          "pct": 351.0
+        },
+        "monthly_2": {
+          "target": 55.0,
+          "actual": 46.0
+        },
+        "weekly_2_1": {
+          "target": 114.0,
+          "actual": 84.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 179.0,
+          "actual": 221.0
+        },
+        "weekly_2_5": {
+          "actual": 920.0,
+          "pct": 957.0
+        },
+        "monthly_3": {
+          "target": 192.0,
+          "actual": 178.0,
+          "pct": 0.9271
+        },
+        "weekly_3_1": {
+          "target": 228.0,
+          "actual": 212.0,
+          "pct": 0.9298
+        },
+        "weekly_3_2": {
+          "target": 230.0,
+          "actual": 210.0
+        },
+        "weekly_3_3": {
+          "target": 352.0,
+          "actual": 352.0
+        },
+        "weekly_3_5": {
+          "actual": 811.0,
+          "pct": 799.0
+        },
+        "monthly_4": {
+          "target": 241.0,
+          "actual": 272.0
+        },
+        "weekly_4_1": {
+          "target": 206.0,
+          "actual": 124.0
+        },
+        "weekly_4_2": {
+          "target": 183.0,
+          "actual": 175.0
+        },
+        "weekly_4_3": {
+          "target": 126.0,
+          "actual": 220.0
+        },
+        "weekly_4_4": {
+          "target": 7.0,
+          "actual": 10.0
+        },
+        "weekly_4_5": {
+          "actual": 917.0,
+          "pct": 949.0
+        },
+        "monthly_5": {
+          "target": 214.0,
+          "actual": 197.0
+        },
+        "weekly_5_1": {
+          "target": 214.0,
+          "actual": 213.0
+        },
+        "weekly_5_2": {
+          "target": 246.0,
+          "actual": 157.0
+        },
+        "weekly_5_3": {
+          "target": 327.0,
+          "actual": 382.0
+        },
+        "weekly_5_5": {
+          "actual": 816.0,
+          "pct": 650.0
+        },
+        "monthly_6": {
+          "target": 207.0,
+          "actual": 243.0
+        },
+        "weekly_6_1": {
+          "target": 198.0,
+          "actual": 190.0
+        },
+        "weekly_6_2": {
+          "target": 168.0,
+          "actual": 157.0
+        },
+        "weekly_6_3": {
+          "target": 198.0,
+          "actual": 45.0
+        },
+        "weekly_6_5": {
+          "actual": 474.0,
+          "pct": 262.0
+        },
+        "monthly_7": {
+          "target": 84.0,
+          "actual": 84.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 108.0,
+          "actual": 117.0,
+          "pct": 1.08
+        },
+        "weekly_7_2": {
+          "target": 64.0,
+          "actual": 75.0
+        },
+        "weekly_7_3": {
+          "target": 68.0,
+          "actual": 1.0
+        }
       }
     },
     "Số lượng sản phẩm hoàn thành sản xuất": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 45.0,
-        "quarterly_1": 45.0,
-        "monthly_1": 15.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 10.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 10.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 4.0,
-        "weekly_2_5": 10.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 10.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 45.0,
+          "actual": 45.0
+        },
+        "quarterly_1": {
+          "target": 45.0,
+          "actual": 0.0
+        },
+        "monthly_1": {
+          "target": 15.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 10.0
+        },
+        "weekly_1_2": {
+          "target": 10.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 10.0
+        },
+        "weekly_1_5": {
+          "actual": 10.0,
+          "pct": 10.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 4.0,
+          "actual": 10.0
+        },
+        "weekly_2_5": {
+          "actual": 10.0,
+          "pct": 15.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 10.0,
+          "actual": 10.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 5.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "Số lượng NDSX Kid Songs": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 2.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "Số lượng NDSX Original Song Việt Nam": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 12.0,
-        "quarterly_1": 12.0,
-        "monthly_1": 1.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 1.0,
-        "weekly_1_3": 1.0,
-        "weekly_1_5": 3.0,
-        "monthly_2": 1.0,
-        "weekly_2_1": 1.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 1.0,
-        "weekly_2_5": 4.0,
-        "monthly_3": 1.0,
-        "weekly_3_1": 1.0,
-        "weekly_3_2": 2.0,
-        "weekly_3_3": 1.0,
-        "weekly_3_5": 4.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 1.0,
-        "weekly_4_2": 1.0,
-        "weekly_4_3": 1.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 4.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 1.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 2.0,
-        "weekly_5_5": 5.0,
-        "monthly_6": 2.0,
-        "weekly_6_1": 1.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_5": 5.0,
-        "monthly_7": 1.0,
-        "weekly_7_1": 1.0,
-        "weekly_7_2": 1.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 12.0,
+          "actual": 12.0
+        },
+        "quarterly_1": {
+          "target": 12.0,
+          "actual": 15.0
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_1_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 3.0,
+          "pct": 2.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 4.0,
+          "pct": 5.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_2": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_3_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 4.0,
+          "pct": 6.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_2": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_4_3": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 5.0,
+          "pct": 4.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_3": {
+          "target": 1.0,
+          "actual": 1.0
+        }
       }
     },
     "Số lượng NDSX Cover hit": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 144.0,
-        "quarterly_1": 144.0,
-        "monthly_1": 7.0,
-        "weekly_1_1": 7.0,
-        "weekly_1_2": 10.0,
-        "weekly_1_3": 7.0,
-        "weekly_1_5": 34.0,
-        "monthly_2": 18.0,
-        "weekly_2_1": 10.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 6.0,
-        "weekly_2_5": 52.0,
-        "monthly_3": 11.0,
-        "weekly_3_1": 10.0,
-        "weekly_3_2": 10.0,
-        "weekly_3_3": 9.0,
-        "weekly_3_5": 13.0,
-        "monthly_4": 8.0,
-        "weekly_4_1": 3.0,
-        "weekly_4_2": 2.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 10.0,
-        "monthly_5": 2.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 3.0,
-        "weekly_5_3": 7.0,
-        "weekly_5_5": 3.0,
-        "monthly_6": 3.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 144.0,
+          "actual": 115.0
+        },
+        "quarterly_1": {
+          "target": 144.0,
+          "actual": 23.0
+        },
+        "monthly_1": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_1_1": {
+          "target": 7.0,
+          "actual": 6.0
+        },
+        "weekly_1_2": {
+          "target": 10.0,
+          "actual": 10.0
+        },
+        "weekly_1_3": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_1_5": {
+          "actual": 34.0,
+          "pct": 34.0
+        },
+        "monthly_2": {
+          "target": 18.0,
+          "actual": 18.0
+        },
+        "weekly_2_1": {
+          "target": 10.0,
+          "actual": 9.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 6.0,
+          "actual": 7.0
+        },
+        "weekly_2_5": {
+          "actual": 52.0,
+          "pct": 51.0
+        },
+        "monthly_3": {
+          "target": 11.0,
+          "actual": 11.0
+        },
+        "weekly_3_1": {
+          "target": 10.0,
+          "actual": 16.0
+        },
+        "weekly_3_2": {
+          "target": 10.0,
+          "actual": 11.0
+        },
+        "weekly_3_3": {
+          "target": 9.0,
+          "actual": 8.0
+        },
+        "weekly_3_5": {
+          "actual": 13.0,
+          "pct": 6.0
+        },
+        "monthly_4": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 10.0,
+          "pct": 14.0
+        },
+        "monthly_5": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_2": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_5_3": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_5_5": {
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "monthly_6": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "Số lượng NDSX nhạc không lời": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 60.0,
-        "quarterly_1": 60.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 20.0,
-        "monthly_2": 13.0,
-        "weekly_2_1": 7.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 21.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 5.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 1.0,
-        "weekly_3_5": 4.0,
-        "monthly_4": 2.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 1.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 4.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 1.0,
-        "weekly_5_2": 2.0,
-        "weekly_5_3": 4.0,
-        "weekly_5_5": 1.0,
-        "monthly_6": 1.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 60.0,
+          "actual": 41.0
+        },
+        "quarterly_1": {
+          "target": 60.0,
+          "actual": 9.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 20.0,
+          "pct": 20.0
+        },
+        "monthly_2": {
+          "target": 13.0,
+          "actual": 13.0
+        },
+        "weekly_2_1": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 21.0,
+          "pct": 21.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 5.0,
+          "actual": 16.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 2.0
+        },
+        "weekly_3_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 4.0,
+          "pct": 8.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_2": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_3": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_6": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        }
       }
     },
     "-2 bài sản xuất 30,31/3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 24.0,
-        "quarterly_1": 24.0,
-        "monthly_1": 7.0,
-        "weekly_1_1": 7.0,
-        "weekly_1_2": 10.0,
-        "weekly_1_3": 7.0,
-        "weekly_1_5": 14.0,
-        "monthly_2": 5.0,
-        "weekly_2_1": 3.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 6.0,
-        "weekly_2_5": 31.0,
-        "monthly_3": 11.0,
-        "weekly_3_1": 5.0,
-        "weekly_3_2": 10.0,
-        "weekly_3_3": 8.0,
-        "weekly_3_5": 9.0,
-        "monthly_4": 6.0,
-        "weekly_4_1": 3.0,
-        "weekly_4_2": 1.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 6.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 1.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 3.0,
-        "weekly_5_5": 2.0,
-        "monthly_6": 2.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 24.0,
+          "actual": 74.0
+        },
+        "quarterly_1": {
+          "target": 24.0,
+          "actual": 14.0
+        },
+        "monthly_1": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_1_1": {
+          "target": 7.0,
+          "actual": 6.0
+        },
+        "weekly_1_2": {
+          "target": 10.0,
+          "actual": 10.0
+        },
+        "weekly_1_3": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_1_5": {
+          "actual": 14.0,
+          "pct": 14.0
+        },
+        "monthly_2": {
+          "target": 5.0,
+          "actual": 5.0
+        },
+        "weekly_2_1": {
+          "target": 3.0,
+          "actual": 2.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 6.0,
+          "actual": 7.0
+        },
+        "weekly_2_5": {
+          "actual": 31.0,
+          "pct": 30.0
+        },
+        "monthly_3": {
+          "target": 11.0,
+          "actual": 11.0
+        },
+        "weekly_3_1": {
+          "target": 5.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 10.0,
+          "actual": 9.0
+        },
+        "weekly_3_3": {
+          "target": 8.0,
+          "actual": 7.0
+        },
+        "weekly_3_5": {
+          "actual": 9.0,
+          "pct": 6.0
+        },
+        "monthly_4": {
+          "target": 6.0,
+          "actual": 6.0
+        },
+        "weekly_4_1": {
+          "target": 3.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 6.0,
+          "pct": 6.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_3": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_5_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        }
       }
     },
     "Số lượng NDSX Jazz Relaxing": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 60.0,
-        "quarterly_1": 60.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 60.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 60.0,
+          "actual": 0.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        }
       }
     },
     "Số lượng NDSX Meditation Relaxing": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        }
       }
     },
     "Số lượng NDSX Worship": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "Theme songs": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 24.0,
-        "quarterly_1": 26.0,
-        "monthly_1": 2.0,
-        "weekly_1_1": 2.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 24.0,
-        "monthly_2": 6.0,
-        "weekly_2_1": 8.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 8.0,
-        "weekly_2_5": 4.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 2.0,
-        "weekly_3_2": 8.0,
-        "weekly_3_3": 2.0,
-        "weekly_3_5": 4.0,
-        "monthly_4": 2.0,
-        "weekly_4_1": 2.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 2.0,
-        "weekly_4_5": 8.0,
-        "monthly_5": 2.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 2.0,
-        "weekly_5_3": 2.0,
-        "weekly_5_5": 8.0,
-        "monthly_6": 2.0,
-        "weekly_6_1": 2.0,
-        "weekly_6_2": 2.0,
-        "weekly_6_3": 2.0,
-        "weekly_6_5": 4.0,
-        "monthly_7": 2.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 8.0,
-        "weekly_7_3": 2.0
+        "yearly_2026": {
+          "target": 24.0,
+          "actual": 34.0
+        },
+        "quarterly_1": {
+          "target": 26.0,
+          "actual": 22.0
+        },
+        "monthly_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_1_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_1_5": {
+          "actual": 24.0,
+          "pct": 18.0
+        },
+        "monthly_2": {
+          "target": 6.0,
+          "actual": 8.0
+        },
+        "weekly_2_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 8.0,
+          "actual": 2.0
+        },
+        "weekly_2_5": {
+          "actual": 4.0,
+          "pct": 8.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_3_2": {
+          "target": 8.0,
+          "actual": 4.0
+        },
+        "weekly_3_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 4.0,
+          "pct": 6.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_4_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_4_5": {
+          "actual": 8.0,
+          "pct": 8.0
+        },
+        "monthly_5": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_2": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 8.0,
+          "pct": 8.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_2": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 4.0,
+          "pct": 8.0
+        },
+        "monthly_7": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_3": {
+          "target": 2.0,
+          "actual": 0.0
+        }
       }
     },
     "Sáng tác bài hát": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 12.0,
-        "quarterly_1": 13.0,
-        "monthly_1": 1.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 1.0,
-        "weekly_1_3": 1.0,
-        "weekly_1_5": 12.0,
-        "monthly_2": 3.0,
-        "weekly_2_1": 4.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 4.0,
-        "weekly_2_5": 2.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 1.0,
-        "weekly_3_2": 4.0,
-        "weekly_3_3": 1.0,
-        "weekly_3_5": 2.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 1.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 1.0,
-        "weekly_4_5": 4.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 1.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 1.0,
-        "weekly_5_5": 4.0,
-        "monthly_6": 1.0,
-        "weekly_6_1": 1.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_5": 2.0,
-        "monthly_7": 1.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 3.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 12.0,
+          "actual": 17.0
+        },
+        "quarterly_1": {
+          "target": 13.0,
+          "actual": 11.0
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 12.0,
+          "pct": 9.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 4.0
+        },
+        "weekly_2_1": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 4.0,
+          "actual": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0,
+          "pct": 4.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_2": {
+          "target": 4.0,
+          "actual": 2.0
+        },
+        "weekly_3_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 2.0,
+          "pct": 3.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "monthly_6": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 2.0,
+          "pct": 3.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "Sáng tác melody": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 12.0,
-        "quarterly_1": 13.0,
-        "monthly_1": 1.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 1.0,
-        "weekly_1_3": 1.0,
-        "weekly_1_5": 12.0,
-        "monthly_2": 3.0,
-        "weekly_2_1": 4.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 4.0,
-        "weekly_2_5": 2.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 1.0,
-        "weekly_3_2": 4.0,
-        "weekly_3_3": 1.0,
-        "weekly_3_5": 2.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 1.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 1.0,
-        "weekly_4_5": 4.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 1.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 1.0,
-        "weekly_5_5": 4.0,
-        "monthly_6": 1.0,
-        "weekly_6_1": 1.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_5": 2.0,
-        "monthly_7": 1.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 5.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 12.0,
+          "actual": 17.0
+        },
+        "quarterly_1": {
+          "target": 13.0,
+          "actual": 11.0
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 12.0,
+          "pct": 9.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 4.0
+        },
+        "weekly_2_1": {
+          "target": 4.0,
+          "actual": 4.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 4.0,
+          "actual": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0,
+          "pct": 4.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_2": {
+          "target": 4.0,
+          "actual": 2.0
+        },
+        "weekly_3_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 2.0,
+          "pct": 3.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 4.0,
+          "pct": 4.0
+        },
+        "monthly_6": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 2.0,
+          "pct": 5.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 5.0,
+          "actual": 5.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "Sáng tác lyric": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 0.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 5.0,
-        "weekly_4_4": 5.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 55.0,
-        "monthly_7": 31.0,
-        "weekly_7_1": 22.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 16.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 16.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 3.0
+        },
+        "weekly_4_3": {
+          "target": 5.0,
+          "actual": 8.0
+        },
+        "weekly_4_4": {
+          "target": 5.0,
+          "actual": 5.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 55.0,
+          "pct": 52.0
+        },
+        "monthly_7": {
+          "target": 31.0,
+          "actual": 31.0
+        },
+        "weekly_7_1": {
+          "target": 22.0,
+          "actual": 21.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        }
       }
     },
     "Hoàn thành 9 bài Kid Songs Remix, 13 bài Relaxing Piano": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1500.0,
-        "quarterly_1": 2100.0,
-        "monthly_1": 205.0,
-        "weekly_1_1": 190.0,
-        "weekly_1_2": 155.0,
-        "weekly_1_3": 145.0,
-        "weekly_1_5": 250.0,
-        "monthly_2": 30.0,
-        "weekly_2_1": 95.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 160.0,
-        "weekly_2_5": 850.0,
-        "monthly_3": 180.0,
-        "weekly_3_1": 215.0,
-        "weekly_3_2": 200.0,
-        "weekly_3_3": 340.0,
-        "weekly_3_5": 790.0,
-        "monthly_4": 230.0,
-        "weekly_4_1": 200.0,
-        "weekly_4_2": 180.0,
-        "weekly_4_3": 120.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 895.0,
-        "monthly_5": 209.0,
-        "weekly_5_1": 209.0,
-        "weekly_5_2": 240.0,
-        "weekly_5_3": 316.0,
-        "weekly_5_5": 800.0,
-        "monthly_6": 200.0,
-        "weekly_6_1": 195.0,
-        "weekly_6_2": 165.0,
-        "weekly_6_3": 195.0,
-        "weekly_6_5": 410.0,
-        "monthly_7": 50.0,
-        "weekly_7_1": 85.0,
-        "weekly_7_2": 55.0,
-        "weekly_7_3": 65.0
+        "yearly_2026": {
+          "target": 1500.0,
+          "actual": 1890.0
+        },
+        "quarterly_1": {
+          "target": 2100.0,
+          "actual": 2322.0
+        },
+        "monthly_1": {
+          "target": 205.0,
+          "actual": 239.0
+        },
+        "weekly_1_1": {
+          "target": 190.0,
+          "actual": 174.0
+        },
+        "weekly_1_2": {
+          "target": 155.0,
+          "actual": 202.0
+        },
+        "weekly_1_3": {
+          "target": 145.0,
+          "actual": 110.0
+        },
+        "weekly_1_5": {
+          "actual": 250.0,
+          "pct": 287.0
+        },
+        "monthly_2": {
+          "target": 30.0,
+          "actual": 20.0
+        },
+        "weekly_2_1": {
+          "target": 95.0,
+          "actual": 65.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 160.0,
+          "actual": 202.0
+        },
+        "weekly_2_5": {
+          "actual": 850.0,
+          "pct": 878.0
+        },
+        "monthly_3": {
+          "target": 180.0,
+          "actual": 166.0
+        },
+        "weekly_3_1": {
+          "target": 215.0,
+          "actual": 193.0
+        },
+        "weekly_3_2": {
+          "target": 200.0,
+          "actual": 183.0
+        },
+        "weekly_3_3": {
+          "target": 340.0,
+          "actual": 336.0
+        },
+        "weekly_3_5": {
+          "actual": 790.0,
+          "pct": 765.0
+        },
+        "monthly_4": {
+          "target": 230.0,
+          "actual": 261.0
+        },
+        "weekly_4_1": {
+          "target": 200.0,
+          "actual": 121.0
+        },
+        "weekly_4_2": {
+          "target": 180.0,
+          "actual": 170.0
+        },
+        "weekly_4_3": {
+          "target": 120.0,
+          "actual": 210.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 3.0
+        },
+        "weekly_4_5": {
+          "actual": 895.0,
+          "pct": 923.0
+        },
+        "monthly_5": {
+          "target": 209.0,
+          "actual": 193.0
+        },
+        "weekly_5_1": {
+          "target": 209.0,
+          "actual": 208.0
+        },
+        "weekly_5_2": {
+          "target": 240.0,
+          "actual": 151.0
+        },
+        "weekly_5_3": {
+          "target": 316.0,
+          "actual": 371.0
+        },
+        "weekly_5_5": {
+          "actual": 800.0,
+          "pct": 634.0
+        },
+        "monthly_6": {
+          "target": 200.0,
+          "actual": 236.0
+        },
+        "weekly_6_1": {
+          "target": 195.0,
+          "actual": 187.0
+        },
+        "weekly_6_2": {
+          "target": 165.0,
+          "actual": 154.0
+        },
+        "weekly_6_3": {
+          "target": 195.0,
+          "actual": 42.0
+        },
+        "weekly_6_5": {
+          "actual": 410.0,
+          "pct": 198.0
+        },
+        "monthly_7": {
+          "target": 50.0,
+          "actual": 52.0
+        },
+        "weekly_7_1": {
+          "target": 85.0,
+          "actual": 95.0
+        },
+        "weekly_7_2": {
+          "target": 55.0,
+          "actual": 66.0
+        },
+        "weekly_7_3": {
+          "target": 65.0
+        }
       }
     },
     "MM2-I01.02": {
       "title": "SL video đạt ngưỡng 1 triệu views (youtube long)",
       "unit": "Số lượng sản phẩm video public",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 720.0,
-        "quarterly_1": 720.0,
-        "monthly_1": 60.0,
-        "weekly_1_1": 60.0,
-        "weekly_1_2": 60.0,
-        "weekly_1_3": 60.0,
-        "weekly_1_5": 200.0,
-        "monthly_2": 50.0,
-        "weekly_2_1": 50.0,
-        "weekly_2_2": 50.0,
-        "weekly_2_3": 50.0,
-        "weekly_2_5": 220.0,
-        "monthly_3": 55.0,
-        "weekly_3_1": 55.0,
-        "weekly_3_2": 55.0,
-        "weekly_3_3": 55.0,
-        "weekly_3_5": 240.0,
-        "monthly_4": 67.0,
-        "weekly_4_1": 75.0,
-        "weekly_4_2": 88.0,
-        "weekly_4_3": 80.0,
-        "weekly_4_4": 80.0,
-        "weekly_4_5": 381.0,
-        "monthly_5": 88.0,
-        "weekly_5_1": 90.0,
-        "weekly_5_2": 83.0,
-        "weekly_5_3": 60.0,
-        "weekly_5_5": 270.0,
-        "monthly_6": 63.0,
-        "weekly_6_1": 56.0,
-        "weekly_6_2": 56.0,
-        "weekly_6_3": 68.0,
-        "weekly_6_5": 350.0,
-        "monthly_7": 88.0,
-        "weekly_7_1": 88.0,
-        "weekly_7_2": 88.0,
-        "weekly_7_3": 88.0
+        "yearly_2026": {
+          "target": 720.0,
+          "actual": 652.0,
+          "pct": 0.91
+        },
+        "quarterly_1": {
+          "target": 720.0,
+          "actual": 952.0,
+          "pct": 1.3222
+        },
+        "monthly_1": {
+          "target": 60.0,
+          "actual": 63.0
+        },
+        "weekly_1_1": {
+          "target": 60.0,
+          "actual": 48.0
+        },
+        "weekly_1_2": {
+          "target": 60.0,
+          "actual": 54.0
+        },
+        "weekly_1_3": {
+          "target": 60.0,
+          "actual": 55.0
+        },
+        "weekly_1_5": {
+          "actual": 200.0,
+          "pct": 230.0
+        },
+        "monthly_2": {
+          "target": 50.0,
+          "actual": 55.0
+        },
+        "weekly_2_1": {
+          "target": 50.0,
+          "actual": 62.0
+        },
+        "weekly_2_2": {
+          "target": 50.0,
+          "actual": 56.0
+        },
+        "weekly_2_3": {
+          "target": 50.0,
+          "actual": 57.0
+        },
+        "weekly_2_5": {
+          "actual": 220.0,
+          "pct": 202.0
+        },
+        "monthly_3": {
+          "target": 55.0,
+          "actual": 55.0
+        },
+        "weekly_3_1": {
+          "target": 55.0,
+          "actual": 38.0
+        },
+        "weekly_3_2": {
+          "target": 55.0,
+          "actual": 49.0
+        },
+        "weekly_3_3": {
+          "target": 55.0,
+          "actual": 60.0
+        },
+        "weekly_3_5": {
+          "actual": 240.0,
+          "pct": 362.0
+        },
+        "monthly_4": {
+          "target": 67.0,
+          "actual": 76.0
+        },
+        "weekly_4_1": {
+          "target": 75.0,
+          "actual": 71.0
+        },
+        "weekly_4_2": {
+          "target": 88.0,
+          "actual": 77.0
+        },
+        "weekly_4_3": {
+          "target": 80.0,
+          "actual": 85.0
+        },
+        "weekly_4_4": {
+          "target": 80.0
+        },
+        "weekly_4_5": {
+          "actual": 381.0,
+          "pct": 313.0
+        },
+        "monthly_5": {
+          "target": 88.0,
+          "actual": 85.0
+        },
+        "weekly_5_1": {
+          "target": 90.0,
+          "actual": 87.0
+        },
+        "weekly_5_2": {
+          "target": 83.0,
+          "actual": 80.0
+        },
+        "weekly_5_3": {
+          "target": 60.0,
+          "actual": 62.0
+        },
+        "weekly_5_5": {
+          "actual": 270.0,
+          "pct": 277.0
+        },
+        "monthly_6": {
+          "target": 63.0,
+          "actual": 62.0
+        },
+        "weekly_6_1": {
+          "target": 56.0,
+          "actual": 59.0
+        },
+        "weekly_6_2": {
+          "target": 56.0,
+          "actual": 49.0
+        },
+        "weekly_6_3": {
+          "target": 68.0,
+          "actual": 87.0
+        },
+        "weekly_6_5": {
+          "actual": 350.0,
+          "pct": 273.0
+        },
+        "monthly_7": {
+          "target": 88.0,
+          "actual": 93.0
+        },
+        "weekly_7_1": {
+          "target": 88.0,
+          "actual": 89.0
+        },
+        "weekly_7_2": {
+          "target": 88.0,
+          "actual": 91.0
+        },
+        "weekly_7_3": {
+          "target": 88.0
+        }
       }
     },
     "MM2-I02": {
       "title": "SL video đạt ngưỡng 1 triệu views (youtube long)",
       "unit": "Nâng cao chất lượng video upload trên kênh thương hiệu",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 12.0,
-        "quarterly_1": 12.0,
-        "monthly_1": 1.0,
-        "weekly_1_1": 2.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 4.0,
-        "monthly_2": 1.0,
-        "weekly_2_1": 1.0,
-        "weekly_2_2": 1.0,
-        "weekly_2_3": 1.0,
-        "weekly_2_5": 4.0,
-        "monthly_3": 1.0,
-        "weekly_3_1": 1.0,
-        "weekly_3_2": 1.0,
-        "weekly_3_3": 1.0,
-        "weekly_3_5": 4.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 1.0,
-        "weekly_4_2": 1.0,
-        "weekly_4_3": 1.0,
-        "weekly_4_4": 1.0,
-        "weekly_4_5": 7.0,
-        "monthly_5": 3.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 2.0,
-        "weekly_5_3": 2.0,
-        "weekly_5_5": 4.0,
-        "monthly_6": 1.0,
-        "weekly_6_1": 1.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 2.0,
-        "weekly_6_5": 4.0,
-        "monthly_7": 2.0,
-        "weekly_7_1": 2.0,
-        "weekly_7_2": 2.0,
-        "weekly_7_3": 2.0,
-        "monthly_11": 0.2,
-        "weekly_11_1": 0.0,
-        "weekly_11_2": 1.0,
-        "weekly_11_3": 1.0,
-        "weekly_11_4": 1.0
+        "yearly_2026": {
+          "target": 12.0,
+          "actual": 4.0,
+          "pct": 0.33
+        },
+        "quarterly_1": {
+          "target": 12.0,
+          "actual": 1.0,
+          "pct": 0.0833
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 7.0,
+          "pct": 1.0
+        },
+        "monthly_5": {
+          "target": 3.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 4.0,
+          "pct": 0.0
+        },
+        "monthly_7": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 2.0
+        },
+        "monthly_11": {
+          "target": 0.2,
+          "actual": 6.0,
+          "pct": 0.0
+        },
+        "weekly_11_1": {
+          "target": 0.0,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_11_2": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_11_3": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_11_4": {
+          "actual": 1.0,
+          "pct": 0.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 0.8707,
-        "quarterly_1": 1.063
+        "yearly_2026": {
+          "pct": 0.8707
+        },
+        "quarterly_1": {
+          "pct": 1.063
+        }
       }
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Số lượng video vượt mốc traffic đề ra theo từng thời điểm ( mốc 20k views)": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Số lượt view youtube DA01",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 22692000.0,
-        "quarterly_1": 24722000.0,
-        "monthly_1": 1500000.0,
-        "weekly_1_1": 1500000.0,
-        "weekly_1_2": 2000000.0,
-        "weekly_1_3": 3451068.0,
-        "weekly_1_5": 7827000.0,
-        "monthly_2": 1956750.0,
-        "weekly_2_1": 1500000.0,
-        "weekly_2_2": 1500000.0,
-        "weekly_2_3": 4521758.0,
-        "weekly_2_5": 8005000.0,
-        "monthly_3": 2001250.0,
-        "weekly_3_1": 1500000.0,
-        "weekly_3_2": 1500000.0,
-        "weekly_3_3": 4244752.0,
-        "weekly_3_5": 8005000.0,
-        "monthly_4": 1500000.0,
-        "weekly_4_1": 1500000.0,
-        "weekly_4_2": 1500000.0,
-        "weekly_4_3": 1500000.0,
-        "weekly_4_4": 2665783.0,
-        "weekly_4_5": 8232000.0,
-        "monthly_5": 1500000.0,
-        "weekly_5_1": 1800000.0,
-        "weekly_5_2": 1500000.0,
-        "weekly_5_3": 4810386.0,
-        "weekly_5_5": 6875000.0,
-        "monthly_6": 1200000.0,
-        "weekly_6_1": 1200000.0,
-        "weekly_6_2": 1200000.0,
-        "weekly_6_3": 3423501.0,
-        "weekly_6_5": 5500000.0,
-        "monthly_7": 1200000.0,
-        "weekly_7_1": 1500000.0,
-        "weekly_7_2": 1500000.0,
-        "weekly_7_3": 1500000.0
+        "yearly_2026": {
+          "target": 22692000.0,
+          "actual": 15942315.0,
+          "pct": 0.7026
+        },
+        "quarterly_1": {
+          "target": 24722000.0,
+          "actual": 15779573.0,
+          "pct": 0.6383
+        },
+        "monthly_1": {
+          "target": 1500000.0,
+          "actual": 1273111.0,
+          "pct": 0.85
+        },
+        "weekly_1_1": {
+          "target": 1500000.0,
+          "actual": 1271504.0,
+          "pct": 0.85
+        },
+        "weekly_1_2": {
+          "target": 2000000.0,
+          "actual": 1349317.0,
+          "pct": 0.67
+        },
+        "weekly_1_3": {
+          "target": 3451068.0,
+          "actual": 1334820.0
+        },
+        "weekly_1_5": {
+          "actual": 7827000.0,
+          "pct": 4469984.0
+        },
+        "monthly_2": {
+          "target": 1956750.0,
+          "actual": 1232177.0,
+          "pct": 0.6297
+        },
+        "weekly_2_1": {
+          "target": 1500000.0,
+          "actual": 1166818.0,
+          "pct": 0.7779
+        },
+        "weekly_2_2": {
+          "target": 1500000.0,
+          "actual": 906247.0,
+          "pct": 0.6042
+        },
+        "weekly_2_3": {
+          "target": 4521758.0,
+          "actual": 1006599.0,
+          "pct": 0.2226
+        },
+        "weekly_2_5": {
+          "actual": 8005000.0,
+          "pct": 5710166.0
+        },
+        "monthly_3": {
+          "target": 2001250.0,
+          "actual": 1244633.0,
+          "pct": 0.6219
+        },
+        "weekly_3_1": {
+          "target": 1500000.0,
+          "actual": 1245804.0,
+          "pct": 0.8305
+        },
+        "weekly_3_2": {
+          "target": 1500000.0,
+          "actual": 1269811.0,
+          "pct": 0.8465
+        },
+        "weekly_3_3": {
+          "target": 4244752.0,
+          "actual": 1344280.0,
+          "pct": 0.3167
+        },
+        "weekly_3_5": {
+          "actual": 8005000.0,
+          "pct": 5704067.0
+        },
+        "monthly_4": {
+          "target": 1500000.0,
+          "actual": 1299217.0,
+          "pct": 0.87
+        },
+        "weekly_4_1": {
+          "target": 1500000.0,
+          "actual": 1378516.0,
+          "pct": 0.92
+        },
+        "weekly_4_2": {
+          "target": 1500000.0,
+          "actual": 1271019.0,
+          "pct": 0.85
+        },
+        "weekly_4_3": {
+          "target": 1500000.0,
+          "actual": 1390465.0,
+          "pct": 0.93
+        },
+        "weekly_4_4": {
+          "target": 2665783.0,
+          "actual": 1243857.0,
+          "pct": 0.47
+        },
+        "weekly_4_5": {
+          "actual": 8232000.0,
+          "pct": 5184974.0
+        },
+        "monthly_5": {
+          "target": 1500000.0,
+          "actual": 1192213.0,
+          "pct": 0.79
+        },
+        "weekly_5_1": {
+          "target": 1800000.0,
+          "actual": 1106842.0,
+          "pct": 0.61
+        },
+        "weekly_5_2": {
+          "target": 1500000.0,
+          "actual": 1122559.0,
+          "pct": 0.75
+        },
+        "weekly_5_3": {
+          "target": 4810386.0
+        },
+        "weekly_5_5": {
+          "actual": 6875000.0,
+          "pct": 4890532.0
+        },
+        "monthly_6": {
+          "target": 1200000.0,
+          "actual": 1194279.0,
+          "pct": 1.0
+        },
+        "weekly_6_1": {
+          "target": 1200000.0,
+          "actual": 1169444.0,
+          "pct": 0.97
+        },
+        "weekly_6_2": {
+          "target": 1200000.0,
+          "actual": 1087776.0,
+          "pct": 0.91
+        },
+        "weekly_6_3": {
+          "target": 3423501.0,
+          "actual": 1093908.0,
+          "pct": 0.32
+        },
+        "weekly_6_5": {
+          "actual": 5500000.0
+        },
+        "monthly_7": {
+          "target": 1200000.0,
+          "actual": 1247720.0,
+          "pct": 1.0398
+        },
+        "weekly_7_1": {
+          "target": 1500000.0,
+          "actual": 1220715.0,
+          "pct": 0.81
+        },
+        "weekly_7_2": {
+          "target": 1500000.0,
+          "actual": 1271391.0,
+          "pct": 0.85
+        },
+        "weekly_7_3": {
+          "target": 1500000.0
+        }
       }
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "TM3-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 1.0389,
-        "quarterly_1": 1.49
+        "yearly_2026": {
+          "pct": 1.0389
+        },
+        "quarterly_1": {
+          "pct": 1.49
+        }
       }
     },
     "MM3-I02.03": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "Đối tác",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 150.0,
-        "quarterly_1": 120.0,
-        "monthly_1": 14.0,
-        "weekly_1_1": 14.0,
-        "weekly_1_2": 17.0,
-        "weekly_1_3": 14.0,
-        "weekly_1_5": 40.0,
-        "monthly_2": 12.0,
-        "weekly_2_1": 14.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 25.0,
-        "weekly_2_5": 50.0,
-        "monthly_3": 12.0,
-        "weekly_3_1": 12.0,
-        "weekly_3_2": 14.0,
-        "weekly_3_3": 9.0,
-        "weekly_3_5": 30.0,
-        "monthly_4": 10.0,
-        "weekly_4_1": 10.0,
-        "weekly_4_2": 8.0,
-        "weekly_4_3": 9.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 30.0,
-        "monthly_5": 8.0,
-        "weekly_5_1": 12.0,
-        "weekly_5_2": 12.0,
-        "weekly_5_3": 18.0,
-        "weekly_5_5": 30.0,
-        "monthly_6": 8.0,
-        "weekly_6_1": 8.0,
-        "weekly_6_2": 7.0,
-        "weekly_6_3": 7.0,
-        "weekly_6_5": 30.0,
-        "monthly_7": 5.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 6.0,
-        "weekly_7_3": 7.0
+        "yearly_2026": {
+          "target": 150.0,
+          "actual": 161.0,
+          "pct": 1.0733
+        },
+        "quarterly_1": {
+          "target": 120.0,
+          "actual": 90.0,
+          "pct": 0.75
+        },
+        "monthly_1": {
+          "target": 14.0,
+          "actual": 13.0
+        },
+        "weekly_1_1": {
+          "target": 14.0,
+          "actual": 9.0
+        },
+        "weekly_1_2": {
+          "target": 17.0,
+          "actual": 22.0
+        },
+        "weekly_1_3": {
+          "target": 14.0,
+          "actual": 15.0
+        },
+        "weekly_1_5": {
+          "actual": 40.0,
+          "pct": 50.0
+        },
+        "monthly_2": {
+          "target": 12.0,
+          "actual": 12.0
+        },
+        "weekly_2_1": {
+          "target": 14.0,
+          "actual": 3.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 25.0,
+          "actual": 35.0
+        },
+        "weekly_2_5": {
+          "actual": 50.0,
+          "pct": 50.0
+        },
+        "monthly_3": {
+          "target": 12.0,
+          "actual": 12.0
+        },
+        "weekly_3_1": {
+          "target": 12.0,
+          "actual": 9.0
+        },
+        "weekly_3_2": {
+          "target": 14.0,
+          "actual": 20.0
+        },
+        "weekly_3_3": {
+          "target": 9.0,
+          "actual": 9.0
+        },
+        "weekly_3_5": {
+          "actual": 30.0,
+          "pct": 30.0
+        },
+        "monthly_4": {
+          "target": 10.0,
+          "actual": 2.0
+        },
+        "weekly_4_1": {
+          "target": 10.0,
+          "actual": 9.0
+        },
+        "weekly_4_2": {
+          "target": 8.0,
+          "actual": 10.0
+        },
+        "weekly_4_3": {
+          "target": 9.0,
+          "actual": 9.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 30.0,
+          "pct": 30.0
+        },
+        "monthly_5": {
+          "target": 8.0,
+          "actual": 2.0
+        },
+        "weekly_5_1": {
+          "target": 12.0,
+          "actual": 5.0
+        },
+        "weekly_5_2": {
+          "target": 12.0,
+          "actual": 5.0
+        },
+        "weekly_5_3": {
+          "target": 18.0
+        },
+        "weekly_5_5": {
+          "actual": 30.0,
+          "pct": 30.0
+        },
+        "monthly_6": {
+          "target": 8.0,
+          "actual": 9.0
+        },
+        "weekly_6_1": {
+          "target": 8.0,
+          "actual": 7.0
+        },
+        "weekly_6_2": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_6_3": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_6_5": {
+          "actual": 30.0
+        },
+        "monthly_7": {
+          "target": 5.0,
+          "actual": 2.0
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 6.0,
+          "actual": 6.0
+        },
+        "weekly_7_3": {
+          "target": 7.0
+        }
       }
     },
     "MM3-I02.04": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "Số lượng đối tác SCMU phản hồi",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 420.0,
-        "quarterly_1": 450.0,
-        "monthly_1": 35.0,
-        "weekly_1_1": 40.0,
-        "weekly_1_2": 40.0,
-        "weekly_1_3": 30.0,
-        "weekly_1_5": 129.0,
-        "monthly_2": 35.0,
-        "weekly_2_1": 40.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 52.0,
-        "weekly_2_5": 150.0,
-        "monthly_3": 40.0,
-        "weekly_3_1": 40.0,
-        "weekly_3_2": 40.0,
-        "weekly_3_3": 28.0,
-        "weekly_3_5": 130.0,
-        "monthly_4": 25.0,
-        "weekly_4_1": 30.0,
-        "weekly_4_2": 35.0,
-        "weekly_4_3": 40.0,
-        "weekly_4_4": 20.0,
-        "weekly_4_5": 140.0,
-        "monthly_5": 35.0,
-        "weekly_5_1": 40.0,
-        "weekly_5_2": 45.0,
-        "weekly_5_3": 41.0,
-        "weekly_5_5": 120.0,
-        "monthly_6": 20.0,
-        "weekly_6_1": 25.0,
-        "weekly_6_2": 35.0,
-        "weekly_6_3": 37.0,
-        "weekly_6_5": 130.0,
-        "monthly_7": 20.0,
-        "weekly_7_1": 28.0,
-        "weekly_7_2": 30.0,
-        "weekly_7_3": 35.0
+        "yearly_2026": {
+          "target": 420.0,
+          "actual": 510.0,
+          "pct": 1.2143
+        },
+        "quarterly_1": {
+          "target": 450.0,
+          "actual": 422.0,
+          "pct": 0.94
+        },
+        "monthly_1": {
+          "target": 35.0,
+          "actual": 42.0
+        },
+        "weekly_1_1": {
+          "target": 40.0,
+          "actual": 61.0
+        },
+        "weekly_1_2": {
+          "target": 40.0,
+          "actual": 67.0
+        },
+        "weekly_1_3": {
+          "target": 30.0,
+          "actual": 22.0
+        },
+        "weekly_1_5": {
+          "actual": 129.0,
+          "pct": 164.0
+        },
+        "monthly_2": {
+          "target": 35.0,
+          "actual": 27.0
+        },
+        "weekly_2_1": {
+          "target": 40.0,
+          "actual": 44.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 52.0,
+          "actual": 93.0
+        },
+        "weekly_2_5": {
+          "actual": 150.0,
+          "pct": 154.0
+        },
+        "monthly_3": {
+          "target": 40.0,
+          "actual": 39.0
+        },
+        "weekly_3_1": {
+          "target": 40.0,
+          "actual": 42.0
+        },
+        "weekly_3_2": {
+          "target": 40.0,
+          "actual": 43.0
+        },
+        "weekly_3_3": {
+          "target": 28.0,
+          "actual": 22.0
+        },
+        "weekly_3_5": {
+          "actual": 130.0,
+          "pct": 147.0
+        },
+        "monthly_4": {
+          "target": 25.0,
+          "actual": 7.0
+        },
+        "weekly_4_1": {
+          "target": 30.0,
+          "actual": 39.0
+        },
+        "weekly_4_2": {
+          "target": 35.0,
+          "actual": 41.0
+        },
+        "weekly_4_3": {
+          "target": 40.0,
+          "actual": 37.0
+        },
+        "weekly_4_4": {
+          "target": 20.0,
+          "actual": 12.0
+        },
+        "weekly_4_5": {
+          "actual": 140.0,
+          "pct": 154.0
+        },
+        "monthly_5": {
+          "target": 35.0,
+          "actual": 7.0
+        },
+        "weekly_5_1": {
+          "target": 40.0,
+          "actual": 42.0
+        },
+        "weekly_5_2": {
+          "target": 45.0,
+          "actual": 50.0
+        },
+        "weekly_5_3": {
+          "target": 41.0
+        },
+        "weekly_5_5": {
+          "actual": 120.0,
+          "pct": 121.0
+        },
+        "monthly_6": {
+          "target": 20.0,
+          "actual": 11.0
+        },
+        "weekly_6_1": {
+          "target": 25.0,
+          "actual": 34.0
+        },
+        "weekly_6_2": {
+          "target": 35.0,
+          "actual": 38.0
+        },
+        "weekly_6_3": {
+          "target": 37.0,
+          "actual": 38.0
+        },
+        "weekly_6_5": {
+          "actual": 130.0
+        },
+        "monthly_7": {
+          "target": 20.0,
+          "actual": 20.0
+        },
+        "weekly_7_1": {
+          "target": 28.0,
+          "actual": 22.0,
+          "pct": 0.79
+        },
+        "weekly_7_2": {
+          "target": 30.0,
+          "actual": 33.0
+        },
+        "weekly_7_3": {
+          "target": 35.0
+        }
       }
     },
     "MM3-I02.05": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "MM3-I02.05",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 25.0,
-        "quarterly_1": 24.0,
-        "monthly_1": 1.0,
-        "weekly_1_1": 2.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 7.0,
-        "monthly_2": 2.0,
-        "weekly_2_1": 2.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 2.0,
-        "weekly_2_5": 10.0,
-        "monthly_3": 2.0,
-        "weekly_3_1": 3.0,
-        "weekly_3_2": 3.0,
-        "weekly_3_3": 2.0,
-        "weekly_3_5": 7.0,
-        "monthly_4": 2.0,
-        "weekly_4_1": 2.0,
-        "weekly_4_2": 2.0,
-        "weekly_4_3": 2.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 7.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 2.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 1.0,
-        "weekly_5_5": 7.0,
-        "monthly_6": 2.0,
-        "weekly_6_1": 2.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 2.0,
-        "weekly_6_5": 9.0,
-        "monthly_7": 1.0,
-        "weekly_7_1": 2.0,
-        "weekly_7_2": 2.0,
-        "weekly_7_3": 2.0
+        "yearly_2026": {
+          "target": 25.0,
+          "actual": 29.0,
+          "pct": 1.16
+        },
+        "quarterly_1": {
+          "target": 24.0,
+          "actual": 26.0,
+          "pct": 1.08
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_1_5": {
+          "actual": 7.0,
+          "pct": 9.0
+        },
+        "monthly_2": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_2_1": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 2.0,
+          "actual": 4.0
+        },
+        "weekly_2_5": {
+          "actual": 10.0,
+          "pct": 12.0
+        },
+        "monthly_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_3_1": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_3_2": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_3_3": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_3_5": {
+          "actual": 7.0,
+          "pct": 8.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 1.0
+        },
+        "weekly_4_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_4_2": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_4_3": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 7.0,
+          "pct": 9.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_5_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 3.0
+        },
+        "weekly_5_3": {
+          "target": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 7.0,
+          "pct": 9.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_1": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 3.0
+        },
+        "weekly_6_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 9.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_7_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 2.0,
+          "actual": 3.0
+        },
+        "weekly_7_3": {
+          "target": 2.0
+        }
       }
     },
     "MM3-I02.06": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "Số lượng đối tác SCMU chốt deal phối hợp nội bộ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 1.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 1.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 0.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        }
       }
     },
     "MM3-I02.07": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "Số lượng đối tác SCMU chốt deal dịch vụ sản xuất",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 3.0,
-        "quarterly_1": 2.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 1.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 1.0,
-        "weekly_2_5": 1.0,
-        "monthly_3": 1.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 1.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 1.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 1.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 1.0,
-        "weekly_5_5": 1.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 1.0,
-        "weekly_6_2": 0.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_5": 1.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.6667
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 4.0,
+          "pct": 2.0
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 2.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "MM3-I02.08": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "Số lượng đối tác SCMU chốt deal cấp kênh + kho nhạc",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 6.0,
-        "quarterly_1": 6.0,
-        "monthly_1": 1.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 1.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 2.0,
-        "monthly_2": 1.0,
-        "weekly_2_1": 1.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 2.0,
-        "monthly_3": 1.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 1.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 2.0,
-        "monthly_4": 1.0,
-        "weekly_4_1": 1.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 1.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 2.0,
-        "monthly_5": 1.0,
-        "weekly_5_1": 1.0,
-        "weekly_5_2": 2.0,
-        "weekly_5_3": 1.0,
-        "weekly_5_5": 2.0,
-        "monthly_6": 1.0,
-        "weekly_6_1": 1.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_5": 3.0,
-        "monthly_7": 1.0,
-        "weekly_7_1": 1.0,
-        "weekly_7_2": 1.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 6.0,
+          "actual": 11.0,
+          "pct": 1.8333
+        },
+        "quarterly_1": {
+          "target": 6.0,
+          "actual": 27.0,
+          "pct": 4.5
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 2.0
+        },
+        "weekly_1_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "monthly_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_2_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 2.0,
+          "pct": 5.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 1.0
+        },
+        "weekly_3_5": {
+          "actual": 2.0,
+          "pct": 4.0
+        },
+        "monthly_4": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_4_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 2.0,
+          "pct": 14.0
+        },
+        "monthly_5": {
+          "target": 1.0,
+          "actual": 3.0
+        },
+        "weekly_5_1": {
+          "target": 1.0,
+          "actual": 8.0
+        },
+        "weekly_5_2": {
+          "target": 2.0,
+          "actual": 1.0
+        },
+        "weekly_5_3": {
+          "target": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 2.0,
+          "pct": 9.0
+        },
+        "monthly_6": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_6_1": {
+          "target": 1.0,
+          "actual": 4.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 3.0
+        },
+        "monthly_7": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_1": {
+          "target": 1.0,
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_7_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "MM3-I02.09": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "Số lượng đối tác SCMU chốt deal cấp kho nhạc",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 7.0,
-        "quarterly_1": 7.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 1.0,
-        "weekly_1_2": 1.0,
-        "weekly_1_3": 2.0,
-        "weekly_1_5": 2.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 1.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 2.0,
-        "weekly_2_5": 3.0,
-        "monthly_3": 1.0,
-        "weekly_3_1": 1.0,
-        "weekly_3_2": 1.0,
-        "weekly_3_3": 1.0,
-        "weekly_3_5": 1.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 1.0,
-        "weekly_4_3": 1.0,
-        "weekly_4_4": 1.0,
-        "weekly_4_5": 1.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 1.0,
-        "weekly_5_2": 1.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 1.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 1.0,
-        "weekly_6_2": 1.0,
-        "weekly_6_3": 1.0,
-        "weekly_6_5": 2.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 1.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 1.0
+        "yearly_2026": {
+          "target": 7.0,
+          "actual": 2.0,
+          "pct": 0.2857
+        },
+        "quarterly_1": {
+          "target": 7.0,
+          "actual": 1.0,
+          "pct": 0.14
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 2.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 2.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "actual": 3.0,
+          "pct": 2.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_3_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_3_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_4": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_5_3": {
+          "target": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_6_3": {
+          "target": 1.0,
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 2.0
+        },
+        "monthly_7": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_7_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_7_3": {
+          "target": 1.0
+        }
       }
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 2.1779
+        "yearly_2026": {
+          "pct": 2.1779
+        }
       }
     },
     "TM4-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM4-I01.01": {
       "title": "Số lượng đối tác Sconnect Music chốt deal cấp quyền khai thác chỉ kho nhạc",
       "unit": "Lượt tiếp cận",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 300000.0,
-        "quarterly_1": 450000.0,
-        "monthly_1": 25000.0,
-        "weekly_1_1": 25000.0,
-        "weekly_1_2": 25000.0,
-        "weekly_1_3": 53694.0,
-        "weekly_1_5": 100000.0,
-        "monthly_2": 25000.0,
-        "weekly_2_1": 10000.0,
-        "weekly_2_2": 50000.0,
-        "weekly_2_3": 100000.0,
-        "weekly_2_5": 150000.0,
-        "monthly_3": 30000.0,
-        "weekly_3_1": 50000.0,
-        "weekly_3_2": 80000.0,
-        "weekly_3_3": 90000.0,
-        "weekly_3_5": 200000.0,
-        "monthly_4": 50000.0,
-        "weekly_4_1": 50000.0,
-        "weekly_4_2": 80000.0,
-        "weekly_4_3": 100000.0,
-        "weekly_4_4": 80000.0,
-        "weekly_4_5": 300000.0,
-        "monthly_5": 50000.0,
-        "weekly_5_1": 100000.0,
-        "weekly_5_2": 100000.0,
-        "weekly_5_3": 124609.0,
-        "weekly_5_5": 300000.0,
-        "monthly_6": 50000.0,
-        "weekly_6_1": 80000.0,
-        "weekly_6_2": 80000.0,
-        "weekly_6_3": 108254.0,
-        "weekly_6_5": 250000.0,
-        "monthly_7": 30000.0,
-        "weekly_7_1": 60000.0,
-        "weekly_7_2": 50000.0,
-        "weekly_7_3": 50000.0
+        "yearly_2026": {
+          "target": 300000.0,
+          "actual": 653363.0,
+          "pct": 2.1779
+        },
+        "quarterly_1": {
+          "target": 450000.0,
+          "actual": 794584.0,
+          "pct": 1.77
+        },
+        "monthly_1": {
+          "target": 25000.0,
+          "actual": 17076.0,
+          "pct": 0.68
+        },
+        "weekly_1_1": {
+          "target": 25000.0,
+          "actual": 16872.0,
+          "pct": 0.67
+        },
+        "weekly_1_2": {
+          "target": 25000.0,
+          "actual": 12358.0,
+          "pct": 0.49
+        },
+        "weekly_1_3": {
+          "target": 53694.0,
+          "actual": 4892.0
+        },
+        "weekly_1_5": {
+          "actual": 100000.0,
+          "pct": 336118.0
+        },
+        "monthly_2": {
+          "target": 25000.0,
+          "actual": 6292.0,
+          "pct": 0.25
+        },
+        "weekly_2_1": {
+          "target": 10000.0,
+          "actual": 41159.0,
+          "pct": 4.12
+        },
+        "weekly_2_2": {
+          "target": 50000.0,
+          "actual": 130984.0,
+          "pct": 2.62
+        },
+        "weekly_2_3": {
+          "target": 100000.0,
+          "actual": 157683.0,
+          "pct": 1.58
+        },
+        "weekly_2_5": {
+          "actual": 150000.0,
+          "pct": 265746.0
+        },
+        "monthly_3": {
+          "target": 30000.0,
+          "actual": 30865.0,
+          "pct": 1.03
+        },
+        "weekly_3_1": {
+          "target": 50000.0,
+          "actual": 71316.0,
+          "pct": 1.43
+        },
+        "weekly_3_2": {
+          "target": 80000.0,
+          "actual": 90843.0,
+          "pct": 1.14
+        },
+        "weekly_3_3": {
+          "target": 90000.0,
+          "actual": 71459.0,
+          "pct": 0.79
+        },
+        "weekly_3_5": {
+          "actual": 200000.0,
+          "pct": 291696.0
+        },
+        "monthly_4": {
+          "target": 50000.0,
+          "actual": 35111.0,
+          "pct": 0.7
+        },
+        "weekly_4_1": {
+          "target": 50000.0,
+          "actual": 80466.0,
+          "pct": 1.61
+        },
+        "weekly_4_2": {
+          "target": 80000.0,
+          "actual": 83978.0,
+          "pct": 1.05
+        },
+        "weekly_4_3": {
+          "target": 100000.0,
+          "actual": 78428.0,
+          "pct": 0.78
+        },
+        "weekly_4_4": {
+          "target": 80000.0,
+          "actual": 15154.0,
+          "pct": 0.19
+        },
+        "weekly_4_5": {
+          "actual": 300000.0,
+          "pct": 250488.0
+        },
+        "monthly_5": {
+          "target": 50000.0,
+          "actual": 1103.0,
+          "pct": 0.02
+        },
+        "weekly_5_1": {
+          "target": 100000.0,
+          "actual": 83282.0,
+          "pct": 0.83
+        },
+        "weekly_5_2": {
+          "target": 100000.0,
+          "actual": 91006.0,
+          "pct": 0.91
+        },
+        "weekly_5_3": {
+          "target": 124609.0
+        },
+        "weekly_5_5": {
+          "actual": 300000.0,
+          "pct": 252400.0
+        },
+        "monthly_6": {
+          "target": 50000.0,
+          "actual": 892.0,
+          "pct": 0.02
+        },
+        "weekly_6_1": {
+          "target": 80000.0,
+          "actual": 97268.0,
+          "pct": 1.22
+        },
+        "weekly_6_2": {
+          "target": 80000.0,
+          "actual": 93586.0,
+          "pct": 1.17
+        },
+        "weekly_6_3": {
+          "target": 108254.0,
+          "actual": 59918.0,
+          "pct": 0.55
+        },
+        "weekly_6_5": {
+          "actual": 250000.0
+        },
+        "monthly_7": {
+          "target": 30000.0,
+          "actual": 12804.0,
+          "pct": 0.43
+        },
+        "weekly_7_1": {
+          "target": 60000.0,
+          "actual": 14521.0,
+          "pct": 0.24
+        },
+        "weekly_7_2": {
+          "target": 50000.0,
+          "actual": 13469.0,
+          "pct": 0.27
+        },
+        "weekly_7_3": {
+          "target": 50000.0
+        }
       }
     },
     "TM4-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM4-I02.02": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 12.0
+        "weekly_6_5": {
+          "actual": 12.0
+        }
       }
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 9.0
+        "weekly_6_5": {
+          "actual": 9.0
+        }
       }
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 1.0
+        "yearly_2026": {
+          "pct": 1.0
+        }
       }
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 0.0,
-        "weekly_1_5": 1.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 42250000.0
+        "weekly_6_5": {
+          "actual": 42250000.0
+        }
       }
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.07": {
       "title": "Số vi phạm chính sách",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 1.0
+        "yearly_2026": {
+          "pct": 1.0
+        }
       }
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "weekly_2_5": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "pct": 1.0
+        }
       }
     },
     "TM6-I01.02": {
       "title": "",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        }
       }
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0
+        "yearly_2026": {
+          "target": 0.0
+        }
       }
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 1.0
+        "yearly_2026": {
+          "pct": 1.0
+        }
       }
     },
     "MM6-I03.02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "MM7-I01.01": {
       "title": "ROI",
       "unit": "Tỉ lệ AIVA áp dụng trong công việc của nhân sự",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.5,
-        "quarterly_1": 0.8
+        "yearly_2026": {
+          "target": 0.5,
+          "actual": 0.8
+        },
+        "quarterly_1": {
+          "target": 0.8
+        }
       }
     },
     "TM7-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I02.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "MM7-I02.01": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "MM7-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 1.0
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.85,
-        "quarterly_1": 0.85,
-        "weekly_1_5": 0.85,
-        "weekly_2_5": 0.85,
-        "weekly_4_5": 0.85,
-        "weekly_5_5": 0.85,
-        "weekly_6_5": 0.85
+        "yearly_2026": {
+          "target": 0.85
+        },
+        "quarterly_1": {
+          "target": 0.85
+        },
+        "weekly_1_5": {
+          "actual": 0.85
+        },
+        "weekly_2_5": {
+          "actual": 0.85
+        },
+        "weekly_4_5": {
+          "actual": 0.85,
+          "pct": 0.86
+        },
+        "weekly_5_5": {
+          "actual": 0.85,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.85
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_5_5": 2.0
+        "weekly_5_5": {
+          "pct": 2.0
+        }
       }
     }
   },
@@ -8550,777 +27285,2162 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1481402760.0,
-        "quarterly_1": 2345419960.0,
-        "monthly_1": 75000000.0,
-        "weekly_1_1": 75000000.0,
-        "weekly_1_2": 75000000.0,
-        "weekly_1_3": 75000000.0,
-        "weekly_1_5": 400000000.0,
-        "monthly_2": 100000000.0,
-        "weekly_2_1": 100000000.0,
-        "weekly_2_2": 100000000.0,
-        "weekly_2_3": 100000000.0,
-        "weekly_2_5": 600000000.0,
-        "monthly_3": 150000000.0,
-        "weekly_3_1": 150000000.0,
-        "weekly_3_2": 150000000.0,
-        "weekly_3_3": 150000000.0,
-        "weekly_3_5": 779531220.0,
-        "monthly_4": 194882805.0,
-        "weekly_4_1": 194882805.0,
-        "weekly_4_2": 194882805.0,
-        "weekly_4_3": 194882805.0,
-        "weekly_4_4": 194882805.0,
-        "weekly_4_5": 800179380.0,
-        "monthly_5": 200044845.0,
-        "weekly_5_1": 200044845.0,
-        "weekly_5_2": 200044845.0,
-        "weekly_5_3": 200044845.0,
-        "weekly_5_5": 940269460.0,
-        "monthly_6": 235067365.0,
-        "weekly_6_1": 235067365.0,
-        "weekly_6_2": 235067365.0,
-        "weekly_6_3": 235067365.0,
-        "weekly_6_5": 610402000.0,
-        "monthly_7": 152600500.0,
-        "weekly_7_1": 152600500.0,
-        "weekly_7_2": 152600500.0,
-        "weekly_7_3": 152600500.0,
-        "weekly_7_5": 758784000.0,
-        "weekly_8_5": 951756000.0
+        "yearly_2026": {
+          "target": 1481402760.0,
+          "actual": 526046393.0,
+          "pct": 0.3551
+        },
+        "quarterly_1": {
+          "target": 2345419960.0,
+          "actual": 1230716085.0,
+          "pct": 0.5247
+        },
+        "monthly_1": {
+          "target": 75000000.0,
+          "actual": 26794480.0,
+          "pct": 0.3573
+        },
+        "weekly_1_1": {
+          "target": 75000000.0,
+          "actual": 28613066.0,
+          "pct": 0.3815
+        },
+        "weekly_1_2": {
+          "target": 75000000.0,
+          "actual": 38952524.0,
+          "pct": 0.5194
+        },
+        "weekly_1_3": {
+          "target": 75000000.0,
+          "actual": 49022702.0,
+          "pct": 0.6536
+        },
+        "weekly_1_5": {
+          "actual": 400000000.0,
+          "pct": 183931308.0
+        },
+        "monthly_2": {
+          "target": 100000000.0,
+          "actual": 43651232.0,
+          "pct": 0.4365
+        },
+        "weekly_2_1": {
+          "target": 100000000.0,
+          "actual": 47470409.8,
+          "pct": 0.4747
+        },
+        "weekly_2_2": {
+          "target": 100000000.0,
+          "actual": 62617752.0,
+          "pct": 0.6262
+        },
+        "weekly_2_3": {
+          "target": 100000000.0,
+          "actual": 57725371.0,
+          "pct": 0.5773
+        },
+        "weekly_2_5": {
+          "actual": 600000000.0,
+          "pct": 191200257.0
+        },
+        "monthly_3": {
+          "target": 150000000.0,
+          "actual": 34250030.0,
+          "pct": 0.2283
+        },
+        "weekly_3_1": {
+          "target": 150000000.0,
+          "actual": 30665967.0,
+          "pct": 0.2044
+        },
+        "weekly_3_2": {
+          "target": 150000000.0,
+          "actual": 40506864.18,
+          "pct": 0.27
+        },
+        "weekly_3_3": {
+          "target": 150000000.0,
+          "actual": 53096705.0,
+          "pct": 0.354
+        },
+        "weekly_3_5": {
+          "actual": 779531220.0,
+          "pct": 307057462.0
+        },
+        "monthly_4": {
+          "target": 194882805.0,
+          "actual": 76703425.0,
+          "pct": 0.3936
+        },
+        "weekly_4_1": {
+          "target": 194882805.0,
+          "actual": 88024144.0,
+          "pct": 0.4517
+        },
+        "weekly_4_2": {
+          "target": 194882805.0,
+          "actual": 69535865.0,
+          "pct": 0.3568
+        },
+        "weekly_4_3": {
+          "target": 194882805.0,
+          "actual": 64329082.0,
+          "pct": 0.3301
+        },
+        "weekly_4_4": {
+          "target": 194882805.0,
+          "actual": 45415426.0,
+          "pct": 0.233
+        },
+        "weekly_4_5": {
+          "actual": 800179380.0,
+          "pct": 262529133.0
+        },
+        "monthly_5": {
+          "target": 200044845.0,
+          "actual": 55080657.0,
+          "pct": 0.2753
+        },
+        "weekly_5_1": {
+          "target": 200044845.0,
+          "actual": 53507582.0,
+          "pct": 0.2675
+        },
+        "weekly_5_2": {
+          "target": 200044845.0,
+          "actual": 60530464.0,
+          "pct": 0.3026
+        },
+        "weekly_5_3": {
+          "target": 200044845.0,
+          "actual": 71997152.0,
+          "pct": 0.3599
+        },
+        "weekly_5_5": {
+          "actual": 940269460.0,
+          "pct": 661129490.0
+        },
+        "monthly_6": {
+          "target": 235067365.0,
+          "actual": 154088458.0,
+          "pct": 0.6555
+        },
+        "weekly_6_1": {
+          "target": 235067365.0,
+          "actual": 248847402.0,
+          "pct": 1.0586
+        },
+        "weekly_6_2": {
+          "target": 235067365.0,
+          "actual": 157132381.0,
+          "pct": 0.6685
+        },
+        "weekly_6_3": {
+          "target": 235067365.0,
+          "actual": 85159893.0,
+          "pct": 0.3623
+        },
+        "weekly_6_5": {
+          "actual": 610402000.0
+        },
+        "monthly_7": {
+          "target": 152600500.0,
+          "actual": 73269299.0,
+          "pct": 0.4801
+        },
+        "weekly_7_1": {
+          "target": 152600500.0,
+          "actual": 91891420.0,
+          "pct": 0.6022
+        },
+        "weekly_7_2": {
+          "target": 152600500.0,
+          "actual": 106261919.0,
+          "pct": 0.6963
+        },
+        "weekly_7_3": {
+          "target": 152600500.0,
+          "pct": 0.0
+        },
+        "weekly_7_5": {
+          "actual": 758784000.0
+        },
+        "weekly_8_5": {
+          "actual": 951756000.0
+        }
       }
     },
     "SM1-I01.02": {
       "title": "Doanh thu khai thác nội dung trên nền tảng Youtube",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 1481402760.0,
-        "quarterly_1": 2345419960.0,
-        "monthly_1": 75000000.0,
-        "weekly_1_1": 75000000.0,
-        "weekly_1_2": 75000000.0,
-        "weekly_1_3": 75000000.0,
-        "weekly_1_5": 400000000.0,
-        "monthly_2": 100000000.0,
-        "weekly_2_1": 100000000.0,
-        "weekly_2_2": 100000000.0,
-        "weekly_2_3": 100000000.0,
-        "weekly_2_5": 600000000.0,
-        "monthly_3": 150000000.0,
-        "weekly_3_1": 150000000.0,
-        "weekly_3_2": 150000000.0,
-        "weekly_3_3": 150000000.0,
-        "weekly_3_5": 779531220.0,
-        "monthly_4": 194882805.0,
-        "weekly_4_1": 194882805.0,
-        "weekly_4_2": 194882805.0,
-        "weekly_4_3": 194882805.0,
-        "weekly_4_4": 194882805.0,
-        "weekly_4_5": 800179380.0,
-        "monthly_5": 200044845.0,
-        "weekly_5_1": 200044845.0,
-        "weekly_5_2": 200044845.0,
-        "weekly_5_3": 200044845.0,
-        "weekly_5_5": 940269460.0,
-        "monthly_6": 235067365.0,
-        "weekly_6_1": 235067365.0,
-        "weekly_6_2": 235067365.0,
-        "weekly_6_3": 235067365.0,
-        "weekly_6_5": 610402000.0,
-        "monthly_7": 152600500.0,
-        "weekly_7_1": 152600500.0,
-        "weekly_7_2": 152600500.0,
-        "weekly_7_3": 152600500.0,
-        "weekly_7_5": 758784000.0,
-        "weekly_8_5": 951756000.0
+        "yearly_2026": {
+          "target": 1481402760.0,
+          "actual": 526046393.0,
+          "pct": 0.3551
+        },
+        "quarterly_1": {
+          "target": 2345419960.0,
+          "actual": 1230716085.0,
+          "pct": 0.5247
+        },
+        "monthly_1": {
+          "target": 75000000.0,
+          "actual": 26794480.0,
+          "pct": 0.3573
+        },
+        "weekly_1_1": {
+          "target": 75000000.0,
+          "actual": 28613066.0,
+          "pct": 0.3815
+        },
+        "weekly_1_2": {
+          "target": 75000000.0,
+          "actual": 38952524.0,
+          "pct": 0.5194
+        },
+        "weekly_1_3": {
+          "target": 75000000.0,
+          "actual": 49022702.0,
+          "pct": 0.6536
+        },
+        "weekly_1_5": {
+          "actual": 400000000.0,
+          "pct": 183931308.0
+        },
+        "monthly_2": {
+          "target": 100000000.0,
+          "actual": 43651232.0,
+          "pct": 0.4365
+        },
+        "weekly_2_1": {
+          "target": 100000000.0,
+          "actual": 47470409.8,
+          "pct": 0.4747
+        },
+        "weekly_2_2": {
+          "target": 100000000.0,
+          "actual": 62617752.0,
+          "pct": 0.6262
+        },
+        "weekly_2_3": {
+          "target": 100000000.0,
+          "actual": 57725371.0,
+          "pct": 0.5773
+        },
+        "weekly_2_5": {
+          "actual": 600000000.0,
+          "pct": 191200257.0
+        },
+        "monthly_3": {
+          "target": 150000000.0,
+          "actual": 34250030.0,
+          "pct": 0.2283
+        },
+        "weekly_3_1": {
+          "target": 150000000.0,
+          "actual": 30665967.0,
+          "pct": 0.2044
+        },
+        "weekly_3_2": {
+          "target": 150000000.0,
+          "actual": 40506864.18,
+          "pct": 0.27
+        },
+        "weekly_3_3": {
+          "target": 150000000.0,
+          "actual": 53096705.0,
+          "pct": 0.354
+        },
+        "weekly_3_5": {
+          "actual": 779531220.0,
+          "pct": 307057462.0
+        },
+        "monthly_4": {
+          "target": 194882805.0,
+          "actual": 76703425.0,
+          "pct": 0.3936
+        },
+        "weekly_4_1": {
+          "target": 194882805.0,
+          "actual": 88024144.0,
+          "pct": 0.4517
+        },
+        "weekly_4_2": {
+          "target": 194882805.0,
+          "actual": 69535865.0,
+          "pct": 0.3568
+        },
+        "weekly_4_3": {
+          "target": 194882805.0,
+          "actual": 64329082.0,
+          "pct": 0.3301
+        },
+        "weekly_4_4": {
+          "target": 194882805.0,
+          "actual": 45415426.0,
+          "pct": 0.233
+        },
+        "weekly_4_5": {
+          "actual": 800179380.0,
+          "pct": 262529133.0
+        },
+        "monthly_5": {
+          "target": 200044845.0,
+          "actual": 55080657.0,
+          "pct": 0.2753
+        },
+        "weekly_5_1": {
+          "target": 200044845.0,
+          "actual": 53507582.0,
+          "pct": 0.2675
+        },
+        "weekly_5_2": {
+          "target": 200044845.0,
+          "actual": 60530464.0
+        },
+        "weekly_5_3": {
+          "target": 200044845.0,
+          "actual": 71997152.0
+        },
+        "weekly_5_5": {
+          "actual": 940269460.0,
+          "pct": 661129490.0
+        },
+        "monthly_6": {
+          "target": 235067365.0,
+          "actual": 154088458.0,
+          "pct": 0.6555
+        },
+        "weekly_6_1": {
+          "target": 235067365.0,
+          "actual": 248847402.0,
+          "pct": 1.0586
+        },
+        "weekly_6_2": {
+          "target": 235067365.0,
+          "actual": 157132381.0,
+          "pct": 0.6685
+        },
+        "weekly_6_3": {
+          "target": 235067365.0,
+          "actual": 85159893.0,
+          "pct": 0.3623
+        },
+        "weekly_6_5": {
+          "actual": 610402000.0
+        },
+        "monthly_7": {
+          "target": 152600500.0,
+          "actual": 73269299.0,
+          "pct": 0.4801
+        },
+        "weekly_7_1": {
+          "target": 152600500.0,
+          "actual": 91891420.0,
+          "pct": 0.6022
+        },
+        "weekly_7_2": {
+          "target": 152600500.0,
+          "actual": 106261919.0,
+          "pct": 0.6963
+        },
+        "weekly_7_3": {
+          "target": 152600500.0
+        },
+        "weekly_7_5": {
+          "actual": 758784000.0
+        },
+        "weekly_8_5": {
+          "actual": 951756000.0
+        }
       }
     },
     "SM1-I02.01.02": {
       "title": "Doanh thu khai thác nội dung trên nền tảng Youtube",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "Doanh thu khai thác nội dung trên các nền tảng ngoài Youtube": {
       "title": "Doanh thu khai thác nội dung trên nền tảng Youtube",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I02.04": {
       "title": "Doanh thu khai thác nội dung trên nền tảng Youtube",
       "unit": "Doanh thu đối tác",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM1-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ sử dụng ngân sách",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.8
+        "yearly_2026": {
+          "target": 0.95
+        },
+        "quarterly_1": {
+          "target": 0.8,
+          "actual": 0.8
+        }
       }
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "SM1-I03.01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.8
+        "yearly_2026": {
+          "target": 0.95
+        },
+        "quarterly_1": {
+          "target": 0.8,
+          "actual": 0.8
+        }
       }
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 111000000.0,
-        "weekly_6_5": 37000000.0
+        "weekly_6_5": {
+          "actual": 37000000.0
+        }
       }
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí CTV (Cộng tác viên)",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 15000000.0,
-        "weekly_6_5": 5000000.0
+        "weekly_6_5": {
+          "actual": 5000000.0
+        }
       }
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM2-I01.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 642.0,
-        "quarterly_1": 696.0,
-        "monthly_1": 137.0,
-        "weekly_1_1": 137.0,
-        "weekly_1_2": 109.0,
-        "weekly_1_3": 36.0,
-        "weekly_1_5": 177.0,
-        "monthly_2": 42.0,
-        "weekly_2_1": 42.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 110.0,
-        "weekly_2_5": 250.0,
-        "monthly_3": 47.0,
-        "weekly_3_1": 47.0,
-        "weekly_3_2": 61.0,
-        "weekly_3_3": 61.0,
-        "weekly_3_5": 311.0,
-        "monthly_4": 42.0,
-        "weekly_4_1": 55.0,
-        "weekly_4_2": 60.0,
-        "weekly_4_3": 62.0,
-        "weekly_4_4": 54.0,
-        "weekly_4_5": 261.0,
-        "monthly_5": 66.0,
-        "weekly_5_1": 69.0,
-        "weekly_5_2": 64.0,
-        "weekly_5_3": 64.0,
-        "weekly_5_5": 152.0,
-        "monthly_6": 35.0,
-        "weekly_6_1": 37.0,
-        "weekly_6_2": 44.0,
-        "weekly_6_3": 39.0,
-        "weekly_6_5": 160.0,
-        "monthly_7": 35.0,
-        "weekly_7_1": 35.0,
-        "weekly_7_2": 35.0,
-        "weekly_7_3": 36.0
+        "yearly_2026": {
+          "target": 642.0,
+          "actual": 670.0,
+          "pct": 1.0436
+        },
+        "quarterly_1": {
+          "target": 696.0,
+          "actual": 616.0,
+          "pct": 0.8851
+        },
+        "monthly_1": {
+          "target": 137.0,
+          "actual": 83.0,
+          "pct": 0.6058
+        },
+        "weekly_1_1": {
+          "target": 137.0,
+          "actual": 133.0,
+          "pct": 0.9708
+        },
+        "weekly_1_2": {
+          "target": 109.0,
+          "actual": 105.0,
+          "pct": 0.9633
+        },
+        "weekly_1_3": {
+          "target": 36.0,
+          "actual": 51.0,
+          "pct": 1.4167
+        },
+        "weekly_1_5": {
+          "actual": 177.0,
+          "pct": 200.0
+        },
+        "monthly_2": {
+          "target": 42.0,
+          "actual": 30.0,
+          "pct": 0.7143
+        },
+        "weekly_2_1": {
+          "target": 42.0,
+          "actual": 117.0,
+          "pct": 2.7857
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 110.0,
+          "actual": 110.0
+        },
+        "weekly_2_5": {
+          "actual": 250.0,
+          "pct": 274.0
+        },
+        "monthly_3": {
+          "target": 47.0,
+          "actual": 60.0,
+          "pct": 1.2766
+        },
+        "weekly_3_1": {
+          "target": 47.0,
+          "actual": 62.0,
+          "pct": 1.3191
+        },
+        "weekly_3_2": {
+          "target": 61.0,
+          "actual": 78.0,
+          "pct": 1.2787
+        },
+        "weekly_3_3": {
+          "target": 61.0,
+          "actual": 52.0,
+          "pct": 0.8525
+        },
+        "weekly_3_5": {
+          "actual": 311.0,
+          "pct": 236.0
+        },
+        "monthly_4": {
+          "target": 42.0,
+          "actual": 34.0,
+          "pct": 0.81
+        },
+        "weekly_4_1": {
+          "target": 55.0,
+          "actual": 41.0,
+          "pct": 0.745
+        },
+        "weekly_4_2": {
+          "target": 60.0,
+          "actual": 67.0,
+          "pct": 1.117
+        },
+        "weekly_4_3": {
+          "target": 62.0,
+          "actual": 51.0,
+          "pct": 0.823
+        },
+        "weekly_4_4": {
+          "target": 54.0,
+          "actual": 55.0,
+          "pct": 1.019
+        },
+        "weekly_4_5": {
+          "actual": 261.0,
+          "pct": 226.0
+        },
+        "monthly_5": {
+          "target": 66.0,
+          "actual": 38.0,
+          "pct": 0.5758
+        },
+        "weekly_5_1": {
+          "target": 69.0,
+          "actual": 81.0,
+          "pct": 1.1739
+        },
+        "weekly_5_2": {
+          "target": 64.0,
+          "actual": 49.0,
+          "pct": 0.7656
+        },
+        "weekly_5_3": {
+          "target": 64.0,
+          "actual": 70.0,
+          "pct": 1.0938
+        },
+        "weekly_5_5": {
+          "actual": 152.0,
+          "pct": 158.0
+        },
+        "monthly_6": {
+          "target": 35.0,
+          "actual": 32.0,
+          "pct": 0.9143
+        },
+        "weekly_6_1": {
+          "target": 37.0,
+          "actual": 24.0,
+          "pct": 0.6486
+        },
+        "weekly_6_2": {
+          "target": 44.0,
+          "actual": 32.0,
+          "pct": 0.7273
+        },
+        "weekly_6_3": {
+          "target": 39.0,
+          "actual": 68.0,
+          "pct": 1.7436
+        },
+        "weekly_6_5": {
+          "actual": 160.0
+        },
+        "monthly_7": {
+          "target": 35.0,
+          "actual": 26.0,
+          "pct": 0.7429
+        },
+        "weekly_7_1": {
+          "target": 35.0,
+          "actual": 34.0
+        },
+        "weekly_7_2": {
+          "target": 35.0,
+          "actual": 36.0
+        },
+        "weekly_7_3": {
+          "target": 36.0
+        }
       }
     },
     "Chi phí nhân sự": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 8.0,
-        "quarterly_1": 24.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0,
-        "weekly_1_5": 0.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 0.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 0.0,
-        "weekly_2_5": 0.35,
-        "monthly_3": 2.0,
-        "weekly_3_1": 2.0,
-        "weekly_3_2": 2.0,
-        "weekly_3_3": 2.0,
-        "weekly_3_5": 0.2,
-        "monthly_4": 2.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0
+        "yearly_2026": {
+          "target": 8.0,
+          "actual": 8.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 24.0,
+          "actual": 2.0,
+          "pct": 0.0833
+        },
+        "monthly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_5": {
+          "target": 0.35,
+          "actual": 8.0,
+          "pct": 8.0
+        },
+        "monthly_3": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_3_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_3_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_3_5": {
+          "target": 0.2,
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "Sản phẩm nội dung độc đáo": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 88.0,
-        "quarterly_1": 24.0,
-        "monthly_1": 11.0,
-        "weekly_1_1": 11.0,
-        "weekly_1_2": 11.0,
-        "weekly_1_3": 6.0,
-        "weekly_1_5": 0.45,
-        "monthly_2": 12.0,
-        "weekly_2_1": 12.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 14.0,
-        "weekly_2_5": 0.45,
-        "monthly_3": 4.0,
-        "weekly_3_1": 4.0,
-        "weekly_3_2": 4.0,
-        "weekly_3_3": 4.0,
-        "weekly_3_5": 0.2,
-        "monthly_4": 2.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 6.0,
-        "monthly_6": 2.0,
-        "weekly_6_1": 4.0,
-        "weekly_6_2": 3.0,
-        "weekly_6_3": 3.0
+        "yearly_2026": {
+          "target": 88.0,
+          "actual": 67.0,
+          "pct": 0.7614
+        },
+        "quarterly_1": {
+          "target": 24.0,
+          "actual": 9.0,
+          "pct": 0.375
+        },
+        "monthly_1": {
+          "target": 11.0,
+          "actual": 9.0,
+          "pct": 0.8182
+        },
+        "weekly_1_1": {
+          "target": 11.0,
+          "actual": 9.0,
+          "pct": 0.8182
+        },
+        "weekly_1_2": {
+          "target": 11.0,
+          "actual": 9.0,
+          "pct": 0.8182
+        },
+        "weekly_1_3": {
+          "target": 6.0,
+          "actual": 7.0,
+          "pct": 1.1667
+        },
+        "weekly_1_5": {
+          "target": 0.45,
+          "actual": 40.0,
+          "pct": 32.0
+        },
+        "monthly_2": {
+          "target": 12.0,
+          "actual": 4.0,
+          "pct": 0.3333
+        },
+        "weekly_2_1": {
+          "target": 12.0,
+          "actual": 9.0,
+          "pct": 0.75
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 14.0,
+          "actual": 14.0
+        },
+        "weekly_2_5": {
+          "target": 0.45,
+          "actual": 16.0,
+          "pct": 17.0
+        },
+        "monthly_3": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_3_1": {
+          "target": 4.0,
+          "actual": 2.0,
+          "pct": 0.5
+        },
+        "weekly_3_2": {
+          "target": 4.0,
+          "actual": 5.0,
+          "pct": 1.25
+        },
+        "weekly_3_3": {
+          "target": 4.0,
+          "actual": 3.0,
+          "pct": 0.75
+        },
+        "weekly_3_5": {
+          "target": 0.2,
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "monthly_4": {
+          "target": 2.0,
+          "actual": 3.0,
+          "pct": 1.5
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 6.0,
+          "pct": 7.0
+        },
+        "monthly_6": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_6_1": {
+          "target": 4.0,
+          "actual": 2.0,
+          "pct": 0.5
+        },
+        "weekly_6_2": {
+          "target": 3.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_6_3": {
+          "target": 3.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "Sản phẩm nội dung thường xuyên": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 173.0,
-        "quarterly_1": 0.0,
-        "monthly_1": 63.0,
-        "weekly_1_1": 63.0,
-        "weekly_1_2": 49.0,
-        "weekly_1_3": 15.0,
-        "weekly_1_5": 0.45,
-        "monthly_2": 15.0,
-        "weekly_2_1": 15.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 48.0,
-        "weekly_2_5": 0.0,
-        "monthly_3": 0.0,
-        "weekly_3_1": 0.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 0.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 2.0,
-        "weekly_4_4": 2.0,
-        "weekly_4_5": 0.0,
-        "monthly_5": 0.0,
-        "weekly_5_1": 0.0,
-        "weekly_5_2": 0.0,
-        "weekly_5_3": 0.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 0.0,
-        "weekly_6_1": 0.0,
-        "weekly_6_2": 0.0
+        "yearly_2026": {
+          "target": 173.0,
+          "actual": 201.0,
+          "pct": 1.1618
+        },
+        "quarterly_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "monthly_1": {
+          "target": 63.0,
+          "actual": 37.0,
+          "pct": 0.5873
+        },
+        "weekly_1_1": {
+          "target": 63.0,
+          "actual": 62.0,
+          "pct": 0.9841
+        },
+        "weekly_1_2": {
+          "target": 49.0,
+          "actual": 48.0,
+          "pct": 0.9796
+        },
+        "weekly_1_3": {
+          "target": 15.0,
+          "actual": 22.0,
+          "pct": 1.4667
+        },
+        "weekly_1_5": {
+          "target": 0.45,
+          "actual": 33.0,
+          "pct": 35.0
+        },
+        "monthly_2": {
+          "target": 15.0,
+          "actual": 13.0,
+          "pct": 0.8667
+        },
+        "weekly_2_1": {
+          "target": 15.0,
+          "actual": 54.0,
+          "pct": 3.6
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 48.0,
+          "actual": 48.0
+        },
+        "weekly_2_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_3": {
+          "target": 0.0,
+          "actual": 2.0
+        },
+        "weekly_3_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_5": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_3": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "monthly_6": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_1": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_6_2": {
+          "target": 0.0,
+          "actual": 0.0
+        }
       }
     },
     "Sản phẩm nội dung xu hướng": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 349.0,
-        "quarterly_1": 648.0,
-        "monthly_1": 63.0,
-        "weekly_1_1": 63.0,
-        "weekly_1_2": 49.0,
-        "weekly_1_3": 15.0,
-        "weekly_1_5": 0.1,
-        "monthly_2": 15.0,
-        "weekly_2_1": 15.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 48.0,
-        "weekly_2_5": 0.2,
-        "monthly_3": 41.0,
-        "weekly_3_1": 41.0,
-        "weekly_3_2": 55.0,
-        "weekly_3_3": 55.0,
-        "weekly_3_5": 0.6,
-        "monthly_4": 38.0,
-        "weekly_4_1": 55.0,
-        "weekly_4_2": 60.0,
-        "weekly_4_3": 60.0,
-        "weekly_4_4": 52.0,
-        "weekly_4_5": 261.0,
-        "monthly_5": 66.0,
-        "weekly_5_1": 69.0,
-        "weekly_5_2": 64.0,
-        "weekly_5_3": 64.0,
-        "weekly_5_5": 146.0,
-        "monthly_6": 33.0,
-        "weekly_6_1": 33.0,
-        "weekly_6_2": 41.0,
-        "weekly_6_3": 36.0
+        "yearly_2026": {
+          "target": 349.0,
+          "actual": 394.0,
+          "pct": 1.1289
+        },
+        "quarterly_1": {
+          "target": 648.0,
+          "actual": 605.0,
+          "pct": 0.9336
+        },
+        "monthly_1": {
+          "target": 63.0,
+          "actual": 37.0,
+          "pct": 0.5873
+        },
+        "weekly_1_1": {
+          "target": 63.0,
+          "actual": 62.0,
+          "pct": 0.9841
+        },
+        "weekly_1_2": {
+          "target": 49.0,
+          "actual": 48.0,
+          "pct": 0.9796
+        },
+        "weekly_1_3": {
+          "target": 15.0,
+          "actual": 22.0,
+          "pct": 1.4667
+        },
+        "weekly_1_5": {
+          "target": 0.1,
+          "actual": 104.0,
+          "pct": 133.0
+        },
+        "monthly_2": {
+          "target": 15.0,
+          "actual": 13.0,
+          "pct": 0.8667
+        },
+        "weekly_2_1": {
+          "target": 15.0,
+          "actual": 54.0,
+          "pct": 3.6
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 48.0,
+          "actual": 48.0
+        },
+        "weekly_2_5": {
+          "target": 0.2,
+          "actual": 226.0,
+          "pct": 249.0
+        },
+        "monthly_3": {
+          "target": 41.0,
+          "actual": 52.0,
+          "pct": 1.2683
+        },
+        "weekly_3_1": {
+          "target": 41.0,
+          "actual": 58.0,
+          "pct": 1.4146
+        },
+        "weekly_3_2": {
+          "target": 55.0,
+          "actual": 72.0,
+          "pct": 1.3091
+        },
+        "weekly_3_3": {
+          "target": 55.0,
+          "actual": 47.0,
+          "pct": 0.8545
+        },
+        "weekly_3_5": {
+          "target": 0.6,
+          "actual": 307.0,
+          "pct": 232.0
+        },
+        "monthly_4": {
+          "target": 38.0,
+          "actual": 29.0,
+          "pct": 0.763
+        },
+        "weekly_4_1": {
+          "target": 55.0,
+          "actual": 41.0,
+          "pct": 0.745
+        },
+        "weekly_4_2": {
+          "target": 60.0,
+          "actual": 67.0,
+          "pct": 0.0
+        },
+        "weekly_4_3": {
+          "target": 60.0,
+          "actual": 50.0,
+          "pct": 0.0
+        },
+        "weekly_4_4": {
+          "target": 52.0,
+          "actual": 53.0,
+          "pct": 1.019
+        },
+        "weekly_4_5": {
+          "actual": 261.0,
+          "pct": 226.0
+        },
+        "monthly_5": {
+          "target": 66.0,
+          "actual": 38.0,
+          "pct": 0.5758
+        },
+        "weekly_5_1": {
+          "target": 69.0,
+          "actual": 81.0,
+          "pct": 1.1739
+        },
+        "weekly_5_2": {
+          "target": 64.0,
+          "actual": 49.0,
+          "pct": 0.7656
+        },
+        "weekly_5_3": {
+          "target": 64.0,
+          "actual": 70.0,
+          "pct": 1.0938
+        },
+        "weekly_5_5": {
+          "actual": 146.0,
+          "pct": 151.0
+        },
+        "monthly_6": {
+          "target": 33.0,
+          "actual": 31.0,
+          "pct": 0.9394
+        },
+        "weekly_6_1": {
+          "target": 33.0,
+          "actual": 22.0,
+          "pct": 0.6667
+        },
+        "weekly_6_2": {
+          "target": 41.0,
+          "actual": 32.0,
+          "pct": 0.7805
+        },
+        "weekly_6_3": {
+          "target": 36.0,
+          "actual": 68.0,
+          "pct": 1.8889
+        }
       }
     },
     "Sản phẩm phái sinh": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 160.0,
-        "weekly_6_5": 36.0,
-        "monthly_7": 9.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 8.0,
-        "weekly_7_3": 8.0
+        "weekly_6_5": {
+          "actual": 36.0
+        },
+        "monthly_7": {
+          "target": 9.0,
+          "actual": 5.0,
+          "pct": 0.5556
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_3": {
+          "target": 8.0
+        }
       }
     },
     "Sản phẩm dự án kids song 01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 160.0,
-        "weekly_6_5": 36.0,
-        "monthly_7": 7.0,
-        "weekly_7_1": 8.0,
-        "weekly_7_2": 8.0,
-        "weekly_7_3": 9.0,
-        "weekly_7_5": 50.0,
-        "weekly_8_5": 52.0
+        "weekly_6_5": {
+          "actual": 36.0
+        },
+        "monthly_7": {
+          "target": 7.0,
+          "actual": 4.0,
+          "pct": 0.5714
+        },
+        "weekly_7_1": {
+          "target": 8.0,
+          "actual": 8.0
+        },
+        "weekly_7_2": {
+          "target": 8.0,
+          "actual": 9.0
+        },
+        "weekly_7_3": {
+          "target": 9.0
+        },
+        "weekly_7_5": {
+          "actual": 50.0
+        },
+        "weekly_8_5": {
+          "actual": 52.0
+        }
       }
     },
     "Sản phẩm dự án kids song 02": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 96.0,
-        "weekly_6_5": 16.0,
-        "monthly_7": 3.0,
-        "weekly_7_1": 3.0,
-        "weekly_7_2": 3.0,
-        "weekly_7_3": 3.0
+        "weekly_6_5": {
+          "actual": 16.0
+        },
+        "monthly_7": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.3333
+        },
+        "weekly_7_1": {
+          "target": 3.0,
+          "actual": 2.0
+        },
+        "weekly_7_2": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_7_3": {
+          "target": 3.0
+        }
       }
     },
     "Sản phẩm dự án TQ": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 216.0,
-        "weekly_6_5": 72.0,
-        "monthly_7": 16.0,
-        "weekly_7_1": 16.0,
-        "weekly_7_2": 16.0,
-        "weekly_7_3": 16.0,
-        "weekly_7_5": 124.0
+        "weekly_6_5": {
+          "actual": 72.0
+        },
+        "monthly_7": {
+          "target": 16.0,
+          "actual": 16.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 16.0,
+          "actual": 16.0
+        },
+        "weekly_7_2": {
+          "target": 16.0,
+          "actual": 16.0
+        },
+        "weekly_7_3": {
+          "target": 16.0
+        },
+        "weekly_7_5": {
+          "target": 124.0,
+          "actual": 26.0
+        }
       }
     },
     "Sản phẩm dubing": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "Tác phẩm điện ảnh": {
       "title": "ROI",
       "unit": "Movie Chiến Binh Gốm",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM2-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I02.01": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "SL video đạt ngưỡng 1 triệu views (youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Tỷ lệ % hoàn thành": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Số lượt view youtube SCS",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 60000000.0,
-        "quarterly_1": 107736905.0,
-        "monthly_1": 4250000.0,
-        "weekly_1_1": 4250000.0,
-        "weekly_1_2": 4250000.0,
-        "weekly_1_3": 4250000.0,
-        "weekly_1_5": 19000000.0,
-        "monthly_2": 4750000.0,
-        "weekly_2_1": 4750000.0,
-        "weekly_2_2": 4750000.0,
-        "weekly_2_3": 4750000.0,
-        "weekly_2_5": 24000000.0,
-        "monthly_3": 6000000.0,
-        "weekly_3_1": 6000000.0,
-        "weekly_3_2": 6000000.0,
-        "weekly_3_3": 6000000.0,
-        "weekly_3_5": 26400000.0,
-        "monthly_4": 6600000.0,
-        "weekly_4_1": 6600000.0,
-        "weekly_4_2": 6600000.0,
-        "weekly_4_3": 6600000.0,
-        "weekly_4_4": 6600000.0,
-        "weekly_4_5": 28600000.0,
-        "monthly_5": 7150000.0,
-        "weekly_5_1": 7150000.0,
-        "weekly_5_2": 7150000.0,
-        "weekly_5_3": 7150000.0,
-        "weekly_5_5": 31400000.0,
-        "monthly_6": 7850000.0,
-        "weekly_6_1": 7850000.0,
-        "weekly_6_2": 7850000.0,
-        "weekly_6_3": 7850000.0,
-        "weekly_6_5": 75676084.0,
-        "monthly_7": 18919021.0,
-        "weekly_7_1": 18919021.0,
-        "weekly_7_2": 18919021.0,
-        "weekly_7_3": 18919021.0,
-        "weekly_7_5": 84967682.0,
-        "weekly_8_5": 95571356.0
+        "yearly_2026": {
+          "target": 60000000.0,
+          "actual": 57777837.0,
+          "pct": 0.963
+        },
+        "quarterly_1": {
+          "target": 107736905.0,
+          "actual": 146708209.0,
+          "pct": 1.3617
+        },
+        "monthly_1": {
+          "target": 4250000.0,
+          "actual": 2632370.0,
+          "pct": 0.6194
+        },
+        "weekly_1_1": {
+          "target": 4250000.0,
+          "actual": 2849632.0,
+          "pct": 0.6705
+        },
+        "weekly_1_2": {
+          "target": 4250000.0,
+          "actual": 3732129.0,
+          "pct": 0.8781
+        },
+        "weekly_1_3": {
+          "target": 4250000.0,
+          "actual": 4314877.0,
+          "pct": 1.0153
+        },
+        "weekly_1_5": {
+          "actual": 19000000.0,
+          "pct": 21726043.0
+        },
+        "monthly_2": {
+          "target": 4750000.0,
+          "actual": 5078621.0,
+          "pct": 1.0692
+        },
+        "weekly_2_1": {
+          "target": 4750000.0,
+          "actual": 5610061.0,
+          "pct": 1.1811
+        },
+        "weekly_2_2": {
+          "target": 4750000.0,
+          "actual": 6006439.0,
+          "pct": 1.2645
+        },
+        "weekly_2_3": {
+          "target": 4750000.0,
+          "actual": 5117285.0,
+          "pct": 1.0773
+        },
+        "weekly_2_5": {
+          "actual": 24000000.0,
+          "pct": 21134187.0
+        },
+        "monthly_3": {
+          "target": 6000000.0,
+          "actual": 4113416.0,
+          "pct": 0.6856
+        },
+        "weekly_3_1": {
+          "target": 6000000.0,
+          "actual": 4485694.0,
+          "pct": 0.7476
+        },
+        "weekly_3_2": {
+          "target": 6000000.0,
+          "actual": 4802620.0,
+          "pct": 0.8004
+        },
+        "weekly_3_3": {
+          "target": 6000000.0,
+          "actual": 5167873.0,
+          "pct": 0.8613
+        },
+        "weekly_3_5": {
+          "actual": 26400000.0,
+          "pct": 31590730.0
+        },
+        "monthly_4": {
+          "target": 6600000.0,
+          "actual": 5616408.0,
+          "pct": 0.851
+        },
+        "weekly_4_1": {
+          "target": 6600000.0,
+          "actual": 7164255.0,
+          "pct": 1.0855
+        },
+        "weekly_4_2": {
+          "target": 6600000.0,
+          "actual": 7631967.0,
+          "pct": 1.1564
+        },
+        "weekly_4_3": {
+          "target": 6600000.0,
+          "actual": 9311675.0,
+          "pct": 1.4109
+        },
+        "weekly_4_4": {
+          "target": 6600000.0,
+          "actual": 9305486.0,
+          "pct": 1.4099
+        },
+        "weekly_4_5": {
+          "actual": 28600000.0,
+          "pct": 53327976.0
+        },
+        "monthly_5": {
+          "target": 7150000.0,
+          "actual": 6546387.0,
+          "pct": 0.9156
+        },
+        "weekly_5_1": {
+          "target": 7150000.0,
+          "actual": 7878983.0,
+          "pct": 1.102
+        },
+        "weekly_5_2": {
+          "target": 7150000.0,
+          "actual": 14489318.0,
+          "pct": 2.0265
+        },
+        "weekly_5_3": {
+          "target": 7150000.0,
+          "actual": 19965121.0,
+          "pct": 2.7923
+        },
+        "weekly_5_5": {
+          "actual": 31400000.0,
+          "pct": 61789503.0
+        },
+        "monthly_6": {
+          "target": 7850000.0,
+          "actual": 14292543.0,
+          "pct": 1.8207
+        },
+        "weekly_6_1": {
+          "target": 7850000.0,
+          "actual": 17080378.0,
+          "pct": 2.1758
+        },
+        "weekly_6_2": {
+          "target": 7850000.0,
+          "actual": 16191218.0,
+          "pct": 2.0626
+        },
+        "weekly_6_3": {
+          "target": 7850000.0,
+          "actual": 11636259.0,
+          "pct": 1.4823
+        },
+        "weekly_6_5": {
+          "actual": 75676084.0
+        },
+        "monthly_7": {
+          "target": 18919021.0,
+          "actual": 15651619.0,
+          "pct": 0.8273
+        },
+        "weekly_7_1": {
+          "target": 18919021.0,
+          "actual": 25173299.0,
+          "pct": 1.3306
+        },
+        "weekly_7_2": {
+          "target": 18919021.0,
+          "actual": 17728401.0,
+          "pct": 0.9371
+        },
+        "weekly_7_3": {
+          "target": 18919021.0
+        },
+        "weekly_7_5": {
+          "actual": 84967682.0
+        },
+        "weekly_8_5": {
+          "actual": 95571356.0
+        }
       }
     },
     "SM3-I01.01": {
       "title": "Số lượng đối tác SCMU tiếp cân",
       "unit": "Số đối tác hợp tác sản xuất kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 2.0,
-        "quarterly_1": 2.0
+        "yearly_2026": {
+          "target": 2.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 0.0
+        }
       }
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "SM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh (Youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 20.0,
-        "quarterly_1": 30.0
+        "yearly_2026": {
+          "target": 20.0,
+          "actual": 25.0,
+          "pct": 1.25
+        },
+        "quarterly_1": {
+          "target": 30.0
+        }
       }
     },
     "SM4-I02.02": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh (Youtube)",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 5.0,
-        "quarterly_1": 5.0
+        "yearly_2026": {
+          "target": 5.0,
+          "actual": 2.0,
+          "pct": 0.4
+        },
+        "quarterly_1": {
+          "target": 5.0
+        }
       }
     },
     "SM4-I02.03": {
       "title": "Số vi phạm chính sách",
       "unit": "Số Kênh Youtube phát triển mới",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 15.0,
-        "weekly_3_5": 6.0,
-        "weekly_4_5": 3.0,
-        "weekly_5_5": 0.0,
-        "monthly_6": 2.0,
-        "weekly_6_5": 2.0
+        "quarterly_1": {
+          "target": 15.0,
+          "actual": 13.0
+        },
+        "weekly_3_5": {
+          "actual": 6.0,
+          "pct": 8.0
+        },
+        "weekly_4_5": {
+          "actual": 3.0,
+          "pct": 2.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 2.0
+        },
+        "monthly_6": {
+          "target": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 2.0
+        }
       }
     },
     "SM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "Số Kênh Youtube phát triển mới",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 8.0,
-        "weekly_3_5": 3.0,
-        "weekly_4_5": 3.0,
-        "weekly_5_5": 5.0,
-        "monthly_6": 5.0,
-        "weekly_6_5": 2.0
+        "quarterly_1": {
+          "target": 8.0,
+          "actual": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "weekly_4_5": {
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "monthly_6": {
+          "target": 5.0
+        },
+        "weekly_6_5": {
+          "actual": 2.0
+        }
       }
     },
     "Số kênh vượt ngưỡng >3k": {
       "title": "Số vi phạm chính sách",
       "unit": "Số Kênh Youtube phát triển mới",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 1.0,
-        "weekly_4_5": 1.0,
-        "weekly_5_5": 2.0,
-        "monthly_6": 2.0,
-        "weekly_6_5": 2.0
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 2.0
+        },
+        "weekly_4_5": {
+          "actual": 1.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "monthly_6": {
+          "target": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 2.0
+        }
       }
     },
     "Số kênh vượt ngưỡng >5k": {
       "title": "Số vi phạm chính sách",
       "unit": "Số Kênh Youtube phát triển mới",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "SL",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 2.0
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 2.0
+        }
       }
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 23.0,
-        "weekly_6_5": 19.0
+        "weekly_6_5": {
+          "actual": 19.0
+        }
       }
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 20.0,
-        "weekly_5_5": 2.0,
-        "weekly_6_5": 16.0
+        "weekly_5_5": {
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_6_5": {
+          "actual": 16.0
+        }
       }
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01.01": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        }
       }
     },
     "TM5-I01.02": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "Cơ chế chính sách hợp tác sản xuât, kinh doanh.": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "TM5-I01.04": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        }
       }
     },
     "Hoàn chỉnh khung năng lực về đánh giá tính hiệu quả sử dụng AI.": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.01": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.02": {
       "title": "Hiệu suất sản xuất",
       "unit": "Quản trị hiệu suất",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh đạt ngưỡng X$/ tháng": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu/người",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.07": {
       "title": "Số vi phạm chính sách",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Số NDSX/ số nhân sự sx trong kỳ (ko tính quản lý BP/DA)": {
       "title": "Số buổi đào tạo được tổ chức",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 9.0,
-        "quarterly_1": 3.0,
-        "weekly_1_5": 3.0,
-        "weekly_2_5": 3.0
+        "yearly_2026": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_1_5": {
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "weekly_2_5": {
+          "actual": 3.0
+        }
       }
     },
     "Số buổi đào tạo được tổ chức/Tháng": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0,
-        "quarterly_1": 1.0,
-        "weekly_1_5": 1.0,
-        "weekly_2_5": 1.0
+        "yearly_2026": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "quarterly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        },
+        "weekly_1_5": {
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_5": {
+          "actual": 1.0
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "SM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.85,
-        "quarterly_1": 0.85,
-        "weekly_1_5": 0.85,
-        "weekly_2_5": 0.85
+        "yearly_2026": {
+          "target": 0.85,
+          "actual": 0.85
+        },
+        "quarterly_1": {
+          "target": 0.85,
+          "actual": 0.9
+        },
+        "weekly_1_5": {
+          "actual": 0.85,
+          "pct": 0.85
+        },
+        "weekly_2_5": {
+          "actual": 0.85
+        }
       }
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Tỷ lệ nhân sự đạt đánh giá giá năng lực về hiệu quả ứng dụng AI vào công việc.": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.85,
-        "quarterly_1": 0.85,
-        "weekly_1_5": 0.85,
-        "weekly_2_5": 0.85
+        "yearly_2026": {
+          "target": 0.85,
+          "actual": 0.85
+        },
+        "quarterly_1": {
+          "target": 0.85,
+          "actual": 0.8
+        },
+        "weekly_1_5": {
+          "actual": 0.85,
+          "pct": 0.85
+        },
+        "weekly_2_5": {
+          "actual": 0.85
+        }
       }
     },
     "Thúc đẩy văn hóa hiệu suất cao cùng AI": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Thúc đẩy văn hóa sáng tạo cùng AI": {
       "title": "Số các đề xuất sáng tạo/ giải pháp AI được ghi nhận",
       "unit": "Hoạt động",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 3.0,
-        "quarterly_1": 3.0,
-        "weekly_1_5": 3.0,
-        "weekly_2_5": 3.0
+        "yearly_2026": {
+          "target": 3.0,
+          "actual": 3.0
+        },
+        "weekly_1_5": {
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "weekly_2_5": {
+          "actual": 3.0
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.95,
-        "quarterly_1": 0.95,
-        "weekly_1_5": 0.95,
-        "weekly_2_5": 0.95,
-        "weekly_5_5": 0.95,
-        "weekly_6_5": 0.95
+        "yearly_2026": {
+          "target": 0.95,
+          "actual": 0.95
+        },
+        "quarterly_1": {
+          "target": 0.95,
+          "actual": 0.95
+        },
+        "weekly_1_5": {
+          "actual": 0.95,
+          "pct": 0.95
+        },
+        "weekly_2_5": {
+          "actual": 0.95
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.95
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_5_5": 2.0
+        "weekly_5_5": {
+          "pct": 2.0
+        }
       }
     }
   },
@@ -9328,470 +29448,1130 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "NM1-I01.01",
+      "pic": "PTGĐ Ly",
       "periods": {
-        "quarterly_1": -0.7
+        "quarterly_1": {
+          "target": -0.7
+        }
       }
     },
     "VM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "quarterly_1": 360000000.0,
-        "weekly_3_5": 56684590.0,
-        "monthly_4": 11414200.0,
-        "weekly_4_1": 11414200.0,
-        "weekly_4_2": 11414200.0,
-        "weekly_4_3": 11414200.0,
-        "weekly_4_4": 11414200.0,
-        "weekly_4_5": 120000000.0,
-        "monthly_5": 27096774.0,
-        "weekly_5_1": 27096774.0,
-        "weekly_5_2": 27096774.0,
-        "weekly_5_3": 27096774.0,
-        "weekly_5_5": 200000000.0,
-        "monthly_6": 46700000.0,
-        "weekly_6_1": 46700000.0,
-        "weekly_6_2": 46700000.0,
-        "weekly_6_3": 46700000.0,
-        "weekly_6_5": 250000000.0,
-        "monthly_7": 53655914.0,
-        "weekly_7_1": 56451613.0,
-        "weekly_7_2": 56451613.0,
-        "weekly_7_3": 56451613.0
+        "quarterly_1": {
+          "target": 360000000.0,
+          "actual": 232675174.0,
+          "pct": 0.646
+        },
+        "weekly_3_5": {
+          "actual": 56684590.0,
+          "pct": 51577070.0
+        },
+        "monthly_4": {
+          "target": 11414200.0,
+          "actual": 14398935.0,
+          "pct": 1.26
+        },
+        "weekly_4_1": {
+          "target": 11414200.0,
+          "actual": 10536999.0,
+          "pct": 0.92
+        },
+        "weekly_4_2": {
+          "target": 11414200.0,
+          "actual": 9242879.0,
+          "pct": 0.81
+        },
+        "weekly_4_3": {
+          "target": 11414200.0,
+          "actual": 7776192.0,
+          "pct": 0.68
+        },
+        "weekly_4_4": {
+          "target": 11414200.0,
+          "actual": 7643225.0,
+          "pct": 0.67
+        },
+        "weekly_4_5": {
+          "actual": 120000000.0,
+          "pct": 72273298.0
+        },
+        "monthly_5": {
+          "target": 27096774.0,
+          "actual": 14295027.0,
+          "pct": 0.53
+        },
+        "weekly_5_1": {
+          "target": 27096774.0,
+          "actual": 16950123.0,
+          "pct": 0.63
+        },
+        "weekly_5_2": {
+          "target": 27096774.0,
+          "actual": 15208620.0,
+          "pct": 0.56
+        },
+        "weekly_5_3": {
+          "target": 27096774.0,
+          "actual": 25819528.0,
+          "pct": 0.95
+        },
+        "weekly_5_5": {
+          "actual": 200000000.0,
+          "pct": 76774078.0
+        },
+        "monthly_6": {
+          "target": 46700000.0,
+          "actual": 17096931.0,
+          "pct": 0.37
+        },
+        "weekly_6_1": {
+          "target": 46700000.0,
+          "actual": 15779486.0,
+          "pct": 0.34
+        },
+        "weekly_6_2": {
+          "target": 46700000.0,
+          "actual": 17088392.0,
+          "pct": 0.37
+        },
+        "weekly_6_3": {
+          "target": 46700000.0,
+          "actual": 16512627.0,
+          "pct": 0.35
+        },
+        "weekly_6_5": {
+          "actual": 250000000.0
+        },
+        "monthly_7": {
+          "target": 53655914.0,
+          "actual": 13438745.0,
+          "pct": 0.25
+        },
+        "weekly_7_1": {
+          "target": 56451613.0,
+          "actual": 13118645.0,
+          "pct": 0.23
+        },
+        "weekly_7_2": {
+          "target": 56451613.0,
+          "actual": 12238088.0,
+          "pct": 0.22
+        },
+        "weekly_7_3": {
+          "target": 56451613.0
+        }
       }
     },
     "NM1-I02.01.01": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu Game",
+      "formula": "NM1-I01.01",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "quarterly_1": 190000000.0,
-        "weekly_3_5": 0.0,
-        "monthly_4": 0.0,
-        "weekly_4_1": 0.0,
-        "weekly_4_2": 0.0,
-        "weekly_4_3": 0.0,
-        "weekly_4_4": 0.0,
-        "weekly_4_5": 70000000.0,
-        "monthly_5": 15806452.0,
-        "weekly_5_1": 15806452.0,
-        "weekly_5_2": 15806452.0,
-        "weekly_5_3": 15806452.0,
-        "weekly_5_5": 120000000.0,
-        "monthly_6": 28000000.0,
-        "weekly_6_1": 28000000.0,
-        "weekly_6_2": 28000000.0,
-        "weekly_6_3": 28000000.0,
-        "weekly_6_5": 150000000.0,
-        "monthly_7": 32193548.0,
-        "weekly_7_1": 33870968.0,
-        "weekly_7_2": 33870968.0,
-        "weekly_7_3": 33870968.0
+        "quarterly_1": {
+          "target": 190000000.0,
+          "actual": 124424320.0,
+          "pct": 0.655
+        },
+        "weekly_3_5": {
+          "actual": 0.0,
+          "pct": 53138855.0
+        },
+        "monthly_4": {
+          "target": 0.0,
+          "actual": 7955435.0
+        },
+        "weekly_4_1": {
+          "target": 0.0,
+          "actual": 3187442.0
+        },
+        "weekly_4_2": {
+          "target": 0.0,
+          "actual": 184327.0
+        },
+        "weekly_4_3": {
+          "target": 0.0,
+          "actual": 131799.0
+        },
+        "weekly_4_4": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 70000000.0,
+          "pct": 36830500.0
+        },
+        "monthly_5": {
+          "target": 15806452.0,
+          "actual": 7266252.0,
+          "pct": 0.46
+        },
+        "weekly_5_1": {
+          "target": 15806452.0,
+          "actual": 8171910.0,
+          "pct": 0.52
+        },
+        "weekly_5_2": {
+          "target": 15806452.0,
+          "actual": 6722310.0,
+          "pct": 0.43
+        },
+        "weekly_5_3": {
+          "target": 15806452.0,
+          "actual": 14670028.0
+        },
+        "weekly_5_5": {
+          "actual": 120000000.0,
+          "pct": 34454965.0
+        },
+        "monthly_6": {
+          "target": 28000000.0,
+          "actual": 8798729.0,
+          "pct": 0.31
+        },
+        "weekly_6_1": {
+          "target": 28000000.0,
+          "actual": 6814937.0,
+          "pct": 0.24
+        },
+        "weekly_6_2": {
+          "target": 28000000.0,
+          "actual": 6852830.0,
+          "pct": 0.24
+        },
+        "weekly_6_3": {
+          "target": 28000000.0,
+          "actual": 6966090.0,
+          "pct": 0.25
+        },
+        "weekly_6_5": {
+          "actual": 150000000.0
+        },
+        "monthly_7": {
+          "target": 32193548.0,
+          "actual": 6732500.0,
+          "pct": 0.21
+        },
+        "weekly_7_1": {
+          "target": 33870968.0,
+          "actual": 6052957.0,
+          "pct": 0.18
+        },
+        "weekly_7_2": {
+          "target": 33870968.0,
+          "actual": 6532073.0,
+          "pct": 0.19
+        },
+        "weekly_7_3": {
+          "target": 33870968.0
+        }
       }
     },
     "NM1-I02.01.02": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu YouTube- nội bộ",
+      "formula": "NM1-I01.01",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "quarterly_1": 170000000.0,
-        "weekly_3_5": 40000000.0,
-        "monthly_4": 11414200.0,
-        "weekly_4_1": 11414200.0,
-        "weekly_4_2": 11414200.0,
-        "weekly_4_3": 11414200.0,
-        "weekly_4_4": 11414200.0,
-        "weekly_4_5": 50000000.0,
-        "monthly_5": 11290323.0,
-        "weekly_5_1": 11290323.0,
-        "weekly_5_2": 11290323.0,
-        "weekly_5_3": 11290323.0,
-        "weekly_5_5": 80000000.0,
-        "monthly_6": 18700000.0,
-        "weekly_6_1": 18700000.0,
-        "weekly_6_2": 18700000.0,
-        "weekly_6_3": 18700000.0,
-        "weekly_6_5": 100000000.0,
-        "monthly_7": 21462366.0,
-        "weekly_7_1": 22580645.0,
-        "weekly_7_2": 22580645.0,
-        "weekly_7_3": 22580645.0
+        "quarterly_1": {
+          "target": 170000000.0,
+          "actual": 108250854.0,
+          "pct": 0.637
+        },
+        "weekly_3_5": {
+          "actual": 40000000.0,
+          "pct": 34222500.0
+        },
+        "monthly_4": {
+          "target": 11414200.0,
+          "actual": 6443500.0,
+          "pct": 0.56
+        },
+        "weekly_4_1": {
+          "target": 11414200.0,
+          "actual": 7349557.0,
+          "pct": 0.64
+        },
+        "weekly_4_2": {
+          "target": 11414200.0,
+          "actual": 9058552.0,
+          "pct": 0.79
+        },
+        "weekly_4_3": {
+          "target": 11414200.0,
+          "actual": 7644393.0,
+          "pct": 0.67
+        },
+        "weekly_4_4": {
+          "target": 11414200.0,
+          "actual": 7643225.0,
+          "pct": 0.67
+        },
+        "weekly_4_5": {
+          "actual": 50000000.0,
+          "pct": 35442798.0
+        },
+        "monthly_5": {
+          "target": 11290323.0,
+          "actual": 7028775.0,
+          "pct": 0.62
+        },
+        "weekly_5_1": {
+          "target": 11290323.0,
+          "actual": 8778213.0,
+          "pct": 0.78
+        },
+        "weekly_5_2": {
+          "target": 11290323.0,
+          "actual": 8486310.0,
+          "pct": 0.75
+        },
+        "weekly_5_3": {
+          "target": 11290323.0,
+          "actual": 11149500.0
+        },
+        "weekly_5_5": {
+          "actual": 80000000.0,
+          "pct": 42319113.0
+        },
+        "monthly_6": {
+          "target": 18700000.0,
+          "actual": 8298202.0,
+          "pct": 0.44
+        },
+        "weekly_6_1": {
+          "target": 18700000.0,
+          "actual": 8964549.0,
+          "pct": 0.48
+        },
+        "weekly_6_2": {
+          "target": 18700000.0,
+          "actual": 10235562.0,
+          "pct": 0.55
+        },
+        "weekly_6_3": {
+          "target": 18700000.0,
+          "actual": 9546537.0,
+          "pct": 0.51
+        },
+        "weekly_6_5": {
+          "actual": 100000000.0
+        },
+        "monthly_7": {
+          "target": 21462366.0,
+          "actual": 6706245.0,
+          "pct": 0.31
+        },
+        "weekly_7_1": {
+          "target": 22580645.0,
+          "actual": 7065688.0,
+          "pct": 0.31
+        },
+        "weekly_7_2": {
+          "target": 22580645.0,
+          "actual": 5706015.0,
+          "pct": 0.25
+        },
+        "weekly_7_3": {
+          "target": 22580645.0
+        }
       }
     },
     "TM1-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ sử dụng ngân sách",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM1-I05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.01": {
       "title": "ROI",
       "unit": "Tối ưu chi phí nhân sự",
+      "formula": "NM1-I01.01",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí CTV (Cộng tác viên)",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "NM1-I05.01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "NM2-I01": {
       "title": "Số vi phạm chính sách",
       "unit": "Số lượng Game/Tính năng mới phát hành đúng hạn",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 50.0,
-        "weekly_3_5": 15.0,
-        "monthly_4": 3.0,
-        "weekly_4_1": 4.0,
-        "weekly_4_2": 2.0,
-        "weekly_4_3": 2.0,
-        "weekly_4_4": 4.0,
-        "weekly_4_5": 16.0,
-        "monthly_5": 2.0,
-        "weekly_5_1": 5.0,
-        "weekly_5_2": 4.0,
-        "weekly_5_3": 3.0,
-        "weekly_5_5": 10.0,
-        "monthly_6": 3.0,
-        "weekly_6_1": 2.0,
-        "weekly_6_2": 3.0,
-        "weekly_6_3": 3.0,
-        "weekly_6_5": 12.0,
-        "monthly_7": 4.0,
-        "weekly_7_1": 3.0,
-        "weekly_7_2": 2.0,
-        "weekly_7_3": 3.0
+        "quarterly_1": {
+          "target": 50.0,
+          "actual": 57.0,
+          "pct": 1.14
+        },
+        "weekly_3_5": {
+          "actual": 15.0,
+          "pct": 15.0
+        },
+        "monthly_4": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_3": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_4_4": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_4_5": {
+          "actual": 16.0,
+          "pct": 33.0
+        },
+        "monthly_5": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_5_1": {
+          "target": 5.0,
+          "actual": 4.0,
+          "pct": 0.8
+        },
+        "weekly_5_2": {
+          "target": 4.0,
+          "actual": 2.0,
+          "pct": 0.5
+        },
+        "weekly_5_3": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.33
+        },
+        "weekly_5_5": {
+          "actual": 10.0,
+          "pct": 10.0
+        },
+        "monthly_6": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.67
+        },
+        "weekly_6_1": {
+          "target": 2.0,
+          "actual": 3.0,
+          "pct": 1.5
+        },
+        "weekly_6_2": {
+          "target": 3.0,
+          "actual": 1.0,
+          "pct": 0.33
+        },
+        "weekly_6_3": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.67
+        },
+        "weekly_6_5": {
+          "actual": 12.0
+        },
+        "monthly_7": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_7_1": {
+          "target": 3.0,
+          "actual": 5.0,
+          "pct": 1.67
+        },
+        "weekly_7_2": {
+          "target": 2.0,
+          "actual": 1.0,
+          "pct": 0.5
+        },
+        "weekly_7_3": {
+          "target": 3.0
+        }
       }
     },
     "Số lượng Game hoặc Tính năng mới phát hành": {
       "title": "Số lượng video hoàn thành sản xuất",
       "unit": "Số lượng sản phẩm upload",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.0
+        "quarterly_1": {
+          "actual": 0.0
+        }
       }
     },
     "Số lượng video sản xuất được upload lên kênh YT lần đầu": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM3-I01.05": {
       "title": "Số lượt cài đặt game/app",
       "unit": "Download",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 500000.0,
-        "weekly_4_5": 200000.0,
-        "monthly_5": 50000.0,
-        "weekly_5_1": 50000.0,
-        "weekly_5_2": 50000.0,
-        "weekly_5_3": 50000.0,
-        "weekly_5_5": 300000.0,
-        "monthly_6": 75000.0,
-        "weekly_6_1": 75000.0,
-        "weekly_6_2": 75000.0,
-        "weekly_6_3": 75000.0,
-        "weekly_6_5": 2600000.0,
-        "monthly_7": 439355.0,
-        "weekly_7_1": 587097.0,
-        "weekly_7_2": 587097.0,
-        "weekly_7_3": 587097.0
+        "quarterly_1": {
+          "target": 500000.0,
+          "actual": 242053.0,
+          "pct": 0.484
+        },
+        "weekly_4_5": {
+          "actual": 200000.0,
+          "pct": 128053.0
+        },
+        "monthly_5": {
+          "target": 50000.0,
+          "actual": 24935.0,
+          "pct": 0.5
+        },
+        "weekly_5_1": {
+          "target": 50000.0,
+          "actual": 26609.0,
+          "pct": 0.53
+        },
+        "weekly_5_2": {
+          "target": 50000.0,
+          "actual": 26586.0,
+          "pct": 0.53
+        },
+        "weekly_5_3": {
+          "target": 50000.0,
+          "actual": 49923.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 300000.0,
+          "pct": 139278.0
+        },
+        "monthly_6": {
+          "target": 75000.0,
+          "actual": 31119.0,
+          "pct": 0.41
+        },
+        "weekly_6_1": {
+          "target": 75000.0,
+          "actual": 25288.0,
+          "pct": 0.34
+        },
+        "weekly_6_2": {
+          "target": 75000.0,
+          "actual": 22761.0,
+          "pct": 0.3
+        },
+        "weekly_6_3": {
+          "target": 75000.0,
+          "actual": 21300.0,
+          "pct": 0.28
+        },
+        "weekly_6_5": {
+          "actual": 2600000.0
+        },
+        "monthly_7": {
+          "target": 439355.0,
+          "actual": 35420.0,
+          "pct": 0.08
+        },
+        "weekly_7_1": {
+          "target": 587097.0,
+          "actual": 34857.0,
+          "pct": 0.06
+        },
+        "weekly_7_2": {
+          "target": 587097.0,
+          "actual": 58036.0,
+          "pct": 0.1
+        },
+        "weekly_7_3": {
+          "target": 587097.0
+        }
       }
     },
     "Số lượt tải/ cài đặt game app": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Số lượt view youtube DA01",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 24336000.0,
-        "weekly_3_5": 8200000.0,
-        "monthly_4": 1640000.0,
-        "weekly_4_1": 1640000.0,
-        "weekly_4_2": 1640000.0,
-        "weekly_4_3": 1640000.0,
-        "weekly_4_4": 1640000.0,
-        "weekly_4_5": 8136000.0,
-        "monthly_5": 2034000.0,
-        "weekly_5_1": 2034000.0,
-        "weekly_5_2": 2034000.0,
-        "weekly_5_3": 2034000.0,
-        "weekly_5_5": 8000000.0,
-        "monthly_6": 2000000.0,
-        "weekly_6_1": 2000000.0,
-        "weekly_6_2": 2000000.0,
-        "weekly_6_3": 2000000.0,
-        "weekly_6_5": 10300000.0,
-        "monthly_7": 2194624.0,
-        "weekly_7_1": 2325806.0,
-        "weekly_7_2": 2325806.0,
-        "weekly_7_3": 2325806.0
+        "quarterly_1": {
+          "target": 24336000.0,
+          "actual": 18366474.0,
+          "pct": 0.755
+        },
+        "weekly_3_5": {
+          "actual": 8200000.0,
+          "pct": 6222000.0
+        },
+        "monthly_4": {
+          "target": 1640000.0,
+          "actual": 1372504.0,
+          "pct": 0.84
+        },
+        "weekly_4_1": {
+          "target": 1640000.0,
+          "actual": 1486990.0,
+          "pct": 0.91
+        },
+        "weekly_4_2": {
+          "target": 1640000.0,
+          "actual": 1461553.0,
+          "pct": 0.89
+        },
+        "weekly_4_3": {
+          "target": 1640000.0,
+          "actual": 1451052.0,
+          "pct": 0.88
+        },
+        "weekly_4_4": {
+          "target": 1640000.0,
+          "actual": 1451052.0,
+          "pct": 0.88
+        },
+        "weekly_4_5": {
+          "actual": 8136000.0,
+          "pct": 6497000.0
+        },
+        "monthly_5": {
+          "target": 2034000.0,
+          "actual": 1385100.0,
+          "pct": 0.68
+        },
+        "weekly_5_1": {
+          "target": 2034000.0,
+          "actual": 1630115.0,
+          "pct": 0.8
+        },
+        "weekly_5_2": {
+          "target": 2034000.0,
+          "actual": 1526702.0,
+          "pct": 0.75
+        },
+        "weekly_5_3": {
+          "target": 2034000.0,
+          "actual": 1955083.0,
+          "pct": 0.96
+        },
+        "weekly_5_5": {
+          "actual": 8000000.0,
+          "pct": 5694978.0
+        },
+        "monthly_6": {
+          "target": 2000000.0,
+          "actual": 1504545.0,
+          "pct": 0.75
+        },
+        "weekly_6_1": {
+          "target": 2000000.0,
+          "actual": 1394525.0,
+          "pct": 0.7
+        },
+        "weekly_6_2": {
+          "target": 2000000.0,
+          "actual": 1372091.0,
+          "pct": 0.69
+        },
+        "weekly_6_3": {
+          "target": 2000000.0,
+          "actual": 1199201.0,
+          "pct": 0.6
+        },
+        "weekly_6_5": {
+          "actual": 10300000.0
+        },
+        "monthly_7": {
+          "target": 2194624.0,
+          "actual": 605648.0,
+          "pct": 0.28
+        },
+        "weekly_7_1": {
+          "target": 2325806.0,
+          "actual": 737300.0,
+          "pct": 0.32
+        },
+        "weekly_7_2": {
+          "target": 2325806.0,
+          "actual": 610379.0,
+          "pct": 0.26
+        },
+        "weekly_7_3": {
+          "target": 2325806.0
+        }
       }
     },
     "NM3-I01.04": {
       "title": "Số lượng traffic nền tảng web game",
       "unit": "Traffic",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.0,
-        "monthly_6": 8061.0,
-        "monthly_7": 11021.0,
-        "weekly_7_1": 13630.0,
-        "weekly_7_2": 37978.0
+        "quarterly_1": {
+          "actual": 0.0
+        },
+        "monthly_6": {
+          "actual": 8061.0
+        },
+        "monthly_7": {
+          "actual": 11021.0
+        },
+        "weekly_7_1": {
+          "actual": 13630.0
+        },
+        "weekly_7_2": {
+          "actual": 37978.0
+        }
       }
     },
     "NM3-I01.06": {
       "title": "Số user game active",
       "unit": "User",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.0,
-        "monthly_6": 286.0,
-        "weekly_6_1": 478.0,
-        "weekly_6_2": 623.0,
-        "weekly_6_3": 566.0,
-        "monthly_7": 643.0,
-        "weekly_7_1": 684.0,
-        "weekly_7_2": 7100.0
+        "quarterly_1": {
+          "actual": 0.0
+        },
+        "monthly_6": {
+          "actual": 286.0
+        },
+        "weekly_6_1": {
+          "actual": 478.0
+        },
+        "weekly_6_2": {
+          "actual": 623.0
+        },
+        "weekly_6_3": {
+          "actual": 566.0
+        },
+        "monthly_7": {
+          "actual": 643.0
+        },
+        "weekly_7_1": {
+          "actual": 684.0
+        },
+        "weekly_7_2": {
+          "actual": 7100.0
+        }
       }
     },
     "Số User game active": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "NM4-I01.01": {
       "title": "Số lượng nền tảng game phát triển mới",
       "unit": "Web/app",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.0,
-        "weekly_6_5": 1.0
+        "quarterly_1": {
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        }
       }
     },
     "NM4-I01.02": {
       "title": "Số lượng cổng game/nền tảng mới phát hành thành công",
       "unit": "Web",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.0,
-        "weekly_6_5": 4.0
+        "quarterly_1": {
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 4.0
+        }
       }
     },
     "NM4-I01.03": {
       "title": "Tỷ lệ giữ chân người chơi TB (Retention Rate)",
       "unit": "DAU/MAU",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_6_5": 0.1
+        "weekly_6_5": {
+          "actual": 0.1
+        }
       }
     },
     "NM4-I01.04": {
       "title": "Số lượng cổng game/nền tảng mới phát hành thành công",
       "unit": "Số lượng web blog phát triển kéo traffic về webgame",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 3.0
+        "weekly_6_5": {
+          "actual": 3.0
+        }
       }
     },
     "NM4-I01.05": {
       "title": "Số lượng fanpage trên các nền tảng kéo traffic về webgame",
       "unit": "Fanpage",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 4.0
+        "weekly_6_5": {
+          "actual": 4.0
+        }
       }
     },
     "NM4-I01.06": {
       "title": "Số lượng traffic & UTM từ web blog và fanpage về web game",
       "unit": "Phiên",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "weekly_6_5": 20000.0
+        "weekly_6_5": {
+          "actual": 20000.0
+        }
       }
     },
     "NM4-I01.07": {
       "title": "Đảm bảo hệ thống vận hành của nền tảng web game hoạt động ổn định, hiệu suất tốt",
       "unit": "Sự cố",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.99,
-        "weekly_6_5": 0.99
+        "weekly_6_5": {
+          "actual": 0.99
+        }
       }
     },
     "- Tỷ lệ đảm bảo: ≤ 1 sự cố/tháng\n- Tỷ lệ uptime hệ thống đạt từ 99% trở lên \n-Tốc độ tải trang tốt, đáp ứng lượng truy cập lớn đồng thời": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Tổng số kênh kinh doanh được triển khai",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 16.0,
-        "weekly_5_5": 16.0,
-        "weekly_6_5": 15.0
+        "quarterly_1": {
+          "actual": 16.0
+        },
+        "weekly_5_5": {
+          "actual": 16.0
+        },
+        "weekly_6_5": {
+          "actual": 15.0
+        }
       }
     },
     "Tổng số kênh kinh doanh trong kỳ": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Tổng số kênh kinh doanh được BKT",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 10.0,
-        "weekly_5_5": 3.0,
-        "weekly_6_5": 12.0
+        "quarterly_1": {
+          "target": 10.0,
+          "actual": 10.0,
+          "pct": 1.0
+        },
+        "weekly_5_5": {
+          "actual": 3.0
+        },
+        "weekly_6_5": {
+          "actual": 12.0
+        }
       }
     },
     "Số kênh mới BKT": {
       "title": "Số kênh đạt ngưỡng 10k $/ tháng",
       "unit": "Số kênh mới BKT",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {
-        "quarterly_1": 0.0,
-        "weekly_6_5": 0.0
+        "quarterly_1": {
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh đạt ngưỡng 2k $/ tháng toàn hệ thống",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.0,
-        "weekly_6_5": 1.0
+        "quarterly_1": {
+          "actual": 0.0
+        },
+        "weekly_6_5": {
+          "actual": 1.0
+        }
       }
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "NM5-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Ứng dụng nền tảng vận hành AIVA cho hoạt động": {
       "title": "ROI",
       "unit": "Xuất bản và lắng nghe phản hồi",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {}
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 6765678.0,
-        "weekly_5_5": 5000000.0
+        "quarterly_1": {
+          "actual": 6765678.0
+        },
+        "weekly_5_5": {
+          "actual": 5000000.0
+        }
       }
     },
     "VM5-I02.04": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất QTK",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 54125427.0,
-        "weekly_5_5": 40000000.0
+        "quarterly_1": {
+          "actual": 54125427.0
+        },
+        "weekly_5_5": {
+          "actual": 40000000.0
+        }
       }
     },
     "Số kênh đạt ngưỡng X$/ tháng": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu/người",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "Số vi phạm chính sách",
       "unit": "Buổi",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I01.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM7-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "NM6-I03.02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Thúc đẩy văn hóa sáng tạo - kết nối": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo/ sự kiện bonding chung",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Thúc đẩy văn hóa sáng tạo cùng AI": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "VM7-I02.02",
+      "formula": "NM1-I01.01",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.95,
-        "weekly_1_5": 0.95,
-        "weekly_2_5": 0.95,
-        "weekly_5_5": 0.95,
-        "weekly_6_5": 0.95
+        "quarterly_1": {
+          "target": 0.95
+        },
+        "weekly_1_5": {
+          "actual": 0.95
+        },
+        "weekly_2_5": {
+          "actual": 0.95
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.95
+        }
       }
     },
     "Số nhân sự tham gia/ tổng nhân sự đơn vị": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "NM1-I01.01",
+      "pic": "Ngày",
       "periods": {
-        "quarterly_1": 0.85,
-        "weekly_1_5": 0.85,
-        "weekly_2_5": 0.85,
-        "weekly_5_5": 3.0
+        "quarterly_1": {
+          "target": 0.85
+        },
+        "weekly_1_5": {
+          "actual": 0.85
+        },
+        "weekly_2_5": {
+          "actual": 0.85
+        },
+        "weekly_5_5": {
+          "pct": 3.0
+        }
       }
     }
   },
@@ -9799,725 +30579,1931 @@ export const MASTER_KPI_DATA: Record<string, Record<string, MasterKpiValue>> = {
     "TM1-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM1-I01.01": {
       "title": "ROI",
       "unit": "%",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "VM1-I01.02": {
       "title": "ROI",
       "unit": "ROS",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "TM1-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "weekly_1_1": 0.15,
-        "weekly_1_2": 0.36,
-        "weekly_2_2": 0.33,
-        "weekly_5_5": 112000000.0,
-        "weekly_7_5": 100100000.0,
-        "weekly_8_5": 182000000.0,
-        "weekly_9_5": 365820000.0,
-        "weekly_10_5": 453234600.0,
-        "weekly_11_5": 657190170.0
+        "weekly_1_1": {
+          "actual": 0.15
+        },
+        "weekly_1_2": {
+          "actual": 0.36
+        },
+        "weekly_2_2": {
+          "actual": 0.33
+        },
+        "weekly_5_5": {
+          "actual": 112000000.0
+        },
+        "weekly_7_5": {
+          "actual": 100100000.0
+        },
+        "weekly_8_5": {
+          "actual": 182000000.0
+        },
+        "weekly_9_5": {
+          "actual": 365820000.0
+        },
+        "weekly_10_5": {
+          "actual": 453234600.0
+        },
+        "weekly_11_5": {
+          "actual": 657190170.0
+        }
       }
     },
     "VM1-I02.01": {
       "title": "Tổng doanh thu",
       "unit": "VNĐ",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 1410814120.0,
-        "quarterly_1": 3985176955.0,
-        "monthly_1": 69000000.0,
-        "weekly_1_1": 70500000.0,
-        "weekly_1_2": 71500000.0,
-        "weekly_1_3": 73055860.0,
-        "weekly_1_5": 429456832.0,
-        "monthly_2": 104864208.0,
-        "weekly_2_1": 104864208.0,
-        "weekly_2_2": 104864208.0,
-        "weekly_2_3": 104864208.0,
-        "weekly_2_5": 671301428.0,
-        "monthly_3": 160825357.0,
-        "weekly_3_1": 160825357.0,
-        "weekly_3_2": 160825357.0,
-        "weekly_3_3": 160825357.0,
-        "weekly_3_5": 1046174240.0,
-        "monthly_4": 114297409.0,
-        "weekly_4_1": 114297409.0,
-        "weekly_4_2": 114297409.0,
-        "weekly_4_3": 114297409.0,
-        "weekly_4_4": 6553950.0,
-        "weekly_4_5": 1322142432.0,
-        "monthly_5": 165000000.0,
-        "weekly_5_1": 165000000.0,
-        "weekly_5_2": 165000000.0,
-        "weekly_5_3": 165000000.0,
-        "weekly_5_5": 320000000.0,
-        "monthly_6": 80000000.0,
-        "weekly_6_1": 80000000.0,
-        "weekly_6_2": 80000000.0,
-        "weekly_6_3": 80000000.0,
-        "weekly_6_5": 0.0,
-        "monthly_7": 0.0,
-        "weekly_7_1": 0.0,
-        "weekly_7_2": 0.0,
-        "weekly_7_3": 0.0,
-        "weekly_7_4": 0.0
+        "yearly_2026": {
+          "target": 1410814120.0,
+          "actual": 555908278.0,
+          "pct": 0.39
+        },
+        "quarterly_1": {
+          "target": 3985176955.0,
+          "actual": 167092597.0,
+          "pct": 0.04
+        },
+        "monthly_1": {
+          "target": 69000000.0,
+          "actual": 23229330.0,
+          "pct": 0.34
+        },
+        "weekly_1_1": {
+          "target": 70500000.0,
+          "actual": 26706280.0,
+          "pct": 0.38
+        },
+        "weekly_1_2": {
+          "target": 71500000.0,
+          "actual": 36421072.0,
+          "pct": 0.51
+        },
+        "weekly_1_3": {
+          "target": 73055860.0,
+          "actual": 30981940.0,
+          "pct": 0.42
+        },
+        "weekly_1_5": {
+          "actual": 429456832.0,
+          "pct": 207802227.0
+        },
+        "monthly_2": {
+          "target": 104864208.0,
+          "actual": 88150850.0,
+          "pct": 0.84
+        },
+        "weekly_2_1": {
+          "target": 104864208.0,
+          "actual": 24621080.0,
+          "pct": 0.23
+        },
+        "weekly_2_2": {
+          "target": 104864208.0,
+          "actual": 26896320.0,
+          "pct": 0.26
+        },
+        "weekly_2_3": {
+          "target": 104864208.0,
+          "actual": 24858080.0
+        },
+        "weekly_2_5": {
+          "actual": 671301428.0,
+          "pct": 176393375.0
+        },
+        "monthly_3": {
+          "target": 160825357.0,
+          "actual": 28764119.0,
+          "pct": 0.18
+        },
+        "weekly_3_1": {
+          "target": 160825357.0,
+          "actual": 29032570.0,
+          "pct": 0.18
+        },
+        "weekly_3_2": {
+          "target": 160825357.0,
+          "actual": 28135336.0,
+          "pct": 0.17
+        },
+        "weekly_3_3": {
+          "target": 160825357.0,
+          "actual": 27415950.0,
+          "pct": 0.17
+        },
+        "weekly_3_5": {
+          "actual": 1046174240.0,
+          "pct": 48913831.0
+        },
+        "monthly_4": {
+          "target": 114297409.0,
+          "actual": 3584448.0,
+          "pct": 0.03
+        },
+        "weekly_4_1": {
+          "target": 114297409.0,
+          "actual": 1747200.0
+        },
+        "weekly_4_2": {
+          "target": 114297409.0,
+          "actual": 1866000.0
+        },
+        "weekly_4_3": {
+          "target": 114297409.0,
+          "actual": 7806760.0
+        },
+        "weekly_4_4": {
+          "actual": 6553950.0
+        },
+        "weekly_4_5": {
+          "actual": 1322142432.0,
+          "pct": 56040016.0
+        },
+        "monthly_5": {
+          "target": 165000000.0,
+          "actual": 5628220.0,
+          "pct": 0.03
+        },
+        "weekly_5_1": {
+          "target": 165000000.0,
+          "actual": 5883800.0,
+          "pct": 0.04
+        },
+        "weekly_5_2": {
+          "target": 165000000.0,
+          "actual": 5364060.0,
+          "pct": 0.03
+        },
+        "weekly_5_3": {
+          "target": 165000000.0,
+          "actual": 7898800.0,
+          "pct": 0.05
+        },
+        "weekly_5_5": {
+          "actual": 320000000.0,
+          "pct": 62138750.0
+        },
+        "monthly_6": {
+          "target": 80000000.0,
+          "actual": 5517200.0,
+          "pct": 0.07
+        },
+        "weekly_6_1": {
+          "target": 80000000.0,
+          "actual": 6890000.0,
+          "pct": 0.09
+        },
+        "weekly_6_2": {
+          "target": 80000000.0,
+          "actual": 11692486.0,
+          "pct": 0.15
+        },
+        "weekly_6_3": {
+          "target": 80000000.0,
+          "actual": 6079814.0
+        },
+        "weekly_6_5": {
+          "actual": 0.0
+        },
+        "monthly_7": {
+          "target": 0.0
+        },
+        "weekly_7_1": {
+          "target": 0.0
+        },
+        "weekly_7_2": {
+          "target": 0.0
+        },
+        "weekly_7_3": {
+          "target": 0.0
+        },
+        "weekly_7_4": {
+          "target": 0.0
+        }
       }
     },
     "NM1-I02.01.02": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu YouTube- nội bộ",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 538814120.0,
-        "quarterly_1": 1985176955.0,
-        "monthly_1": 8000000.0,
-        "weekly_1_1": 9500000.0,
-        "weekly_1_2": 10500000.0,
-        "weekly_1_3": 12055860.0,
-        "weekly_1_5": 147456832.0,
-        "monthly_2": 36864208.0,
-        "weekly_2_1": 36864208.0,
-        "weekly_2_2": 36864208.0,
-        "weekly_2_3": 36864208.0,
-        "weekly_2_5": 351301428.0,
-        "monthly_3": 87825357.0,
-        "weekly_3_1": 87825357.0,
-        "weekly_3_2": 87825357.0,
-        "weekly_3_3": 87825357.0,
-        "weekly_3_4": 769600.0,
-        "weekly_3_5": 506174240.0,
-        "monthly_4": 114297409.0,
-        "weekly_4_1": 114297409.0,
-        "weekly_4_2": 114297409.0,
-        "weekly_4_3": 114297409.0,
-        "weekly_4_4": 114297409.0,
-        "weekly_4_5": 662142432.0,
-        "monthly_5": 2493400.0,
-        "weekly_5_1": 1801800.0,
-        "weekly_5_2": 894400.0,
-        "weekly_5_3": 1138800.0,
-        "weekly_5_5": 20000000.0,
-        "monthly_6": 5000000.0,
-        "weekly_6_1": 5000000.0,
-        "weekly_6_2": 5000000.0,
-        "weekly_6_3": 5000000.0,
-        "weekly_6_4": 5000000.0
+        "yearly_2026": {
+          "target": 538814120.0,
+          "actual": 1886238.0
+        },
+        "quarterly_1": {
+          "target": 1985176955.0,
+          "actual": 26439400.0
+        },
+        "monthly_1": {
+          "target": 8000000.0,
+          "actual": 248820.0,
+          "pct": 0.03
+        },
+        "weekly_1_1": {
+          "target": 9500000.0,
+          "actual": 205400.0,
+          "pct": 0.02
+        },
+        "weekly_1_2": {
+          "target": 10500000.0,
+          "actual": 207740.0,
+          "pct": 0.02
+        },
+        "weekly_1_3": {
+          "target": 12055860.0,
+          "actual": 183040.0,
+          "pct": 0.02
+        },
+        "weekly_1_5": {
+          "actual": 147456832.0,
+          "pct": 773240.0
+        },
+        "monthly_2": {
+          "target": 36864208.0,
+          "actual": 215540.0,
+          "pct": 0.01
+        },
+        "weekly_2_1": {
+          "target": 36864208.0,
+          "actual": 232700.0,
+          "pct": 0.01
+        },
+        "weekly_2_2": {
+          "target": 36864208.0,
+          "actual": 177840.0,
+          "pct": 0.0
+        },
+        "weekly_2_3": {
+          "target": 36864208.0
+        },
+        "weekly_2_5": {
+          "actual": 351301428.0,
+          "pct": 186618.0
+        },
+        "monthly_3": {
+          "target": 87825357.0,
+          "actual": 189020.0,
+          "pct": 0.0
+        },
+        "weekly_3_1": {
+          "target": 87825357.0,
+          "actual": 115960.0,
+          "pct": 0.0
+        },
+        "weekly_3_2": {
+          "target": 87825357.0,
+          "actual": 392600.0,
+          "pct": 0.0
+        },
+        "weekly_3_3": {
+          "target": 87825357.0,
+          "actual": 527800.0,
+          "pct": 0.01
+        },
+        "weekly_3_4": {
+          "actual": 769600.0
+        },
+        "weekly_3_5": {
+          "actual": 506174240.0,
+          "pct": 12292800.0
+        },
+        "monthly_4": {
+          "target": 114297409.0,
+          "actual": 1981200.0,
+          "pct": 0.02
+        },
+        "weekly_4_1": {
+          "target": 114297409.0,
+          "actual": 689000.0
+        },
+        "weekly_4_2": {
+          "target": 114297409.0,
+          "actual": 514800.0
+        },
+        "weekly_4_3": {
+          "target": 114297409.0,
+          "actual": 6008600.0
+        },
+        "weekly_4_4": {
+          "target": 114297409.0,
+          "actual": 4412200.0
+        },
+        "weekly_4_5": {
+          "actual": 662142432.0,
+          "pct": 7072000.0
+        },
+        "monthly_5": {
+          "actual": 2493400.0
+        },
+        "weekly_5_1": {
+          "actual": 1801800.0
+        },
+        "weekly_5_2": {
+          "actual": 894400.0
+        },
+        "weekly_5_3": {
+          "actual": 1138800.0
+        },
+        "weekly_5_5": {
+          "actual": 20000000.0,
+          "pct": 7074600.0
+        },
+        "monthly_6": {
+          "target": 5000000.0,
+          "actual": 1947400.0,
+          "pct": 0.39
+        },
+        "weekly_6_1": {
+          "target": 5000000.0,
+          "actual": 1690000.0,
+          "pct": 0.34
+        },
+        "weekly_6_2": {
+          "target": 5000000.0,
+          "actual": 1482000.0,
+          "pct": 0.3
+        },
+        "weekly_6_3": {
+          "target": 5000000.0,
+          "actual": 1684800.0
+        },
+        "weekly_6_4": {
+          "target": 5000000.0
+        }
       }
     },
     "CM1-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 2000000000.0,
-        "monthly_1": 0.0,
-        "weekly_1_5": 0.0,
-        "monthly_2": 60000000.0,
-        "weekly_3_5": 540000000.0,
-        "monthly_4": 1603248.0,
-        "weekly_4_1": 1058200.0,
-        "weekly_4_2": 1351200.0,
-        "weekly_4_3": 1798160.0,
-        "weekly_4_4": 2141750.0,
-        "weekly_4_5": 660000000.0,
-        "monthly_5": 165000000.0,
-        "weekly_5_1": 165000000.0,
-        "weekly_5_2": 165000000.0,
-        "weekly_5_3": 165000000.0,
-        "weekly_5_5": 300000000.0,
-        "monthly_6": 75000000.0,
-        "weekly_6_1": 75000000.0,
-        "weekly_6_2": 10210486.0,
-        "weekly_6_3": 4395014.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 2000000000.0,
+          "actual": 49774338.0
+        },
+        "monthly_1": {
+          "actual": 0.0
+        },
+        "weekly_1_5": {
+          "actual": 0.0,
+          "pct": 60000000.0
+        },
+        "monthly_2": {
+          "actual": 60000000.0
+        },
+        "weekly_3_5": {
+          "actual": 540000000.0,
+          "pct": 7952558.0
+        },
+        "monthly_4": {
+          "actual": 1603248.0
+        },
+        "weekly_4_1": {
+          "actual": 1058200.0
+        },
+        "weekly_4_2": {
+          "actual": 1351200.0
+        },
+        "weekly_4_3": {
+          "actual": 1798160.0
+        },
+        "weekly_4_4": {
+          "actual": 2141750.0
+        },
+        "weekly_4_5": {
+          "actual": 660000000.0,
+          "pct": 18446480.0
+        },
+        "monthly_5": {
+          "target": 165000000.0,
+          "actual": 3134820.0
+        },
+        "weekly_5_1": {
+          "target": 165000000.0,
+          "actual": 4082000.0
+        },
+        "weekly_5_2": {
+          "target": 165000000.0,
+          "actual": 4469660.0
+        },
+        "weekly_5_3": {
+          "target": 165000000.0,
+          "actual": 6760000.0
+        },
+        "weekly_5_5": {
+          "actual": 300000000.0,
+          "pct": 23375300.0
+        },
+        "monthly_6": {
+          "target": 75000000.0,
+          "actual": 3569800.0,
+          "pct": 0.05
+        },
+        "weekly_6_1": {
+          "target": 75000000.0,
+          "actual": 5200000.0,
+          "pct": 0.07
+        },
+        "weekly_6_2": {
+          "actual": 10210486.0
+        },
+        "weekly_6_3": {
+          "actual": 4395014.0
+        }
       }
     },
     "Doanh thu hợp tác": {
       "title": "Tổng doanh thu",
       "unit": "WOA UNI",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 660000000.0,
-        "weekly_1_5": 60000000.0,
-        "monthly_2": 60000000.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 660000000.0
+        },
+        "weekly_1_5": {
+          "pct": 60000000.0
+        },
+        "monthly_2": {
+          "actual": 60000000.0
+        }
       }
     },
     "Doanh thu từ đối tác IP": {
       "title": "Tổng doanh thu",
       "unit": "CBC",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 1340000000.0
+        "yearly_2026": {
+          "target": 0.0
+        },
+        "quarterly_1": {
+          "target": 1340000000.0
+        }
       }
     },
     "Doanh thu từ đối tác khai thác": {
       "title": "Tổng doanh thu",
       "unit": "Wolfoo",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Doanh thu từ DA phái sinh": {
       "title": "Tổng doanh thu",
       "unit": "Doanh thu Game App",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "yearly_2026": 872000000.0,
-        "quarterly_1": 3202593750.0,
-        "monthly_1": 61000000.0,
-        "weekly_1_1": 61000000.0,
-        "weekly_1_2": 61000000.0,
-        "weekly_1_3": 61000000.0,
-        "weekly_1_5": 272000000.0,
-        "monthly_2": 68000000.0,
-        "weekly_2_1": 68000000.0,
-        "weekly_2_2": 68000000.0,
-        "weekly_2_3": 68000000.0,
-        "weekly_2_5": 320000000.0,
-        "monthly_3": 73000000.0,
-        "weekly_3_1": 73000000.0,
-        "weekly_3_2": 73000000.0,
-        "weekly_3_3": 73000000.0,
-        "weekly_3_4": 28000000.0
+        "yearly_2026": {
+          "target": 872000000.0,
+          "actual": 383760314.0,
+          "pct": 0.44
+        },
+        "monthly_1": {
+          "target": 61000000.0,
+          "actual": 22980510.0,
+          "pct": 0.38
+        },
+        "weekly_1_1": {
+          "target": 61000000.0,
+          "actual": 26500880.0,
+          "pct": 0.43
+        },
+        "weekly_1_2": {
+          "target": 61000000.0,
+          "actual": 36213332.0,
+          "pct": 0.59
+        },
+        "weekly_1_3": {
+          "target": 61000000.0,
+          "actual": 30798900.0,
+          "pct": 0.5
+        },
+        "weekly_1_5": {
+          "actual": 272000000.0,
+          "pct": 111494411.0
+        },
+        "monthly_2": {
+          "target": 68000000.0,
+          "actual": 27935310.0,
+          "pct": 0.41
+        },
+        "weekly_2_1": {
+          "target": 68000000.0,
+          "actual": 24388380.0,
+          "pct": 0.36
+        },
+        "weekly_2_2": {
+          "target": 68000000.0,
+          "actual": 26718480.0,
+          "pct": 0.39
+        },
+        "weekly_2_3": {
+          "target": 68000000.0,
+          "actual": 24858080.0,
+          "pct": 0.37
+        },
+        "weekly_2_5": {
+          "actual": 320000000.0,
+          "pct": 136106598.0
+        },
+        "monthly_3": {
+          "target": 73000000.0,
+          "actual": 28575099.0,
+          "pct": 0.39
+        },
+        "weekly_3_1": {
+          "target": 73000000.0,
+          "actual": 28916610.0,
+          "pct": 0.4
+        },
+        "weekly_3_2": {
+          "target": 73000000.0,
+          "actual": 27742736.0,
+          "pct": 0.38
+        },
+        "weekly_3_3": {
+          "target": 73000000.0,
+          "actual": 26888150.0,
+          "pct": 0.37
+        },
+        "weekly_3_4": {
+          "target": 28000000.0
+        }
       }
     },
     "Tổng doanh thu mảng Game phát sinh trong kỳ đánh giá": {
       "title": "Tổng doanh thu",
       "unit": "IP Owner",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "quarterly_1": 100387758.0,
-        "weekly_1_5": 34604652.0,
-        "weekly_2_5": 40100159.0,
-        "weekly_3_5": 32934509.0,
-        "weekly_4_5": 35764399.0,
-        "weekly_5_5": 31688850.0
+        "quarterly_1": {
+          "actual": 100387758.0
+        },
+        "weekly_1_5": {
+          "pct": 34604652.0
+        },
+        "weekly_2_5": {
+          "pct": 40100159.0
+        },
+        "weekly_3_5": {
+          "pct": 32934509.0
+        },
+        "weekly_4_5": {
+          "pct": 35764399.0
+        },
+        "weekly_5_5": {
+          "pct": 31688850.0
+        }
       }
     },
     "TM1-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {
-        "weekly_2_5": 30.0
+        "weekly_2_5": {
+          "actual": 30.0
+        }
       }
     },
     "VM1-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ sử dụng ngân sách",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "TM1-I05": {
       "title": "",
       "unit": "CM1-I03.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM1-I05.03": {
       "title": "Tổng doanh thu",
       "unit": "5",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 25000000.0,
-        "quarterly_1": 25000000.0
+        "yearly_2026": {
+          "target": 25000000.0
+        },
+        "quarterly_1": {
+          "target": 25000000.0
+        }
       }
     },
     "VM1-I05.04": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí CTV (Cộng tác viên)",
-      "periods": {
-        "quarterly_1": 0.0
-      }
+      "formula": "",
+      "pic": "Ngày",
+      "periods": {}
     },
     "M2": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM2-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM2-I01.01": {
       "title": "SL video đạt ngưỡng 1 triệu views (youtube long)",
       "unit": "VM2-I01.01",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 6377.0,
-        "quarterly_1": 165.0,
-        "monthly_1": 1209.0,
-        "weekly_1_1": 1512.0,
-        "weekly_1_2": 1664.0,
-        "weekly_1_3": 1715.0,
-        "weekly_1_5": 76.0,
-        "monthly_2": 3.0,
-        "weekly_2_1": 18.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 55.0,
-        "weekly_2_5": 201.0,
-        "monthly_3": 50.0,
-        "weekly_3_1": 51.0,
-        "weekly_3_2": 51.0,
-        "weekly_3_3": 51.0,
-        "weekly_3_4": 5.0,
-        "weekly_3_5": 55.0,
-        "monthly_4": 11.0,
-        "weekly_4_1": 11.0,
-        "weekly_4_2": 13.0,
-        "weekly_4_3": 12.0,
-        "weekly_4_4": 8.0,
-        "weekly_4_5": 80.0,
-        "monthly_5": 20.0,
-        "weekly_5_1": 20.0,
-        "weekly_5_2": 20.0,
-        "weekly_5_3": 20.0,
-        "weekly_5_5": 60.0,
-        "monthly_6": 10.0,
-        "weekly_6_1": 15.0,
-        "weekly_6_2": 15.0,
-        "weekly_6_3": 15.0,
-        "weekly_6_5": 175.0,
-        "monthly_7": 5.0,
-        "weekly_7_1": 10.0,
-        "weekly_7_2": 12.0,
-        "weekly_7_3": 10.0,
-        "weekly_7_4": 12.0,
-        "weekly_7_5": 175.0
+        "yearly_2026": {
+          "target": 6377.0,
+          "actual": 7616.0,
+          "pct": 1.194
+        },
+        "quarterly_1": {
+          "target": 165.0,
+          "actual": 165.0,
+          "pct": 1.0
+        },
+        "monthly_1": {
+          "target": 1209.0,
+          "actual": 2006.0,
+          "pct": 1.66
+        },
+        "weekly_1_1": {
+          "target": 1512.0,
+          "actual": 2389.0,
+          "pct": 1.58
+        },
+        "weekly_1_2": {
+          "target": 1664.0,
+          "actual": 1417.0,
+          "pct": 0.85
+        },
+        "weekly_1_3": {
+          "target": 1715.0,
+          "actual": 1527.0,
+          "pct": 0.89
+        },
+        "weekly_1_5": {
+          "actual": 76.0,
+          "pct": 76.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 18.0,
+          "actual": 18.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 55.0,
+          "actual": 55.0
+        },
+        "weekly_2_5": {
+          "actual": 201.0,
+          "pct": 201.0
+        },
+        "monthly_3": {
+          "target": 50.0,
+          "actual": 44.0,
+          "pct": 0.88
+        },
+        "weekly_3_1": {
+          "target": 51.0,
+          "actual": 65.0,
+          "pct": 1.27
+        },
+        "weekly_3_2": {
+          "target": 51.0,
+          "actual": 44.0,
+          "pct": 0.86
+        },
+        "weekly_3_3": {
+          "target": 51.0,
+          "actual": 24.0,
+          "pct": 0.47
+        },
+        "weekly_3_4": {
+          "target": 5.0,
+          "actual": 24.0
+        },
+        "weekly_3_5": {
+          "actual": 55.0,
+          "pct": 46.0
+        },
+        "monthly_4": {
+          "target": 11.0,
+          "actual": 11.0
+        },
+        "weekly_4_1": {
+          "target": 11.0,
+          "actual": 9.0
+        },
+        "weekly_4_2": {
+          "target": 13.0,
+          "actual": 12.0
+        },
+        "weekly_4_3": {
+          "target": 12.0,
+          "actual": 10.0
+        },
+        "weekly_4_4": {
+          "target": 8.0,
+          "actual": 4.0
+        },
+        "weekly_4_5": {
+          "actual": 80.0,
+          "pct": 79.0
+        },
+        "monthly_5": {
+          "target": 20.0,
+          "actual": 22.0,
+          "pct": 1.1
+        },
+        "weekly_5_1": {
+          "target": 20.0,
+          "actual": 23.0,
+          "pct": 1.15
+        },
+        "weekly_5_2": {
+          "target": 20.0,
+          "actual": 17.0,
+          "pct": 0.85
+        },
+        "weekly_5_3": {
+          "target": 20.0,
+          "actual": 17.0,
+          "pct": 0.85
+        },
+        "weekly_5_5": {
+          "actual": 60.0,
+          "pct": 53.0
+        },
+        "monthly_6": {
+          "target": 10.0,
+          "actual": 11.0,
+          "pct": 1.1
+        },
+        "weekly_6_1": {
+          "target": 15.0,
+          "actual": 18.0,
+          "pct": 1.2
+        },
+        "weekly_6_2": {
+          "target": 15.0,
+          "actual": 11.0,
+          "pct": 0.73
+        },
+        "weekly_6_3": {
+          "target": 15.0,
+          "actual": 13.0
+        },
+        "weekly_6_5": {
+          "actual": 175.0
+        },
+        "monthly_7": {
+          "target": 5.0,
+          "actual": 7.0,
+          "pct": 1.4
+        },
+        "weekly_7_1": {
+          "target": 10.0,
+          "actual": 15.0,
+          "pct": 1.5
+        },
+        "weekly_7_2": {
+          "target": 12.0,
+          "actual": 19.0,
+          "pct": 1.583
+        },
+        "weekly_7_3": {
+          "target": 10.0
+        },
+        "weekly_7_4": {
+          "target": 12.0
+        },
+        "weekly_7_5": {
+          "actual": 175.0
+        }
       }
     },
     "CM2-I01.01": {
       "title": "SL video đạt ngưỡng 1 triệu views (youtube long)",
       "unit": "Số lượng video long",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 84.0,
-        "quarterly_1": 165.0,
-        "monthly_1": 9.0,
-        "weekly_1_1": 12.0,
-        "weekly_1_2": 14.0,
-        "weekly_1_3": 15.0,
-        "weekly_1_5": 14.0,
-        "monthly_2": 3.0,
-        "weekly_2_1": 4.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 7.0,
-        "weekly_2_5": 20.0,
-        "monthly_3": 5.0,
-        "weekly_3_1": 5.0,
-        "weekly_3_2": 5.0,
-        "weekly_3_3": 5.0,
-        "weekly_3_4": 2.0,
-        "weekly_3_5": 55.0,
-        "monthly_4": 11.0,
-        "weekly_4_1": 11.0,
-        "weekly_4_2": 13.0,
-        "weekly_4_3": 12.0,
-        "weekly_4_4": 8.0,
-        "weekly_4_5": 80.0,
-        "monthly_5": 20.0,
-        "weekly_5_1": 20.0,
-        "weekly_5_2": 20.0,
-        "weekly_5_3": 20.0,
-        "weekly_5_5": 60.0,
-        "monthly_6": 10.0,
-        "weekly_6_1": 15.0,
-        "weekly_6_2": 15.0,
-        "weekly_6_3": 15.0,
-        "weekly_6_4": 5.0
+        "yearly_2026": {
+          "target": 84.0,
+          "actual": 79.0,
+          "pct": 0.94
+        },
+        "quarterly_1": {
+          "target": 165.0,
+          "actual": 165.0
+        },
+        "monthly_1": {
+          "target": 9.0,
+          "actual": 9.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 12.0,
+          "actual": 11.0,
+          "pct": 0.92
+        },
+        "weekly_1_2": {
+          "target": 14.0,
+          "actual": 3.0,
+          "pct": 0.21
+        },
+        "weekly_1_3": {
+          "target": 15.0,
+          "actual": 4.0,
+          "pct": 0.27
+        },
+        "weekly_1_5": {
+          "actual": 14.0,
+          "pct": 14.0
+        },
+        "monthly_2": {
+          "target": 3.0,
+          "actual": 3.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 7.0,
+          "actual": 7.0
+        },
+        "weekly_2_5": {
+          "actual": 20.0,
+          "pct": 38.0
+        },
+        "monthly_3": {
+          "target": 5.0,
+          "actual": 4.0,
+          "pct": 0.8
+        },
+        "weekly_3_1": {
+          "target": 5.0,
+          "actual": 9.0,
+          "pct": 1.8
+        },
+        "weekly_3_2": {
+          "target": 5.0,
+          "actual": 13.0,
+          "pct": 2.6
+        },
+        "weekly_3_3": {
+          "target": 5.0,
+          "actual": 10.0,
+          "pct": 2.0
+        },
+        "weekly_3_4": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_3_5": {
+          "actual": 55.0,
+          "pct": 46.0
+        },
+        "monthly_4": {
+          "target": 11.0,
+          "actual": 11.0,
+          "pct": 1.0
+        },
+        "weekly_4_1": {
+          "target": 11.0,
+          "actual": 9.0,
+          "pct": 0.82
+        },
+        "weekly_4_2": {
+          "target": 13.0,
+          "actual": 12.0,
+          "pct": 0.92
+        },
+        "weekly_4_3": {
+          "target": 12.0,
+          "actual": 10.0,
+          "pct": 0.83
+        },
+        "weekly_4_4": {
+          "target": 8.0,
+          "actual": 4.0,
+          "pct": 0.5
+        },
+        "weekly_4_5": {
+          "actual": 80.0,
+          "pct": 79.0
+        },
+        "monthly_5": {
+          "target": 20.0,
+          "actual": 22.0,
+          "pct": 1.1
+        },
+        "weekly_5_1": {
+          "target": 20.0,
+          "actual": 23.0,
+          "pct": 1.15
+        },
+        "weekly_5_2": {
+          "target": 20.0,
+          "actual": 17.0
+        },
+        "weekly_5_3": {
+          "target": 20.0,
+          "actual": 17.0
+        },
+        "weekly_5_5": {
+          "actual": 60.0,
+          "pct": 58.0
+        },
+        "monthly_6": {
+          "target": 10.0,
+          "actual": 11.0,
+          "pct": 1.1
+        },
+        "weekly_6_1": {
+          "target": 15.0,
+          "actual": 18.0
+        },
+        "weekly_6_2": {
+          "target": 15.0,
+          "actual": 11.0
+        },
+        "weekly_6_3": {
+          "target": 15.0,
+          "actual": 13.0
+        },
+        "weekly_6_4": {
+          "target": 5.0,
+          "actual": 5.0
+        }
       }
     },
     "Số lượng video thời lượng 5 phút": {
       "title": "SL video đạt ngưỡng 1 triệu views (youtube long)",
       "unit": "Số lượng video short/shot",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 6293.0,
-        "quarterly_1": 0.0,
-        "monthly_1": 1200.0,
-        "weekly_1_1": 1500.0,
-        "weekly_1_2": 1650.0,
-        "weekly_1_3": 1700.0,
-        "weekly_1_5": 62.0,
-        "monthly_2": 0.0,
-        "weekly_2_1": 14.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 48.0,
-        "weekly_2_5": 181.0,
-        "monthly_3": 45.0,
-        "weekly_3_1": 46.0,
-        "weekly_3_2": 46.0,
-        "weekly_3_3": 46.0,
-        "weekly_3_4": 3.0,
-        "weekly_3_5": 0.0
+        "yearly_2026": {
+          "target": 6293.0,
+          "actual": 7537.0,
+          "pct": 1.198
+        },
+        "quarterly_1": {
+          "target": 0.0
+        },
+        "monthly_1": {
+          "target": 1200.0,
+          "actual": 1997.0,
+          "pct": 1.66
+        },
+        "weekly_1_1": {
+          "target": 1500.0,
+          "actual": 2378.0,
+          "pct": 1.59
+        },
+        "weekly_1_2": {
+          "target": 1650.0,
+          "actual": 1414.0,
+          "pct": 0.86
+        },
+        "weekly_1_3": {
+          "target": 1700.0,
+          "actual": 1523.0,
+          "pct": 0.9
+        },
+        "weekly_1_5": {
+          "actual": 62.0,
+          "pct": 62.0
+        },
+        "monthly_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_1": {
+          "target": 14.0,
+          "actual": 14.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 48.0,
+          "actual": 48.0
+        },
+        "weekly_2_5": {
+          "actual": 181.0,
+          "pct": 163.0
+        },
+        "monthly_3": {
+          "target": 45.0,
+          "actual": 40.0,
+          "pct": 0.88
+        },
+        "weekly_3_1": {
+          "target": 46.0,
+          "actual": 56.0,
+          "pct": 1.22
+        },
+        "weekly_3_2": {
+          "target": 46.0,
+          "actual": 31.0,
+          "pct": 0.67
+        },
+        "weekly_3_3": {
+          "target": 46.0,
+          "actual": 14.0,
+          "pct": 0.3
+        },
+        "weekly_3_4": {
+          "target": 3.0,
+          "actual": 22.0
+        },
+        "weekly_3_5": {
+          "actual": 0.0
+        }
       }
     },
     "Số lượng video thời lượng <1 phút": {
       "title": "SL video đạt ngưỡng 1 triệu views (youtube long)",
       "unit": "Video",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 50.0,
-        "quarterly_1": 200.0,
-        "weekly_4_5": 0.0,
-        "weekly_5_5": 0.0
+        "yearly_2026": {
+          "target": 50.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 200.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_4_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_5_5": {
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "CM2-I01.02": {
       "title": "Số vi phạm chính sách",
       "unit": "Số bộ IP hoàn thành",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 70.0,
-        "quarterly_1": 10.0
+        "yearly_2026": {
+          "target": 70.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 10.0,
+          "actual": 0.0
+        }
       }
     },
     "CM2-I01.03": {
       "title": "Số vi phạm chính sách",
       "unit": "CM2-I01.03",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 25.0,
-        "quarterly_1": 9.0,
-        "monthly_1": 2.0,
-        "weekly_1_1": 2.0,
-        "weekly_1_2": 2.0,
-        "weekly_1_3": 3.0,
-        "weekly_1_5": 5.0,
-        "monthly_2": 2.0,
-        "weekly_2_1": 1.0,
-        "weekly_2_2": 0.0,
-        "weekly_2_3": 2.0,
-        "weekly_2_5": 3.0,
-        "monthly_3": 1.0,
-        "weekly_3_1": 1.0,
-        "weekly_3_2": 0.0,
-        "weekly_3_3": 1.0
+        "yearly_2026": {
+          "target": 25.0,
+          "actual": 16.0,
+          "pct": 0.64
+        },
+        "monthly_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_3": {
+          "target": 3.0,
+          "actual": 2.0,
+          "pct": 0.67
+        },
+        "weekly_1_5": {
+          "actual": 5.0,
+          "pct": 5.0
+        },
+        "monthly_2": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_2_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_2_2": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "weekly_2_3": {
+          "target": 2.0,
+          "actual": 2.0
+        },
+        "weekly_2_5": {
+          "actual": 3.0,
+          "pct": 3.0
+        },
+        "monthly_3": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_1": {
+          "target": 1.0,
+          "actual": 1.0,
+          "pct": 1.0
+        },
+        "weekly_3_2": {
+          "target": 0.0
+        },
+        "weekly_3_3": {
+          "target": 1.0
+        }
       }
     },
     "M3": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM3-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Số Game phát triển mới/update": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Số lượt view youtube SCS",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 147997005.0,
-        "quarterly_1": 60000000.0,
-        "monthly_1": 7000000.0,
-        "weekly_1_1": 7500000.0,
-        "weekly_1_2": 7800000.0,
-        "weekly_1_3": 8005002.0,
-        "weekly_1_5": 49327302.0,
-        "monthly_2": 12331826.0,
-        "weekly_2_1": 12331826.0,
-        "weekly_2_2": 12331826.0,
-        "weekly_2_3": 12331826.0,
-        "weekly_2_5": 11000000.0,
-        "monthly_3": 17091176.0,
-        "weekly_3_1": 17091176.0,
-        "weekly_3_2": 3000000.0,
-        "weekly_3_3": 3000000.0,
-        "weekly_3_4": 3000000.0,
-        "weekly_3_5": 15000000.0,
-        "monthly_4": 3387097.0,
-        "weekly_4_1": 3387097.0,
-        "weekly_4_2": 3387097.0,
-        "weekly_4_3": 3387097.0,
-        "weekly_4_4": 3387097.0,
-        "weekly_4_5": 8000000.0,
-        "monthly_5": 2000000.0,
-        "weekly_5_1": 2000000.0,
-        "weekly_5_2": 371535.0,
-        "weekly_5_3": 178228.0,
-        "weekly_5_5": 3000000.0,
-        "monthly_6": 750000.0,
-        "weekly_6_1": 700000.0,
-        "weekly_6_2": 750000.0,
-        "weekly_6_3": 800000.0,
-        "weekly_6_5": 1510000.0,
-        "monthly_7": 10000.0,
-        "weekly_7_1": 100000.0,
-        "weekly_7_2": 250000.0,
-        "weekly_7_3": 500000.0,
-        "weekly_7_4": 650000.0,
-        "weekly_7_5": 2208863.0,
-        "weekly_8_5": 4209634.0,
-        "weekly_9_5": 8447268.0,
-        "weekly_10_5": 10468733.0,
-        "weekly_11_5": 15179662.0
+        "yearly_2026": {
+          "target": 147997005.0,
+          "actual": 48188635.0,
+          "pct": 0.326
+        },
+        "quarterly_1": {
+          "target": 60000000.0,
+          "actual": 10513279.0,
+          "pct": 0.1752
+        },
+        "monthly_1": {
+          "target": 7000000.0,
+          "actual": 4700833.0,
+          "pct": 0.67
+        },
+        "weekly_1_1": {
+          "target": 7500000.0,
+          "actual": 5233647.0,
+          "pct": 0.7
+        },
+        "weekly_1_2": {
+          "target": 7800000.0,
+          "actual": 2238630.0,
+          "pct": 0.29
+        },
+        "weekly_1_3": {
+          "target": 8005002.0,
+          "actual": 3387089.0,
+          "pct": 0.42
+        },
+        "weekly_1_5": {
+          "actual": 49327302.0,
+          "pct": 23885004.0
+        },
+        "monthly_2": {
+          "target": 12331826.0,
+          "actual": 5331602.0,
+          "pct": 0.43
+        },
+        "weekly_2_1": {
+          "target": 12331826.0,
+          "actual": 11899954.0,
+          "pct": 0.96
+        },
+        "weekly_2_2": {
+          "target": 12331826.0,
+          "actual": 3667611.0,
+          "pct": 0.3
+        },
+        "weekly_2_3": {
+          "target": 12331826.0
+        },
+        "weekly_2_5": {
+          "actual": 11000000.0,
+          "pct": 7966303.0
+        },
+        "monthly_3": {
+          "target": 17091176.0,
+          "actual": 2798207.0,
+          "pct": 0.16
+        },
+        "weekly_3_1": {
+          "target": 17091176.0,
+          "actual": 1599455.0,
+          "pct": 0.09
+        },
+        "weekly_3_2": {
+          "target": 3000000.0,
+          "actual": 1239189.0,
+          "pct": 0.41
+        },
+        "weekly_3_3": {
+          "target": 3000000.0,
+          "actual": 1639260.0,
+          "pct": 0.55
+        },
+        "weekly_3_4": {
+          "target": 3000000.0,
+          "actual": 429061.0
+        },
+        "weekly_3_5": {
+          "actual": 15000000.0,
+          "pct": 7483470.0
+        },
+        "monthly_4": {
+          "target": 3387097.0,
+          "actual": 588209.0,
+          "pct": 0.17
+        },
+        "weekly_4_1": {
+          "target": 3387097.0,
+          "actual": 820038.0,
+          "pct": 0.24
+        },
+        "weekly_4_2": {
+          "target": 3387097.0,
+          "actual": 1406251.0,
+          "pct": 0.42
+        },
+        "weekly_4_3": {
+          "target": 3387097.0,
+          "actual": 1938169.0,
+          "pct": 0.57
+        },
+        "weekly_4_4": {
+          "target": 3387097.0,
+          "actual": 1078487.0
+        },
+        "weekly_4_5": {
+          "actual": 8000000.0,
+          "pct": 1894293.0
+        },
+        "monthly_5": {
+          "target": 2000000.0,
+          "actual": 570605.0,
+          "pct": 0.29
+        },
+        "weekly_5_1": {
+          "target": 2000000.0,
+          "actual": 607453.0,
+          "pct": 0.3
+        },
+        "weekly_5_2": {
+          "actual": 371535.0
+        },
+        "weekly_5_3": {
+          "actual": 178228.0
+        },
+        "weekly_5_5": {
+          "actual": 3000000.0,
+          "pct": 1135516.0
+        },
+        "monthly_6": {
+          "target": 750000.0,
+          "actual": 331640.0,
+          "pct": 0.44
+        },
+        "weekly_6_1": {
+          "target": 700000.0,
+          "actual": 347997.0
+        },
+        "weekly_6_2": {
+          "target": 750000.0,
+          "actual": 223815.0
+        },
+        "weekly_6_3": {
+          "target": 800000.0,
+          "actual": 217639.0
+        },
+        "weekly_6_5": {
+          "actual": 1510000.0
+        },
+        "monthly_7": {
+          "target": 10000.0,
+          "actual": 0.0,
+          "pct": 0.0
+        },
+        "weekly_7_1": {
+          "target": 100000.0,
+          "actual": 5083.0,
+          "pct": 0.051
+        },
+        "weekly_7_2": {
+          "target": 250000.0,
+          "actual": 23843.0,
+          "pct": 0.095
+        },
+        "weekly_7_3": {
+          "target": 500000.0
+        },
+        "weekly_7_4": {
+          "target": 650000.0
+        },
+        "weekly_7_5": {
+          "actual": 2208863.0
+        },
+        "weekly_8_5": {
+          "actual": 4209634.0
+        },
+        "weekly_9_5": {
+          "actual": 8447268.0
+        },
+        "weekly_10_5": {
+          "actual": 10468733.0
+        },
+        "weekly_11_5": {
+          "actual": 15179662.0
+        }
       }
     },
     "Số lượt view youtube SCCH": {
       "title": "Số lượt view youtube SCVN",
       "unit": "Số lượt view youtube shorts",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "TM3-I01.05": {
       "title": "Số lượt cài đặt game/app",
       "unit": "TM3-I01.05",
+      "formula": "",
+      "pic": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "periods": {
-        "yearly_2026": 2000000.0,
-        "quarterly_1": 3000000.0,
-        "monthly_1": 150000.0,
-        "weekly_1_1": 150000.0,
-        "weekly_1_2": 150000.0,
-        "weekly_1_3": 150000.0,
-        "weekly_1_5": 700000.0,
-        "monthly_2": 175000.0,
-        "weekly_2_1": 175000.0,
-        "weekly_2_2": 175000.0,
-        "weekly_2_3": 175000.0,
-        "weekly_2_5": 700000.0,
-        "monthly_3": 175000.0,
-        "weekly_3_1": 175000.0,
-        "weekly_3_2": 175000.0,
-        "weekly_3_3": 175000.0
+        "yearly_2026": {
+          "target": 2000000.0,
+          "actual": 2487078.0,
+          "pct": 1.244
+        },
+        "monthly_1": {
+          "target": 150000.0,
+          "actual": 206069.0,
+          "pct": 1.37
+        },
+        "weekly_1_1": {
+          "target": 150000.0,
+          "actual": 253423.0,
+          "pct": 1.69
+        },
+        "weekly_1_2": {
+          "target": 150000.0,
+          "actual": 367488.0,
+          "pct": 2.45
+        },
+        "weekly_1_3": {
+          "target": 150000.0,
+          "actual": 239756.0,
+          "pct": 1.6
+        },
+        "weekly_1_5": {
+          "actual": 700000.0,
+          "pct": 640644.0
+        },
+        "monthly_2": {
+          "target": 175000.0,
+          "actual": 204426.0,
+          "pct": 1.17
+        },
+        "weekly_2_1": {
+          "target": 175000.0,
+          "actual": 146001.0,
+          "pct": 0.83
+        },
+        "weekly_2_2": {
+          "target": 175000.0,
+          "actual": 160611.0,
+          "pct": 0.92
+        },
+        "weekly_2_3": {
+          "target": 175000.0,
+          "actual": 134876.0,
+          "pct": 0.77
+        },
+        "weekly_2_5": {
+          "actual": 700000.0,
+          "pct": 647759.0
+        },
+        "monthly_3": {
+          "target": 175000.0,
+          "actual": 138968.0,
+          "pct": 0.79
+        },
+        "weekly_3_1": {
+          "target": 175000.0,
+          "actual": 136669.0,
+          "pct": 0.78
+        },
+        "weekly_3_2": {
+          "target": 175000.0,
+          "actual": 155719.0,
+          "pct": 0.89
+        },
+        "weekly_3_3": {
+          "target": 175000.0,
+          "actual": 146353.0,
+          "pct": 0.84
+        }
       }
     },
     "Số lượng view trên nền tảng youtube nd short": {
       "title": "Số vi phạm chính sách",
       "unit": "Số đối tác hợp tác",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM3-I01.06": {
       "title": "Số lượt view youtube SCVN",
       "unit": "View TB/1 nội dung mới upload trong kỳ",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {}
     },
     "M4": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "Phát triển hệ thống kênh kinh doanh": {
       "title": "Số vi phạm chính sách",
       "unit": "Kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "monthly_1": {
+          "target": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0
+        }
       }
     },
     "TM4-I02.02": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "monthly_1": 0.0,
-        "weekly_1_1": 0.0,
-        "weekly_1_2": 0.0,
-        "weekly_1_3": 0.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "monthly_1": {
+          "target": 0.0
+        },
+        "weekly_1_1": {
+          "target": 0.0
+        },
+        "weekly_1_2": {
+          "target": 0.0
+        },
+        "weekly_1_3": {
+          "target": 0.0
+        }
       }
     },
     "TM4-I04.01": {
       "title": "Số vi phạm chính sách",
       "unit": "TM4-I04.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.0,
-        "quarterly_1": 10.0
+        "yearly_2026": {
+          "target": 0.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 10.0,
+          "actual": 0.0,
+          "pct": 0.0
+        }
       }
     },
     "VM4-I02.04": {
       "title": "Số vi phạm chính sách",
       "unit": "SL",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.05": {
       "title": "Số vi phạm chính sách",
       "unit": "Tổng số kênh kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM4-I02.06": {
       "title": "Số vi phạm chính sách",
       "unit": "Số kênh BKT",
-      "periods": {
-        "quarterly_1": 3.0
-      }
+      "formula": "",
+      "pic": "Quỹ IP",
+      "periods": {}
     },
     "M5": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM5-I01.03": {
       "title": "Chuẩn hóa tài liệu vận hành theo mô hình mới",
       "unit": "Tài liệu",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 3.0,
-        "quarterly_1": 2.0
+        "yearly_2026": {
+          "target": 3.0,
+          "actual": 0.0
+        },
+        "quarterly_1": {
+          "target": 2.0,
+          "actual": 0.0
+        }
       }
     },
     "Số lượng IP được đăng ký bảo hộ": {
       "title": "ROI",
       "unit": "",
+      "formula": "",
+      "pic": "PTGĐ Ly",
       "periods": {}
     },
     "Hoàn chỉnh khung năng lực về đánh giá tính hiệu quả sử dụng AI.": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.01": {
       "title": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "unit": "VM5-I02.01",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.02": {
       "title": "Hiệu suất sản xuất",
       "unit": "Quản trị hiệu suất",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.03": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu kênh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh đạt ngưỡng X$/ tháng": {
       "title": "Tổng doanh thu",
       "unit": "Hiệu suất doanh thu/người",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Số kênh kinh doanh không hiệu quả bị trả lại trong kỳ": {
       "title": "Tổng doanh thu",
       "unit": "Chi phí sx TB/1 SP",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.05": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "Chuyển đổi số AI": {
       "title": "Số vi phạm chính sách",
       "unit": "Đầu mục công việc số hóa",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "VM5-I02.07": {
       "title": "ROI",
       "unit": "VM5-I02.06.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {}
     },
     "M6": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I01.01": {
       "title": "Tỷ lệ nhân sự vận hành quy trình sáng tạo và sản xuất  bằng AIVA",
       "unit": "Buổi",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 6.0,
-        "quarterly_1": 2.0,
-        "monthly_1": 1.0,
-        "weekly_1_1": 2.0,
-        "weekly_1_2": 4.0
+        "yearly_2026": {
+          "target": 6.0,
+          "actual": 8.0
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 2.0,
+          "pct": 2.0
+        },
+        "weekly_1_1": {
+          "target": 2.0,
+          "actual": 2.0,
+          "pct": 1.0
+        },
+        "weekly_1_2": {
+          "target": 4.0,
+          "actual": 4.0,
+          "pct": 1.0
+        }
       }
     },
     "TM6-I01.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia đào tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.9,
-        "monthly_1": 1.0
+        "yearly_2026": {
+          "target": 0.9
+        },
+        "monthly_1": {
+          "target": 1.0,
+          "actual": 1.0
+        }
       }
     },
     "TM6-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM6-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được đánh giá giá năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.5
+        "yearly_2026": {
+          "target": 0.5
+        }
       }
     },
     "TM6-I03.02": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự được nâng cấp năng lực",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.2
+        "yearly_2026": {
+          "target": 0.2
+        }
       }
     },
     "M7": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "TM7-I01": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I01.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự đạt hiệu suất cao sản xuất/kinh doanh",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.3
+        "yearly_2026": {
+          "target": 0.3
+        }
       }
     },
     "TM7-I02": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I02.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự tham gia các sự kiện sáng tạo",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 0.9
+        "yearly_2026": {
+          "target": 0.9
+        }
       }
     },
     "VM7-I02.02": {
       "title": "Số các đề xuất sáng tạo được ghi nhận",
       "unit": "VM7-I02.02",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "yearly_2026": 1.0
+        "yearly_2026": {
+          "target": 1.0
+        }
       }
     },
     "TM7-I03": {
       "title": "",
       "unit": "",
+      "formula": "",
+      "pic": "",
       "periods": {}
     },
     "VM7-I03.01": {
       "title": "ROI",
       "unit": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "formula": "",
+      "pic": "Ngày",
       "periods": {
-        "yearly_2026": 0.9,
-        "quarterly_1": 0.95,
-        "weekly_2_5": 0.95,
-        "weekly_5_5": 0.95,
-        "weekly_6_5": 0.95
+        "yearly_2026": {
+          "target": 0.9
+        },
+        "quarterly_1": {
+          "actual": 0.95
+        },
+        "weekly_2_5": {
+          "actual": 0.95
+        },
+        "weekly_5_5": {
+          "actual": 0.95,
+          "pct": 1.0
+        },
+        "weekly_6_5": {
+          "actual": 0.95
+        }
       }
     },
     "VM7-I03.02": {
       "title": "Số vi phạm tuân thủ",
       "unit": "Lần",
+      "formula": "",
+      "pic": "Quỹ IP",
       "periods": {
-        "weekly_5_5": 1.0
+        "weekly_5_5": {
+          "pct": 1.0
+        }
       }
     }
   }
 };
 
+export function getMasterKpiRecord(unitCode: string, kpiCode: string, periodKey: string): PeriodKpiVal | null {
+  const u = MASTER_KPI_DATA[unitCode] || MASTER_KPI_DATA["SCVN"];
+  if (!u) return null;
+  const item = u[kpiCode];
+  if (!item || !item.periods) return null;
+  return item.periods[periodKey] || null;
+}
+
 export function getMasterKpiActual(unitCode: string, kpiCode: string, periodKey: string): number | null {
-  const unitMap = MASTER_KPI_DATA[unitCode] || MASTER_KPI_DATA["SCVN"];
-  if (!unitMap) return null;
-  const kpi = unitMap[kpiCode];
-  if (!kpi || !kpi.periods) return null;
-  return kpi.periods[periodKey] ?? null;
+  const rec = getMasterKpiRecord(unitCode, kpiCode, periodKey);
+  return rec?.actual ?? rec?.target ?? null;
 }
