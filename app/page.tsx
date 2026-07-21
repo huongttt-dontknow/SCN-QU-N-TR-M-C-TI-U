@@ -494,8 +494,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      </div>
-
       {/* 7. NHẬN XÉT & ĐÁNH GIÁ KẾT QUẢ TỪ BAN GIÁM ĐỐC (BOD - KHỚP 100% ẢNH 3) */}
       <div className="glass-panel p-5 flex flex-col gap-3">
         <h3 className="text-xs font-black text-white tracking-wider uppercase">
