@@ -180,26 +180,27 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Card 5: Tỷ suất lợi nhuận ROI (THÊM BỔ SUNG KHỚP NGUYÊN MẪU ẢNH 1) */}
-          <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-purple-500 md:col-span-2 min-h-[130px]">
-            <div className="flex justify-between items-start">
-              <div>
-                <span className="text-[9px] font-extrabold text-purple-400 uppercase tracking-wider block">
-                  TỶ SUẤT LỢI NHUẬN ROI
-                </span>
-                <span className="text-3xl font-black text-purple-300 mt-1 block">
-                  70.0%
-                </span>
-              </div>
-              <div className="text-right">
-                <span className="text-xs font-bold text-rose-500 block">
-                  88% | ▼ -12.0% so với kỳ trước
-                </span>
-                <span className="text-[10px] text-[var(--text-muted)]">(KH: 80.0%)</span>
+          {/* Card 5: Tỷ suất lợi nhuận ROI (CHỈ HIỂN THỊ KHU CHỌN BÁO CÁO QUÝ) */}
+          {filters.periodType === "quarterly" && (
+            <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-purple-500 md:col-span-2 min-h-[130px]">
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="text-[9px] font-extrabold text-purple-400 uppercase tracking-wider block">
+                    TỶ SUẤT LỢI NHUẬN ROI
+                  </span>
+                  <span className="text-3xl font-black text-purple-300 mt-1 block">
+                    70.0%
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-bold text-rose-500 block">
+                    88% | ▼ -12.0% so với kỳ trước
+                  </span>
+                  <span className="text-[10px] text-[var(--text-muted)]">(KH: 80.0%)</span>
+                </div>
               </div>
             </div>
-          </div>
-
+          )}
         </div>
 
       </div>
