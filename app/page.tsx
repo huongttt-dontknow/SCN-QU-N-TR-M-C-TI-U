@@ -6,7 +6,7 @@ import FiltersHeader from "@/components/FiltersHeader";
 import ObjectiveRadarChart from "@/components/ObjectiveRadarChart";
 import RevenueDonutChart from "@/components/RevenueDonutChart";
 import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
-import { getMasterKpiRecord } from "@/lib/kpiMasterData";
+import { getMasterKpiRecord, MASTER_KPI_DATA } from "@/lib/kpiMasterData";
 import { getRadarScores } from "@/lib/radarMasterData";
 import { BarChart3 } from "lucide-react";
 import { 
@@ -156,6 +156,45 @@ export default function DashboardPage() {
       { label: "Giảm mạnh nhất", text: "Không biến động", isUp: false },
     ];
   }
+
+  // Dữ liệu M3 Traffic (Số lượt view youtube) cho 9 đơn vị theo kỳ
+  const trafficData = unitList.map(u => {
+    const uDict = MASTER_KPI_DATA[u.code] || {};
+    let item = uDict["TM3-I01.02"] || uDict["VM3-I01.02"] || uDict["3.1"];
+    if (!item) {
+      for (const k in uDict) {
+        const v = uDict[k];
+        const t = (v.title || "").toUpperCase();
+        const unitStr = (v.unit || "").toUpperCase();
+        if (t.includes("SỐ LƯỢT VIEW YOUTUBE") || t.includes("VIEW YOUTUBE") || t.includes("TRAFFIC") || unitStr.includes("VIEWS")) {
+          if (v.periods) {
+            item = v;
+            break;
+          }
+        }
+      }
+    }
+    const rec = item?.periods?.[periodKey];
+    const tgt = rec?.target ?? 0;
+    const act = rec?.actual ?? 0;
+
+    const tgtM = tgt >= 1000 ? Number((tgt / 1e6).toFixed(1)) : tgt;
+    const actM = act >= 1000 ? Number((act / 1e6).toFixed(1)) : act;
+    const pct = rec?.pct ? Math.round(rec.pct * 100) : (tgtM > 0 ? Math.round((actM / tgtM) * 100) : 0);
+
+    let color = "bg-emerald-500 font-extrabold";
+    if (tgtM === 0) color = "bg-slate-600 font-medium";
+    else if (pct < 75) color = "bg-rose-500 font-extrabold";
+    else if (pct < 100) color = "bg-lime-500 font-extrabold";
+
+    return {
+      name: u.label,
+      actual: actM,
+      target: tgtM,
+      pct,
+      color
+    };
+  });
 
   // Card 5: ROI
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
@@ -423,35 +462,25 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/5 pt-4">
             <div>
               <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Đơn vị</h4>
-              <RevenueDonutChart />
+              <RevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
             </div>
             <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
               <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
-              <SourceRevenueDonutChart />
+              <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
             </div>
           </div>
         </div>
 
-        {/* Mức độ Hoàn thành Mục tiêu Traffic (M4) */}
+        {/* Mức độ Hoàn thành Mục tiêu Traffic (M3) */}
         <div className="glass-panel p-5 flex flex-col justify-between">
           <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
-            📈 Mức độ Hoàn thành Mục tiêu Traffic (M4)
+            📈 Mức độ Hoàn thành Mục tiêu Traffic (M3)
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">
             So sánh lượt xem/truy cập thực tế so với mục tiêu kế hoạch (M triệu views)
           </p>
           <div className="space-y-3 overflow-y-auto max-h-[280px] pr-1">
-            {[
-              { name: "Wolfoo (WO)", actual: 369.0, target: 330.0, pct: 112, color: "bg-emerald-600 font-extrabold" },
-              { name: "Lego (LE)", actual: 140.0, target: 154.0, pct: 91, color: "bg-lime-500 font-extrabold" },
-              { name: "Animated Story", actual: 84.0, target: 109.0, pct: 77, color: "bg-rose-500 font-extrabold" },
-              { name: "Dự án 01 (DA)", actual: 103.0, target: 107.0, pct: 96, color: "bg-lime-500 font-extrabold" },
-              { name: "Music (SCMU)", actual: 134.0, target: 172.0, pct: 78, color: "bg-rose-500 font-extrabold" },
-              { name: "Nội dung TH", actual: 93.0, target: 75.0, pct: 124, color: "bg-emerald-500 font-extrabold" },
-              { name: "Creative Hub", actual: 61.0, target: 55.0, pct: 111, color: "bg-emerald-600 font-extrabold" },
-              { name: "CNGP (Game)", actual: 41.0, target: 49.0, pct: 84, color: "bg-lime-500 font-extrabold" },
-              { name: "Studio (ST)", actual: 31.0, target: 34.0, pct: 91, color: "bg-lime-500 font-extrabold" },
-            ].map(item => (
+            {trafficData.map(item => (
               <div key={item.name} className="space-y-1">
                 <div className="flex justify-between text-xs font-bold">
                   <span className="text-slate-200 font-extrabold">{item.name}</span>
