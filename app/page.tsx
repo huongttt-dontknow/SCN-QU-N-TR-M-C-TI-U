@@ -30,11 +30,33 @@ export default function DashboardPage() {
   };
 
   const isWeekly = filters.periodType === "weekly";
+  const isQuarterly = filters.periodType === "quarterly";
+  const isYearly = filters.periodType === "yearly";
 
   return (
     <div className="flex flex-col gap-4">
       {/* FREEZE FILTERS PANEL */}
       <FiltersHeader />
+
+      {/* HIGHLIGHT BANNER FOR QUARTERLY ROI METRIC */}
+      {isQuarterly && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3.5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-lg">💰</span>
+            <div>
+              <h4 className="text-xs font-black text-amber-400 tracking-wider uppercase">
+                BÁO CÁO QUÝ: TỶ SUẤT LỢI NHUẬN ROI ĐẶC THÙ
+              </h4>
+              <p className="text-xs text-slate-200 mt-0.5">
+                Chỉ số ROI Quý đạt <strong className="text-amber-400 font-black">128.5% hoàn thành KH</strong> (tăng <strong className="text-emerald-400">+8.2%</strong> so với Quý trước: 120.3%). Tỷ suất lợi nhuận thực tế đạt <strong className="text-emerald-400">24.6%</strong>.
+              </p>
+            </div>
+          </div>
+          <span className="text-[10px] font-black bg-amber-500 text-slate-950 px-2.5 py-1 rounded uppercase shrink-0">
+            Đạt vượt chỉ tiêu Quý
+          </span>
+        </div>
+      )}
 
       {/* balanced 50/50 split row */}
       <div className={`grid gap-4 ${isWeekly ? "grid-cols-4" : "grid-cols-1 lg:grid-cols-2"}`}>
@@ -134,27 +156,68 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Card 4: Kỷ luật (Month) / Tích lũy DT (Week) */}
+          {/* Card 4: ROI (Quarterly/Yearly) / Kỷ luật (Month) / Tích lũy DT (Week) */}
           <div className="glass-panel p-5 flex flex-col justify-between min-h-[167px]">
-            <div>
-              <span className="text-[9px] text-[var(--accent-emerald)] font-extrabold tracking-widest uppercase">
-                {isWeekly ? "Lũy kế tháng" : "M7. Kỷ luật"}
-              </span>
-              <h3 className="text-xs font-medium text-[var(--text-muted)] mt-1">
-                {isWeekly ? "Tiến độ tích lũy DT" : "Tỷ lệ không vi phạm"}
-              </h3>
-            </div>
-            <div className="flex items-baseline gap-2 my-2">
-              <span className="text-3xl font-extrabold text-white">
-                {isWeekly ? "48.2%" : "98.5%"}
-              </span>
-              <span className="text-xs font-bold text-emerald-400">
-                {isWeekly ? "▲ +12%" : "▲ +0.5%"}
-              </span>
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] border-t border-white/5 pt-2">
-              {isWeekly ? "Mục tiêu tháng: 12 tỷ" : "Mục tiêu: 100% tuân thủ"}
-            </div>
+            {isQuarterly || isYearly ? (
+              <>
+                <div>
+                  <span className="text-[9px] text-amber-400 font-extrabold tracking-widest uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                    M1. TÀI CHÍNH - ROI
+                  </span>
+                  <h3 className="text-xs font-extrabold text-white mt-1.5">
+                    Tỷ suất lợi nhuận ROI
+                  </h3>
+                </div>
+                <div className="flex items-baseline gap-2 my-2">
+                  <span className="text-3xl font-black text-amber-400">
+                    {isQuarterly ? "128.5%" : "135.0%"}
+                  </span>
+                  <span className="text-xs font-bold text-emerald-400">
+                    {isQuarterly ? "▲ +8.2%" : "▲ +12.5%"}
+                  </span>
+                </div>
+                <div className="text-[10px] text-[var(--text-muted)] border-t border-white/5 pt-2 flex justify-between items-center">
+                  <span>{isQuarterly ? "So với Quý trước: 120.3%" : "So với Năm trước: 122.5%"}</span>
+                  <span className="text-emerald-400 font-extrabold">{isQuarterly ? "ROI Quý: 24.6%" : "ROI Năm: 28.5%"}</span>
+                </div>
+              </>
+            ) : isWeekly ? (
+              <>
+                <div>
+                  <span className="text-[9px] text-[var(--accent-emerald)] font-extrabold tracking-widest uppercase">
+                    Lũy kế tháng
+                  </span>
+                  <h3 className="text-xs font-medium text-[var(--text-muted)] mt-1">
+                    Tiến độ tích lũy DT
+                  </h3>
+                </div>
+                <div className="flex items-baseline gap-2 my-2">
+                  <span className="text-3xl font-extrabold text-white">48.2%</span>
+                  <span className="text-xs font-bold text-emerald-400">▲ +12%</span>
+                </div>
+                <div className="text-[10px] text-[var(--text-muted)] border-t border-white/5 pt-2">
+                  Mục tiêu tháng: 12 tỷ
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <span className="text-[9px] text-[var(--accent-emerald)] font-extrabold tracking-widest uppercase">
+                    M7. Kỷ luật
+                  </span>
+                  <h3 className="text-xs font-medium text-[var(--text-muted)] mt-1">
+                    Tỷ lệ không vi phạm
+                  </h3>
+                </div>
+                <div className="flex items-baseline gap-2 my-2">
+                  <span className="text-3xl font-extrabold text-white">98.5%</span>
+                  <span className="text-xs font-bold text-emerald-400">▲ +0.5%</span>
+                </div>
+                <div className="text-[10px] text-[var(--text-muted)] border-t border-white/5 pt-2">
+                  Mục tiêu: 100% tuân thủ
+                </div>
+              </>
+            )}
           </div>
         </div>
 
