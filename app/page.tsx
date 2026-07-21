@@ -57,39 +57,38 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col gap-5 text-white">
+    <div className="flex flex-col gap-6 text-white text-sm">
       {/* 1. FREEZE FILTERS PANEL */}
       <FiltersHeader />
 
-      {/* 2. KHU VỰC HÀNG TRÊN (TOP SECTION - KHỚP 100% ẢNH 1) */}
       {/* 2. KHU VỰC HÀNG TRÊN (TOP SECTION - BỐ CỤC 6-6 CÂN ĐỐI) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         {/* KHỐI BÁNH XE MỤC TIÊU & BIẾN ĐỘNG (COL-SPAN-6) */}
-        <div className="lg:col-span-6 glass-panel p-5 flex flex-col md:flex-row gap-4 min-h-[360px]">
+        <div className="lg:col-span-6 glass-panel p-5 flex flex-col md:flex-row gap-5 min-h-[380px]">
           {/* Radar Chart */}
           <div className="flex-1 flex flex-col justify-between">
-            <h3 className="text-xs font-black text-white tracking-wider uppercase border-b border-white/10 pb-2 flex items-center gap-1.5">
+            <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
               🎯 BÁNH XE MỤC TIÊU (SỨC KHỎE DOANH NGHIỆP)
             </h3>
             <ObjectiveRadarChart />
-            <div className="flex justify-center gap-4 text-[10px] font-bold mt-1">
-              <span className="flex items-center gap-1 text-emerald-400">
-                <span className="w-2 h-0.5 bg-emerald-400 inline-block"></span> Kỳ này (Q3/2026)
+            <div className="flex justify-center gap-4 text-xs font-bold mt-2">
+              <span className="flex items-center gap-1.5 text-emerald-500">
+                <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> Kỳ này (Q3/2026)
               </span>
-              <span className="flex items-center gap-1 text-[var(--text-muted)]">
-                <span className="w-2 h-0.5 bg-slate-500 inline-block border-t border-dashed"></span> Kỳ trước (Q2/2026)
+              <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                <span className="w-2.5 h-1 bg-slate-500 inline-block border-t border-dashed rounded"></span> Kỳ trước (Q2/2026)
               </span>
             </div>
           </div>
 
-          {/* Chi tiết biến động (RỘNG RÃI RÕ CHỮ) */}
-          <div className="w-full md:w-64 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4">
-            <h4 className="text-[10px] font-extrabold text-[var(--accent-purple)] uppercase tracking-wider mb-2 flex items-center gap-1">
+          {/* Chi tiết biến động */}
+          <div className="w-full md:w-72 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-5">
+            <h4 className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider mb-3 flex items-center gap-1.5">
               📈 CHI TIẾT BIẾN ĐỘNG
             </h4>
-            <div className="space-y-2 text-[11px] flex-1">
-              <div className="flex justify-between text-[9px] text-[var(--text-muted)] font-black border-b border-white/10 pb-1 uppercase">
+            <div className="space-y-2.5 text-xs flex-1">
+              <div className="flex justify-between text-xs text-[var(--text-muted)] font-black border-b border-white/10 pb-1.5 uppercase tracking-wider">
                 <span>MỤC TIÊU</span>
                 <div className="flex gap-4">
                   <span>HIỆN TẠI</span>
@@ -105,11 +104,11 @@ export default function DashboardPage() {
                 { name: "Nhân sự", current: "87%", change: "+3%", up: true },
                 { name: "Văn hóa", current: "96%", change: "+4%", up: true },
               ].map(item => (
-                <div key={item.name} className="flex justify-between items-center py-1 border-b border-white/5 text-[10px] gap-2">
-                  <span className="text-[var(--text-muted)] font-semibold whitespace-nowrap">{item.name}</span>
+                <div key={item.name} className="flex justify-between items-center py-1.5 border-b border-white/5 text-xs gap-2">
+                  <span className="text-[var(--text-muted)] font-bold whitespace-nowrap">{item.name}</span>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="font-bold text-white min-w-[28px] text-right">{item.current}</span>
-                    <span className={`font-extrabold min-w-[36px] text-right ${item.up ? "text-emerald-400" : "text-rose-500"}`}>
+                    <span className="font-extrabold text-white min-w-[32px] text-right text-xs">{item.current}</span>
+                    <span className={`font-black min-w-[42px] text-right text-xs ${item.up ? "text-emerald-500" : "text-rose-500"}`}>
                       {item.up ? "▲" : "▼"} {item.change}
                     </span>
                   </div>
@@ -119,99 +118,99 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* CỤM KPI CARDS (COL-SPAN-6 - THIẾT KẾ CO GỌN CÂN ĐỐI) */}
+        {/* CỤM KPI CARDS (COL-SPAN-6) */}
         <div className="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           
           {/* Card 1: Doanh thu & Tiến độ hoàn thành */}
-          <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[170px]">
+          <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[175px]">
             <div>
-              <span className="text-[9px] font-extrabold text-[var(--accent-purple)] uppercase tracking-wider block">
+              <span className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider block">
                 DOANH THU & TIẾN ĐỘ HOÀN THÀNH
               </span>
-              <div className="flex items-baseline justify-between mt-1">
-                <span className="text-3xl font-black text-white">100%</span>
+              <div className="flex items-baseline justify-between mt-1.5">
+                <span className="text-4xl font-black text-white">100%</span>
               </div>
             </div>
             <div className="my-1">
-              <p className="text-xs font-bold text-emerald-400">
+              <p className="text-sm font-extrabold text-emerald-500">
                 100.0 Tỷ VNĐ | ▲ +4.0% so với quý trước
               </p>
-              <span className="text-[10px] text-[var(--text-muted)]">(KH: 100.0 Tỷ VNĐ)</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: 100.0 Tỷ VNĐ)</span>
             </div>
           </div>
 
           {/* Card 2: Sản lượng Video hoàn thành */}
-          <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-emerald-500 min-h-[170px]">
+          <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-emerald-500 min-h-[175px]">
             <div>
-              <span className="text-[9px] font-extrabold text-emerald-400 uppercase tracking-wider block">
+              <span className="text-xs font-black text-emerald-500 uppercase tracking-wider block">
                 SẢN LƯỢNG VIDEO HOÀN THÀNH
               </span>
-              <div className="flex items-baseline justify-between mt-1">
-                <span className="text-3xl font-black text-emerald-400">363 Video</span>
+              <div className="flex items-baseline justify-between mt-1.5">
+                <span className="text-4xl font-black text-emerald-500">363 Video</span>
               </div>
             </div>
             <div className="my-1">
-              <p className="text-xs font-bold text-emerald-400">
+              <p className="text-sm font-extrabold text-emerald-500">
                 110% | ▲ +12.0% so với quý trước
               </p>
-              <span className="text-[10px] text-[var(--text-muted)]">(KH: 330 Video)</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: 330 Video)</span>
             </div>
           </div>
 
           {/* Card 3: Đơn vị HT Doanh thu cao nhất */}
-          <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-[var(--accent-cyan)] min-h-[170px]">
+          <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-cyan)] min-h-[175px]">
             <div>
-              <span className="text-[9px] font-extrabold text-[var(--accent-cyan)] uppercase tracking-wider block">
+              <span className="text-xs font-black text-[var(--accent-cyan)] uppercase tracking-wider block">
                 ĐƠN VỊ HT DOANH THU CAO NHẤT
               </span>
-              <div className="mt-1">
-                <span className="text-2xl font-black text-white truncate block">
+              <div className="mt-1.5">
+                <span className="text-3xl font-black text-white truncate block">
                   Wolfoo - 95%
                 </span>
               </div>
             </div>
-            <div className="text-[10px] text-[var(--text-muted)] border-t border-white/5 pt-2 font-medium">
+            <div className="text-xs text-[var(--text-muted)] border-t border-white/5 pt-2 font-bold">
               Đơn vị trực thuộc xuất sắc nhất kỳ
             </div>
           </div>
 
-          {/* Card 4: Tỷ lệ không vi phạm kỷ luật (GIỮ NGUYÊN) */}
-          <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[170px]">
+          {/* Card 4: Tỷ lệ không vi phạm kỷ luật */}
+          <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
             <div>
-              <span className="text-[9px] font-extrabold text-[var(--accent-pink)] uppercase tracking-wider block">
+              <span className="text-xs font-black text-[var(--accent-pink)] uppercase tracking-wider block">
                 TỶ LỆ KHÔNG VI PHẠM KỶ LUẬT
               </span>
-              <div className="mt-1">
-                <span className="text-3xl font-black text-[var(--accent-pink)]">
+              <div className="mt-1.5">
+                <span className="text-4xl font-black text-[var(--accent-pink)]">
                   99.85%
                 </span>
               </div>
             </div>
             <div className="my-1">
-              <p className="text-xs font-bold text-emerald-400">
+              <p className="text-sm font-extrabold text-emerald-500">
                 ▲ +0.05% so với quý trước
               </p>
-              <span className="text-[10px] text-[var(--text-muted)]">(KH: &gt; 98.0%)</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: &gt; 98.0%)</span>
             </div>
           </div>
 
-          {/* Card 5: Tỷ suất lợi nhuận ROI (HIỂN THỊ KHI CHỌN QUÝ VÀ NĂM) */}
+          {/* Card 5: Tỷ suất lợi nhuận ROI */}
           {(filters.periodType === "quarterly" || filters.periodType === "yearly") && (
-            <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-purple-500 md:col-span-2 min-h-[130px]">
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-purple-500 md:col-span-2 min-h-[140px]">
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-[9px] font-extrabold text-purple-400 uppercase tracking-wider block">
+                  <span className="text-xs font-black text-purple-400 uppercase tracking-wider block">
                     TỶ SUẤT LỢI NHUẬN ROI ({filters.periodType === "quarterly" ? "QUÝ" : "NĂM"})
                   </span>
-                  <span className="text-3xl font-black text-purple-300 mt-1 block">
+                  <span className="text-4xl font-black text-purple-300 mt-1 block">
                     {filters.periodType === "quarterly" ? "70.0%" : "135.0%"}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className={`text-xs font-bold block ${filters.periodType === "quarterly" ? "text-rose-500" : "text-emerald-400"}`}>
+                  <span className={`text-sm font-extrabold block ${filters.periodType === "quarterly" ? "text-rose-500" : "text-emerald-500"}`}>
                     {filters.periodType === "quarterly" ? "88% | ▼ -12.0% so với kỳ trước" : "▲ +12.5% so với năm trước"}
                   </span>
-                  <span className="text-[10px] text-[var(--text-muted)]">
+                  <span className="text-xs text-[var(--text-muted)] font-semibold">
                     {filters.periodType === "quarterly" ? "(KH: 80.0%)" : "(KH: 120.0%)"}
                   </span>
                 </div>
@@ -223,45 +222,45 @@ export default function DashboardPage() {
       </div>
 
       {/* 3. BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU CÁC ĐƠN VỊ THEO KỲ */}
-      <div className="glass-panel p-5">
-        <h3 className="text-xs font-black text-white tracking-wider uppercase mb-4 flex items-center gap-2">
-          <BarChart3 size={16} className="text-[var(--accent-cyan)]" />
+      <div className="glass-panel p-6">
+        <h3 className="text-sm font-black text-white tracking-wider uppercase mb-4 flex items-center gap-2">
+          <BarChart3 size={18} className="text-[var(--accent-cyan)]" />
           📊 BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU {filters.periodType === "weekly" ? "TUẦN" : filters.periodType === "monthly" ? "THÁNG" : filters.periodType === "quarterly" ? "QUÝ" : "NĂM"} (9 ĐƠN VỊ)
         </h3>
-        <div className="w-full h-[240px]">
+        <div className="w-full h-[260px]">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={getRevenueComparisonData()}>
               <CartesianGrid strokeDasharray="3 3" stroke={theme === "light" ? "#e2e8f0" : "rgba(255,255,255,0.05)"} />
-              <XAxis dataKey="name" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={11} tickLine={false} />
-              <YAxis yAxisId="left" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={11} tickFormatter={(val) => `${val}T`} />
-              <YAxis yAxisId="right" orientation="right" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} fontSize={11} tickFormatter={(val) => `${val}%`} />
-              <RechartsTooltip contentStyle={{ background: theme === "light" ? "#ffffff" : "#0f172a", border: theme === "light" ? "1px solid #cbd5e1" : "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12, color: theme === "light" ? "#0f172a" : "#ffffff", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" }} />
-              <Bar yAxisId="left" dataKey="target" fill={theme === "light" ? "#0284c7" : "#0284c7"} radius={[4, 4, 0, 0]} barSize={16} name="Mục tiêu (Tỷ)" />
-              <Bar yAxisId="left" dataKey="revenue" fill={theme === "light" ? "#16a34a" : "#00f2fe"} radius={[4, 4, 0, 0]} barSize={16} name="Kết quả thực tế (Tỷ)" />
-              <Line yAxisId="right" type="monotone" dataKey="completion" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} strokeWidth={3} dot={{ r: 5, fill: theme === "light" ? "#7e22ce" : "#a855f7", stroke: "#ffffff", strokeWidth: 1.5 }} name="% Hoàn thành" />
+              <XAxis dataKey="name" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={12} tickLine={false} />
+              <YAxis yAxisId="left" stroke={theme === "light" ? "#0f172a" : "#94a3b8"} fontSize={12} tickFormatter={(val) => `${val}T`} />
+              <YAxis yAxisId="right" orientation="right" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} fontSize={12} tickFormatter={(val) => `${val}%`} />
+              <RechartsTooltip contentStyle={{ background: theme === "light" ? "#ffffff" : "#0f172a", border: theme === "light" ? "1px solid #cbd5e1" : "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 13, color: theme === "light" ? "#0f172a" : "#ffffff", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" }} />
+              <Bar yAxisId="left" dataKey="target" fill={theme === "light" ? "#0284c7" : "#0284c7"} radius={[4, 4, 0, 0]} barSize={18} name="Mục tiêu (Tỷ)" />
+              <Bar yAxisId="left" dataKey="revenue" fill={theme === "light" ? "#16a34a" : "#00f2fe"} radius={[4, 4, 0, 0]} barSize={18} name="Kết quả thực tế (Tỷ)" />
+              <Line yAxisId="right" type="monotone" dataKey="completion" stroke={theme === "light" ? "#7e22ce" : "#8b5cf6"} strokeWidth={3} dot={{ r: 6, fill: theme === "light" ? "#7e22ce" : "#a855f7", stroke: "#ffffff", strokeWidth: 2 }} name="% Hoàn thành" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* 4. KHU VỰC CƠ CẤU DOANH THU & TRAFFIC (KHỚP ẢNH 2) */}
+      {/* 4. KHU VỰC CƠ CẤU DOANH THU & TRAFFIC */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         
         {/* Tỷ trọng Cơ cấu Doanh thu (M1) */}
         <div className="glass-panel p-5">
-          <h3 className="text-xs font-black text-white tracking-wider uppercase mb-1">
+          <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
             📊 Tỷ trọng Cơ cấu Doanh thu (M1)
           </h3>
-          <p className="text-[10px] text-[var(--text-muted)] mb-4">
+          <p className="text-xs text-[var(--text-muted)] mb-4 font-semibold">
             Cơ cấu đóng góp doanh thu theo Đơn vị và theo Nguồn phát sinh doanh thu
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/5 pt-4">
             <div>
-              <h4 className="text-[10px] font-bold text-white uppercase mb-2 text-center">Doanh thu theo Đơn vị</h4>
+              <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Đơn vị</h4>
               <RevenueDonutChart />
             </div>
             <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
-              <h4 className="text-[10px] font-bold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
+              <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
               <SourceRevenueDonutChart />
             </div>
           </div>
@@ -269,13 +268,13 @@ export default function DashboardPage() {
 
         {/* Mức độ Hoàn thành Mục tiêu Traffic (M4) */}
         <div className="glass-panel p-5 flex flex-col justify-between">
-          <h3 className="text-xs font-black text-white tracking-wider uppercase mb-1">
+          <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
             📈 Mức độ Hoàn thành Mục tiêu Traffic (M4)
           </h3>
-          <p className="text-[10px] text-[var(--text-muted)] mb-3">
+          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">
             So sánh lượt xem/truy cập thực tế so với mục tiêu kế hoạch (M triệu views)
           </p>
-          <div className="space-y-2.5 overflow-y-auto max-h-[260px] pr-1">
+          <div className="space-y-3 overflow-y-auto max-h-[280px] pr-1">
             {[
               { name: "Wolfoo (WO)", actual: 369.0, target: 330.0, pct: 112, color: "bg-rose-500" },
               { name: "Lego (LE)", actual: 140.0, target: 154.0, pct: 91, color: "bg-rose-500" },
@@ -288,13 +287,13 @@ export default function DashboardPage() {
               { name: "Studio (ST)", actual: 31.0, target: 34.0, pct: 91, color: "bg-purple-500" },
             ].map(item => (
               <div key={item.name} className="space-y-1">
-                <div className="flex justify-between text-[11px] font-medium">
-                  <span className="text-slate-200 font-semibold">{item.name}</span>
-                  <span className="text-slate-300 font-bold">
+                <div className="flex justify-between text-xs font-bold">
+                  <span className="text-slate-200 font-extrabold">{item.name}</span>
+                  <span className="text-slate-300 font-black">
                     {item.actual}M / {item.target}M ({item.pct}%)
                   </span>
                 </div>
-                <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-white/5">
                   <div className={`h-full rounded-full ${item.color}`} style={{ width: `${Math.min(100, item.pct)}%` }} />
                 </div>
               </div>
@@ -304,16 +303,16 @@ export default function DashboardPage() {
 
       </div>
 
-      {/* 5. CỤM 3 BANG XEP HANG (BXH DOANH THU, SẢN XUẤT, TRAFFIC - KHỚP ẢNH 2) */}
+      {/* 5. CỤM 3 BẢNG XẾP HẠNG (BXH DOANH THU, SẢN XUẤT, TRAFFIC) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         
         {/* BXH Tăng trưởng Doanh thu */}
-        <div className="glass-panel p-4">
+        <div className="glass-panel p-5">
           <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
             📝 BXH Tăng trưởng Doanh thu
           </h3>
-          <p className="text-[10px] text-[var(--text-muted)] mb-3">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
-          <div className="space-y-2 text-[11px]">
+          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
+          <div className="space-y-2.5 text-xs">
             {[
               { rank: "#1", name: "Wolfoo", val: "76.0 Tỷ", change: "+0.3%", up: true, highlight: true },
               { rank: "#2", name: "Lego", val: "70.0 Tỷ", change: "-6.4%", up: false },
@@ -322,16 +321,16 @@ export default function DashboardPage() {
               { rank: "#5", name: "Music", val: "70.0 Tỷ", change: "-6.4%", up: false },
               { rank: "#9", name: "Studio", val: "70.0 Tỷ", change: "-6.4%", up: false, warning: true },
             ].map(row => (
-              <div key={row.rank + row.name} className={`flex justify-between items-center p-2 rounded border ${
+              <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
                 <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-amber-400 w-6">{row.rank}</span>
-                  <span className="font-bold text-white">{row.name}</span>
+                  <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
+                  <span className="font-extrabold text-white text-xs">{row.name}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[var(--text-muted)]">{row.val}</span>
-                  <span className={`font-bold ${row.up ? "text-emerald-400" : "text-rose-500"}`}>{row.change}</span>
+                  <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
+                  <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
                 </div>
               </div>
             ))}
@@ -339,12 +338,12 @@ export default function DashboardPage() {
         </div>
 
         {/* BXH Hoàn thành Sản xuất */}
-        <div className="glass-panel p-4">
+        <div className="glass-panel p-5">
           <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
             🎬 BXH Hoàn thành Sản xuất
           </h3>
-          <p className="text-[10px] text-[var(--text-muted)] mb-3">Mức độ hoàn thành kế hoạch số lượng video</p>
-          <div className="space-y-2 text-[11px]">
+          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Mức độ hoàn thành kế hoạch số lượng video</p>
+          <div className="space-y-2.5 text-xs">
             {[
               { rank: "#1", name: "Creative", val: "26 Video", pct: "113%", highlight: true },
               { rank: "#2", name: "Lego", val: "67 Video", pct: "112%" },
@@ -353,16 +352,16 @@ export default function DashboardPage() {
               { rank: "#5", name: "Nội dung", val: "32 Video", pct: "91%" },
               { rank: "#9", name: "Dự án 01", val: "28 Video", pct: "76%", warning: true },
             ].map(row => (
-              <div key={row.rank + row.name} className={`flex justify-between items-center p-2 rounded border ${
+              <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
                 <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-amber-400 w-6">{row.rank}</span>
-                  <span className="font-bold text-white">{row.name}</span>
+                  <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
+                  <span className="font-extrabold text-white text-xs">{row.name}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[var(--text-muted)]">{row.val}</span>
-                  <span className="font-extrabold text-emerald-400">{row.pct}</span>
+                  <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
+                  <span className="font-black text-emerald-500 text-xs">{row.pct}</span>
                 </div>
               </div>
             ))}
@@ -370,12 +369,12 @@ export default function DashboardPage() {
         </div>
 
         {/* BXH Tăng trưởng Traffic */}
-        <div className="glass-panel p-4">
+        <div className="glass-panel p-5">
           <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
             🌐 BXH Tăng trưởng Traffic
           </h3>
-          <p className="text-[10px] text-[var(--text-muted)] mb-3">Xếp hạng theo % tăng trưởng traffic so với kỳ trước</p>
-          <div className="space-y-2 text-[11px]">
+          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng traffic views</p>
+          <div className="space-y-2.5 text-xs">
             {[
               { rank: "#1", name: "Dự án 01", val: "102.0M", change: "+12.3%", up: true, highlight: true },
               { rank: "#2", name: "Creative", val: "82.0M", change: "+12.3%", up: true },
@@ -384,16 +383,16 @@ export default function DashboardPage() {
               { rank: "#5", name: "Animated", val: "139.0M", change: "+1.2%", up: true },
               { rank: "#9", name: "Wolfoo", val: "42.0M", change: "-10.7%", up: false, warning: true },
             ].map(row => (
-              <div key={row.rank + row.name} className={`flex justify-between items-center p-2 rounded border ${
+              <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
                 <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-amber-400 w-6">{row.rank}</span>
-                  <span className="font-bold text-white">{row.name}</span>
+                  <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
+                  <span className="font-extrabold text-white text-xs">{row.name}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[var(--text-muted)]">{row.val}</span>
-                  <span className={`font-bold ${row.up ? "text-emerald-400" : "text-rose-500"}`}>{row.change}</span>
+                  <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
+                  <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
                 </div>
               </div>
             ))}
@@ -402,130 +401,28 @@ export default function DashboardPage() {
 
       </div>
 
-      {/* 6. ĐÁNH GIÁ HIỆU QUẢ CÁC SẢN PHẨM & TOP 3/CẢNH BÁO (ẨN KHI XEM BÁO CÁO HÀNG TUẦN) */}
-      {filters.periodType !== "weekly" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          
-          {/* Trái: Hiệu quả các Dòng Sản phẩm (Điểm PSH) - THIẾT KẾ GỌN GÀNG KHÔNG TRỐNG) */}
-          <div className="glass-panel p-5 flex flex-col gap-4">
-            <div>
-              <h3 className="text-xs font-black text-white tracking-wider uppercase mb-1">
-                Hiệu quả các Dòng Sản phẩm (Điểm PSH)
-              </h3>
-              <p className="text-[10px] text-[var(--text-muted)] border-b border-white/5 pb-2">
-                Điểm hiệu quả sản phẩm trung bình theo nhóm sản phẩm (Thang điểm 100)
-              </p>
-            </div>
-            <div className="space-y-3.5">
-              {[
-                { name: "Dòng phim Wolfoo (WO)", score: 88, color: "bg-purple-500" },
-                { name: "Dòng phim Animated Story (AS)", score: 80, color: "bg-blue-900" },
-                { name: "Sản phẩm Music (SCMU)", score: 78, color: "bg-emerald-500" },
-                { name: "Sản phẩm Lego Series", score: 67, color: "bg-amber-500" },
-                { name: "Creative Hub Products", score: 61, color: "bg-pink-500" },
-                { name: "Game & Technology (CNGP)", score: 35, color: "bg-rose-600" },
-              ].map(item => (
-                <div key={item.name} className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium">
-                    <span className="text-slate-200 font-semibold">{item.name}</span>
-                    <span className="font-extrabold text-white">{item.score}đ</span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/5">
-                    <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.score}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Phải: Bảng Tỷ lệ Hiệu quả: Top 3 & Cảnh báo (Điểm PSH) */}
-          <div className="glass-panel p-5 flex flex-col justify-between space-y-4">
-            <div>
-              <h3 className="text-xs font-black text-[var(--accent-purple)] tracking-wider uppercase mb-1">
-                Bảng Tỷ lệ Hiệu quả: Top 3 & Cảnh báo (Điểm PSH)
-              </h3>
-              <p className="text-[10px] text-[var(--text-muted)] border-b border-white/5 pb-2">
-                Sản phẩm hiệu quả cao nhất và sản phẩm hiệu quả thấp nhất cần lưu ý
-              </p>
-            </div>
-
-            {/* TOP 3 SẢN PHẨM HIỆU QUẢ CAO NHẤT */}
-            <div className="space-y-2">
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                🏆 TOP 3 SẢN PHẨM HIỆU QUẢ CAO NHẤT
-              </span>
-              {[
-                { rank: "#1", code: "Wolfoo 2D Stories (WO-2020-001)", desc: "Doanh thu & Sản lượng vượt 112% kế hoạch", score: 95 },
-                { rank: "#2", code: "Sản phẩm Animated Story - MDA", desc: "Năng suất vượt trội và ứng dụng AI xuất sắc", score: 92 },
-                { rank: "#3", code: "Lego Automation (LE-2026-001)", desc: "Quy trình tự động hóa hoàn thiện đạt chuẩn", score: 90 },
-              ].map(item => (
-                <div key={item.rank} className="bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-lg flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-black text-emerald-400">{item.rank}</span>
-                    <div>
-                      <h4 className="font-extrabold text-xs text-white">{item.code}</h4>
-                      <p className="text-[10px] text-[var(--text-muted)]">{item.desc}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black text-emerald-400 bg-emerald-500/20 px-2 py-1 rounded">
-                    {item.score} điểm
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* CẢNH BÁO: 3 SẢN PHẨM HIỆU QUẢ THẤP NHẤT */}
-            <div className="space-y-2 pt-2 border-t border-white/5">
-              <span className="text-[10px] font-black text-rose-500 uppercase tracking-wider flex items-center gap-1">
-                ⚠️ CẢNH BÁO: 3 SẢN PHẨM HIỆU QUẢ THẤP NHẤT
-              </span>
-              {[
-                { code: "Game Web/App (CN-2026-001)", desc: "Tiến độ sản xuất chậm, doanh thu chưa đạt kỳ vọng", score: 35 },
-                { code: "Creative Hub – Manga Podcast", desc: "Lượt xem tích lũy (Traffic) sụt giảm 15% so với cùng kỳ", score: 42 },
-                { code: "Lego AI 100% (LE-2026-002)", desc: "Sự cố kênh phân phối cũ chưa hồi phục", score: 45 },
-              ].map(item => (
-                <div key={item.code} className="bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-lg flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-xs">⚠️</span>
-                    <div>
-                      <h4 className="font-extrabold text-xs text-white">{item.code}</h4>
-                      <p className="text-[10px] text-rose-300/80">{item.desc}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black text-rose-400 bg-rose-500/20 px-2 py-1 rounded">
-                    {item.score} điểm
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 7. NHẬN XÉT & ĐÁNH GIÁ KẾT QUẢ TỪ BAN GIÁM ĐỐC (BOD - KHỚP 100% ẢNH 3) */}
-      <div className="glass-panel p-5 flex flex-col gap-3">
-        <h3 className="text-xs font-black text-white tracking-wider uppercase">
-          Nhận xét & Đánh giá kết quả từ Ban Giám đốc (BOD)
+      {/* 6. KHU VỰC CHỈ ĐẠO CỦA BOD (BOTTOM SECTION) */}
+      <div className="glass-panel p-5 space-y-3">
+        <h3 className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider flex items-center gap-2">
+          💬 Ý KIẾN CHỈ ĐẠO ĐIỀU HÀNH CỦA BAN GIÁM ĐỐC (BOD)
         </h3>
-        <p className="text-[10px] text-[var(--text-muted)]">
-          Ghi chú ý kiến chỉ đạo hành động, nhận định hiệu suất kỳ này để lưu trữ và gửi thông báo tới các đơn vị
+        <p className="text-xs text-[var(--text-muted)] font-medium">
+          Ghi chú ý kiến chỉ đạo hành động, nhận định hiệu xuất kỳ này để lưu trữ và gửi thông báo tới các đơn vị
         </p>
         <textarea
           value={bodComment}
           onChange={(e) => setBodComment(e.target.value)}
-          placeholder="Nhập ý kiến đánh giá hoặc chỉ đạo hành động của Ban Giám đốc tại đây..."
+          placeholder="Nhập nội dung chỉ đạo điều hành chiến lược cho các đơn vị thuộc BU Sconnect..."
           rows={3}
-          className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[var(--accent-cyan)] transition-all resize-none"
+          className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[var(--accent-purple)] resize-none"
         />
-        <div className="flex justify-between items-center mt-1">
-          <span className="text-[10px] text-[var(--text-muted)] italic">
-            {isSaved ? "✓ Đã lưu nhận xét chỉ đạo thành công cho kỳ này" : "Chưa có nhận xét cho kỳ này"}
-          </span>
+        <div className="flex justify-end gap-3 items-center">
+          {isSaved && <span className="text-xs text-emerald-500 font-extrabold">✓ Đã lưu thành công!</span>}
           <button
             onClick={handleSaveComment}
-            className="bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white text-xs font-black px-5 py-2 rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.4)] transition-all"
+            className="bg-purple-700 hover:bg-purple-600 text-white text-xs font-extrabold px-5 py-2.5 rounded-xl shadow transition-all"
           >
-            {isSaved ? "✓ Đã lưu nhận xét" : "Lưu nhận xét"}
+            💾 Lưu chỉ đạo BOD
           </button>
         </div>
       </div>

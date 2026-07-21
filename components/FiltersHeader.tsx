@@ -32,17 +32,17 @@ export default function FiltersHeader() {
 
   return (
     <div className="glass-panel p-4 mb-4 flex flex-wrap gap-4 items-center justify-between shrink-0">
-      <div className="flex flex-wrap gap-3 items-center">
+      <div className="flex flex-wrap gap-3.5 items-center">
         {/* Chọn đơn vị */}
         <div className="flex flex-col">
-          <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+          <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
             Đơn vị báo cáo
           </label>
           <select
             value={filters.unitCode}
             disabled={isRestricted}
             onChange={(e) => handleFilterChange("unitCode", e.target.value)}
-            className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {units.map(u => (
               <option key={u.code} value={u.code}>{u.name}</option>
@@ -52,13 +52,13 @@ export default function FiltersHeader() {
 
         {/* Tần suất */}
         <div className="flex flex-col">
-          <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+          <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
             Tần suất
           </label>
           <select
             value={filters.periodType}
             onChange={(e) => handleFilterChange("periodType", e.target.value)}
-            className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+            className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
           >
             <option value="weekly">Hàng tuần</option>
             <option value="monthly">Hàng tháng</option>
@@ -70,13 +70,13 @@ export default function FiltersHeader() {
         {/* Lọc tháng */}
         {filters.periodType !== "yearly" && (
           <div className="flex flex-col">
-            <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+            <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
               Tháng
             </label>
             <select
               value={filters.month}
               onChange={(e) => handleFilterChange("month", e.target.value)}
-              className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+              className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
             >
               {Array.from({ length: 12 }, (_, i) => (
                 <option key={i + 1} value={i + 1}>Tháng {i + 1}</option>
@@ -88,13 +88,13 @@ export default function FiltersHeader() {
         {/* Lọc tuần */}
         {filters.periodType === "weekly" && (
           <div className="flex flex-col">
-            <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+            <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
               Tuần
             </label>
             <select
               value={filters.week}
               onChange={(e) => handleFilterChange("week", e.target.value)}
-              className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+              className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
             >
               <option value="1">Tuần 1 (01/07 - 05/07)</option>
               <option value="2">Tuần 2 (06/07 - 12/07)</option>
@@ -108,13 +108,13 @@ export default function FiltersHeader() {
         {/* Lọc Quý */}
         {filters.periodType === "quarterly" && (
           <div className="flex flex-col">
-            <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+            <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
               Quý
             </label>
             <select
               value={filters.quarter}
               onChange={(e) => handleFilterChange("quarter", e.target.value)}
-              className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+              className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
             >
               <option value="Q1">Quý I</option>
               <option value="Q2">Quý II</option>
@@ -126,13 +126,13 @@ export default function FiltersHeader() {
 
         {/* Lọc Năm (2025 / 2026 / 2027) */}
         <div className="flex flex-col">
-          <label className="text-[10px] text-[var(--text-muted)] font-bold mb-1 uppercase tracking-wider">
+          <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
             Năm
           </label>
           <select
             value={filters.year}
             onChange={(e) => handleFilterChange("year", e.target.value)}
-            className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-2 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+            className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
           >
             <option value="2025">Năm 2025</option>
             <option value="2026">Năm 2026</option>
@@ -141,10 +141,9 @@ export default function FiltersHeader() {
         </div>
       </div>
 
-      <div className="text-right">
-        <span className="text-[10px] font-bold text-[var(--accent-cyan)] uppercase tracking-widest bg-[rgba(0,242,254,0.06)] px-2.5 py-1 rounded border border-[rgba(0,242,254,0.2)]">
-          KỲ LỌC: {filters.periodType === "weekly" ? `Tuần ${filters.week} - Tháng ${filters.month}` : filters.periodType === "monthly" ? `Tháng ${filters.month}` : filters.periodType === "quarterly" ? `${filters.quarter}` : `Năm ${filters.year}`} / {filters.year}
-        </span>
+      {/* Tóm tắt bộ lọc active */}
+      <div className="bg-slate-900/60 border border-[var(--glass-border)] px-3.5 py-2 rounded-xl text-xs font-black text-[var(--accent-cyan)] tracking-wider">
+        KỲ LỌC: {filters.periodType === "weekly" ? `TUẦN ${filters.week} - THÁNG ${filters.month}` : filters.periodType === "monthly" ? `THÁNG ${filters.month}` : filters.periodType === "quarterly" ? `QUÝ ${filters.quarter}` : "CẢ NĂM"} / {filters.year}
       </div>
     </div>
   );

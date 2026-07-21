@@ -105,15 +105,15 @@ export default function ProductDataPage() {
       {/* PRODUCT SELECTOR DROPDOWN */}
       <div className="glass-panel p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Layers size={18} className="text-[var(--accent-cyan)]" />
-          <h2 className="text-sm font-bold text-white uppercase tracking-wider">
+          <Layers size={20} className="text-[var(--accent-cyan)]" />
+          <h2 className="text-sm font-extrabold text-white uppercase tracking-wider">
             Chọn sản phẩm đo lường
           </h2>
         </div>
         <select
           value={selectedProduct}
           onChange={(e) => setSelectedProduct(e.target.value)}
-          className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs font-semibold rounded px-3 py-2 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer w-64"
+          className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3.5 py-2 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer w-72"
         >
           {productGroups.map(group => (
             <optgroup key={group.unit} label={`Đơn vị: ${group.unit}`}>
@@ -126,30 +126,30 @@ export default function ProductDataPage() {
       </div>
 
       {profile && (
-        <div className="flex flex-col lg:flex-row gap-4">
+        <div className="flex flex-col lg:flex-row gap-5">
           {/* PRODUCT PROFILE CARD (25% Width) */}
-          <div className="glass-panel p-5 lg:w-1/4 flex flex-col justify-between shrink-0 min-h-[220px]">
+          <div className="glass-panel p-5 lg:w-1/4 flex flex-col justify-between shrink-0 min-h-[230px]">
             <div>
-              <span className="text-[9px] text-[var(--accent-cyan)] font-extrabold tracking-widest uppercase block mb-1">
+              <span className="text-xs text-[var(--accent-cyan)] font-black tracking-widest uppercase block mb-1">
                 Thông tin sản phẩm
               </span>
-              <h3 className="text-base font-extrabold text-white mb-4">
+              <h3 className="text-lg font-black text-white mb-4">
                 {profile.name}
               </h3>
             </div>
             
             <div className="space-y-3 text-xs flex-1">
-              <div className="flex justify-between items-center py-1.5 border-b border-white/5">
-                <span className="text-[var(--text-muted)] flex items-center gap-1.5"><Briefcase size={12} /> PIC</span>
-                <span className="font-bold text-white">{profile.pic}</span>
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
+                <span className="text-[var(--text-muted)] font-extrabold flex items-center gap-1.5"><Briefcase size={14} /> PIC</span>
+                <span className="font-extrabold text-white">{profile.pic}</span>
               </div>
-              <div className="flex justify-between items-center py-1.5 border-b border-white/5">
-                <span className="text-[var(--text-muted)] flex items-center gap-1.5"><Users size={12} /> Quy mô (FTE)</span>
-                <span className="font-bold text-white">{profile.fte} nhân sự</span>
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
+                <span className="text-[var(--text-muted)] font-extrabold flex items-center gap-1.5"><Users size={14} /> Quy mô (FTE)</span>
+                <span className="font-extrabold text-white">{profile.fte} nhân sự</span>
               </div>
-              <div className="flex justify-between items-center py-1.5">
-                <span className="text-[var(--text-muted)] flex items-center gap-1.5"><FolderGit2 size={12} /> Phân loại</span>
-                <span className="font-bold text-[var(--accent-cyan)] bg-[var(--accent-cyan)]/5 px-2 py-0.5 rounded border border-[var(--accent-cyan)]/10">
+              <div className="flex justify-between items-center py-2">
+                <span className="text-[var(--text-muted)] font-extrabold flex items-center gap-1.5"><FolderGit2 size={14} /> Phân loại</span>
+                <span className="font-black text-[var(--accent-cyan)] bg-[var(--accent-cyan)]/10 px-2.5 py-1 rounded-lg border border-[var(--accent-cyan)]/20 text-xs">
                   {profile.type}
                 </span>
               </div>
@@ -157,97 +157,97 @@ export default function ProductDataPage() {
           </div>
 
           {/* CROSS COMPARE MULTI-METRIC WIDGETS (75% Width) */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-5">
             
             {/* Widget A: Doanh thu */}
-            <div className="glass-panel p-5 flex flex-col justify-between h-[220px]">
+            <div className="glass-panel p-5 flex flex-col justify-between h-[230px]">
               <div>
-                <span className="text-[9px] text-[var(--accent-cyan)] font-extrabold tracking-widest uppercase">
+                <span className="text-xs text-[var(--accent-cyan)] font-black tracking-widest uppercase">
                   Doanh thu (M1)
                 </span>
-                <h4 className="text-xs text-[var(--text-muted)] mt-1">Hoàn thành kế hoạch</h4>
+                <h4 className="text-xs text-[var(--text-muted)] font-bold mt-1">Hoàn thành kế hoạch</h4>
               </div>
               <div className="my-2">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-white">
+                  <span className="text-3xl font-black text-white">
                     {Math.round((profile.revenueActual / profile.revenueTarget) * 100)}%
                   </span>
-                  <span className="text-[10px] text-[var(--text-muted)]">
+                  <span className="text-xs text-[var(--text-muted)] font-bold">
                     {profile.revenueActual}M / {profile.revenueTarget}M VNĐ
                   </span>
                 </div>
-                <div className="w-full h-1.5 bg-slate-900 rounded-full mt-2 overflow-hidden">
+                <div className="w-full h-2 bg-slate-900 rounded-full mt-2 overflow-hidden border border-white/5">
                   <div 
                     className="h-full rounded-full bg-[var(--accent-cyan)]"
                     style={{ width: `${Math.round((profile.revenueActual / profile.revenueTarget) * 100)}%` }}
                   />
                 </div>
               </div>
-              <div className="text-[10px] text-[var(--text-muted)] flex items-center gap-1 border-t border-white/5 pt-2">
-                <TrendingUp size={12} className="text-emerald-400" />
-                <span className="text-emerald-400 font-bold">+{profile.revenueGrowth}%</span>
+              <div className="text-xs text-[var(--text-muted)] flex items-center gap-1 border-t border-white/5 pt-2 font-bold">
+                <TrendingUp size={14} className="text-emerald-500" />
+                <span className="text-emerald-500 font-black">+{profile.revenueGrowth}%</span>
                 <span>so với kỳ trước</span>
               </div>
             </div>
 
             {/* Widget B: Sản lượng */}
-            <div className="glass-panel p-5 flex flex-col justify-between h-[220px]">
+            <div className="glass-panel p-5 flex flex-col justify-between h-[230px]">
               <div>
-                <span className="text-[9px] text-[var(--accent-purple)] font-extrabold tracking-widest uppercase">
+                <span className="text-xs text-[var(--accent-purple)] font-black tracking-widest uppercase">
                   Sản lượng (M2)
                 </span>
-                <h4 className="text-xs text-[var(--text-muted)] mt-1">Video hoàn thành</h4>
+                <h4 className="text-xs text-[var(--text-muted)] font-bold mt-1">Video hoàn thành</h4>
               </div>
               <div className="my-2">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-white">
+                  <span className="text-3xl font-black text-white">
                     {Math.round((profile.sảnLượngActual / profile.sảnLượngTarget) * 100)}%
                   </span>
-                  <span className="text-[10px] text-[var(--text-muted)]">
+                  <span className="text-xs text-[var(--text-muted)] font-bold">
                     {profile.sảnLượngActual} / {profile.sảnLượngTarget} Video
                   </span>
                 </div>
-                <div className="w-full h-1.5 bg-slate-900 rounded-full mt-2 overflow-hidden">
+                <div className="w-full h-2 bg-slate-900 rounded-full mt-2 overflow-hidden border border-white/5">
                   <div 
                     className="h-full rounded-full bg-[var(--accent-purple)]"
                     style={{ width: `${Math.round((profile.sảnLượngActual / profile.sảnLượngTarget) * 100)}%` }}
                   />
                 </div>
               </div>
-              <div className="text-[10px] text-[var(--text-muted)] flex items-center gap-1 border-t border-white/5 pt-2">
-                <TrendingDown size={12} className="text-rose-500" />
-                <span className="text-rose-500 font-bold">{profile.sảnLượngGrowth}%</span>
+              <div className="text-xs text-[var(--text-muted)] flex items-center gap-1 border-t border-white/5 pt-2 font-bold">
+                <TrendingDown size={14} className="text-rose-500" />
+                <span className="text-rose-500 font-black">{profile.sảnLượngGrowth}%</span>
                 <span>so với kỳ trước</span>
               </div>
             </div>
 
             {/* Widget C: Traffic */}
-            <div className="glass-panel p-5 flex flex-col justify-between h-[220px]">
+            <div className="glass-panel p-5 flex flex-col justify-between h-[230px]">
               <div>
-                <span className="text-[9px] text-[var(--accent-pink)] font-extrabold tracking-widest uppercase">
+                <span className="text-xs text-[var(--accent-pink)] font-black tracking-widest uppercase">
                   Lượt xem (M4)
                 </span>
-                <h4 className="text-xs text-[var(--text-muted)] mt-1">Traffic đạt được</h4>
+                <h4 className="text-xs text-[var(--text-muted)] font-bold mt-1">Traffic đạt được</h4>
               </div>
               <div className="my-2">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-white">
+                  <span className="text-3xl font-black text-white">
                     {Math.round((profile.trafficActual / profile.trafficTarget) * 100)}%
                   </span>
-                  <span className="text-[10px] text-[var(--text-muted)]">
+                  <span className="text-xs text-[var(--text-muted)] font-bold">
                     {profile.trafficActual}M / {profile.trafficTarget}M Views
                   </span>
                 </div>
-                <div className="w-full h-1.5 bg-slate-900 rounded-full mt-2 overflow-hidden">
+                <div className="w-full h-2 bg-slate-900 rounded-full mt-2 overflow-hidden border border-white/5">
                   <div 
                     className="h-full rounded-full bg-[var(--accent-pink)]"
                     style={{ width: `${Math.round((profile.trafficActual / profile.trafficTarget) * 100)}%` }}
                   />
                 </div>
               </div>
-              <div className="text-[10px] text-[var(--text-muted)] flex items-center gap-1 border-t border-white/5 pt-2">
-                <TrendingUp size={12} className="text-emerald-400" />
-                <span className="text-emerald-400 font-bold">+{profile.trafficGrowth}%</span>
+              <div className="text-xs text-[var(--text-muted)] flex items-center gap-1 border-t border-white/5 pt-2 font-bold">
+                <TrendingUp size={14} className="text-emerald-500" />
+                <span className="text-emerald-500 font-black">+{profile.trafficGrowth}%</span>
                 <span>so với kỳ trước</span>
               </div>
             </div>

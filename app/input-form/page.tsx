@@ -334,9 +334,9 @@ export default function InputFormPage() {
             </h3>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-left text-sm border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 text-slate-300 font-bold bg-slate-900/60">
+                  <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900/60 uppercase text-xs">
                     <th className="p-3 w-28">Mã chỉ tiêu</th>
                     <th className="p-3">Mục tiêu / Chi tiêu cần báo cáo</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
@@ -353,7 +353,7 @@ export default function InputFormPage() {
                     const groupItems = kpis.filter(k => k.group === groupName);
                     return (
                       <React.Fragment key={groupName}>
-                        <tr className="bg-slate-900/50 text-[var(--accent-cyan)] font-black border-b border-white/5 uppercase text-[10px]">
+                        <tr className="bg-slate-900/50 text-[var(--accent-cyan)] font-black border-b border-white/5 uppercase text-xs">
                           <td colSpan={9} className="p-2.5 tracking-wider">
                             {groupName}
                           </td>
@@ -361,16 +361,16 @@ export default function InputFormPage() {
                         {groupItems.map(kpi => {
                           const pct = Math.round((kpi.actual / kpi.target) * 100);
                           return (
-                            <tr key={kpi.code} className="border-b border-white/5 hover:bg-white/5 text-xs text-slate-200">
+                            <tr key={kpi.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                               <td className="p-3">
-                                <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-[11px] border border-sky-500/20">{kpi.code}</code>
+                                <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
                               </td>
-                              <td className="p-3 font-medium text-white">{kpi.title}</td>
-                              <td className="p-3 text-center text-slate-400 font-bold">{kpi.unit}</td>
-                              <td className="p-3 italic text-slate-400 text-[11px] truncate max-w-[200px]" title={kpi.formula}>
+                              <td className="p-3 font-bold text-white">{kpi.title}</td>
+                              <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>
+                              <td className="p-3 italic text-slate-400 text-xs truncate max-w-[200px]" title={kpi.formula}>
                                 {kpi.formula}
                               </td>
-                              <td className="p-3 text-center font-bold text-slate-300">
+                              <td className="p-3 text-center font-extrabold text-slate-300">
                                 {kpi.target.toLocaleString()} {kpi.unit}
                               </td>
                               <td className="p-3 text-center">
@@ -379,16 +379,16 @@ export default function InputFormPage() {
                                   value={kpi.actual}
                                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
                                   onChange={(e) => handleInputChange(kpi.code, e.target.value)}
-                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-black rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-black text-sm rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
                                 />
                               </td>
-                              <td className="p-3 text-center font-black">
+                              <td className="p-3 text-center font-black text-sm">
                                 <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
                                   {pct}%
                                 </span>
                               </td>
                               <td className="p-3 text-center">
-                                <span className="text-[10px] bg-slate-800 text-amber-300 font-bold px-2 py-1 rounded border border-amber-500/20">
+                                <span className="text-xs bg-slate-800 text-amber-300 font-extrabold px-2.5 py-1 rounded-lg border border-amber-500/20">
                                   {kpi.status}
                                 </span>
                               </td>
@@ -396,7 +396,7 @@ export default function InputFormPage() {
                                 <button
                                   onClick={() => handleSaveRow(kpi.code)}
                                   disabled={isReadOnly}
-                                  className="bg-indigo-600/90 hover:bg-indigo-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg transition-all shadow"
+                                  className="bg-indigo-600/90 hover:bg-indigo-600 text-white text-xs font-black px-3.5 py-1.5 rounded-lg transition-all shadow"
                                 >
                                   Lưu dòng
                                 </button>
@@ -781,9 +781,9 @@ export default function InputFormPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-left text-sm border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 text-slate-300 font-bold bg-slate-900/60 uppercase text-[10px]">
+                  <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900/60 uppercase text-xs">
                     <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>
                     <th className="p-3">Mục tiêu / Chỉ tiêu dòng sản phẩm</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
@@ -799,7 +799,7 @@ export default function InputFormPage() {
                     const items = productKpis.filter(k => k.group === groupName);
                     return (
                       <React.Fragment key={groupName}>
-                        <tr className="bg-slate-900/50 text-sky-400 font-black border-b border-white/5 uppercase text-[10px]">
+                        <tr className="bg-slate-900/50 text-sky-400 font-black border-b border-white/5 uppercase text-xs">
                           <td colSpan={8} className="p-2.5 tracking-wider">
                             {groupName}
                           </td>
@@ -807,18 +807,18 @@ export default function InputFormPage() {
                         {items.map(pk => {
                           const pct = pk.target > 0 ? Math.round((pk.actual / pk.target) * 100) : 100;
                           return (
-                            <tr key={pk.code} className="border-b border-white/5 hover:bg-white/5 text-xs text-slate-200">
+                            <tr key={pk.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                               <td className="p-3 text-center">
-                                <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-[11px] border border-sky-500/20">
+                                <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">
                                   {pk.code}
                                 </code>
                               </td>
-                              <td className="p-3 font-semibold text-white">{pk.title}</td>
-                              <td className="p-3 text-center text-slate-400 font-bold">{pk.unit}</td>
-                              <td className="p-3 italic text-slate-400 text-[11px] truncate max-w-[200px]" title={pk.formula}>
+                              <td className="p-3 font-bold text-white">{pk.title}</td>
+                              <td className="p-3 text-center text-slate-400 font-bold text-xs">{pk.unit}</td>
+                              <td className="p-3 italic text-slate-400 text-xs truncate max-w-[200px]" title={pk.formula}>
                                 {pk.formula}
                               </td>
-                              <td className="p-3 text-center font-bold text-sky-300 bg-sky-950/10">
+                              <td className="p-3 text-center font-extrabold text-sky-300 bg-sky-950/10">
                                 {pk.target.toLocaleString()} {pk.unit}
                               </td>
                               <td className="p-3 text-center bg-purple-950/10">
@@ -827,10 +827,10 @@ export default function InputFormPage() {
                                   value={pk.actual}
                                   disabled={isReadOnly}
                                   onChange={(e) => handleProdInputChange(pk.code, e.target.value)}
-                                  className="w-28 bg-slate-950 border border-purple-500/40 text-white text-center font-black rounded-lg p-1.5 focus:outline-none focus:border-purple-400 shadow-inner"
+                                  className="w-28 bg-slate-950 border border-purple-500/40 text-white text-center font-black text-sm rounded-lg p-1.5 focus:outline-none focus:border-purple-400 shadow-inner"
                                 />
                               </td>
-                              <td className="p-3 text-center font-black">
+                              <td className="p-3 text-center font-black text-sm">
                                 <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
                                   {pct}%
                                 </span>
@@ -839,7 +839,7 @@ export default function InputFormPage() {
                                 <button
                                   onClick={() => handleSaveProdRow(pk.code)}
                                   disabled={isReadOnly}
-                                  className="bg-purple-700 hover:bg-purple-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg transition-all shadow-md"
+                                  className="bg-purple-700 hover:bg-purple-600 text-white text-xs font-black px-3.5 py-1.5 rounded-lg transition-all shadow-md"
                                 >
                                   Lưu dòng
                                 </button>

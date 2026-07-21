@@ -99,136 +99,145 @@ export default function UnitDataPage() {
       { code: "TM6-I01.02", title: "Tỷ lệ nhân sự tham gia đào tạo", unit: "%", targetWeek: 90, actualWeek: 85, targetMonth: 90, actualMonth: 92, targetQuarter: 90, actualQuarter: 94, targetYear: 90, actualYear: 95, isParent: false, parentCode: "M6" },
 
       // M7. VĂN HÓA DOANH NGHIỆP
-      { code: "M7", title: "M7. VĂN HÓA DOANH NGHIỆP", unit: "%", targetWeek: 100, actualWeek: 99.85, targetMonth: 100, actualMonth: 99.9, targetQuarter: 100, actualQuarter: 99.92, targetYear: 100, actualYear: 99.95, isParent: true },
-      { code: "VM7-I03.01", title: "Tỷ lệ nhân sự không vi phạm kỷ luật", unit: "%", targetWeek: 98, actualWeek: 99.85, targetMonth: 98, actualMonth: 99.9, targetQuarter: 98, actualQuarter: 99.92, targetYear: 98, actualYear: 99.95, isParent: false, parentCode: "M7" },
+      { code: "M7", title: "M7. VĂN HÓA DOANH NGHIỆP", unit: "%", targetWeek: 100, actualWeek: 98, targetMonth: 100, actualMonth: 98.5, targetQuarter: 100, actualQuarter: 99, targetYear: 100, actualYear: 99.5, isParent: true },
+      { code: "TM7-I01.01", title: "Tỷ lệ tuân thủ quy trình văn hóa", unit: "%", targetWeek: 100, actualWeek: 98, targetMonth: 100, actualMonth: 98.5, targetQuarter: 100, actualQuarter: 99, targetYear: 100, actualYear: 99.5, isParent: false, parentCode: "M7" },
     ];
 
     setKpiRows(defaultData);
-  }, [filters]);
+  }, [filters.unitCode]);
 
   const toggleRow = (code: string) => {
-    setExpandedRows(prev => ({
-      ...prev,
-      [code]: !prev[code]
-    }));
+    setExpandedRows(prev => ({ ...prev, [code]: !prev[code] }));
   };
 
-  // Xác định tiêu đề cột Theo Kỳ & Lũy Kế
-  const isWeekly = filters.periodType === "weekly";
-  const isMonthly = filters.periodType === "monthly";
-  const isQuarterly = filters.periodType === "quarterly";
+  const getTargetValue = (row: KpiRow) => {
+    if (filters.periodType === "weekly") return row.targetWeek;
+    if (filters.periodType === "monthly") return row.targetMonth;
+    if (filters.periodType === "quarterly") return row.targetQuarter;
+    return row.targetYear;
+  };
 
-  const primaryTitle = isWeekly ? "Tuần" : isMonthly ? "Tháng" : isQuarterly ? "Quý" : "Năm";
-  const cumulativeTitle = isWeekly ? "Tháng" : isMonthly ? "Quý" : isQuarterly ? "Năm" : "5 Năm";
+  const getActualValue = (row: KpiRow) => {
+    if (filters.periodType === "weekly") return row.actualWeek;
+    if (filters.periodType === "monthly") return row.actualMonth;
+    if (filters.periodType === "quarterly") return row.actualQuarter;
+    return row.actualYear;
+  };
 
-  // 1. Tính toán Doanh thu trong kỳ (Card 1) tương ứng dòng VM1-I02.01 (Tổng doanh thu)
+  const getCumulativeTarget = (row: KpiRow) => {
+    if (filters.periodType === "weekly") return row.targetMonth;
+    if (filters.periodType === "monthly") return row.targetQuarter;
+    return row.targetYear;
+  };
+
+  const getCumulativeActual = (row: KpiRow) => {
+    if (filters.periodType === "weekly") return row.actualMonth;
+    if (filters.periodType === "monthly") return row.actualQuarter;
+    return row.actualYear;
+  };
+
   const revRow = kpiRows.find(r => r.code === "VM1-I02.01");
-  const targetRev = isWeekly ? (revRow?.targetWeek || 1) : isMonthly ? (revRow?.targetMonth || 1) : isQuarterly ? (revRow?.targetQuarter || 1) : (revRow?.targetYear || 1);
-  const actualRev = isWeekly ? (revRow?.actualWeek || 0) : isMonthly ? (revRow?.actualMonth || 0) : isQuarterly ? (revRow?.actualQuarter || 0) : (revRow?.actualYear || 0);
-  const revCompletion = targetRev > 0 ? Math.round((actualRev / targetRev) * 100) : 0;
+  const actualRev = revRow ? getActualValue(revRow) : 0;
+  const targetRev = revRow ? getTargetValue(revRow) : 1;
+  const revCompletion = Math.round((actualRev / targetRev) * 100);
 
-  // 2. Tính toán Traffic trong kỳ (Card 2) tương ứng dòng TM3-I01.02 (Tổng traffic đơn vị Views)
   const trafficRow = kpiRows.find(r => r.code === "TM3-I01.02");
-  const targetTraffic = isWeekly ? (trafficRow?.targetWeek || 1) : isMonthly ? (trafficRow?.targetMonth || 1) : isQuarterly ? (trafficRow?.targetQuarter || 1) : (trafficRow?.targetYear || 1);
-  const actualTraffic = isWeekly ? (trafficRow?.actualWeek || 0) : isMonthly ? (trafficRow?.actualMonth || 0) : isQuarterly ? (trafficRow?.actualQuarter || 0) : (trafficRow?.actualYear || 0);
-  const trafficCompletion = targetTraffic > 0 ? Math.round((actualTraffic / targetTraffic) * 100) : 0;
+  const actualTraffic = trafficRow ? getActualValue(trafficRow) : 0;
+  const targetTraffic = trafficRow ? getTargetValue(trafficRow) : 1;
+  const trafficCompletion = Math.round((actualTraffic / targetTraffic) * 100);
 
-  // 3. Lọc chỉ tiêu báo động (< 80%) theo kỳ được chọn
   const warningList = kpiRows
     .filter(r => !r.isParent)
     .map(r => {
-      const target = isWeekly ? r.targetWeek : isMonthly ? r.targetMonth : isQuarterly ? r.targetQuarter : r.targetYear;
-      const actual = isWeekly ? r.actualWeek : isMonthly ? r.actualMonth : isQuarterly ? r.actualQuarter : r.actualYear;
-      const pct = target > 0 ? Math.round((actual / target) * 100) : 100;
-      return { ...r, target, actual, pct };
+      const act = getActualValue(r);
+      const tgt = getTargetValue(r);
+      const pct = tgt > 0 ? Math.round((act / tgt) * 100) : 100;
+      return { ...r, pct };
     })
-    .filter(r => r.pct < 80)
-    .sort((a, b) => a.pct - b.pct);
+    .filter(r => r.pct < 80);
 
-  const formatVal = (val: number, unit: string) => {
-    if (unit === "%") return `${val}%`;
-    return val.toLocaleString();
-  };
+  const primaryTitle = filters.periodType === "weekly" ? "Tuần" : filters.periodType === "monthly" ? "Tháng" : filters.periodType === "quarterly" ? "Quý" : "Năm";
+  const cumulativeTitle = filters.periodType === "weekly" ? "Tháng" : "Quý";
 
   const getPctColor = (pct: number) => {
-    if (pct < 80) return "text-rose-500 font-extrabold";
-    if (pct < 100) return "text-amber-400 font-extrabold";
-    return "text-emerald-400 font-extrabold";
+    if (pct < 80) return "text-rose-500 font-black";
+    if (pct < 100) return "text-amber-400 font-black";
+    return "text-emerald-500 font-black";
   };
 
   return (
-    <div className="flex flex-col gap-5 text-white">
+    <div className="flex flex-col gap-6 text-white text-sm">
       {/* 1. FREEZE FILTERS PANEL */}
       <FiltersHeader />
 
-      {/* 2. MICRO CARDS TỔNG QUAN ĐƠN VỊ (KHỚP DỮ LIỆU ĐỘNG THEO KỲ) */}
+      {/* 2. MICRO CARDS TỔNG QUAN ĐƠN VỊ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Card 1: Doanh thu trong kỳ */}
-        <div className="glass-panel p-4 flex flex-col justify-between min-h-[110px]">
+        <div className="glass-panel p-5 flex flex-col justify-between min-h-[120px]">
           <div className="flex justify-between items-start">
-            <span className="text-[10px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
+            <span className="text-xs font-black text-[var(--text-muted)] uppercase tracking-wider">
               DOANH THU TRONG KỲ ({primaryTitle.toUpperCase()})
             </span>
-            <DollarSign size={16} className="text-amber-400" />
+            <DollarSign size={18} className="text-emerald-400" />
           </div>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className={`text-3xl font-black ${revCompletion < 100 ? "text-amber-400" : "text-emerald-400"}`}>
+              <span className={`text-4xl font-black ${revCompletion < 100 ? "text-amber-400" : "text-emerald-400"}`}>
                 {revCompletion}%
               </span>
             </div>
-            <div className="w-full h-1.5 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
+            <div className="w-full h-2 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
               <div 
                 className={`h-full rounded-full ${revCompletion < 100 ? "bg-amber-500" : "bg-emerald-500"}`} 
                 style={{ width: `${Math.min(100, revCompletion)}%` }} 
               />
             </div>
-            <span className="text-[10px] text-[var(--text-muted)] font-semibold block mt-1">
+            <span className="text-xs text-[var(--text-muted)] font-extrabold block mt-1.5">
               Thực tế: {(actualRev / 1000000).toFixed(1)}M / KH: {(targetRev / 1000000).toFixed(1)}M VNĐ
             </span>
           </div>
         </div>
 
         {/* Card 2: Traffic trong kỳ */}
-        <div className="glass-panel p-4 flex flex-col justify-between min-h-[110px]">
+        <div className="glass-panel p-5 flex flex-col justify-between min-h-[120px]">
           <div className="flex justify-between items-start">
-            <span className="text-[10px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
+            <span className="text-xs font-black text-[var(--text-muted)] uppercase tracking-wider">
               TRAFFIC TRONG KỲ ({primaryTitle.toUpperCase()})
             </span>
-            <TrendingUp size={16} className="text-purple-400" />
+            <TrendingUp size={18} className="text-purple-400" />
           </div>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className={`text-3xl font-black ${trafficCompletion < 100 ? "text-purple-400" : "text-emerald-400"}`}>
+              <span className={`text-4xl font-black ${trafficCompletion < 100 ? "text-purple-400" : "text-emerald-400"}`}>
                 {trafficCompletion}%
               </span>
             </div>
-            <div className="w-full h-1.5 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
+            <div className="w-full h-2 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
               <div 
                 className={`h-full rounded-full ${trafficCompletion < 100 ? "bg-purple-500" : "bg-emerald-500"}`} 
                 style={{ width: `${Math.min(100, trafficCompletion)}%` }} 
               />
             </div>
-            <span className="text-[10px] text-[var(--text-muted)] font-semibold block mt-1">
+            <span className="text-xs text-[var(--text-muted)] font-extrabold block mt-1.5">
               Thực tế: {actualTraffic}M / KH: {targetTraffic}M Views
             </span>
           </div>
         </div>
 
         {/* Card 3: Chỉ tiêu báo động (< 80%) */}
-        <div className={`glass-panel p-4 flex flex-col justify-between min-h-[110px] border-l-4 ${warningList.length > 0 ? "border-l-rose-500" : "border-l-emerald-500"}`}>
+        <div className={`glass-panel p-5 flex flex-col justify-between min-h-[120px] border-l-4 ${warningList.length > 0 ? "border-l-rose-500" : "border-l-emerald-500"}`}>
           <div className="flex justify-between items-start">
-            <span className="text-[10px] font-extrabold text-rose-400 uppercase tracking-wider flex items-center gap-1">
-              <AlertOctagon size={14} /> CHỈ TIÊU BÁO ĐỘNG (&lt; 80%)
+            <span className="text-xs font-black text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+              <AlertOctagon size={16} /> CHỈ TIÊU BÁO ĐỘNG (&lt; 80%)
             </span>
           </div>
-          <div className="space-y-1 text-[11px] font-semibold text-rose-300">
+          <div className="space-y-1.5 text-xs font-extrabold text-rose-300">
             {warningList.length > 0 ? (
               warningList.map(w => (
-                <p key={w.code}>• {w.title}: <strong className="text-rose-400">{w.pct}%</strong></p>
+                <p key={w.code}>• {w.title}: <strong className="text-rose-400 text-sm">{w.pct}%</strong></p>
               ))
             ) : (
-              <span className="text-emerald-400 font-extrabold text-xs block py-1">
+              <span className="text-emerald-400 font-black text-sm block py-1">
                 ✓ Tất cả chỉ tiêu đạt trên 80%
               </span>
             )}
@@ -236,7 +245,7 @@ export default function UnitDataPage() {
         </div>
       </div>
 
-      {/* 3. BẢNG DỮ LỆU BỘ 7 MỤC TIÊU (HIỂN THỊ KỲ NÀY & LŨY KẾ THEO YÊU CẦU - KHỚP 100% ẢNH MỚI) */}
+      {/* 3. BẢNG DỮ LỆU BỘ 7 MỤC TIÊU */}
       <div className="glass-panel p-5 overflow-hidden">
         
         {/* HEADER BẢNG THÔNG TIN CÓ NÚT XUẤT FILE EXCEL */}
@@ -248,112 +257,129 @@ export default function UnitDataPage() {
             onClick={() => alert("Hệ thống đang xuất file Excel dữ liệu bộ 7 chỉ tiêu...")}
             className="bg-indigo-800 hover:bg-indigo-700 text-white text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all"
           >
-            <Download size={14} /> Xuất File Excel
+            <Download size={15} /> Xuất File Excel
           </button>
         </div>
 
         {/* BẢNG THÔNG TIN DỮ LIỆU */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-white/10 text-slate-300 font-bold bg-slate-900/60 uppercase text-[10px] tracking-wider">
+              <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900/60 uppercase text-xs tracking-wider">
                 <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>
                 <th className="p-3">Mục tiêu / Chỉ tiêu cấp bộ phận</th>
                 <th className="p-3 w-20 text-center">ĐVT</th>
                 
                 {/* CỤM CỘT THEO KỲ CHÍNH (XANH LAM) */}
-                <th className="p-3 w-28 text-center bg-sky-950/40 text-sky-300 border-l border-white/10">KH {primaryTitle}</th>
-                <th className="p-3 w-28 text-center bg-sky-950/40 text-sky-300">Thực tế {primaryTitle}</th>
-                <th className="p-3 w-24 text-center bg-sky-950/40 text-sky-300 border-r border-white/10">% HT {primaryTitle}</th>
+                <th className="p-3 w-32 text-center bg-sky-950/40 text-sky-300 border-l border-white/10">KH {primaryTitle}</th>
+                <th className="p-3 w-32 text-center bg-sky-950/40 text-sky-300">Thực tế {primaryTitle}</th>
+                <th className="p-3 w-28 text-center bg-sky-950/40 text-sky-300 border-r border-white/10">% HT {primaryTitle}</th>
 
                 {/* CỤM CỘT LŨY KẾ KỲ TIẾP THEO (TÍM) */}
                 {filters.periodType !== "yearly" && (
                   <>
-                    <th className="p-3 w-28 text-center bg-purple-950/40 text-purple-300">KH {cumulativeTitle}</th>
-                    <th className="p-3 w-28 text-center bg-purple-950/40 text-purple-300">Thực tế {cumulativeTitle}</th>
-                    <th className="p-3 w-24 text-center bg-purple-950/40 text-purple-300">% HT {cumulativeTitle}</th>
+                    <th className="p-3 w-32 text-center bg-purple-950/40 text-purple-300">KH {cumulativeTitle}</th>
+                    <th className="p-3 w-32 text-center bg-purple-950/40 text-purple-300">Thực tế {cumulativeTitle}</th>
+                    <th className="p-3 w-28 text-center bg-purple-950/40 text-purple-300">% HT {cumulativeTitle}</th>
                   </>
                 )}
               </tr>
             </thead>
             <tbody>
               {kpiRows.map(row => {
-                const isParent = row.isParent;
-                const isExpanded = expandedRows[row.code];
+                const targetPri = getTargetValue(row);
+                const actualPri = getActualValue(row);
+                const pctPri = targetPri > 0 ? Math.round((actualPri / targetPri) * 100) : 100;
 
-                // Nếu là con của parent bị collapse thì ẩn đi
+                const targetCum = getCumulativeTarget(row);
+                const actualCum = getCumulativeActual(row);
+                const pctCum = targetCum > 0 ? Math.round((actualCum / targetCum) * 100) : 100;
+
+                if (row.isParent) {
+                  const isExpanded = expandedRows[row.code];
+                  return (
+                    <tr 
+                      key={row.code} 
+                      onClick={() => toggleRow(row.code)}
+                      className="bg-slate-900/80 hover:bg-slate-800 text-[var(--accent-cyan)] font-black border-b border-white/10 cursor-pointer select-none transition-all text-sm"
+                    >
+                      <td className="p-3 text-center">
+                        <span className="inline-flex items-center justify-center gap-1 font-mono">
+                          {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                          {row.code}
+                        </span>
+                      </td>
+                      <td colSpan={2} className="p-3 uppercase tracking-wider font-black text-white">
+                        {row.title}
+                      </td>
+                      
+                      {/* Cột kỳ chính */}
+                      <td className="p-3 text-center font-black border-l border-white/10 text-slate-200">
+                        {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
+                      </td>
+                      <td className="p-3 text-center font-black text-white">
+                        {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
+                      </td>
+                      <td className={`p-3 text-center font-black border-r border-white/10 ${getPctColor(pctPri)}`}>
+                        {pctPri}%
+                      </td>
+
+                      {/* Cột lũy kế */}
+                      {filters.periodType !== "yearly" && (
+                        <>
+                          <td className="p-3 text-center font-black text-slate-300">
+                            {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
+                          </td>
+                          <td className="p-3 text-center font-black text-purple-200">
+                            {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
+                          </td>
+                          <td className={`p-3 text-center font-black ${getPctColor(pctCum)}`}>
+                            {pctCum}%
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  );
+                }
+
+                // Dòng con
                 if (row.parentCode && !expandedRows[row.parentCode]) {
                   return null;
                 }
 
-                // Lấy số liệu theo kỳ được chọn
-                const targetPrim = isWeekly ? row.targetWeek : isMonthly ? row.targetMonth : isQuarterly ? row.targetQuarter : row.targetYear;
-                const actualPrim = isWeekly ? row.actualWeek : isMonthly ? row.actualMonth : isQuarterly ? row.actualQuarter : row.actualYear;
-                const pctPrim = targetPrim > 0 ? Math.round((actualPrim / targetPrim) * 100) : 100;
-
-                // Lấy số liệu Lũy Kế
-                const targetCum = isWeekly ? row.targetMonth : isMonthly ? row.targetQuarter : row.targetYear;
-                const actualCum = isWeekly ? row.actualMonth : isMonthly ? row.actualQuarter : row.actualYear;
-                const pctCum = targetCum > 0 ? Math.round((actualCum / targetCum) * 100) : 100;
-
                 return (
-                  <tr 
-                    key={row.code} 
-                    className={`border-b border-white/5 transition-all ${
-                      isParent 
-                        ? "bg-slate-900/60 font-black text-white hover:bg-slate-900/80" 
-                        : "text-slate-200 hover:bg-white/5"
-                    }`}
-                  >
-                    {/* Mã chỉ tiêu */}
+                  <tr key={row.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                     <td className="p-3 text-center">
-                      <code className="bg-slate-800/80 text-sky-400 px-2 py-0.5 rounded text-[11px] font-mono border border-sky-500/20">
+                      <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs border border-sky-500/20 font-bold">
                         {row.code}
                       </code>
                     </td>
+                    <td className="p-3 font-semibold text-white pl-6">
+                      {row.title}
+                    </td>
+                    <td className="p-3 text-center text-slate-400 font-extrabold text-xs">{row.unit}</td>
 
-                    {/* Tiêu đề mục tiêu */}
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        {isParent && (
-                          <button 
-                            onClick={() => toggleRow(row.code)}
-                            className="text-sky-400 focus:outline-none"
-                          >
-                            {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                          </button>
-                        )}
-                        {!isParent && <span className="text-purple-400 pl-4">↳</span>}
-                        <span className={isParent ? "font-black tracking-wide text-sky-300" : "font-semibold text-slate-200"}>
-                          {row.title}
-                        </span>
-                      </div>
+                    {/* Dữ liệu Kỳ chính */}
+                    <td className="p-3 text-center font-bold text-slate-300 border-l border-white/5 bg-sky-950/10">
+                      {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
+                    </td>
+                    <td className="p-3 text-center font-extrabold text-white bg-sky-950/10">
+                      {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
+                    </td>
+                    <td className={`p-3 text-center font-black border-r border-white/5 bg-sky-950/10 ${getPctColor(pctPri)}`}>
+                      {pctPri}%
                     </td>
 
-                    {/* ĐVT */}
-                    <td className="p-3 text-center font-bold text-slate-400">{row.unit}</td>
-
-                    {/* SỐ LIỆU KỲ CHÍNH (KH, THỰC TẾ, % HT) */}
-                    <td className="p-3 text-center font-semibold text-slate-300 bg-sky-950/20 border-l border-white/5">
-                      {formatVal(targetPrim, row.unit)}
-                    </td>
-                    <td className="p-3 text-center font-extrabold text-white bg-sky-950/20">
-                      {formatVal(actualPrim, row.unit)}
-                    </td>
-                    <td className={`p-3 text-center bg-sky-950/20 border-r border-white/5 ${getPctColor(pctPrim)}`}>
-                      {pctPrim}%
-                    </td>
-
-                    {/* SỐ LIỆU LŨY KẾ KỲ TIẾP THEO (KH, THỰC TẾ LŨY KẾ, % HT LŨY KẾ) */}
+                    {/* Dữ liệu Lũy kế */}
                     {filters.periodType !== "yearly" && (
                       <>
-                        <td className="p-3 text-center font-semibold text-slate-400 bg-purple-950/20">
-                          {formatVal(targetCum, row.unit)}
+                        <td className="p-3 text-center font-bold text-slate-400 bg-purple-950/10">
+                          {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
                         </td>
-                        <td className="p-3 text-center font-extrabold text-slate-200 bg-purple-950/20">
-                          {formatVal(actualCum, row.unit)}
+                        <td className="p-3 text-center font-extrabold text-purple-300 bg-purple-950/10">
+                          {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
                         </td>
-                        <td className={`p-3 text-center bg-purple-950/20 ${getPctColor(pctCum)}`}>
+                        <td className={`p-3 text-center font-black bg-purple-950/10 ${getPctColor(pctCum)}`}>
                           {pctCum}%
                         </td>
                       </>
@@ -364,7 +390,6 @@ export default function UnitDataPage() {
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
   );
