@@ -52,10 +52,11 @@ export default function DashboardPage() {
       <FiltersHeader />
 
       {/* 2. KHU VỰC HÀNG TRÊN (TOP SECTION - KHỚP 100% ẢNH 1) */}
+      {/* 2. KHU VỰC HÀNG TRÊN (TOP SECTION - BỐ CỤC 6-6 CÂN ĐỐI) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        {/* KHỐI BÁNH XE MỤC TIÊU & BIẾN ĐỘNG (COL-SPAN-5) */}
-        <div className="lg:col-span-5 glass-panel p-5 flex flex-col md:flex-row gap-4 min-h-[360px]">
+        {/* KHỐI BÁNH XE MỤC TIÊU & BIẾN ĐỘNG (COL-SPAN-6) */}
+        <div className="lg:col-span-6 glass-panel p-5 flex flex-col md:flex-row gap-4 min-h-[360px]">
           {/* Radar Chart */}
           <div className="flex-1 flex flex-col justify-between">
             <h3 className="text-xs font-black text-white tracking-wider uppercase border-b border-white/10 pb-2 flex items-center gap-1.5">
@@ -72,16 +73,18 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Chi tiết biến động */}
-          <div className="w-full md:w-44 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4">
+          {/* Chi tiết biến động (RỘNG RÃI RÕ CHỮ) */}
+          <div className="w-full md:w-64 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4">
             <h4 className="text-[10px] font-extrabold text-[var(--accent-purple)] uppercase tracking-wider mb-2 flex items-center gap-1">
               📈 CHI TIẾT BIẾN ĐỘNG
             </h4>
             <div className="space-y-2 text-[11px] flex-1">
               <div className="flex justify-between text-[9px] text-[var(--text-muted)] font-black border-b border-white/10 pb-1 uppercase">
                 <span>MỤC TIÊU</span>
-                <span>HIỆN TẠI</span>
-                <span>BIẾN ĐỘNG</span>
+                <div className="flex gap-4">
+                  <span>HIỆN TẠI</span>
+                  <span>BIẾN ĐỘNG</span>
+                </div>
               </div>
               {[
                 { name: "Tài chính", current: "82%", change: "+7%", up: true },
@@ -92,20 +95,22 @@ export default function DashboardPage() {
                 { name: "Nhân sự", current: "87%", change: "+3%", up: true },
                 { name: "Văn hóa", current: "96%", change: "+4%", up: true },
               ].map(item => (
-                <div key={item.name} className="flex justify-between items-center py-0.5 border-b border-white/5 text-[10px]">
-                  <span className="text-[var(--text-muted)] truncate font-semibold max-w-[80px]">{item.name}</span>
-                  <span className="font-bold text-white">{item.current}</span>
-                  <span className={`font-extrabold ${item.up ? "text-emerald-400" : "text-rose-500"}`}>
-                    {item.up ? "▲" : "▼"} {item.change}
-                  </span>
+                <div key={item.name} className="flex justify-between items-center py-1 border-b border-white/5 text-[10px] gap-2">
+                  <span className="text-[var(--text-muted)] font-semibold whitespace-nowrap">{item.name}</span>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="font-bold text-white min-w-[28px] text-right">{item.current}</span>
+                    <span className={`font-extrabold min-w-[36px] text-right ${item.up ? "text-emerald-400" : "text-rose-500"}`}>
+                      {item.up ? "▲" : "▼"} {item.change}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* CỤM 5 THẺ KPI CHÍNH (COL-SPAN-7 - KHỚP 100% ẢNH 1) */}
-        <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* CỤM KPI CARDS (COL-SPAN-6 - THIẾT KẾ CO GỌN CÂN ĐỐI) */}
+        <div className="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           
           {/* Card 1: Doanh thu & Tiến độ hoàn thành */}
           <div className="glass-panel p-4 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[170px]">
