@@ -35,18 +35,26 @@ export default function DashboardPage() {
     setTimeout(() => setIsSaved(false), 2000);
   };
 
-  // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị (Kết hợp Cột Mục tiêu - Kết quả & Đường % Hoàn thành)
-  const revenueComparisonData = [
-    { name: "Wolfoo", target: 80.0, revenue: 76.0, completion: 95 },
-    { name: "Lego", target: 79.5, revenue: 70.0, completion: 88 },
-    { name: "Animated", target: 79.5, revenue: 70.0, completion: 88 },
-    { name: "Dự án 01", target: 79.5, revenue: 70.0, completion: 88 },
-    { name: "Music", target: 79.5, revenue: 70.0, completion: 88 },
-    { name: "Nội dung", target: 79.5, revenue: 70.0, completion: 88 },
-    { name: "Creative", target: 79.5, revenue: 70.0, completion: 88 },
-    { name: "CNGP", target: 79.5, revenue: 70.0, completion: 88 },
-    { name: "Studio", target: 79.5, revenue: 70.0, completion: 88 },
-  ];
+  // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị tự động tính theo kỳ lọc (Tuần / Tháng / Quý / Năm)
+  const getRevenueComparisonData = () => {
+    const isWeekly = filters.periodType === "weekly";
+    const isMonthly = filters.periodType === "monthly";
+    const isQuarterly = filters.periodType === "quarterly";
+
+    const factor = isWeekly ? 0.08 : isMonthly ? 0.33 : isQuarterly ? 1.0 : 4.0;
+
+    return [
+      { name: "Wolfoo", target: Number((80.0 * factor).toFixed(1)), revenue: Number((76.0 * factor).toFixed(1)), completion: 95 },
+      { name: "Lego", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+      { name: "Animated", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+      { name: "Dự án 01", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+      { name: "Music", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+      { name: "Nội dung", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+      { name: "Creative", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+      { name: "CNGP", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+      { name: "Studio", target: Number((79.5 * factor).toFixed(1)), revenue: Number((70.0 * factor).toFixed(1)), completion: 88 },
+    ];
+  };
 
   return (
     <div className="flex flex-col gap-5 text-white">
@@ -214,15 +222,15 @@ export default function DashboardPage() {
 
       </div>
 
-      {/* 3. BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU QUÝ (9 ĐƠN VỊ - KHỚP ẢNH 1) */}
+      {/* 3. BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU CÁC ĐƠN VỊ THEO KỲ */}
       <div className="glass-panel p-5">
         <h3 className="text-xs font-black text-white tracking-wider uppercase mb-4 flex items-center gap-2">
           <BarChart3 size={16} className="text-[var(--accent-cyan)]" />
-          📊 BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU QUÝ (9 ĐƠN VỊ)
+          📊 BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU {filters.periodType === "weekly" ? "TUẦN" : filters.periodType === "monthly" ? "THÁNG" : filters.periodType === "quarterly" ? "QUÝ" : "NĂM"} (9 ĐƠN VỊ)
         </h3>
         <div className="w-full h-[240px]">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={revenueComparisonData}>
+            <ComposedChart data={getRevenueComparisonData()}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} />
               <YAxis yAxisId="left" stroke="#94a3b8" fontSize={11} tickFormatter={(val) => `${val}T`} />
