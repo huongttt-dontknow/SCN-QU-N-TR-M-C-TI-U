@@ -892,31 +892,31 @@ export default function InputFormPage() {
 
               {/* Card 2: AI Dự Phóng Cuối Tháng */}
               {isWeekly ? (
-                <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-indigo-500 bg-indigo-950/30">
+                <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-indigo-500 bg-indigo-950/30 light-indigo-card">
                   <div>
-                    <span className="text-[10px] font-black text-indigo-300 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                    <span className="text-[10px] font-black text-indigo-400 uppercase tracking-wider flex items-center gap-1.5 mb-1 psh-card-title">
                       <Sparkles size={14} /> 🔮 AI DỰ PHÓNG PSH CUỐI THÁNG (RUN-RATE)
                     </span>
                     <div className="flex items-baseline gap-3">
-                      <span className="text-3xl font-black text-indigo-200">
+                      <span className="text-3xl font-black text-indigo-600 psh-big-score">
                         {weeklyPHSInfo.projectedMonthlyPHS}đ
                       </span>
-                      <span className="text-xs text-indigo-300">Dự báo ngày 30/31</span>
+                      <span className="text-xs text-indigo-500 font-bold psh-subtext">Dự báo ngày 30/31</span>
                     </div>
                   </div>
 
-                  <div className="space-y-1.5 text-[11px] pt-3 text-indigo-200 border-t border-indigo-500/20">
+                  <div className="space-y-1.5 text-[11px] pt-3 text-slate-700 psh-list-border border-t border-indigo-500/20">
                     <div className="flex justify-between">
-                      <span>• Nhịp chạy Doanh thu tuần:</span>
-                      <strong className="text-white">{weeklyPHSInfo.rRev}%</strong>
+                      <span className="text-slate-600 font-bold psh-list-item">• Nhịp chạy Doanh thu tuần:</span>
+                      <strong className="text-indigo-900 font-black psh-list-val">{weeklyPHSInfo.rRev}%</strong>
                     </div>
                     <div className="flex justify-between">
-                      <span>• Nhịp chạy Sản lượng video:</span>
-                      <strong className="text-white">{weeklyPHSInfo.rVol}%</strong>
+                      <span className="text-slate-600 font-bold psh-list-item">• Nhịp chạy Sản lượng video:</span>
+                      <strong className="text-indigo-900 font-black psh-list-val">{weeklyPHSInfo.rVol}%</strong>
                     </div>
                     <div className="flex justify-between">
-                      <span>• Nhịp chạy Traffic Views:</span>
-                      <strong className="text-white">{weeklyPHSInfo.rView}%</strong>
+                      <span className="text-slate-600 font-bold psh-list-item">• Nhịp chạy Traffic Views:</span>
+                      <strong className="text-indigo-900 font-black psh-list-val">{weeklyPHSInfo.rView}%</strong>
                     </div>
                   </div>
                 </div>
