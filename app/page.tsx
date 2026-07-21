@@ -392,102 +392,105 @@ export default function DashboardPage() {
 
       </div>
 
-      {/* 6. ĐÁNH GIÁ HIỆU QUẢ CÁC SẢN PHẨM & TOP 3/CẢNH BÁO (KHỚP 100% ẢNH 3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        
-        {/* Trái: Hiệu quả các Dòng Sản phẩm (Điểm PSH) */}
-        <div className="glass-panel p-5 flex flex-col justify-between">
-          <div>
-            <h3 className="text-xs font-black text-white tracking-wider uppercase mb-1">
-              Hiệu quả các Dòng Sản phẩm (Điểm PSH)
-            </h3>
-            <p className="text-[10px] text-[var(--text-muted)] mb-4">
-              Điểm hiệu quả sản phẩm trung bình theo nhóm sản phẩm (Thang điểm 100)
-            </p>
-          </div>
-          <div className="space-y-3">
-            {[
-              { name: "Dòng phim Wolfoo (WO)", score: 88, color: "bg-purple-500" },
-              { name: "Dòng phim Animated Story (AS)", score: 80, color: "bg-blue-900" },
-              { name: "Sản phẩm Music (SCMU)", score: 78, color: "bg-emerald-500" },
-              { name: "Sản phẩm Lego Series", score: 67, color: "bg-amber-500" },
-              { name: "Creative Hub Products", score: 61, color: "bg-pink-500" },
-              { name: "Game & Technology (CNGP)", score: 35, color: "bg-rose-600" },
-            ].map(item => (
-              <div key={item.name} className="space-y-1">
-                <div className="flex justify-between text-xs font-medium">
-                  <span className="text-slate-200">{item.name}</span>
-                  <span className="font-extrabold text-white">{item.score}đ</span>
-                </div>
-                <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/5">
-                  <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.score}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Phải: Bảng Tỷ lệ Hiệu quả: Top 3 & Cảnh báo (Điểm PSH) */}
-        <div className="glass-panel p-5 flex flex-col justify-between space-y-4">
-          <div>
-            <h3 className="text-xs font-black text-[var(--accent-purple)] tracking-wider uppercase mb-1">
-              Bảng Tỷ lệ Hiệu quả: Top 3 & Cảnh báo (Điểm PSH)
-            </h3>
-            <p className="text-[10px] text-[var(--text-muted)]">
-              Sản phẩm hiệu quả cao nhất và sản phẩm hiệu quả thấp nhất cần lưu ý
-            </p>
-          </div>
-
-          {/* TOP 3 SẢN PHẨM HIỆU QUẢ CAO NHẤT */}
-          <div className="space-y-2">
-            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-              🏆 TOP 3 SẢN PHẨM HIỆU QUẢ CAO NHẤT
-            </span>
-            {[
-              { rank: "#1", code: "Wolfoo 2D Stories (WO-2020-001)", desc: "Doanh thu & Sản lượng vượt 112% kế hoạch", score: 95 },
-              { rank: "#2", code: "Sản phẩm Animated Story - MDA", desc: "Năng suất vượt trội và ứng dụng AI xuất sắc", score: 92 },
-              { rank: "#3", code: "Lego Automation (LE-2026-001)", desc: "Quy trình tự động hóa hoàn thiện đạt chuẩn", score: 90 },
-            ].map(item => (
-              <div key={item.rank} className="bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-lg flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-xs font-black text-emerald-400">{item.rank}</span>
-                  <div>
-                    <h4 className="font-extrabold text-xs text-white">{item.code}</h4>
-                    <p className="text-[10px] text-[var(--text-muted)]">{item.desc}</p>
+      {/* 6. ĐÁNH GIÁ HIỆU QUẢ CÁC SẢN PHẨM & TOP 3/CẢNH BÁO (ẨN KHI XEM BÁO CÁO HÀNG TUẦN) */}
+      {!isWeekly && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          
+          {/* Trái: Hiệu quả các Dòng Sản phẩm (Điểm PSH) - THIẾT KẾ GỌN GÀNG KHÔNG TRỐNG) */}
+          <div className="glass-panel p-5 flex flex-col gap-4">
+            <div>
+              <h3 className="text-xs font-black text-white tracking-wider uppercase mb-1">
+                Hiệu quả các Dòng Sản phẩm (Điểm PSH)
+              </h3>
+              <p className="text-[10px] text-[var(--text-muted)] border-b border-white/5 pb-2">
+                Điểm hiệu quả sản phẩm trung bình theo nhóm sản phẩm (Thang điểm 100)
+              </p>
+            </div>
+            <div className="space-y-3.5">
+              {[
+                { name: "Dòng phim Wolfoo (WO)", score: 88, color: "bg-purple-500" },
+                { name: "Dòng phim Animated Story (AS)", score: 80, color: "bg-blue-900" },
+                { name: "Sản phẩm Music (SCMU)", score: 78, color: "bg-emerald-500" },
+                { name: "Sản phẩm Lego Series", score: 67, color: "bg-amber-500" },
+                { name: "Creative Hub Products", score: 61, color: "bg-pink-500" },
+                { name: "Game & Technology (CNGP)", score: 35, color: "bg-rose-600" },
+              ].map(item => (
+                <div key={item.name} className="space-y-1">
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-slate-200 font-semibold">{item.name}</span>
+                    <span className="font-extrabold text-white">{item.score}đ</span>
+                  </div>
+                  <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                    <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.score}%` }} />
                   </div>
                 </div>
-                <span className="text-xs font-black text-emerald-400 bg-emerald-500/20 px-2 py-1 rounded">
-                  {item.score} điểm
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* CẢNH BÁO: 3 SẢN PHẨM HIỆU QUẢ THẤP NHẤT */}
-          <div className="space-y-2 pt-2 border-t border-white/5">
-            <span className="text-[10px] font-black text-rose-500 uppercase tracking-wider flex items-center gap-1">
-              ⚠️ CẢNH BÁO: 3 SẢN PHẨM HIỆU QUẢ THẤP NHẤT
-            </span>
-            {[
-              { code: "Game Web/App (CN-2026-001)", desc: "Tiến độ sản xuất chậm, doanh thu chưa đạt kỳ vọng", score: 35 },
-              { code: "Creative Hub – Manga Podcast", desc: "Lượt xem tích lũy (Traffic) sụt giảm 15% so với cùng kỳ", score: 42 },
-              { code: "Lego AI 100% (LE-2026-002)", desc: "Sự cố kênh phân phối cũ chưa hồi phục", score: 45 },
-            ].map(item => (
-              <div key={item.code} className="bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-lg flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-xs">⚠️</span>
-                  <div>
-                    <h4 className="font-extrabold text-xs text-white">{item.code}</h4>
-                    <p className="text-[10px] text-rose-300/80">{item.desc}</p>
+          {/* Phải: Bảng Tỷ lệ Hiệu quả: Top 3 & Cảnh báo (Điểm PSH) */}
+          <div className="glass-panel p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <h3 className="text-xs font-black text-[var(--accent-purple)] tracking-wider uppercase mb-1">
+                Bảng Tỷ lệ Hiệu quả: Top 3 & Cảnh báo (Điểm PSH)
+              </h3>
+              <p className="text-[10px] text-[var(--text-muted)] border-b border-white/5 pb-2">
+                Sản phẩm hiệu quả cao nhất và sản phẩm hiệu quả thấp nhất cần lưu ý
+              </p>
+            </div>
+
+            {/* TOP 3 SẢN PHẨM HIỆU QUẢ CAO NHẤT */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                🏆 TOP 3 SẢN PHẨM HIỆU QUẢ CAO NHẤT
+              </span>
+              {[
+                { rank: "#1", code: "Wolfoo 2D Stories (WO-2020-001)", desc: "Doanh thu & Sản lượng vượt 112% kế hoạch", score: 95 },
+                { rank: "#2", code: "Sản phẩm Animated Story - MDA", desc: "Năng suất vượt trội và ứng dụng AI xuất sắc", score: 92 },
+                { rank: "#3", code: "Lego Automation (LE-2026-001)", desc: "Quy trình tự động hóa hoàn thiện đạt chuẩn", score: 90 },
+              ].map(item => (
+                <div key={item.rank} className="bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-lg flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs font-black text-emerald-400">{item.rank}</span>
+                    <div>
+                      <h4 className="font-extrabold text-xs text-white">{item.code}</h4>
+                      <p className="text-[10px] text-[var(--text-muted)]">{item.desc}</p>
+                    </div>
                   </div>
+                  <span className="text-xs font-black text-emerald-400 bg-emerald-500/20 px-2 py-1 rounded">
+                    {item.score} điểm
+                  </span>
                 </div>
-                <span className="text-xs font-black text-rose-400 bg-rose-500/20 px-2 py-1 rounded">
-                  {item.score} điểm
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* CẢNH BÁO: 3 SẢN PHẨM HIỆU QUẢ THẤP NHẤT */}
+            <div className="space-y-2 pt-2 border-t border-white/5">
+              <span className="text-[10px] font-black text-rose-500 uppercase tracking-wider flex items-center gap-1">
+                ⚠️ CẢNH BÁO: 3 SẢN PHẨM HIỆU QUẢ THẤP NHẤT
+              </span>
+              {[
+                { code: "Game Web/App (CN-2026-001)", desc: "Tiến độ sản xuất chậm, doanh thu chưa đạt kỳ vọng", score: 35 },
+                { code: "Creative Hub – Manga Podcast", desc: "Lượt xem tích lũy (Traffic) sụt giảm 15% so với cùng kỳ", score: 42 },
+                { code: "Lego AI 100% (LE-2026-002)", desc: "Sự cố kênh phân phối cũ chưa hồi phục", score: 45 },
+              ].map(item => (
+                <div key={item.code} className="bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-lg flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs">⚠️</span>
+                    <div>
+                      <h4 className="font-extrabold text-xs text-white">{item.code}</h4>
+                      <p className="text-[10px] text-rose-300/80">{item.desc}</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-black text-rose-400 bg-rose-500/20 px-2 py-1 rounded">
+                    {item.score} điểm
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+      )}
 
       </div>
 
