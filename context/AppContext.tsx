@@ -22,7 +22,7 @@ export interface RolePermission {
 
 interface AppFilters {
   unitCode: string;
-  periodType: string; // weekly, monthly, quarterly
+  periodType: string; // weekly, monthly, quarterly, yearly
   month: string;
   week: string;
   quarter: string;
@@ -34,8 +34,10 @@ interface AppContextType {
   usersList: User[];
   permissions: RolePermission[];
   filters: AppFilters;
+  theme: "dark" | "light";
   setCurrentLoggedUser: (user: User) => void;
   setFilters: React.Dispatch<React.SetStateAction<AppFilters>>;
+  toggleTheme: () => void;
   refreshUsers: () => Promise<void>;
   refreshPermissions: () => Promise<void>;
 }
@@ -46,6 +48,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [currentLoggedUser, setCurrentLoggedUserState] = useState<User | null>(null);
   const [usersList, setUsersList] = useState<User[]>([]);
   const [permissions, setPermissions] = useState<RolePermission[]>([]);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
   const [filters, setFilters] = useState<AppFilters>({
     unitCode: "SCVN",
     periodType: "weekly",
@@ -55,13 +59,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     year: "2026",
   });
 
+  // Load theme from localStorage on initial render
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("sconnect_theme") as "dark" | "light";
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+      document.documentElement.classList.toggle("light", savedTheme === "light");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const nextTheme = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("sconnect_theme", nextTheme);
+      document.documentElement.classList.toggle("light", nextTheme === "light");
+      return nextTheme;
+    });
+  };
+
   const refreshUsers = async () => {
     try {
       const res = await fetch("/api/users");
       const data = await res.json();
       if (Array.isArray(data)) {
         setUsersList(data);
-        // Set default active user to Admin (Trí)
         if (!currentLoggedUser && data.length > 0) {
           const admin = data.find(u => u.role === "Admin") || data[0];
           setCurrentLoggedUserState(admin);
@@ -91,7 +112,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const setCurrentLoggedUser = (user: User) => {
     setCurrentLoggedUserState(user);
-    // Tự động đồng bộ khóa đơn vị nếu vai trò hạn chế
     const isRestricted = user.role === "Trưởng đơn vị" || user.role === "Người dùng";
     if (isRestricted) {
       setFilters(prev => ({
@@ -108,8 +128,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         usersList,
         permissions,
         filters,
+        theme,
         setCurrentLoggedUser,
         setFilters,
+        toggleTheme,
         refreshUsers,
         refreshPermissions,
       }}

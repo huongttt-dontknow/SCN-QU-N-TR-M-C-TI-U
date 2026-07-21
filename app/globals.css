@@ -5,7 +5,7 @@
 :root {
   --background: #0f172a;
   --foreground: #f8fafc;
-  --glass-bg: rgba(30, 41, 59, 0.45);
+  --glass-bg: rgba(30, 41, 59, 0.65);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   
@@ -15,6 +15,31 @@
   --accent-purple: #8b5cf6;
   --text-muted: #94a3b8;
   --text-main: #f8fafc;
+
+  /* Sconnect Brand Theme Tokens */
+  --sconnect-green: #16a34a;
+  --sconnect-lime: #84cc16;
+  --sconnect-purple: #7e22ce;
+}
+
+/* Sconnect Brand Light Theme Mode */
+html.light,
+html.light body {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(226, 232, 240, 0.9);
+  --glass-shadow: 0 8px 30px 0 rgba(15, 23, 42, 0.06);
+
+  --accent-cyan: #0284c7;
+  --accent-emerald: #16a34a;
+  --accent-pink: #e11d48;
+  --accent-purple: #7e22ce;
+  --text-muted: #64748b;
+  --text-main: #0f172a;
+
+  color: #0f172a;
+  background: radial-gradient(circle at 50% 0%, #f0fdf4 0%, #f8fafc 100%);
 }
 
 body {
@@ -23,6 +48,10 @@ body {
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
   overflow-x: hidden;
+}
+
+html.light body {
+  background: radial-gradient(circle at 50% 0%, #f0fdf4 0%, #f8fafc 100%);
 }
 
 /* Glassmorphism panel styling */
@@ -36,18 +65,20 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+html.light .glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.05);
+}
+
 .glass-panel:hover {
   border-color: rgba(255, 255, 255, 0.15);
   box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* Glass card styling */
-.glass-card {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+html.light .glass-panel:hover {
+  border-color: rgba(22, 163, 74, 0.3);
+  box-shadow: 0 8px 30px 0 rgba(22, 163, 74, 0.1);
 }
 
 /* Custom Scrollbars */
@@ -60,13 +91,25 @@ body {
   background: rgba(15, 23, 42, 0.5);
 }
 
+html.light ::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.8);
+}
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
 }
 
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(22, 163, 74, 0.3);
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(22, 163, 74, 0.5);
 }
 
 /* Priority Badges */
