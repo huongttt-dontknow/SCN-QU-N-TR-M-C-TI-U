@@ -217,6 +217,209 @@ export default function DashboardPage() {
     };
   });
 
+  // 1. Hàm tính khóa thời gian của kỳ trước
+  const getPrevPeriodKey = (type: string, mStr: string, wStr: string, qStr: string, yStr: string) => {
+    const m = Number(mStr) || 7;
+    const w = Number(wStr) || 1;
+    const y = Number(yStr) || 2026;
+    if (type === "weekly") {
+      if (w > 1) {
+        return `weekly_${m}_${w - 1}`;
+      }
+      if (m > 1) {
+        return `weekly_${m - 1}_4`;
+      }
+      return `weekly_12_5`;
+    } else if (type === "monthly") {
+      if (m > 1) {
+        return `monthly_${m - 1}`;
+      }
+      return `monthly_12`;
+    } else if (type === "quarterly") {
+      if (qStr === "Q4") return "quarterly_Q3";
+      if (qStr === "Q3") return "quarterly_Q2";
+      if (qStr === "Q2") return "quarterly_Q1";
+      return "quarterly_Q4";
+    } else {
+      return "yearly";
+    }
+  };
+
+  const prevPeriodKey = getPrevPeriodKey(filters.periodType, filters.month, filters.week, filters.quarter, filters.year);
+
+  // 2. Tính BXH Tăng Trưởng Doanh Thu
+  const formatRevenueVal = (val: number) => {
+    if (val >= 1e9) {
+      return `${(val / 1e9).toFixed(1)} Tỷ`;
+    }
+    return `${(val / 1e6).toFixed(0)} Triệu`;
+  };
+
+  const bxhRevenueData = unitList.map(u => {
+    const currRec = getMasterKpiRecord(u.code, "VM1-I02.01", periodKey);
+    const prevRec = getMasterKpiRecord(u.code, "VM1-I02.01", prevPeriodKey);
+
+    const currAct = currRec?.actual ?? 0;
+    const prevAct = prevRec?.actual ?? 0;
+    const diff = currAct - prevAct;
+    let pct = 0;
+    if (prevAct > 0) {
+      pct = Number(((currAct - prevAct) / prevAct * 100).toFixed(1));
+    } else if (currAct > 0) {
+      pct = 100.0;
+    }
+
+    return {
+      name: u.label,
+      val: formatRevenueVal(currAct),
+      change: `${pct >= 0 ? "+" : ""}${pct}%`,
+      pctRaw: pct,
+      up: pct >= 0
+    };
+  }).sort((a, b) => b.pctRaw - a.pctRaw);
+
+  const bxhRevenueSorted = bxhRevenueData.map((x, idx) => ({
+    ...x,
+    rank: `#${idx + 1}`,
+    highlight: idx === 0,
+    warning: idx === bxhRevenueData.length - 1
+  }));
+
+  // 3. Tính BXH Hoàn Thành Sản Xuất (M2)
+  const getUnitProductionData = (uCode: string, pKey: string) => {
+    const uDict = MASTER_KPI_DATA[uCode] || {};
+    const candidates: { item: any; rec: any }[] = [];
+
+    // Priority keys
+    const prioKeys = ["VM2-I01.01", "VM2-I01.04", "VM2-I01", "MM1-I03.01", "NM2-I01"];
+    for (const pk of prioKeys) {
+      if (uDict[pk]) {
+        const pData = uDict[pk].periods?.[pKey];
+        if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
+          candidates.push({ item: uDict[pk], rec: pData });
+        }
+      }
+    }
+
+    if (candidates.length === 0) {
+      for (const k in uDict) {
+        const v = uDict[k];
+        const t = (v.title || "").toUpperCase();
+        const uStr = (v.unit || "").toUpperCase();
+        const kStr = k.toUpperCase();
+
+        if (
+          (t.includes("SẢN XUẤT") || t.includes("SẢN LƯỢNG") || kStr.includes("SẢN XUẤT") || t.includes("HOÀN THÀNH") || kStr.includes("MM1-I03.01") || kStr.includes("NM2-I01")) &&
+          (uStr.includes("VIDEO") || uStr.includes("TẬP") || uStr.includes("SẢN PHẨM") || uStr.includes("GAME") || kStr.includes("VIDEO") || kStr.includes("SẢN PHẨM"))
+        ) {
+          if (uStr.includes("CTR") || uStr.includes("APV") || uStr.includes("CHI PHÍ") || t.includes("HIỆU SUẤT")) {
+            continue;
+          }
+          const pData = v.periods?.[pKey];
+          if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
+            candidates.push({ item: v, rec: pData });
+          }
+        }
+      }
+    }
+
+    if (candidates.length === 0) return null;
+    candidates.sort((a, b) => Math.max(b.rec.actual || 0, b.rec.target || 0) - Math.max(a.rec.actual || 0, a.rec.target || 0));
+    return candidates[0];
+  };
+
+  const bxhProductionData = unitList.map(u => {
+    const res = getUnitProductionData(u.code, periodKey);
+    if (!res) {
+      return { name: u.label, val: "0 Video", pctRaw: 0, pctStr: "0%" };
+    }
+    const { item, rec } = res;
+    const tgt = rec.target ?? 0;
+    const act = rec.actual ?? 0;
+    const pct = rec.pct ? Math.round(rec.pct * 100) : (tgt > 0 ? Math.round((act / tgt) * 100) : 0);
+
+    const unitSuffix = (item.unit || "").toLowerCase().includes("game") ? "Game" : ((item.unit || "").toLowerCase().includes("sản phẩm") ? "Sản phẩm" : "Video");
+
+    return {
+      name: u.label,
+      val: `${act} ${unitSuffix}`,
+      pctRaw: pct,
+      pctStr: `${pct}%`
+    };
+  }).sort((a, b) => b.pctRaw - a.pctRaw);
+
+  const bxhProductionSorted = bxhProductionData.map((x, idx) => ({
+    ...x,
+    rank: `#${idx + 1}`,
+    highlight: idx === 0,
+    warning: idx === bxhProductionData.length - 1
+  }));
+
+  // 4. Tính BXH Tăng Trưởng Traffic (M3)
+  const getUnitTrafficActual = (uCode: string, pKey: string) => {
+    const uDict = MASTER_KPI_DATA[uCode] || {};
+    const candidates: { item: any; rec: any }[] = [];
+
+    for (const k in uDict) {
+      const v = uDict[k];
+      const t = (v.title || "").toUpperCase();
+      const uStr = (v.unit || "").toUpperCase();
+      const kStr = k.toUpperCase();
+
+      if (
+        (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+        !uStr.includes("CTR") &&
+        !uStr.includes("TB/1")
+      ) {
+        const pData = v.periods?.[pKey];
+        if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
+          candidates.push({ item: v, rec: pData });
+        }
+      }
+    }
+
+    if (candidates.length === 0) return 0;
+    candidates.sort((a, b) => Math.max(b.rec.actual || 0, b.rec.target || 0) - Math.max(a.rec.actual || 0, a.rec.target || 0));
+    return candidates[0].rec.actual ?? 0;
+  };
+
+  const formatTrafficVal = (val: number) => {
+    if (val >= 1e6) {
+      return `${(val / 1e6).toFixed(1)}M`;
+    }
+    if (val >= 1e3) {
+      return `${(val / 1e3).toFixed(0)}K`;
+    }
+    return `${val}`;
+  };
+
+  const bxhTrafficData = unitList.map(u => {
+    const currAct = getUnitTrafficActual(u.code, periodKey);
+    const prevAct = getUnitTrafficActual(u.code, prevPeriodKey);
+    const diff = currAct - prevAct;
+    let pct = 0;
+    if (prevAct > 0) {
+      pct = Number((diff / prevAct * 100).toFixed(1));
+    } else if (currAct > 0) {
+      pct = 100.0;
+    }
+
+    return {
+      name: u.label,
+      val: formatTrafficVal(currAct),
+      change: `${pct >= 0 ? "+" : ""}${pct}%`,
+      pctRaw: pct,
+      up: pct >= 0
+    };
+  }).sort((a, b) => b.pctRaw - a.pctRaw);
+
+  const bxhTrafficSorted = bxhTrafficData.map((x, idx) => ({
+    ...x,
+    rank: `#${idx + 1}`,
+    highlight: idx === 0,
+    warning: idx === bxhTrafficData.length - 1
+  }));
+
   // Card 5: ROI
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
@@ -529,14 +732,7 @@ export default function DashboardPage() {
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
           <div className="space-y-2.5 text-xs">
-            {[
-              { rank: "#1", name: "Wolfoo", val: "76.0 Tỷ", change: "+0.3%", up: true, highlight: true },
-              { rank: "#2", name: "Lego", val: "70.0 Tỷ", change: "-6.4%", up: false },
-              { rank: "#3", name: "Animated", val: "70.0 Tỷ", change: "-6.4%", up: false },
-              { rank: "#4", name: "Dự án 01", val: "70.0 Tỷ", change: "-6.4%", up: false },
-              { rank: "#5", name: "Music", val: "70.0 Tỷ", change: "-6.4%", up: false },
-              { rank: "#9", name: "Studio", val: "70.0 Tỷ", change: "-6.4%", up: false, warning: true },
-            ].map(row => (
+            {bxhRevenueSorted.slice(0, 6).map(row => (
               <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
@@ -560,14 +756,7 @@ export default function DashboardPage() {
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Mức độ hoàn thành kế hoạch số lượng video</p>
           <div className="space-y-2.5 text-xs">
-            {[
-              { rank: "#1", name: "Creative", val: "26 Video", pct: "113%", highlight: true },
-              { rank: "#2", name: "Lego", val: "67 Video", pct: "112%" },
-              { rank: "#3", name: "Music", val: "45 Video", pct: "100%" },
-              { rank: "#4", name: "Animated", val: "50 Video", pct: "94%" },
-              { rank: "#5", name: "Nội dung", val: "32 Video", pct: "91%" },
-              { rank: "#9", name: "Dự án 01", val: "28 Video", pct: "76%", warning: true },
-            ].map(row => (
+            {bxhProductionSorted.slice(0, 6).map(row => (
               <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
@@ -577,7 +766,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
-                  <span className="font-black text-emerald-500 text-xs">{row.pct}</span>
+                  <span className="font-black text-emerald-500 text-xs">{row.pctStr}</span>
                 </div>
               </div>
             ))}
@@ -591,14 +780,7 @@ export default function DashboardPage() {
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng traffic views</p>
           <div className="space-y-2.5 text-xs">
-            {[
-              { rank: "#1", name: "Dự án 01", val: "102.0M", change: "+12.3%", up: true, highlight: true },
-              { rank: "#2", name: "Creative", val: "82.0M", change: "+12.3%", up: true },
-              { rank: "#3", name: "Lego", val: "137.0M", change: "+8.6%", up: true },
-              { rank: "#4", name: "Nội dung", val: "87.0M", change: "+8.6%", up: true },
-              { rank: "#5", name: "Animated", val: "139.0M", change: "+1.2%", up: true },
-              { rank: "#9", name: "Wolfoo", val: "42.0M", change: "-10.7%", up: false, warning: true },
-            ].map(row => (
+            {bxhTrafficSorted.slice(0, 6).map(row => (
               <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
