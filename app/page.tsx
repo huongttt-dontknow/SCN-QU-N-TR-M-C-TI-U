@@ -318,7 +318,7 @@ export default function DashboardPage() {
     ...x,
     rank: `#${idx + 1}`,
     highlight: idx === 0,
-    warning: idx === bxhRevenueData.length - 1
+    warning: x.pctRaw < 0
   }));
 
   // 3. Tính BXH Hoàn Thành Sản Xuất (M2)
@@ -462,7 +462,7 @@ export default function DashboardPage() {
     ...x,
     rank: `#${idx + 1}`,
     highlight: idx === 0,
-    warning: idx === bxhTrafficData.length - 1
+    warning: x.pctRaw < 0
   }));
 
   // Card 5: ROI
