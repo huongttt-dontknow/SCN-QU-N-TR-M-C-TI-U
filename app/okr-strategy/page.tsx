@@ -254,6 +254,10 @@ export default function OkrStrategyPage() {
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
   const [isUnplannedModalOpen, setIsUnplannedModalOpen] = useState(false);
 
+  // States cho Sửa OKRs
+  const [editingObjId, setEditingObjId] = useState<string | null>(null);
+  const [editingKrId, setEditingKrId] = useState<string | null>(null);
+
   // Active parent IDs
   const [activeObjId, setActiveObjId] = useState("");
   const [activeKrId, setActiveKrId] = useState("");
@@ -447,7 +451,9 @@ export default function OkrStrategyPage() {
   // -------------------------------------------------------------
   const handleOpenObjModal = () => {
     if (!isEditable) return;
-    setObjTitle("");
+    setEditingObjId(null);
+    const nextIndex = objectives.length + 1;
+    setObjTitle(`O${nextIndex}: `);
     setObjWeight("35");
     setIsObjModalOpen(true);
   };
@@ -455,7 +461,10 @@ export default function OkrStrategyPage() {
   const handleOpenKrModal = (objId: string) => {
     if (!isEditable) return;
     setActiveObjId(objId);
-    setKrTitle("");
+    setEditingKrId(null);
+    const parentObj = objectives.find(o => o.id === objId);
+    const nextKrIndex = parentObj ? parentObj.keyResults.length + 1 : 1;
+    setKrTitle(`KR${nextKrIndex}: `);
     setKrWeight("50");
     setKrPriority("High");
     setKrPic(currentLoggedUser?.fullname || "Nguyễn Văn A");
@@ -473,36 +482,130 @@ export default function OkrStrategyPage() {
     setIsActionModalOpen(true);
   };
 
+  const handleEditObjective = (obj: ObjectiveItem) => {
+    if (!isEditable) return;
+    setEditingObjId(obj.id);
+    setObjTitle(obj.title);
+    setObjWeight(obj.weight.toString());
+    setIsObjModalOpen(true);
+  };
+
+  const handleEditKr = (objId: string, kr: KeyResultItem) => {
+    if (!isEditable) return;
+    setActiveObjId(objId);
+    setEditingKrId(kr.id);
+    setKrTitle(kr.title);
+    setKrWeight(kr.weight.toString());
+    setKrPriority(kr.priority);
+    setKrPic(kr.pic);
+    setKrDeadline(kr.deadline ? new Date(kr.deadline).toISOString().split('T')[0] : "2026-09-30");
+    setIsKrModalOpen(true);
+  };
+
+  const handleDeleteObjective = (objId: string) => {
+    if (!isEditable) return;
+    if (!confirm("Bạn có chắc chắn muốn xóa Objective này và toàn bộ KRs/Actions trực thuộc không?")) return;
+    setObjectives(prev => prev.filter(o => o.id !== objId));
+  };
+
+  const handleDeleteKr = (objId: string, krId: string) => {
+    if (!isEditable) return;
+    if (!confirm("Bạn có chắc chắn muốn xóa Key Result này và các Actions trực thuộc không?")) return;
+    setObjectives(prev => prev.map(o => o.id === objId ? { ...o, keyResults: o.keyResults.filter(k => k.id !== krId) } : o));
+  };
+
+  const handleSaveOkrSetupSession = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/okrs/save-setup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          unitCode: filters.unitCode,
+          period: `${filters.periodType === "weekly" ? "M" + filters.month : filters.quarter}_${filters.year}`,
+          objectives: objectives,
+        }),
+      });
+      if (res.ok) {
+        alert("✓ Đã lưu thành công phiên thiết lập OKRs!");
+        await fetchOkrs();
+      } else {
+        const err = await res.json();
+        alert(`❌ Lỗi khi lưu: ${err.error || "Không rõ nguyên nhân"}`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("❌ Lỗi mạng khi lưu thiết lập OKRs!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmitObjective = (e: React.FormEvent) => {
     e.preventDefault();
     if (!objTitle) return;
-    const newObj: ObjectiveItem = {
-      id: `obj-${Date.now()}`,
-      title: objTitle,
-      weight: parseFloat(objWeight) || 30,
-      progress: 0,
-      aiForecastProgress: 10,
-      aiRiskLevel: "Thấp",
-      keyResults: []
-    };
-    setObjectives(prev => [...prev, newObj]);
+
+    if (editingObjId) {
+      setObjectives(prev => prev.map(o => o.id === editingObjId ? { ...o, title: objTitle, weight: parseFloat(objWeight) || 30 } : o));
+      setEditingObjId(null);
+    } else {
+      const nextIndex = objectives.length + 1;
+      let finalTitle = objTitle;
+      if (!/^O\d+:/.test(objTitle)) {
+        finalTitle = `O${nextIndex}: ${objTitle}`;
+      }
+      const newObj: ObjectiveItem = {
+        id: `obj-${Date.now()}`,
+        title: finalTitle,
+        weight: parseFloat(objWeight) || 30,
+        progress: 0,
+        aiForecastProgress: 10,
+        aiRiskLevel: "Thấp",
+        keyResults: []
+      };
+      setObjectives(prev => [...prev, newObj]);
+    }
     setIsObjModalOpen(false);
   };
 
   const handleSubmitKr = (e: React.FormEvent) => {
     e.preventDefault();
     if (!krTitle) return;
-    const newKr: KeyResultItem = {
-      id: `kr-${Date.now()}`,
-      title: krTitle,
-      weight: parseFloat(krWeight) || 50,
-      progress: 0,
-      priority: krPriority,
-      pic: krPic,
-      deadline: krDeadline || "2026-09-30",
-      actions: []
-    };
-    setObjectives(prev => prev.map(o => o.id === activeObjId ? { ...o, keyResults: [...o.keyResults, newKr] } : o));
+
+    if (editingKrId) {
+      setObjectives(prev => prev.map(o => o.id === activeObjId ? {
+        ...o,
+        keyResults: o.keyResults.map(k => k.id === editingKrId ? {
+          ...k,
+          title: krTitle,
+          weight: parseFloat(krWeight) || 50,
+          priority: krPriority,
+          pic: krPic,
+          deadline: krDeadline || "2026-09-30"
+        } : k)
+      } : o));
+      setEditingKrId(null);
+    } else {
+      const parentObj = objectives.find(o => o.id === activeObjId);
+      const nextKrIndex = parentObj ? parentObj.keyResults.length + 1 : 1;
+      let finalKrTitle = krTitle;
+      if (!/^KR\d+:/.test(krTitle)) {
+        finalKrTitle = `KR${nextKrIndex}: ${krTitle}`;
+      }
+      const newKr: KeyResultItem = {
+        id: `kr-${Date.now()}`,
+        title: finalKrTitle,
+        weight: parseFloat(krWeight) || 50,
+        progress: 0,
+        priority: krPriority,
+        pic: krPic,
+        deadline: krDeadline || "2026-09-30",
+        actions: []
+      };
+      setObjectives(prev => prev.map(o => o.id === activeObjId ? { ...o, keyResults: [...o.keyResults, newKr] } : o));
+    }
     setIsKrModalOpen(false);
   };
 
@@ -1147,21 +1250,45 @@ export default function OkrStrategyPage() {
                   >
                     + THÊM MỤC TIÊU (O)
                   </button>
+                  {isEditable && (
+                    <button
+                      onClick={handleSaveOkrSetupSession}
+                      className="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded hover:bg-emerald-500 shadow-md hover:shadow-[0_0_12px_rgba(16,185,129,0.3)] transition-all flex items-center gap-1"
+                    >
+                      <Save size={14} /> Lưu phiên thiết lập
+                    </button>
+                  )}
                 </div>
               </div>
 
               {/* Danh sách Objective setup */}
               {objectives.map(obj => (
-                <div key={obj.id} className="glass-panel p-5">
+                <div key={obj.id} className="glass-panel p-5 border-l-4 border-purple-600 dark:border-purple-500">
                   <div className="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
                     <div className="flex items-center gap-3">
-                      <Target className="text-[var(--accent-cyan)]" size={18} />
-                      <h3 className="font-extrabold text-sm text-white">O: {obj.title}</h3>
+                      <Target className="text-purple-600 dark:text-purple-400" size={18} />
+                      <h3 className={`font-extrabold text-sm ${theme === "light" ? "text-purple-900" : "text-white"}`}>O: {obj.title}</h3>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">
+                      <span className="text-xs font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">
                         Trọng số: {obj.weight}%
                       </span>
+                      {isEditable && (
+                        <div className="flex gap-1.5">
+                          <button
+                            onClick={() => handleEditObjective(obj)}
+                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 hover:bg-sky-500/30 transition-all"
+                          >
+                            Sửa
+                          </button>
+                          <button
+                            onClick={() => handleDeleteObjective(obj.id)}
+                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 hover:bg-rose-500/30 transition-all"
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      )}
                       <div
                         role="button"
                         onClick={() => {
@@ -1182,23 +1309,50 @@ export default function OkrStrategyPage() {
 
                   <div className="space-y-3">
                     {obj.keyResults.map(kr => (
-                      <div key={kr.id} className="bg-slate-950/40 border border-white/5 p-3 rounded-lg">
+                      <div
+                        key={kr.id}
+                        className={`p-3 rounded-lg border transition-all ${
+                          theme === "light"
+                            ? "bg-purple-50/70 border-purple-200 text-purple-950 shadow-sm"
+                            : "bg-slate-950/40 border border-white/5 text-white"
+                        }`}
+                      >
                         <div className="flex justify-between items-center">
-                          <span className="font-bold text-xs text-white">↳ KR: {kr.title} (Trọng số: {kr.weight}%)</span>
-                          <div
-                            role="button"
-                            onClick={() => {
-                              if (isEditable) handleOpenActionModal(kr.id);
-                            }}
-                            className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg border transition-all select-none ${
-                              !isEditable
-                                ? "opacity-50 cursor-not-allowed"
-                                : theme === "light"
-                                  ? "bg-purple-50 border-purple-300 text-purple-700 hover:bg-purple-100 cursor-pointer shadow-sm"
-                                  : "bg-[var(--accent-purple)]/10 border-transparent text-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/20 cursor-pointer"
-                            }`}
-                          >
-                            + Thêm Action
+                          <span className={`font-bold text-xs ${theme === "light" ? "text-purple-950" : "text-white"}`}>
+                            ↳ KR: {kr.title} (Trọng số: {kr.weight}%)
+                          </span>
+                          <div className="flex items-center gap-2">
+                            {isEditable && (
+                              <div className="flex gap-1.5">
+                                <button
+                                  onClick={() => handleEditKr(obj.id, kr)}
+                                  className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 hover:bg-sky-500/30 transition-all"
+                                >
+                                  Sửa
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteKr(obj.id, kr.id)}
+                                  className="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 hover:bg-rose-500/30 transition-all"
+                                >
+                                  Xóa
+                                </button>
+                              </div>
+                            )}
+                            <div
+                              role="button"
+                              onClick={() => {
+                                if (isEditable) handleOpenActionModal(kr.id);
+                              }}
+                              className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg border transition-all select-none ${
+                                !isEditable
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : theme === "light"
+                                    ? "bg-purple-50 border-purple-300 text-purple-700 hover:bg-purple-100 cursor-pointer shadow-sm"
+                                    : "bg-[var(--accent-purple)]/10 border-transparent text-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/20 cursor-pointer"
+                              }`}
+                            >
+                              + Thêm Action
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1431,13 +1585,15 @@ export default function OkrStrategyPage() {
       {/* ========================================================================= */}
       {/* MODALS TẠO MỚI */}
       {/* ========================================================================= */}
-      {isObjModalOpen && (
+       {isObjModalOpen && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="w-full max-w-lg bg-slate-900/90 border border-white/10 rounded-2xl shadow-2xl p-6 relative text-white">
             <button onClick={() => setIsObjModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">
               <X size={18} />
             </button>
-            <h3 className="text-sm font-extrabold uppercase mb-4 text-[var(--accent-cyan)]">🎯 Thiết lập Mục tiêu (Objective) mới</h3>
+            <h3 className="text-sm font-extrabold uppercase mb-4 text-[var(--accent-cyan)]">
+              {editingObjId ? "🎯 Cập nhật Mục tiêu (Objective)" : "🎯 Thiết lập Mục tiêu (Objective) mới"}
+            </h3>
             <form onSubmit={handleSubmitObjective} className="space-y-4">
               <div>
                 <label className="block text-[11px] font-bold text-[var(--text-muted)] uppercase mb-1">Tên mục tiêu:</label>
@@ -1449,7 +1605,9 @@ export default function OkrStrategyPage() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setIsObjModalOpen(false)} className="bg-slate-800 text-xs px-4 py-2 rounded font-bold">Hủy</button>
-                <button type="submit" className="bg-white text-slate-950 text-xs px-4 py-2 rounded font-extrabold">Thêm mới</button>
+                <button type="submit" className="bg-white text-slate-950 text-xs px-4 py-2 rounded font-extrabold">
+                  {editingObjId ? "Cập nhật" : "Thêm mới"}
+                </button>
               </div>
             </form>
           </div>
@@ -1462,7 +1620,9 @@ export default function OkrStrategyPage() {
             <button onClick={() => setIsKrModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">
               <X size={18} />
             </button>
-            <h3 className="text-sm font-extrabold uppercase mb-4 text-[var(--accent-purple)]">🔑 Thiết lập Kết quả then chốt (KR) mới</h3>
+            <h3 className="text-sm font-extrabold uppercase mb-4 text-[var(--accent-purple)]">
+              {editingKrId ? "🔑 Cập nhật Kết quả then chốt (KR)" : "🔑 Thiết lập Kết quả then chốt (KR) mới"}
+            </h3>
             <form onSubmit={handleSubmitKr} className="space-y-4">
               <div>
                 <label className="block text-[11px] font-bold text-[var(--text-muted)] uppercase mb-1">Tên KR:</label>
@@ -1488,7 +1648,9 @@ export default function OkrStrategyPage() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setIsKrModalOpen(false)} className="bg-slate-800 text-xs px-4 py-2 rounded font-bold">Hủy</button>
-                <button type="submit" className="bg-white text-slate-950 text-xs px-4 py-2 rounded font-extrabold">Thêm mới</button>
+                <button type="submit" className="bg-white text-slate-950 text-xs px-4 py-2 rounded font-extrabold">
+                  {editingKrId ? "Cập nhật" : "Thêm mới"}
+                </button>
               </div>
             </form>
           </div>
