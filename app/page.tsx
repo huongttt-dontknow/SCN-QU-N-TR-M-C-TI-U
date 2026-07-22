@@ -38,6 +38,7 @@ export default function DashboardPage() {
   };
 
   const [bodComment, setBodComment] = useState("");
+  const [savedComment, setSavedComment] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function DashboardPage() {
       const pKey = getPeriodKey();
       const key = `bod_comment_${filters.unitCode}_${pKey}`;
       const saved = localStorage.getItem(key) || "";
+      setSavedComment(saved);
       setBodComment(saved);
     }
     setIsSaved(false);
@@ -55,6 +57,7 @@ export default function DashboardPage() {
       const pKey = getPeriodKey();
       const key = `bod_comment_${filters.unitCode}_${pKey}`;
       localStorage.setItem(key, bodComment);
+      setSavedComment(bodComment);
     }
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
@@ -957,11 +960,11 @@ export default function DashboardPage() {
       </div>
 
       {/* 6. KHU VỰC CHỈ ĐẠO CỦA BOD (BOTTOM SECTION) */}
-      <div className="glass-panel p-5 space-y-3">
-        <h3 className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider flex items-center gap-2">
+      <div className="glass-panel p-5 space-y-4">
+        <h3 className="text-sm font-black text-[var(--accent-purple)] uppercase tracking-wider flex items-center gap-2">
           💬 Ý KIẾN CHỈ ĐẠO ĐIỀU HÀNH CỦA BAN GIÁM ĐỐC (BOD)
         </h3>
-        <p className="text-xs text-[var(--text-muted)] font-medium">
+        <p className="text-sm text-[var(--text-muted)] font-medium">
           Ghi chú ý kiến chỉ đạo hành động, nhận định hiệu xuất kỳ này để lưu trữ và gửi thông báo tới các đơn vị
         </p>
         <textarea
@@ -969,17 +972,26 @@ export default function DashboardPage() {
           onChange={(e) => setBodComment(e.target.value)}
           placeholder="Nhập nội dung chỉ đạo điều hành chiến lược cho các đơn vị thuộc BU Sconnect..."
           rows={3}
-          className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[var(--accent-purple)] resize-none"
+          className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-xl p-3 text-sm text-white focus:outline-none focus:border-[var(--accent-purple)] resize-none"
         />
         <div className="flex justify-end gap-3 items-center">
-          {isSaved && <span className="text-xs text-emerald-500 font-extrabold">✓ Đã lưu thành công!</span>}
+          {isSaved && <span className="text-sm text-emerald-500 font-extrabold">✓ Đã lưu thành công!</span>}
           <button
             onClick={handleSaveComment}
-            className="bg-purple-700 hover:bg-purple-600 text-white text-xs font-extrabold px-5 py-2.5 rounded-xl shadow transition-all"
+            className="bg-purple-700 hover:bg-purple-600 text-white text-sm font-extrabold px-5 py-2.5 rounded-xl shadow transition-all"
           >
             💾 Lưu chỉ đạo BOD
           </button>
         </div>
+
+        {savedComment && (
+          <div className="mt-3 p-4 rounded-xl bg-purple-950/20 border border-purple-500/25 space-y-1.5">
+            <span className="text-[10px] uppercase font-black text-[var(--accent-purple)] block tracking-wider">
+              📌 CHỈ ĐẠO ĐÃ LƯU ĐANG ÁP DỤNG KỲ NÀY:
+            </span>
+            <p className="text-sm font-semibold text-slate-200 whitespace-pre-wrap">{savedComment}</p>
+          </div>
+        )}
       </div>
 
     </div>
