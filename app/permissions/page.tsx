@@ -20,7 +20,8 @@ export default function PermissionsPage() {
     permissions, 
     setCurrentLoggedUser, 
     refreshUsers, 
-    refreshPermissions 
+    refreshPermissions,
+    theme
   } = useApp();
 
   // Form states
@@ -99,6 +100,34 @@ export default function PermissionsPage() {
   const handleSimulateUser = (user: User) => {
     setCurrentLoggedUser(user);
     alert(`🔌 Đã chuyển đổi giả lập sang người dùng: ${user.fullname} (${user.role})`);
+  };
+
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    if (!isAdmin) {
+      alert("Chỉ tài khoản Admin mới có quyền thay đổi vai trò nhân sự!");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/users", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: userId, role: newRole }),
+      });
+
+      if (res.ok) {
+        refreshUsers();
+        if (currentLoggedUser?.id === userId) {
+          setCurrentLoggedUser({ ...currentLoggedUser, role: newRole });
+        }
+      } else {
+        const err = await res.json();
+        alert(`Lỗi: ${err.error}`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Lỗi kết nối khi thay đổi vai trò.");
+    }
   };
 
   const handleDeleteUser = async (id: string) => {
@@ -324,7 +353,8 @@ export default function PermissionsPage() {
                   <th className="p-2.5 w-16 text-center">Mã</th>
                   <th className="p-2.5">Họ tên</th>
                   <th className="p-2.5 w-24">Bộ phận</th>
-                  <th className="p-2.5 w-28">Vai trò</th>
+                  <th className="p-2.5 w-24">Vai trò</th>
+                  <th className="p-2.5 w-28">Đổi quyền</th>
                   <th className="p-2.5 w-28 text-center">Thao tác</th>
                 </tr>
               </thead>
@@ -339,13 +369,32 @@ export default function PermissionsPage() {
                       <td className="p-2.5 text-white font-semibold">{user.fullname} {isActive && "⭐"}</td>
                       <td className="p-2.5">{user.unitCode}</td>
                       <td className="p-2.5 font-bold text-[var(--accent-purple)]">{user.role}</td>
+                      <td className="p-2.5">
+                        <select
+                          value={user.role}
+                          disabled={!isAdmin}
+                          onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                          className={`border rounded px-1.5 py-0.5 font-bold text-[10px] cursor-pointer outline-none focus:border-[var(--accent-purple)] ${
+                            theme === "light" 
+                              ? "bg-white text-slate-900 border-slate-300" 
+                              : "bg-slate-950 text-white border-white/10"
+                          }`}
+                        >
+                          <option value="Admin" className={theme === "light" ? "bg-white text-slate-900" : "bg-slate-900 text-white"}>Admin</option>
+                          <option value="Quản trị viên" className={theme === "light" ? "bg-white text-slate-900" : "bg-slate-900 text-white"}>Quản trị viên</option>
+                          <option value="Trưởng đơn vị" className={theme === "light" ? "bg-white text-slate-900" : "bg-slate-900 text-white"}>Trưởng đơn vị</option>
+                          <option value="Người dùng" className={theme === "light" ? "bg-white text-slate-900" : "bg-slate-900 text-white"}>Người dùng</option>
+                        </select>
+                      </td>
                       <td className="p-2.5 flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleSimulateUser(user)}
                           className={`text-[9px] font-black px-2 py-1 rounded flex items-center gap-1 transition-all ${
                             isActive 
                               ? "bg-emerald-500 text-slate-950 font-extrabold" 
-                              : "bg-white/5 text-white border border-white/10 hover:bg-white/15"
+                              : theme === "light"
+                                ? "bg-amber-50 text-amber-600 border border-amber-300 hover:bg-amber-100"
+                                : "bg-white/5 text-white border border-white/10 hover:bg-white/15"
                           }`}
                         >
                           <ToggleLeft size={10} />

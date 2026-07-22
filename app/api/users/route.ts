@@ -89,3 +89,23 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+// PUT /api/users - Cập nhật vai trò người dùng
+export async function PUT(request: Request) {
+  try {
+    const { id, role } = await request.json();
+
+    if (!id || !role) {
+      return NextResponse.json({ error: "Thiếu ID hoặc vai trò để cập nhật" }, { status: 400 });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: { role },
+    });
+
+    return NextResponse.json(updatedUser);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
