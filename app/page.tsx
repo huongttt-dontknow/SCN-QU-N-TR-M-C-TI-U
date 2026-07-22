@@ -287,14 +287,15 @@ export default function DashboardPage() {
         const uStr = (v.unit || "").toUpperCase();
         const kStr = k.toUpperCase();
         if (
-          (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+          (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
           !uStr.includes("CTR") &&
           !uStr.includes("TB/1")
         ) {
           const pData = v.periods?.[wKey];
           if (pData && pData.actual !== undefined) {
-            trafAct = pData.actual;
-            break;
+            if (pData.actual > trafAct) {
+              trafAct = pData.actual;
+            }
           }
         }
       }
@@ -307,14 +308,15 @@ export default function DashboardPage() {
         const uStr = (v.unit || "").toUpperCase();
         const kStr = k.toUpperCase();
         if (
-          (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+          (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
           !uStr.includes("CTR") &&
           !uStr.includes("TB/1")
         ) {
           const pData = v.periods?.[wKey];
           if (pData && pData.target !== undefined) {
-            trafTgt = pData.target;
-            break;
+            if (pData.target > trafTgt) {
+              trafTgt = pData.target;
+            }
           }
         }
       }
@@ -361,14 +363,15 @@ export default function DashboardPage() {
         const uStr = (v.unit || "").toUpperCase();
         const kStr = k.toUpperCase();
         if (
-          (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+          (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
           !uStr.includes("CTR") &&
           !uStr.includes("TB/1")
         ) {
           const pData = v.periods?.[mKey];
           if (pData && pData.actual !== undefined) {
-            trafAct = pData.actual;
-            break;
+            if (pData.actual > trafAct) {
+              trafAct = pData.actual;
+            }
           }
         }
       }
@@ -1165,7 +1168,8 @@ export default function DashboardPage() {
       </div>
 
       {/* 3. BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU CÁC ĐƠN VỊ THEO KỲ */}
-      <div className="glass-panel p-6">
+      {isParentUnit && (
+        <div className="glass-panel p-6">
         <h3 className="text-sm font-black text-white tracking-wider uppercase mb-4 flex items-center gap-2">
           <BarChart3 size={18} className="text-[var(--accent-cyan)]" /> 
           📊 BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU {filters.periodType === "weekly" ? `TUẦN ${filters.week} - THÁNG ${filters.month}` : filters.periodType === "monthly" ? `THÁNG ${filters.month}` : filters.periodType === "quarterly" ? `QUÝ ${filters.quarter}` : "CẢ NĂM"} / {filters.year} (9 ĐƠN VỊ)
@@ -1220,6 +1224,7 @@ export default function DashboardPage() {
           </ResponsiveContainer>
         </div>
       </div>
+      )}
 
       {/* 4. KHU VỰC CƠ CẤU DOANH THU & TRAFFIC */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
