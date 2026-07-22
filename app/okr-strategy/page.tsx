@@ -186,13 +186,13 @@ const SCVN_STRATEGIES: StrategyItem[] = [
 const renderFormattedAiText = (text: string, theme: string) => {
   if (!text) return null;
   if (text.startsWith("Chưa có nhận định")) {
-    return <span className={theme === "light" ? "text-slate-500 font-medium" : "text-slate-400"}>{text}</span>;
+    return <span className={theme === "light" ? "text-slate-500 font-medium" : "text-slate-200"}>{text}</span>;
   }
 
   // Split key phrases to apply colors (red/purple) for highlighting key metrics
   const parts = text.split(/(AI Agent nhận định:|TỐT|90%|95%|Đề xuất:|chuẩn hóa kho asset 3D)/g);
   return (
-    <span className={theme === "light" ? "text-slate-700 font-semibold" : "text-slate-300"}>
+    <span className={theme === "light" ? "text-slate-700 font-semibold" : "text-white"}>
       {parts.map((part, i) => {
         if (part === "AI Agent nhận định:") {
           return <span key={i} className="text-purple-600 dark:text-purple-400 font-black">{part}</span>;
@@ -1059,13 +1059,13 @@ export default function OkrStrategyPage() {
               <div className={`rounded-xl p-3.5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border transition-all ${
                 theme === "light"
                   ? "bg-white border-[#32CD32] shadow-[0_2px_10px_rgba(50,205,50,0.06)]"
-                  : "bg-slate-950/60 border-[var(--accent-purple)]/30"
+                  : "bg-slate-900 border-amber-500/40 shadow-[0_4px_12px_rgba(245,158,11,0.1)]"
               }`}>
                 <div className="flex items-start gap-2.5">
                   <span className="text-base">🤖</span>
                   <div>
                     <h4 className={`text-xs font-black tracking-wider uppercase ${
-                      theme === "light" ? "text-[#228B22]" : "text-[var(--accent-purple)]"
+                      theme === "light" ? "text-[#228B22]" : "text-amber-400 font-extrabold"
                     }`}>
                       TRỢ LÝ AI ĐÁNH GIÁ MỤC TIÊU (ASSESSOR)
                     </h4>
