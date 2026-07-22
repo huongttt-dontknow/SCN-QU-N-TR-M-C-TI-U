@@ -933,7 +933,7 @@ export default function OkrStrategyPage() {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
                   effectiveSubTab === "setup"
                     ? theme === "light"
-                      ? "bg-emerald-600 text-white shadow-md border border-emerald-500"
+                      ? "bg-gradient-to-r from-emerald-500/10 to-lime-500/5 text-emerald-800 font-black shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-emerald-500/20 border-l-[4px] border-l-emerald-500"
                       : "bg-[var(--accent-cyan)] text-slate-950 shadow-md border border-[var(--accent-cyan)]/20"
                     : theme === "light"
                       ? "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 hover:text-slate-800"
@@ -948,7 +948,7 @@ export default function OkrStrategyPage() {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
                   effectiveSubTab === "pillars"
                     ? theme === "light"
-                      ? "bg-emerald-600 text-white shadow-md border border-emerald-500"
+                      ? "bg-gradient-to-r from-emerald-500/10 to-lime-500/5 text-emerald-800 font-black shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-emerald-500/20 border-l-[4px] border-l-emerald-500"
                       : "bg-[var(--accent-cyan)] text-slate-950 shadow-md border border-[var(--accent-cyan)]/20"
                     : theme === "light"
                       ? "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 hover:text-slate-800"
