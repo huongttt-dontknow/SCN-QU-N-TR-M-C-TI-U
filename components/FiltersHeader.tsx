@@ -97,11 +97,11 @@ export default function FiltersHeader() {
               onChange={(e) => handleFilterChange("week", e.target.value)}
               className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
             >
-              <option value="1">Tuần 1 (01/07 - 05/07)</option>
-              <option value="2">Tuần 2 (06/07 - 12/07)</option>
-              <option value="3">Tuần 3 (13/07 - 19/07)</option>
-              <option value="4">Tuần 4 (20/07 - 26/07)</option>
-              <option value="5">Tuần 5 (27/07 - 31/07)</option>
+              <option value="1">Tuần 1</option>
+              <option value="2">Tuần 2</option>
+              <option value="3">Tuần 3</option>
+              <option value="4">Tuần 4</option>
+              <option value="5">Tuần 5</option>
             </select>
           </div>
         )}
