@@ -164,7 +164,6 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
           </div>
           <div className="text-xs text-[var(--text-muted)] font-bold flex flex-col items-end">
             <span className="text-emerald-500 font-black tracking-wide">OMS: Aligning Strategy, Driving Performance</span>
-            <span className="text-[10px] font-semibold text-slate-500">(Đồng bộ chiến lược, Thúc đẩy hiệu suất)</span>
           </div>
         </header>
 

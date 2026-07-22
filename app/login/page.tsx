@@ -124,9 +124,6 @@ export default function LoginPage() {
           <p className="text-[10px] text-emerald-500 font-extrabold uppercase tracking-widest text-center mt-1">
             Aligning Strategy, Driving Performance
           </p>
-          <p className="text-[9px] text-slate-500 font-semibold text-center">
-            (Đồng bộ chiến lược, Thúc đẩy hiệu suất)
-          </p>
         </div>
 
         {/* ERROR WARNING CONTAINER */}

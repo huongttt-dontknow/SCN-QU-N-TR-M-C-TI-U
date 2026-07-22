@@ -5,7 +5,7 @@ import SidebarLayout from "@/components/SidebarLayout";
 
 export const metadata: Metadata = {
   title: "Sconnect Objectives Management System (OMS)",
-  description: "Sconnect OMS - Aligning Strategy, Driving Performance (Đồng bộ chiến lược, Thúc đẩy hiệu suất)",
+  description: "Sconnect OMS - Aligning Strategy, Driving Performance",
 };
 
 export default function RootLayout({
