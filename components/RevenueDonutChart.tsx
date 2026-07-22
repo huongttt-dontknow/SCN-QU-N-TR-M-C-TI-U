@@ -22,8 +22,8 @@ export default function RevenueDonutChart({ unitCode = "SCVN", periodKey = "mont
     { code: "Music", name: "Music (SCMU)" },
     { code: "NDTH", name: "NDTH" },
     { code: "CR", name: "Creative Hub" },
-    { code: "CN", name: "CNGP Game" },
-    { code: "SCS", name: "Studio SCS" },
+    { code: "CN", name: "CNGP" },
+    { code: "SCS", name: "Studio" },
   ];
 
   // Raw values in Triệu VNĐ

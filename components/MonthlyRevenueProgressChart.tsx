@@ -11,7 +11,8 @@ import {
   ResponsiveContainer,
   Tooltip,
   Cell,
-  CartesianGrid
+  CartesianGrid,
+  LabelList
 } from "recharts";
 
 export default function MonthlyRevenueProgressChart() {
@@ -28,8 +29,8 @@ export default function MonthlyRevenueProgressChart() {
     { code: "Music", name: "Music (SCMU)" },
     { code: "NDTH", name: "NDTH" },
     { code: "CR", name: "Creative Hub" },
-    { code: "CN", name: "CNGP Game" },
-    { code: "SCS", name: "Studio SCS" },
+    { code: "CN", name: "CNGP" },
+    { code: "SCS", name: "Studio" },
   ];
 
   const formatRevenue = (val: number) => {
@@ -40,7 +41,8 @@ export default function MonthlyRevenueProgressChart() {
   };
 
   const data = unitList.map(u => {
-    const kpiItem = MASTER_KPI_DATA[u.code]?.["VM1-I02.01"];
+    const uData = MASTER_KPI_DATA[u.code] || {};
+    const kpiItem = uData["VM1-I02.01"] || uData["2.1"];
     const periods = kpiItem?.periods || {};
 
     // 1. Cộng tổng thực tế các tuần trong tháng
@@ -74,7 +76,7 @@ export default function MonthlyRevenueProgressChart() {
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 5, right: 35, left: 10, bottom: 5 }}
+          margin={{ top: 5, right: 40, left: 10, bottom: 5 }}
         >
           <CartesianGrid
             strokeDasharray="3 3"
@@ -132,6 +134,12 @@ export default function MonthlyRevenueProgressChart() {
                     : (entry.pct >= 50 ? (isLight ? "#0284c7" : "#38bdf8") : (isLight ? "#ea580c" : "#fb923c")));
               return <Cell key={`cell-${index}`} fill={color} />;
             })}
+            <LabelList 
+              dataKey="pct" 
+              position="right" 
+              formatter={(val: number) => `${val}%`} 
+              style={{ fill: isLight ? "#0f172a" : "#cbd5e1", fontSize: 9, fontWeight: 700 }}
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
