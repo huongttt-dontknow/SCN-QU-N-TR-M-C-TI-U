@@ -3,7 +3,11 @@
 import React from "react";
 import { useApp } from "@/context/AppContext";
 
-export default function FiltersHeader() {
+export interface FiltersHeaderProps {
+  hideFrequency?: boolean;
+}
+
+export default function FiltersHeader({ hideFrequency = false }: FiltersHeaderProps = {}) {
   const { filters, setFilters, currentLoggedUser } = useApp();
 
   const isRestricted = 
@@ -52,24 +56,26 @@ export default function FiltersHeader() {
         </div>
 
         {/* Tần suất */}
-        <div className="flex flex-col">
-          <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
-            Tần suất
-          </label>
-          <select
-            value={filters.periodType}
-            onChange={(e) => handleFilterChange("periodType", e.target.value)}
-            className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
-          >
-            <option value="weekly">Hàng tuần</option>
-            <option value="monthly">Hàng tháng</option>
-            <option value="quarterly">Hàng quý</option>
-            <option value="yearly">Hàng năm</option>
-          </select>
-        </div>
+        {!hideFrequency && (
+          <div className="flex flex-col">
+            <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
+              Tần suất
+            </label>
+            <select
+              value={filters.periodType}
+              onChange={(e) => handleFilterChange("periodType", e.target.value)}
+              className="bg-slate-900 border border-[var(--glass-border)] text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
+            >
+              <option value="weekly">Hàng tuần</option>
+              <option value="monthly">Hàng tháng</option>
+              <option value="quarterly">Hàng quý</option>
+              <option value="yearly">Hàng năm</option>
+            </select>
+          </div>
+        )}
 
         {/* Lọc tháng */}
-        {filters.periodType !== "yearly" && (
+        {!hideFrequency && filters.periodType !== "yearly" && (
           <div className="flex flex-col">
             <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
               Tháng
@@ -87,7 +93,7 @@ export default function FiltersHeader() {
         )}
 
         {/* Lọc tuần */}
-        {filters.periodType === "weekly" && (
+        {!hideFrequency && filters.periodType === "weekly" && (
           <div className="flex flex-col">
             <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
               Tuần
@@ -107,7 +113,7 @@ export default function FiltersHeader() {
         )}
 
         {/* Lọc Quý */}
-        {filters.periodType === "quarterly" && (
+        {!hideFrequency && filters.periodType === "quarterly" && (
           <div className="flex flex-col">
             <label className="text-xs text-[var(--text-muted)] font-extrabold mb-1 uppercase tracking-wider">
               Quý
@@ -144,7 +150,7 @@ export default function FiltersHeader() {
 
       {/* Tóm tắt bộ lọc active */}
       <div className="bg-sky-50 dark:bg-slate-900/60 border border-sky-200 dark:border-[var(--glass-border)] px-4 py-2 rounded-xl text-xs font-black text-sky-800 dark:text-[var(--accent-cyan)] tracking-wider shadow-sm">
-        KỲ LỌC: {filters.periodType === "weekly" ? `TUẦN ${filters.week} - THÁNG ${filters.month}` : filters.periodType === "monthly" ? `THÁNG ${filters.month}` : filters.periodType === "quarterly" ? `QUÝ ${filters.quarter}` : "CẢ NĂM"} / {filters.year}
+        {hideFrequency ? `NĂM ${filters.year}` : `KỲ LỌC: ${filters.periodType === "weekly" ? `TUẦN ${filters.week} - THÁNG ${filters.month}` : filters.periodType === "monthly" ? `THÁNG ${filters.month}` : filters.periodType === "quarterly" ? `QUÝ ${filters.quarter}` : "CẢ NĂM"} / ${filters.year}`}
       </div>
     </div>
   );

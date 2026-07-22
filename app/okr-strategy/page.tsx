@@ -623,7 +623,7 @@ export default function OkrStrategyPage() {
       </div>
 
       {/* FREEZE PANEL FILTER HEADER */}
-      <FiltersHeader />
+      <FiltersHeader hideFrequency={effectiveSubTab === "pillars"} />
 
       {/* ========================================================================= */}
       {/* MODULE 5.2: CẬP NHẬT VÀ THEO DÕI TIẾN ĐỘ (KHỚP 100% ẢNH MẪU CỦA NGƯỜI DÙNG) */}
@@ -927,22 +927,36 @@ export default function OkrStrategyPage() {
         <div className="space-y-6">
           {isCorporateLevel && (
             <div className="flex gap-3 border-b border-white/10 pb-2">
-              <button
+              <div
+                role="button"
                 onClick={() => setTab51Sub("setup")}
-                className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${
-                  effectiveSubTab === "setup" ? "bg-white text-slate-950" : "bg-slate-900 text-[var(--text-muted)]"
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
+                  effectiveSubTab === "setup"
+                    ? theme === "light"
+                      ? "bg-emerald-600 text-white shadow-md border border-emerald-500"
+                      : "bg-[var(--accent-cyan)] text-slate-950 shadow-md border border-[var(--accent-cyan)]/20"
+                    : theme === "light"
+                      ? "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 hover:text-slate-800"
+                      : "bg-slate-900 text-[var(--text-muted)] border border-white/5 hover:bg-slate-800 hover:text-white"
                 }`}
               >
                 📋 Tab 2: Thiết lập OKRs Đơn vị
-              </button>
-              <button
+              </div>
+              <div
+                role="button"
                 onClick={() => setTab51Sub("pillars")}
-                className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${
-                  effectiveSubTab === "pillars" ? "bg-white text-slate-950" : "bg-slate-900 text-[var(--text-muted)]"
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
+                  effectiveSubTab === "pillars"
+                    ? theme === "light"
+                      ? "bg-emerald-600 text-white shadow-md border border-emerald-500"
+                      : "bg-[var(--accent-cyan)] text-slate-950 shadow-md border border-[var(--accent-cyan)]/20"
+                    : theme === "light"
+                      ? "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 hover:text-slate-800"
+                      : "bg-slate-900 text-[var(--text-muted)] border border-white/5 hover:bg-slate-800 hover:text-white"
                 }`}
               >
                 🏛️ Tab 1: Trụ cột Chiến lược Sconnect 2026
-              </button>
+              </div>
             </div>
           )}
 
