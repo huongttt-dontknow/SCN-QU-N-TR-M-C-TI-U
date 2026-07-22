@@ -308,7 +308,10 @@ export default function OkrStrategyPage() {
   const fetchOkrs = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/okrs?unitCode=${filters.unitCode}&period=${filters.periodType === "weekly" ? "M" + filters.month : filters.quarter}_${filters.year}`);
+      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
+        ? "M" + filters.month 
+        : filters.quarter;
+      const res = await fetch(`/api/okrs?unitCode=${filters.unitCode}&period=${periodKey}_${filters.year}`);
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         setObjectives(data);
@@ -517,6 +520,9 @@ export default function OkrStrategyPage() {
   const handleSaveOkrSetupSession = async () => {
     setLoading(true);
     try {
+      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
+        ? "M" + filters.month 
+        : filters.quarter;
       const res = await fetch("/api/okrs/save-setup", {
         method: "POST",
         headers: {
@@ -524,7 +530,7 @@ export default function OkrStrategyPage() {
         },
         body: JSON.stringify({
           unitCode: filters.unitCode,
-          period: `${filters.periodType === "weekly" ? "M" + filters.month : filters.quarter}_${filters.year}`,
+          period: `${periodKey}_${filters.year}`,
           objectives: objectives,
         }),
       });
