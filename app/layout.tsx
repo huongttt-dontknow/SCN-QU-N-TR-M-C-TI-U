@@ -4,8 +4,8 @@ import { AppProvider } from "@/context/AppContext";
 import SidebarLayout from "@/components/SidebarLayout";
 
 export const metadata: Metadata = {
-  title: "Sconnect OKR & KPI Management System",
-  description: "Hệ thống Quản trị Mục tiêu Hành động Trọng tâm Sconnect",
+  title: "Sconnect Objectives Management System (OMS)",
+  description: "Sconnect OMS - Aligning Strategy, Driving Performance (Đồng bộ chiến lược, Thúc đẩy hiệu suất)",
 };
 
 export default function RootLayout({

@@ -53,10 +53,10 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
             </div>
             <div>
               <h1 className="font-black text-sm tracking-wide bg-gradient-to-r from-emerald-500 to-lime-500 bg-clip-text text-transparent">
-                SCONNECT
+                SCONNECT OMS
               </h1>
-              <p className="text-[10px] text-emerald-500 font-extrabold tracking-widest uppercase">
-                Goal Manager
+              <p className="text-[8px] text-emerald-500 font-extrabold tracking-wider uppercase">
+                Objectives Management System
               </p>
             </div>
           </div>
@@ -162,8 +162,9 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
               </span>
             )}
           </div>
-          <div className="text-xs text-[var(--text-muted)] font-bold">
-            Hệ thống Quản trị Mục tiêu & Chiến dịch OKR 2026
+          <div className="text-xs text-[var(--text-muted)] font-bold flex flex-col items-end">
+            <span className="text-emerald-500 font-black tracking-wide">OMS: Aligning Strategy, Driving Performance</span>
+            <span className="text-[10px] font-semibold text-slate-500">(Đồng bộ chiến lược, Thúc đẩy hiệu suất)</span>
           </div>
         </header>
 

@@ -115,11 +115,17 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500 to-lime-500 flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-emerald-500/20 mb-2 animate-pulse">
             S
           </div>
-          <h1 className="text-xl font-black tracking-wider uppercase bg-gradient-to-r from-emerald-400 to-lime-400 bg-clip-text text-transparent">
-            SCONNECT GOAL MANAGER
+          <h1 className="text-xl font-black tracking-wider uppercase bg-gradient-to-r from-emerald-400 to-lime-400 bg-clip-text text-transparent text-center">
+            SCONNECT OMS
           </h1>
-          <p className="text-xs text-slate-400 font-medium">
-            Hệ thống Quản trị Mục tiêu & Chiến dịch OKR 2026
+          <p className="text-xs text-slate-400 font-bold text-center">
+            Objectives Management System (OMS)
+          </p>
+          <p className="text-[10px] text-emerald-500 font-extrabold uppercase tracking-widest text-center mt-1">
+            Aligning Strategy, Driving Performance
+          </p>
+          <p className="text-[9px] text-slate-500 font-semibold text-center">
+            (Đồng bộ chiến lược, Thúc đẩy hiệu suất)
           </p>
         </div>
 
