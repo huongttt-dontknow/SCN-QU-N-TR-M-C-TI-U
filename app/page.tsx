@@ -118,11 +118,11 @@ export default function DashboardPage() {
     };
   });
 
-  // Số liệu thực tế SCVN cấp Toàn BU
-  const scvnRevRec = getMasterKpiRecord("SCVN", "VM1-I02.01", periodKey);
-  const scvnVolRec = getMasterKpiRecord("SCVN", "VM2-I01.01", periodKey);
-  const scvnDisciplineRec = getMasterKpiRecord("SCVN", "TM7-I01.01", periodKey);
-  const scvnRoiRec = getMasterKpiRecord("SCVN", "VM1-I01.01", periodKey);
+  // Số liệu thực tế đơn vị cấp Toàn hệ thống/BU
+  const scvnRevRec = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", periodKey);
+  const scvnVolRec = getMasterKpiRecord(filters.unitCode, "VM2-I01.01", periodKey);
+  const scvnDisciplineRec = getMasterKpiRecord(filters.unitCode, "TM7-I01.01", periodKey);
+  const scvnRoiRec = getMasterKpiRecord(filters.unitCode, "VM1-I01.01", periodKey);
 
   // Card 1: Doanh thu & Tiến độ hoàn thành SCVN
   const revTargetVal = scvnRevRec?.target ? (scvnRevRec.target >= 1e9 ? `${(scvnRevRec.target / 1e9).toFixed(2)} Tỷ VNĐ` : `${(scvnRevRec.target / 1e6).toFixed(0)} Triệu VNĐ`) : "7.98 Tỷ VNĐ";
@@ -481,12 +481,23 @@ export default function DashboardPage() {
   // Card 5: ROI
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
-  // Tính toán so sánh Doanh thu SCVN kỳ liền trước & cùng kỳ tháng trước (cho Card 1) - Tăng trưởng của doanh thu thực tế
-  const scvnRevRecPrev = getMasterKpiRecord("SCVN", "VM1-I02.01", prevPeriodKey);
+  // Tính toán so sánh Doanh thu đơn vị kỳ liền trước & cùng kỳ tháng trước (cho Card 1) - Tăng trưởng của doanh thu thực tế
+  const getSelectedUnitRevenuePeriods = () => {
+    const u = MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
+    let kpiItem = u?.["VM1-I02.01"];
+    if (filters.unitCode === "TCT") {
+      kpiItem = u?.["TM1-I02.01"];
+    } else if (!kpiItem) {
+      kpiItem = u?.["2.1"] || Object.values(u || {}).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
+    }
+    return kpiItem?.periods || {};
+  };
+
+  const scvnRevRecPrev = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", prevPeriodKey);
   
   let currActVal = scvnRevRec?.actual || 0;
   if (filters.periodType === "monthly" && currActVal === 0) {
-    const periods = MASTER_KPI_DATA["SCVN"]?.["VM1-I02.01"]?.periods || {};
+    const periods = getSelectedUnitRevenuePeriods();
     let sumAct = 0;
     const m = Number(filters.month) || 7;
     for (let w = 1; w <= 5; w++) {
@@ -502,7 +513,7 @@ export default function DashboardPage() {
 
   let prevActVal = scvnRevRecPrev?.actual || 0;
   if (filters.periodType === "monthly" && prevActVal === 0 && prevPeriodKey) {
-    const periods = MASTER_KPI_DATA["SCVN"]?.["VM1-I02.01"]?.periods || {};
+    const periods = getSelectedUnitRevenuePeriods();
     let sumAct = 0;
     const prevM = Number(filters.month) > 1 ? Number(filters.month) - 1 : 12;
     for (let w = 1; w <= 5; w++) {
@@ -525,7 +536,8 @@ export default function DashboardPage() {
       if (m > 1) {
         const prevMonth = m - 1;
         const targetKey = `weekly_${prevMonth}_${w}`;
-        const hasWeekRecord = MASTER_KPI_DATA["SCVN"]?.["VM1-I02.01"]?.periods?.[targetKey];
+        const periods = getSelectedUnitRevenuePeriods();
+        const hasWeekRecord = periods[targetKey];
         if (hasWeekRecord) {
           return targetKey;
         }
@@ -538,7 +550,7 @@ export default function DashboardPage() {
   const samePeriodLastMonthKey = getSamePeriodLastMonthKey(filters.periodType, filters.month, filters.week, filters.quarter, filters.year);
   let diffLastMonth: number | null = null;
   if (samePeriodLastMonthKey) {
-    const scvnRevRecSameLastMonth = getMasterKpiRecord("SCVN", "VM1-I02.01", samePeriodLastMonthKey);
+    const scvnRevRecSameLastMonth = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", samePeriodLastMonthKey);
     if (scvnRevRecSameLastMonth) {
       const sameLastMonthActVal = scvnRevRecSameLastMonth.actual || 0;
       if (sameLastMonthActVal > 0) {
