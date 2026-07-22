@@ -261,20 +261,28 @@ export default function DashboardPage() {
 
     const currAct = currRec?.actual ?? 0;
     const prevAct = prevRec?.actual ?? 0;
-    const diff = currAct - prevAct;
-    let pct = 0;
+
+    let change = "-";
+    let pctRaw = -999;
+    let up = true;
+
     if (prevAct > 0) {
-      pct = Number(((currAct - prevAct) / prevAct * 100).toFixed(1));
+      const pct = Number(((currAct - prevAct) / prevAct * 100).toFixed(1));
+      change = `${pct >= 0 ? "+" : ""}${pct}%`;
+      pctRaw = pct;
+      up = pct >= 0;
     } else if (currAct > 0) {
-      pct = 100.0;
+      change = "-";
+      pctRaw = 0;
+      up = true;
     }
 
     return {
       name: u.label,
       val: formatRevenueVal(currAct),
-      change: `${pct >= 0 ? "+" : ""}${pct}%`,
-      pctRaw: pct,
-      up: pct >= 0
+      change,
+      pctRaw,
+      up
     };
   }).sort((a, b) => b.pctRaw - a.pctRaw);
 
@@ -397,19 +405,28 @@ export default function DashboardPage() {
     const currAct = getUnitTrafficActual(u.code, periodKey);
     const prevAct = getUnitTrafficActual(u.code, prevPeriodKey);
     const diff = currAct - prevAct;
-    let pct = 0;
+
+    let change = "-";
+    let pctRaw = -999;
+    let up = true;
+
     if (prevAct > 0) {
-      pct = Number((diff / prevAct * 100).toFixed(1));
+      const pct = Number((diff / prevAct * 100).toFixed(1));
+      change = `${pct >= 0 ? "+" : ""}${pct}%`;
+      pctRaw = pct;
+      up = pct >= 0;
     } else if (currAct > 0) {
-      pct = 100.0;
+      change = "-";
+      pctRaw = 0;
+      up = true;
     }
 
     return {
       name: u.label,
       val: formatTrafficVal(currAct),
-      change: `${pct >= 0 ? "+" : ""}${pct}%`,
-      pctRaw: pct,
-      up: pct >= 0
+      change,
+      pctRaw,
+      up
     };
   }).sort((a, b) => b.pctRaw - a.pctRaw);
 
