@@ -350,7 +350,7 @@ async function main() {
     AS: "Trịnh Quốc Thịnh",
     NDTH: "Lò Quế Hằng",
     Lego: "Lê Quỳnh Nga",
-    DA01: "Trần Thị Hồng",
+    DA01: "Trần Thị Diệu Ly",
     SCS: "Nguyễn Ánh Tùng",
     Music: "Vũ Trung Đức"
   };
