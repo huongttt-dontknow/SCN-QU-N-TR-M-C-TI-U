@@ -888,11 +888,11 @@ export default function OkrStrategyPage() {
                         ? "border-emerald-200 bg-emerald-100/60 text-emerald-950"
                         : "border-white/10 text-[var(--text-muted)] bg-slate-900/60"
                     }`}>
-                      <th className="p-3 w-[25%] min-w-[200px]">Mục tiêu / Kết quả / Hành động</th>
+                      <th className="p-3 w-[30%] min-w-[220px]">Mục tiêu / Kết quả / Hành động</th>
                       <th className="p-3 w-24 text-center">Phụ trách</th>
                       <th className="p-3 w-28 text-center">Tiến độ (%)</th>
-                      <th className="p-3 w-24 text-center">Trạng thái</th>
-                      <th className="p-3 w-[45%] min-w-[320px]">Ghi chú kết quả thực tế</th>
+                      <th className="p-3 w-36 text-center">Trạng thái</th>
+                      <th className="p-3 w-[35%] min-w-[280px]">Ghi chú kết quả thực tế</th>
                       <th className="p-3 w-20 text-center">Thao tác</th>
                     </tr>
                   </thead>
