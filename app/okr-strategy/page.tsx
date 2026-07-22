@@ -258,6 +258,12 @@ export default function OkrStrategyPage() {
   const [editingObjId, setEditingObjId] = useState<string | null>(null);
   const [editingKrId, setEditingKrId] = useState<string | null>(null);
 
+  // States cho Gợi ý AI Planning
+  const [loadingAiSuggest, setLoadingAiSuggest] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<any[]>([]);
+  const [showAiSuggestModal, setShowAiSuggestModal] = useState(false);
+  const [aiSuggestError, setAiSuggestError] = useState("");
+
   // Active parent IDs
   const [activeObjId, setActiveObjId] = useState("");
   const [activeKrId, setActiveKrId] = useState("");
@@ -437,16 +443,106 @@ export default function OkrStrategyPage() {
     alert(`✓ Đã lưu thành công kết quả và tiến độ cho: ${title}`);
   };
 
-  // Xử lý AI Đánh giá Mục tiêu (Assessor)
-  const handleAiAssessObjective = (objId: string, objTitle: string) => {
+  // Xử lý AI Đánh giá Mục tiêu (Assessor) thực tế qua API
+  const handleAiAssessObjective = async (objId: string, objTitle: string) => {
+    const targetObj = objectives.find(o => o.id === objId);
+    if (!targetObj) return;
+    
     setIsAiAssessing(prev => ({ ...prev, [objId]: true }));
-    setTimeout(() => {
-      setAiAssessments(prev => ({
-        ...prev,
-        [objId]: `AI Agent nhận định: Objective "${objTitle.substring(0, 35)}..." đang vận hành TỐT (Tiến độ 90%). Dự báo cuối kỳ đạt 95% kế hoạch. Đề xuất: Tiếp tục nhân rộng quy trình chuẩn hóa kho asset 3D cho các BU khác.`
-      }));
+    try {
+      const res = await fetch("/api/ai/okr-strategy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "assess",
+          unitCode: filters.unitCode,
+          objectiveTitle: objTitle,
+          objectiveProgress: targetObj.progress,
+          keyResults: targetObj.keyResults,
+        })
+      });
+      const data = await res.json();
+      if (data.assessment) {
+        setAiAssessments(prev => ({ ...prev, [objId]: data.assessment }));
+      } else if (data.error) {
+        setAiAssessments(prev => ({ ...prev, [objId]: `❌ Lỗi AI: ${data.error}` }));
+      }
+    } catch (e: any) {
+      setAiAssessments(prev => ({ ...prev, [objId]: `❌ Không thể kết nối với AI Agent: ${e.message}` }));
+    } finally {
       setIsAiAssessing(prev => ({ ...prev, [objId]: false }));
-    }, 1200);
+    }
+  };
+
+  // Xử lý Gợi ý AI Planning thực tế qua API
+  const handleAiSuggestOkr = async () => {
+    setLoadingAiSuggest(true);
+    setAiSuggestError("");
+    setAiSuggestions([]);
+    setShowAiSuggestModal(true);
+    try {
+      const res = await fetch("/api/ai/okr-strategy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "suggest",
+          unitCode: filters.unitCode,
+        })
+      });
+      const data = await res.json();
+      if (data.suggestions && Array.isArray(data.suggestions)) {
+        setAiSuggestions(data.suggestions);
+      } else if (data.error) {
+        setAiSuggestError(data.error);
+      } else {
+        setAiSuggestError("Không nhận được định dạng gợi ý hợp lệ từ AI.");
+      }
+    } catch (e: any) {
+      setAiSuggestError(`Không thể kết nối với AI Agent: ${e.message}`);
+    } finally {
+      setLoadingAiSuggest(false);
+    }
+  };
+
+  // Áp dụng đề xuất OKR từ AI vào State
+  const handleApplyAiSuggestion = (suggestion: any) => {
+    const newObjId = "obj-ai-" + Date.now();
+    const newObj = {
+      id: newObjId,
+      title: suggestion.title,
+      weight: suggestion.weight || 50,
+      progress: 0,
+      aiForecastProgress: 0,
+      aiRiskLevel: "Thấp",
+      keyResults: (suggestion.keyResults || []).map((kr: any, kIdx: number) => {
+        const newKrId = `kr-ai-${Date.now()}-${kIdx}`;
+        return {
+          id: newKrId,
+          title: kr.title,
+          weight: kr.weight || Math.round(100 / suggestion.keyResults.length),
+          progress: 0,
+          priority: kr.priority || "Medium",
+          pic: kr.pic || "Trưởng phòng",
+          deadline: "2026-09-30",
+          notes: "",
+          actions: (kr.actions || []).map((act: any, aIdx: number) => {
+            return {
+              id: `act-ai-${Date.now()}-${kIdx}-${aIdx}`,
+              title: act.title,
+              pic: act.pic || "Nhân sự",
+              startDate: "2026-07-01",
+              endDate: "2026-09-30",
+              progress: 0,
+              status: "Chưa thực hiện",
+              notes: ""
+            };
+          })
+        };
+      })
+    };
+    setObjectives(prev => [...prev, newObj]);
+    setShowAiSuggestModal(false);
+    alert("✓ Đã áp dụng thành công mục tiêu do AI đề xuất vào danh sách thiết lập. Bạn hãy bấm 'Lưu phiên thiết lập' để đồng bộ!");
   };
 
   // -------------------------------------------------------------
@@ -1310,7 +1406,7 @@ export default function OkrStrategyPage() {
                 </h2>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => alert("🤖 AI Planning Agent: Đã quét chiến lược 2026. Đề xuất Objective: 'Nâng cao tỷ lệ tái sử dụng Assets 3D Wolfoo lên 60%'")}
+                    onClick={handleAiSuggestOkr}
                     className="bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600/30 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all"
                   >
                     <Bot size={14} /> Gợi ý AI Planning
@@ -1785,6 +1881,108 @@ export default function OkrStrategyPage() {
                 <button type="submit" className="bg-amber-500 text-slate-950 text-xs px-4 py-2 rounded font-extrabold">Thêm mới</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL GỢI Ý AI PLANNING */}
+      {showAiSuggestModal && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className={`w-full max-w-2xl rounded-2xl border p-6 max-h-[85vh] overflow-y-auto ${
+            theme === "light" 
+              ? "bg-white border-slate-200 text-slate-800" 
+              : "bg-slate-900 border-white/10 text-white"
+          }`}>
+            <div className="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+              <h3 className="font-extrabold text-sm flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                🤖 GỢI Ý MỤC TIÊU CHIẾN LƯỢC TỪ AI AGENT (SCONNECT SKILLSET)
+              </h3>
+              <button 
+                onClick={() => setShowAiSuggestModal(false)}
+                className="text-slate-400 hover:text-slate-200 text-lg font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {loadingAiSuggest ? (
+              <div className="py-12 flex flex-col items-center justify-center gap-3">
+                <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                <p className="text-xs font-semibold text-slate-400 animate-pulse">
+                  AI Agent đang phân tích tài liệu chiến lược Sconnect 2026...
+                </p>
+              </div>
+            ) : aiSuggestError ? (
+              <div className="p-4 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-lg text-xs space-y-2">
+                <p className="font-bold">Không thể gọi AI Agent:</p>
+                <p className="leading-relaxed">{aiSuggestError}</p>
+                <p className="text-[10px] text-slate-400 mt-2">
+                  Mẹo: Vui lòng đảm bảo bạn đã điền <code className="bg-slate-950 px-1.5 py-0.5 rounded text-rose-300">GEMINI_API_KEY</code> trong file <code className="bg-slate-950 px-1.5 py-0.5 rounded text-rose-300">.env</code> của dự án Next.js và khởi động lại server.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  AI Agent đã phân tích dữ liệu trụ cột chiến lược của đơn vị và đề xuất các mục tiêu (Objectives) cùng kết quả then chốt (Key Results) tối ưu dựa trên tài liệu định hướng Sconnect:
+                </p>
+
+                {aiSuggestions.map((suggestion, idx) => (
+                  <div key={idx} className={`p-4 rounded-xl border ${
+                    theme === "light" ? "bg-slate-50 border-slate-200" : "bg-slate-950/60 border-white/5"
+                  }`}>
+                    <div className="flex justify-between items-start gap-4 mb-3">
+                      <div className="flex-1">
+                        <span className="text-[9px] font-black uppercase bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">
+                          Đề xuất {idx + 1}
+                        </span>
+                        <h4 className="font-bold text-xs mt-1 text-slate-800 dark:text-white leading-relaxed">
+                          {suggestion.title}
+                        </h4>
+                      </div>
+                      <button
+                        onClick={() => handleApplyAiSuggestion(suggestion)}
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shrink-0 transition-all shadow-[0_2px_8px_rgba(16,185,129,0.3)]"
+                      >
+                        Áp dụng Mục tiêu này
+                      </button>
+                    </div>
+
+                    <div className="space-y-2 mt-4 pl-4 border-l border-purple-500/20">
+                      <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-wider block">
+                        Các Kết quả then chốt (KRs) & Hành động kèm theo:
+                      </span>
+                      {suggestion.keyResults?.map((kr: any, kIdx: number) => (
+                        <div key={kIdx} className="text-xs space-y-1">
+                          <p className={`font-bold flex items-start gap-1 ${theme === "light" ? "text-slate-700" : "text-slate-300"}`}>
+                            <span className="text-purple-400">↳</span>
+                            <span>{kr.title} (Độ ưu tiên: {kr.priority}, PIC: {kr.pic})</span>
+                          </p>
+                          <ul className="pl-6 space-y-1">
+                            {kr.actions?.map((act: any, aIdx: number) => (
+                              <li key={aIdx} className={`text-[11px] flex items-start gap-1 ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>
+                                <span className="text-emerald-500">•</span>
+                                <span>Action: {act.title} (PIC: {act.pic})</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <div className="flex justify-end gap-3 mt-6 border-t border-white/10 pt-4">
+              <button
+                onClick={() => setShowAiSuggestModal(false)}
+                className={`text-xs font-bold px-4 py-2 rounded-lg ${
+                  theme === "light" ? "bg-slate-100 hover:bg-slate-200 text-slate-700" : "bg-slate-800 hover:bg-slate-700 text-white"
+                }`}
+              >
+                Đóng
+              </button>
+            </div>
           </div>
         </div>
       )}
