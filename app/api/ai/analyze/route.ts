@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     }
 
     // Nếu có API key, gọi Gemini API thực tế
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
     const kpiSummaryText = kpis.map(k => 
       `- Chỉ số: ${k.indicatorCode} (${k.title || k.indicatorCode}), Kế hoạch: ${k.targetValue}, Thực tế: ${k.actualValue}, Trách nhiệm: ${k.pic}`

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       console.warn("Sconnect context file not found at:", contextPath);
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
     // 1. NGHIỆP VỤ AI PLANNING: GỢI Ý MỤC TIÊU THEO CHIẾN LƯỢC SCONNECT
     if (action === "suggest") {
