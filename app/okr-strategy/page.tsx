@@ -62,14 +62,137 @@ interface UnplannedAction {
   evaluation: string;
 }
 
+// Strategy data definitions
+interface StrategyItem {
+  id: string;
+  title: string;
+  justification: string;
+  initiatives?: string[];
+  description?: string[];
+  expectations: string;
+}
+
+const TCT_STRATEGIES: StrategyItem[] = [
+  {
+    id: "tct-1",
+    title: "PHƯƠNG ÁN 1: TẬP TRUNG NGUỒN LỰC VÀO BA LĨNH VỰC CỐT LÕI",
+    justification: "Tối ưu hóa việc sử dụng nguồn lực sau tái cấu trúc để tạo dòng tiền mạnh và bứt phá nhanh. Áp dụng Nguyên tắc 80/20 và Nguyên tắc Lãnh đạo \"Sử dụng Nguồn lực Hiệu quả\".",
+    initiatives: [
+      "Tập trung nguồn lực chính vào 3 dòng cốt lõi: Nội dung số (S2), Dịch vụ Nhà sáng tạo (S4), Dịch vụ Nhãn hàng/Truyền thông (S4).",
+      "Ưu tiên triển khai nền tảng AIVA sâu nhất tại các lĩnh vực này để tạo hình mẫu thành công."
+    ],
+    expectations: "Đóng góp >90% tổng doanh thu và lợi nhuận; Đạt mục tiêu tăng trưởng +80% với tỷ suất lợi nhuận +15%."
+  },
+  {
+    id: "tct-2",
+    title: "PHƯƠNG ÁN 2: ĐỘT PHÁ NỀN TẢNG CÔNG NGHỆ AIVA",
+    justification: "AIVA là nền tảng cốt lõi cho Scaling, giải quyết bài toán năng suất, chất lượng và tái thiết lợi thế cạnh tranh.",
+    initiatives: [
+      "AIVA-C (Creative & Production): Triển khai Siêu trợ lý AI toàn chuỗi giá trị sáng tạo và sản xuất (Kịch bản, Thiết kế, Diễn hoạt...). Hoàn thiện Platform Animation Studio Aiva, tự động hóa >80% tác vụ lặp lại.",
+      "AIVA-O (Organizational Operations): Hoàn thiện Digital COO, tự động hóa 100% Shared Services (TCKT, NS), tối ưu hóa Kinh doanh/Marketing.",
+      "AIVA-P (Personal & Development): Triển khai Siêu trợ lý cá nhân cho 100% Quản lý, xây dựng Hệ thống Đào tạo Thông minh."
+    ],
+    expectations: "Đạt mục tiêu tăng trưởng năng suất sản xuất 200%; Giảm thời gian chu kỳ quyết định <24h."
+  },
+  {
+    id: "tct-3",
+    title: "PHƯƠNG ÁN 3: CẢI TIẾN CƠ CHẾ THU NHẬP TẠO SỰ MINH BẠCH THÚC ĐẨY ĐỘNG LỰC LÀM VIỆC MẠNH MẼ",
+    justification: "Chuyển dịch từ trả lương theo Thời gian/Công sức sang bảo vệ thu nhập và Chia sẻ Giá trị Thực tế (Value-Sharing). Biến chi phí lương cố định thành Chi phí biến đổi (Variable Cost) tỷ lệ thuận với doanh thu, đảm bảo an toàn dòng tiền.",
+    description: [
+      "Chuẩn hóa mô hình Thu nhập 3P",
+      "Minh bạch 06 dòng thu nhập",
+      "Công cụ: \"Total Rewards Dashboard\" trên AIVA – Minh bạch hóa thu nhập theo thời gian thực."
+    ],
+    expectations: "Tăng năng suất 200%, giữ chân nhân tài hiệu suất cao và kiến tạo văn hóa sòng phẳng."
+  },
+  {
+    id: "tct-4",
+    title: "PHƯƠNG ÁN 4: GIỮ VỮNG BẢN SẮC VĂN HOÁ VÀ KIẾN TẠO VĂN HOÁ MỚI AI-FIRST",
+    justification: "Cân bằng \"Tư duy Nghịch lý\". Đảm bảo công nghệ phục vụ văn hóa và ngược lại. Đưa tư duy Dữ liệu và Quy trình thành bản năng của tổ chức.",
+    initiatives: [
+      "Tái khẳng định Giá trị Cốt lõi: Nhấn mạnh \"Kỷ luật\" và \"Sáng tạo\", \"Khát vọng phát triển\" là bản sắc văn hoá Sconnect.",
+      "Kiến tạo văn hóa AI-First: Tư duy \"Mặc định là Tự động\", Ra quyết định dựa trên Dữ liệu (Data-Driven), và Cộng hưởng Người-Máy (Synergy).",
+      "Thực thi 10 Nguyên tắc Lãnh đạo: Lãnh đạo làm gương về hiệu quả và đơn giản hóa."
+    ],
+    expectations: "Tỷ lệ chấp nhận và sử dụng thành thạo AIVA >90%; Duy trì môi trường hiệu suất cao."
+  },
+  {
+    id: "tct-5",
+    title: "PHƯƠNG ÁN 5: CHUẨN HÓA QUẢN TRỊ CHIẾN LƯỢC VÀ MỤC TIÊU",
+    justification: "Thực thi triệt để \"Làm TRÒN\". Đảm bảo sự kỷ luật trong thực thi thông qua các công cụ quản trị hiện đại, làm nền tảng cho AIVA vận hành.",
+    initiatives: [
+      "Quản trị Chiến lược: Bắt buộc sử dụng Project Charter cho mọi nhiệm vụ chiến lược. Vận hành nghiêm ngặt theo chu trình PDCA, giám sát bởi PMO và AIVA-O.",
+      "Quản trị Mục tiêu: Vận hành triệt để Triết lý Bánh xe Mục tiêu (Phân biệt rõ OKRs cho Làm LỚN và KPIs Cam kết cho Làm TRÒN).",
+      "Quản trị Hiệu suất Liên tục (CPM): Chuyển đổi Check-in thành các phiên huấn luyện."
+    ],
+    expectations: "Tỷ lệ hoàn thành Nhiệm vụ Chiến lược >90%; Văn hóa Trách nhiệm Giải trình được thực thi mạnh mẽ."
+  },
+  {
+    id: "tct-6",
+    title: "PHƯƠNG ÁN 6: TÁI ĐỊNH VỊ KHUNG NĂNG LỰC AI-NATIVE",
+    justification: "Chuẩn bị nguồn nhân lực cho mô hình vận hành mới. Chuyển dịch vai trò con người từ \"thực thi\" sang \"Đối tác với AI\" và \"sáng tạo cấp cao\".",
+    initiatives: [
+      "Tái thiết kế Khung Năng lực: Đưa \"Năng lực AI và Dữ liệu\" thành năng lực cốt lõi bắt buộc.",
+      "Chuyển dịch Vai trò: Cập nhật 100% JDs để phản ánh vai trò mới (Phân tích, Sáng tạo, Quản trị AI).",
+      "Tái đào tạo (Reskilling): Chương trình đào tạo bắt buộc về nền tảng AIVA cho 100% nhân sự (phối hợp SAMA)."
+    ],
+    expectations: "Mức độ Trưởng thành Cộng hưởng Người-AI đạt Level 3 (Partner); Kiến tạo đội ngũ nhân tài sẵn sàng cho tương lai."
+  }
+];
+
+const SCVN_STRATEGIES: StrategyItem[] = [
+  {
+    id: "scvn-1",
+    title: "PHƯƠNG ÁN 1: Tối Đa Hóa Hiệu Suất Doanh Thu Đa Nền Tảng",
+    justification: "Triển khai chiến lược đa nền tảng nhất quán để tối đa hóa khả năng tiếp cận thị trường và tăng trưởng doanh thu trên nhiều kênh kinh doanh mới.",
+    initiatives: [
+      "Thiết lập cơ chế phân phối sản phẩm đa kênh",
+      "Khảo sát và mở rộng thị trường nội dung số quốc tế"
+    ],
+    expectations: "Tối đa hóa khả năng tiếp cận thị trường và tăng trưởng doanh thu."
+  },
+  {
+    id: "scvn-2",
+    title: "PHƯƠNG ÁN 2: Hoàn Thiện Quy Trình & Công Nghệ AIVA",
+    justification: "Xây dựng và triển khai hệ thống quy trình sản xuất hoàn chỉnh, tích hợp công nghệ AIVA để tối ưu hóa hiệu suất và chất lượng sản phẩm.",
+    initiatives: [
+      "Ứng dụng Platform Animation Studio Aiva",
+      "Tự động hóa các tác vụ thiết kế và diễn hoạt lặp lại"
+    ],
+    expectations: "Tối ưu hóa hiệu suất sản xuất và nâng cao chất lượng sản phẩm."
+  },
+  {
+    id: "scvn-3",
+    title: "PHƯƠNG ÁN 3: Phái Sinh Sản Phẩm Kinh Doanh Mới",
+    justification: "Tận dụng nguồn tài sản nội dung có sẵn để phát triển các sản phẩm, dịch vụ mới và tạo ra các nguồn doanh thu bổ sung.",
+    initiatives: [
+      "Phát triển sản phẩm thương mại phái sinh từ IP Wolfoo",
+      "Đẩy mạnh các hoạt động hợp tác nhãn hàng thương mại"
+    ],
+    expectations: "Tạo ra các dòng doanh thu bổ sung vững chắc từ tài sản số."
+  },
+  {
+    id: "scvn-4",
+    title: "PHƯƠNG ÁN 4: Phát Triển Năng Lực Sáng Tạo AI",
+    justification: "Thúc đẩy năng lực chuyên về sáng tạo và sử dụng công cụ AI, đặt nền tảng cho sự đổi mới và tăng trưởng bền vững.",
+    initiatives: [
+      "Đào tạo kỹ năng làm việc cộng hưởng Người-AI",
+      "Xây dựng đội ngũ nhân sự sáng tạo AI-First thế hệ mới"
+    ],
+    expectations: "Đặt nền tảng cho sự đổi mới liên tục và tăng trưởng bền vững."
+  }
+];
+
 export default function OkrStrategyPage() {
-  const { filters, currentLoggedUser, setCurrentLoggedUser } = useApp();
+  const { filters, currentLoggedUser, setCurrentLoggedUser, theme } = useApp();
+  const isCorporateLevel = filters.unitCode === "TCT" || filters.unitCode === "SCVN";
   
   // Tab chính của Phân hệ 5
   const [activeTab, setActiveTab] = useState<"5.1" | "5.2" | "5.3" | "5.4">("5.2");
   
   // Tab phụ của Module 5.1
   const [tab51Sub, setTab51Sub] = useState<"pillars" | "setup">("setup");
+  const effectiveSubTab = isCorporateLevel ? tab51Sub : "setup";
 
   const [objectives, setObjectives] = useState<ObjectiveItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -802,46 +925,139 @@ export default function OkrStrategyPage() {
       {/* ========================================================================= */}
       {activeTab === "5.1" && (
         <div className="space-y-6">
-          <div className="flex gap-3 border-b border-white/10 pb-2">
-            <button
-              onClick={() => setTab51Sub("setup")}
-              className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${
-                tab51Sub === "setup" ? "bg-white text-slate-950" : "bg-slate-900 text-[var(--text-muted)]"
-              }`}
-            >
-              📋 Tab 2: Thiết lập OKRs Đơn vị
-            </button>
-            <button
-              onClick={() => setTab51Sub("pillars")}
-              className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${
-                tab51Sub === "pillars" ? "bg-white text-slate-950" : "bg-slate-900 text-[var(--text-muted)]"
-              }`}
-            >
-              🏛️ Tab 1: Trụ cột Chiến lược Sconnect 2026
-            </button>
-          </div>
+          {isCorporateLevel && (
+            <div className="flex gap-3 border-b border-white/10 pb-2">
+              <button
+                onClick={() => setTab51Sub("setup")}
+                className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${
+                  effectiveSubTab === "setup" ? "bg-white text-slate-950" : "bg-slate-900 text-[var(--text-muted)]"
+                }`}
+              >
+                📋 Tab 2: Thiết lập OKRs Đơn vị
+              </button>
+              <button
+                onClick={() => setTab51Sub("pillars")}
+                className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${
+                  effectiveSubTab === "pillars" ? "bg-white text-slate-950" : "bg-slate-900 text-[var(--text-muted)]"
+                }`}
+              >
+                🏛️ Tab 1: Trụ cột Chiến lược Sconnect 2026
+              </button>
+            </div>
+          )}
 
-          {tab51Sub === "pillars" ? (
-            <div className="glass-panel p-6 space-y-4">
-              <h3 className="text-sm font-black text-[var(--accent-cyan)] uppercase tracking-wider">
-                🏛️ TRỤ CỘT CHIẾN LƯỢC SCONNECT NĂM 2026 (READ-ONLY BỘ PHẬN)
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-slate-950/60 p-4 border border-white/10 rounded-xl">
-                  <span className="text-[10px] font-black text-amber-400 uppercase">Trụ cột 1</span>
-                  <h4 className="font-bold text-xs text-white mt-1">Chuẩn hóa & Tự động hóa quy trình AIVA-AI</h4>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-2">Đảm bảo 100% dòng sản phẩm ứng dụng quy trình AIVA Standard để giảm 40% chi phí vận hành.</p>
+          {effectiveSubTab === "pillars" ? (
+            <div className="glass-panel p-6 space-y-6">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/10 pb-4 gap-4">
+                <div>
+                  <h3 className="text-base font-black text-emerald-500 uppercase tracking-wider flex items-center gap-2">
+                    🏛️ {filters.unitCode === "TCT" ? "CHIẾN LƯỢC NĂM 2026 TỔNG CÔNG TY (TCT)" : "CHIẾN LƯỢC NĂM 2026 BU SCONNECT VIỆT NAM (SCVN)"}
+                  </h3>
+                  <p className="text-xs text-[var(--text-muted)] font-semibold mt-1">
+                    Chương trình hành động và định hướng chiến lược trọng tâm năm 2026
+                  </p>
                 </div>
-                <div className="bg-slate-950/60 p-4 border border-white/10 rounded-xl">
-                  <span className="text-[10px] font-black text-[var(--accent-cyan)] uppercase">Trụ cột 2</span>
-                  <h4 className="font-bold text-xs text-white mt-1">Đột phá doanh thu từ nội dung mới</h4>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-2">Mở rộng kênh Tiktok Beta, Quỹ IP và đối tác thương mại để đạt tăng trưởng 150%.</p>
+                <div className="px-3 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-extrabold tracking-wide">
+                  ĐƠN VỊ: {filters.unitCode}
                 </div>
-                <div className="bg-slate-950/60 p-4 border border-white/10 rounded-xl">
-                  <span className="text-[10px] font-black text-emerald-400 uppercase">Trụ cột 3</span>
-                  <h4 className="font-bold text-xs text-white mt-1">Phát triển nguồn lực & Văn hóa tổ chức</h4>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-2">Nâng cao năng lực nhân sự, thực thi phản tỉnh hàng tuần và tuân thủ kỷ luật kỷ cương.</p>
-                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {(filters.unitCode === "TCT" ? TCT_STRATEGIES : SCVN_STRATEGIES).map((strategy, idx) => (
+                  <div 
+                    key={strategy.id} 
+                    className={`flex flex-col justify-between rounded-2xl border transition-all duration-300 p-5 ${
+                      theme === "light"
+                        ? "bg-white border-emerald-100 shadow-sm hover:shadow-md hover:border-emerald-300"
+                        : "bg-slate-900/60 border-white/5 hover:border-emerald-500/30 shadow-inner"
+                    }`}
+                  >
+                    <div className="space-y-4">
+                      {/* Badge & Number */}
+                      <div className="flex items-center justify-between">
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
+                          theme === "light" ? "bg-emerald-50 text-emerald-700" : "bg-emerald-500/10 text-emerald-400"
+                        }`}>
+                          Phương án {idx + 1}
+                        </span>
+                        <Target size={16} className="text-emerald-500 opacity-60" />
+                      </div>
+
+                      {/* Title */}
+                      <h4 className={`font-black text-sm leading-snug ${
+                        theme === "light" ? "text-slate-900" : "text-white"
+                      }`}>
+                        {strategy.title.replace(/^PHƯƠNG ÁN \d+:\s*/i, "")}
+                      </h4>
+
+                      {/* Strategic Justification */}
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">
+                          Giải trình Chiến lược
+                        </span>
+                        <p className={`text-xs leading-relaxed italic ${
+                          theme === "light" ? "text-slate-600" : "text-slate-300"
+                        }`}>
+                          "{strategy.justification}"
+                        </p>
+                      </div>
+
+                      {/* Key Initiatives */}
+                      {strategy.initiatives && strategy.initiatives.length > 0 && (
+                        <div className="space-y-2">
+                          <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">
+                            Sáng kiến Trọng tâm
+                          </span>
+                          <ul className="space-y-1.5">
+                            {strategy.initiatives.map((init, i) => (
+                              <li key={i} className="flex items-start gap-2 text-xs">
+                                <span className="text-emerald-500 mt-1 shrink-0">•</span>
+                                <span className={theme === "light" ? "text-slate-700" : "text-slate-300"}>
+                                  {init}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Description (Custom structured data like P3) */}
+                      {strategy.description && strategy.description.length > 0 && (
+                        <div className="space-y-1.5">
+                          <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">
+                            Mô tả chi tiết
+                          </span>
+                          <ul className="space-y-1">
+                            {strategy.description.map((desc, i) => (
+                              <li key={i} className="flex items-start gap-2 text-xs">
+                                <span className="text-emerald-500 mt-1 shrink-0">✓</span>
+                                <span className={theme === "light" ? "text-slate-700" : "text-slate-300"}>
+                                  {desc}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Expected Results */}
+                    {strategy.expectations && (
+                      <div className={`mt-5 p-3 rounded-xl border ${
+                        theme === "light" 
+                          ? "bg-emerald-50/50 border-emerald-100 text-slate-800" 
+                          : "bg-emerald-500/5 border-emerald-500/10 text-slate-300"
+                      }`}>
+                        <span className="text-[9px] font-extrabold text-emerald-500 uppercase tracking-wider block mb-1">
+                          🎯 Kỳ vọng Kết quả
+                        </span>
+                        <p className="text-xs leading-relaxed font-semibold">
+                          {strategy.expectations}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           ) : (
