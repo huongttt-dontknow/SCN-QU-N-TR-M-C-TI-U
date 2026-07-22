@@ -571,7 +571,7 @@ export default function OkrStrategyPage() {
   );
 
   return (
-    <div className="flex flex-col gap-4 relative text-white">
+    <div className={`flex flex-col gap-4 relative ${theme === "light" ? "text-slate-900" : "text-white"}`}>
       {/* HEADER PHÂN HỆ 5 */}
       <div className="glass-panel p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -1189,7 +1189,9 @@ export default function OkrStrategyPage() {
       {activeTab === "5.3" && (
         <div className="glass-panel p-6 space-y-6">
           <div>
-            <h2 className="text-sm font-black text-[var(--accent-pink)] uppercase tracking-wider flex items-center gap-2">
+            <h2 className={`text-sm font-black uppercase tracking-wider flex items-center gap-2 ${
+              theme === "light" ? "text-pink-700" : "text-[var(--accent-pink)]"
+            }`}>
               🧠 MODULE 5.3: AI REVIEW & PHẢN TỈNH HÀNG TUẦN (REFLECTION)
             </h2>
             <p className="text-xs text-[var(--text-muted)] mt-1">
@@ -1198,34 +1200,57 @@ export default function OkrStrategyPage() {
           </div>
 
           {/* 4 BƯỚC PHẢN TỈNH */}
-          <div className="grid grid-cols-4 gap-2 border-b border-white/10 pb-4">
+          <div className={`grid grid-cols-4 gap-2 border-b pb-4 ${
+            theme === "light" ? "border-slate-200" : "border-white/10"
+          }`}>
             {["1. AI Phân tích kỳ trước", "2. Dẫn dắt Phản tỉnh", "3. 5 Whys đào sâu", "4. Chốt Action kỳ tới"].map((st, idx) => (
-              <button
+              <div
                 key={idx}
+                role="button"
                 onClick={() => setReflectionStep(idx + 1)}
-                className={`py-2 px-3 rounded-lg text-xs font-bold text-center transition-all ${
+                className={`py-2 px-3 rounded-lg text-xs font-extrabold text-center transition-all cursor-pointer select-none border ${
                   reflectionStep === idx + 1
-                    ? "bg-[var(--accent-pink)] text-white font-extrabold shadow-[0_0_10px_rgba(255,75,114,0.4)]"
-                    : "bg-slate-900/60 text-[var(--text-muted)]"
+                    ? "bg-[var(--accent-pink)] text-white shadow-[0_0_10px_rgba(255,75,114,0.4)] border-transparent"
+                    : theme === "light"
+                      ? "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 hover:text-slate-800"
+                      : "bg-slate-900/60 text-[var(--text-muted)] border-white/5 hover:bg-slate-800"
                 }`}
               >
                 {st}
-              </button>
+              </div>
             ))}
           </div>
 
           {/* BƯỚC 1 & 2 & 3 & 4 CONTENT */}
           {reflectionStep === 1 && (
             <div className="space-y-4">
-              <h3 className="text-xs font-extrabold text-white uppercase">📌 BƯỚC 1: AI TỰ ĐỘNG PHÂN TÍCH KẾT QUẢ KỲ TRƯỚC</h3>
+              <h3 className={`text-xs font-extrabold uppercase ${
+                theme === "light" ? "text-slate-800" : "text-white"
+              }`}>📌 BƯỚC 1: AI TỰ ĐỘNG PHÂN TÍCH KẾT QUẢ KỲ TRƯỚC</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-rose-500/10 border border-rose-500/30 p-4 rounded-xl">
-                  <span className="text-[10px] font-black text-rose-400 uppercase">KR Chậm tiến độ (Cần xử lý)</span>
-                  <p className="text-xs font-bold text-white mt-1">KR: Mở rộng kênh Tiktok Beta (Đạt 10% / KH 50%)</p>
+                <div className={`p-4 rounded-xl border ${
+                  theme === "light"
+                    ? "bg-rose-50 border-rose-200/80 shadow-sm"
+                    : "bg-rose-500/10 border border-rose-500/30"
+                }`}>
+                  <span className={`text-[10px] font-black uppercase ${
+                    theme === "light" ? "text-rose-700" : "text-rose-400"
+                  }`}>KR Chậm tiến độ (Cần xử lý)</span>
+                  <p className={`text-xs font-bold mt-1 ${
+                    theme === "light" ? "text-slate-900" : "text-white"
+                  }`}>KR: Mở rộng kênh Tiktok Beta (Đạt 10% / KH 50%)</p>
                 </div>
-                <div className="bg-emerald-500/10 border border-emerald-500/30 p-4 rounded-xl">
-                  <span className="text-[10px] font-black text-emerald-400 uppercase">KR Tiến triển tốt</span>
-                  <p className="text-xs font-bold text-white mt-1">KR: Tái sử dụng assets Wolfoo 3D (Đạt 80% / KH 60%)</p>
+                <div className={`p-4 rounded-xl border ${
+                  theme === "light"
+                    ? "bg-emerald-50 border-emerald-200/80 shadow-sm"
+                    : "bg-emerald-500/10 border border-emerald-500/30"
+                }`}>
+                  <span className={`text-[10px] font-black uppercase ${
+                    theme === "light" ? "text-emerald-700" : "text-emerald-400"
+                  }`}>KR Tiến triển tốt</span>
+                  <p className={`text-xs font-bold mt-1 ${
+                    theme === "light" ? "text-slate-900" : "text-white"
+                  }`}>KR: Tái sử dụng assets Wolfoo 3D (Đạt 80% / KH 60%)</p>
                 </div>
               </div>
             </div>
@@ -1233,12 +1258,22 @@ export default function OkrStrategyPage() {
 
           {reflectionStep === 2 || reflectionStep === 3 ? (
             <div className="space-y-4">
-              <h3 className="text-xs font-extrabold text-white uppercase">💬 BƯỚC 2 & 3: KHẢO SÁT PHẢN TỈNH & 5 WHYS CHAT</h3>
-              <div className="bg-slate-950 border border-white/10 rounded-xl p-4 h-[240px] overflow-y-auto space-y-3">
+              <h3 className={`text-xs font-extrabold uppercase ${
+                theme === "light" ? "text-slate-800" : "text-white"
+              }`}>💬 BƯỚC 2 & 3: KHẢO SÁT PHẢN TỈNH & 5 WHYS CHAT</h3>
+              <div className={`border rounded-xl p-4 h-[240px] overflow-y-auto space-y-3 ${
+                theme === "light"
+                  ? "bg-slate-50 border-slate-200"
+                  : "bg-slate-950 border border-white/10"
+              }`}>
                 {whysChat.map((msg, i) => (
                   <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                     <div className={`p-3 rounded-xl max-w-[80%] text-xs ${
-                      msg.role === "user" ? "bg-[var(--accent-purple)] text-white" : "bg-slate-900 border border-white/10 text-slate-200"
+                      msg.role === "user"
+                        ? "bg-[var(--accent-purple)] text-white"
+                        : theme === "light"
+                          ? "bg-white border border-slate-200 text-slate-800 shadow-sm font-semibold"
+                          : "bg-slate-900 border border-white/10 text-slate-200"
                     }`}>
                       {msg.text}
                     </div>
@@ -1252,7 +1287,11 @@ export default function OkrStrategyPage() {
                   value={whyInput}
                   onChange={(e) => setWhyInput(e.target.value)}
                   placeholder="Trả lời AI hoặc nhập lý do nguyên nhân tại sao..."
-                  className="flex-1 bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[var(--accent-pink)]"
+                  className={`flex-1 rounded-lg px-3 py-2 text-xs focus:outline-none transition-all ${
+                    theme === "light"
+                      ? "bg-white border border-slate-200 text-slate-900 focus:border-purple-500 focus:ring-1 focus:ring-purple-200"
+                      : "bg-slate-950 border border-white/10 text-white focus:border-[var(--accent-pink)]"
+                  }`}
                 />
                 <button type="submit" className="bg-[var(--accent-pink)] text-white font-extrabold text-xs px-4 py-2 rounded-lg">
                   Gửi AI
@@ -1263,15 +1302,25 @@ export default function OkrStrategyPage() {
 
           {reflectionStep === 4 && (
             <div className="space-y-4">
-              <h3 className="text-xs font-extrabold text-white uppercase">⚡ BƯỚC 4: KẾ HOẠCH HÀNH ĐỘNG MỚI ĐÃ ĐƯỢC DUYỆT</h3>
-              <div className="bg-slate-950/60 p-4 border border-emerald-500/30 rounded-xl flex justify-between items-center">
+              <h3 className={`text-xs font-extrabold uppercase ${
+                theme === "light" ? "text-slate-800" : "text-white"
+              }`}>⚡ BƯỚC 4: KẾ HOẠCH HÀNH ĐỘNG MỚI ĐÃ ĐƯỢC DUYỆT</h3>
+              <div className={`p-4 border rounded-xl flex justify-between items-center transition-all ${
+                theme === "light"
+                  ? "bg-emerald-50/50 border-emerald-200/80 shadow-sm"
+                  : "bg-slate-950/60 border border-emerald-500/30"
+              }`}>
                 <div>
-                  <h4 className="font-extrabold text-xs text-white">Action: Setup tự động hóa khâu đăng clip lên 5 kênh Tiktok Beta mới</h4>
-                  <span className="text-[10px] text-[var(--text-muted)]">Nguồn sinh: AI Review | PIC: Nguyễn Minh Trí</span>
+                  <h4 className={`font-extrabold text-xs ${
+                    theme === "light" ? "text-slate-900" : "text-white"
+                  }`}>Action: Setup tự động hóa khâu đăng clip lên 5 kênh Tiktok Beta mới</h4>
+                  <span className={`text-[10px] ${
+                    theme === "light" ? "text-slate-500" : "text-[var(--text-muted)]"
+                  }`}>Nguồn sinh: AI Review | PIC: Nguyễn Minh Trí</span>
                 </div>
                 <button
                   onClick={() => alert("✓ Đã đồng bộ thành công Action này sang Module 5.2!")}
-                  className="bg-emerald-500 text-slate-950 font-black text-xs px-3 py-1.5 rounded-lg"
+                  className="bg-emerald-500 text-slate-950 font-black text-xs px-3 py-1.5 rounded-lg hover:bg-emerald-600 transition-all"
                 >
                   ✓ Bổ sung vào Module 5.2
                 </button>
@@ -1287,7 +1336,9 @@ export default function OkrStrategyPage() {
       {activeTab === "5.4" && (
         <div className="glass-panel p-6 space-y-6">
           <div>
-            <h2 className="text-sm font-black text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+            <h2 className={`text-sm font-black uppercase tracking-wider flex items-center gap-2 ${
+              theme === "light" ? "text-emerald-700" : "text-emerald-400"
+            }`}>
               🌳 MODULE 5.4: SƠ ĐỒ LIÊN KẾT CHIẾN LƯỢC (ALIGNMENT TREE)
             </h2>
             <p className="text-xs text-[var(--text-muted)] mt-1">
@@ -1297,27 +1348,49 @@ export default function OkrStrategyPage() {
 
           {/* CÂY LIÊN KẾT TRỰC QUAN */}
           <div className="space-y-4">
-            <div className="bg-slate-950/80 border border-emerald-500/40 p-4 rounded-xl">
-              <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-black px-2 py-0.5 rounded uppercase">
+            <div className={`p-4 rounded-xl border transition-all ${
+              theme === "light"
+                ? "bg-emerald-50/40 border-emerald-200/80 shadow-sm"
+                : "bg-slate-950/80 border-emerald-500/40"
+            }`}>
+              <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider ${
+                theme === "light"
+                  ? "bg-emerald-100 text-emerald-800"
+                  : "bg-emerald-500/10 text-emerald-400"
+              }`}>
                 MỤC TIÊU CÔNG TY SCONNECT 2026
               </span>
-              <h3 className="font-extrabold text-sm text-white mt-1">
+              <h3 className={`font-black text-sm mt-1.5 ${
+                theme === "light" ? "text-emerald-950" : "text-white"
+              }`}>
                 🎯 Trụ cột 1: Tối ưu quy trình AIVA-AI & Nâng cao hiệu suất sản xuất ND 2D/3D
               </h3>
 
               <div className="mt-4 pl-6 border-l-2 border-emerald-500/30 space-y-3">
-                <div className="bg-slate-900/80 p-3 rounded-lg border border-white/10">
-                  <span className="text-[10px] font-bold text-[var(--accent-cyan)] uppercase">Đơn vị: Wolfoo (WO)</span>
-                  <h4 className="font-extrabold text-xs text-white mt-0.5">
+                <div className={`p-3 rounded-xl border transition-all ${
+                  theme === "light"
+                    ? "bg-white border-slate-200 shadow-sm"
+                    : "bg-slate-900/80 border-white/10"
+                }`}>
+                  <span className={`text-[10px] font-bold uppercase ${
+                    theme === "light" ? "text-indigo-700" : "text-[var(--accent-cyan)]"
+                  }`}>
+                    Đơn vị: Wolfoo (WO)
+                  </span>
+                  <h4 className={`font-extrabold text-xs mt-0.5 ${
+                    theme === "light" ? "text-slate-900" : "text-white"
+                  }`}>
                     O: Tối ưu hóa chi phí vận hành hệ thống sản xuất và nâng tỷ lệ tái sử dụng assets Wolfoo (Trọng số 35%)
                   </h4>
 
-                  <div className="mt-2 pl-4 border-l border-white/10 space-y-2">
-                    <div className="text-[11px] text-slate-300">
-                      ↳ <span className="font-bold text-white">KR1:</span> Tái sử dụng trên 60% assets trong sản xuất phim mới (HIGH)
+                  <div className={`mt-2 pl-4 border-l space-y-2 ${
+                    theme === "light" ? "border-slate-200" : "border-white/10"
+                  }`}>
+                    <div className={theme === "light" ? "text-[11px] text-slate-700 font-medium" : "text-[11px] text-slate-300"}>
+                      ↳ <span className={theme === "light" ? "font-bold text-slate-900" : "font-bold text-white"}>KR1:</span> Tái sử dụng trên 60% assets trong sản xuất phim mới (HIGH)
                     </div>
-                    <div className="text-[11px] text-slate-300">
-                      ↳ <span className="font-bold text-white">KR2:</span> Giảm hao phí render lỗi xuống dưới 5% (MEDIUM)
+                    <div className={theme === "light" ? "text-[11px] text-slate-700 font-medium" : "text-[11px] text-slate-300"}>
+                      ↳ <span className={theme === "light" ? "font-bold text-slate-900" : "font-bold text-white"}>KR2:</span> Giảm hao phí render lỗi xuống dưới 5% (MEDIUM)
                     </div>
                   </div>
                 </div>
