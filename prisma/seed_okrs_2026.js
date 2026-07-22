@@ -345,6 +345,16 @@ async function main() {
   });
   console.log("Cleanup finished.");
 
+  const leaderMapping = {
+    Wofloo: "Lê Đăng Khoa",
+    AS: "Trịnh Quốc Thịnh",
+    NDTH: "Lò Quế Hằng",
+    Lego: "Lê Quỳnh Nga",
+    DA01: "Trần Thị Hồng",
+    SCS: "Nguyễn Ánh Tùng",
+    Music: "Vũ Trung Đức"
+  };
+
   // Iterate over periods and units to seed
   for (const period of periods) {
     console.log(`Seeding period: ${period}...`);
@@ -363,7 +373,7 @@ async function main() {
                 weight: kr.weight,
                 progress: 0,
                 priority: "Medium",
-                pic: kr.pic,
+                pic: leaderMapping[unitCode] || kr.pic,
                 deadline: new Date("2026-12-31")
               }))
             }
