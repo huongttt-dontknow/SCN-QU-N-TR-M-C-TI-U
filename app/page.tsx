@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import FiltersHeader from "@/components/FiltersHeader";
 import ObjectiveRadarChart from "@/components/ObjectiveRadarChart";
+import MonthlyRevenueProgressChart from "@/components/MonthlyRevenueProgressChart";
 import RevenueDonutChart from "@/components/RevenueDonutChart";
 import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
 import { getMasterKpiRecord, MASTER_KPI_DATA } from "@/lib/kpiMasterData";
@@ -489,8 +490,23 @@ export default function DashboardPage() {
       {/* 2. KHU VỰC HÀNG TRÊN (TOP SECTION - BỐ CỤC 6-6 CÂN ĐỐI) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        {/* KHỐI BÁNH XE MỤC TIÊU & BIẾN ĐỘNG (COL-SPAN-6) - Chỉ hiển thị khi KHÔNG phải báo cáo theo tuần */}
-        {!isWeeklyReport && (
+        {/* KHỐI BÊN TRÁI: TIẾN ĐỘ THÁNG (KHI LÀ TUẦN) HOẶC BÁNH XE MỤC TIÊU (KHI LÀ THÁNG/QUÝ/NĂM) */}
+        {isWeeklyReport ? (
+          <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
+            <div className="flex-1 flex flex-col justify-between">
+              <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
+                📈 TIẾN ĐỘ HOÀN THÀNH DOANH THU THÁNG {filters.month}/2026 (%)
+              </h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1.5 font-semibold">
+                Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng
+              </p>
+              <MonthlyRevenueProgressChart />
+            </div>
+            <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
+              Biểu đồ thể hiện mức độ hoàn thành tiến độ doanh thu của SCVN và các đơn vị thành viên
+            </div>
+          </div>
+        ) : (
           <div className="lg:col-span-6 glass-panel p-5 flex flex-col md:flex-row gap-5 min-h-[380px]">
             {/* Radar Chart */}
             <div className="flex-1 flex flex-col justify-between">
@@ -540,8 +556,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* CỤM KPI CARDS (COL-SPAN-6 khi có Radar, COL-SPAN-12 khi ẩn Radar) */}
-        <div className={`lg:col-span-${isWeeklyReport ? "12" : "6"} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${isWeeklyReport ? "4" : "2"} gap-4`}>
+        {/* CỤM KPI CARDS (COL-SPAN-6 CỐ ĐỊNH CÂN ĐỐI) */}
+        <div className="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           
           {/* Card 1: Doanh thu & Tiến độ hoàn thành */}
           <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[175px]">
