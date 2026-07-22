@@ -63,6 +63,34 @@ export default function DashboardPage() {
     setTimeout(() => setIsSaved(false), 2000);
   };
 
+  const getUnitName = (code: string) => {
+    const found = [
+      { code: "SCVN", name: "SCVN" },
+      { code: "TCT", name: "TCT" },
+      { code: "Wofloo", name: "Wolfoo" },
+      { code: "Lego", name: "Lego" },
+      { code: "AS", name: "AS" },
+      { code: "DA01", name: "DA01" },
+      { code: "Music", name: "Music" },
+      { code: "NDTH", name: "NDTH" },
+      { code: "CR", name: "Creative" },
+      { code: "CN", name: "CNGP" },
+      { code: "SCS", name: "Studio" },
+    ].find(u => u.code === code);
+    return found ? found.name : code;
+  };
+
+  const getSelectedUnitRevenuePeriods = () => {
+    const u = MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
+    let kpiItem = u?.["VM1-I02.01"];
+    if (filters.unitCode === "TCT") {
+      kpiItem = u?.["TM1-I02.01"];
+    } else if (!kpiItem) {
+      kpiItem = u?.["2.1"] || Object.values(u || {}).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
+    }
+    return kpiItem?.periods || {};
+  };
+
   const periodKey = getPeriodKey();
 
   // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị THỰC TẾ từ lib/kpiMasterData.ts
@@ -124,6 +152,72 @@ export default function DashboardPage() {
   const scvnDisciplineRec = getMasterKpiRecord(filters.unitCode, "TM7-I01.01", periodKey);
   const scvnRoiRec = getMasterKpiRecord(filters.unitCode, "VM1-I01.01", periodKey);
 
+  const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
+
+  // Calculations for Card 3 & 4 when isParentUnit is false:
+  let monthlyCompletionPct = 0;
+  let forecastPct = 0;
+  let quarterCompletionPct = 0;
+  let yearCompletionPct = 0;
+  let currentQuarterNum = 1;
+
+  if (!isParentUnit) {
+    const currentM = Number(filters.month) || 7;
+    const currentW = Number(filters.week) || 1;
+
+    // Monthly Target & Accumulated Actual (for weekly report)
+    const mTargetRec = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${currentM}`);
+    const monthlyTarget = mTargetRec?.target || 0;
+
+    let accumulatedActual = 0;
+    const uPeriods = getSelectedUnitRevenuePeriods();
+    for (let w = 1; w <= currentW; w++) {
+      const wKey = `weekly_${currentM}_${w}`;
+      accumulatedActual += uPeriods[wKey]?.actual || 0;
+    }
+
+    if (mTargetRec?.pct !== undefined && mTargetRec.pct !== null && mTargetRec.pct > 0) {
+      monthlyCompletionPct = Math.round(mTargetRec.pct * 100);
+    } else if (monthlyTarget > 0) {
+      monthlyCompletionPct = Math.round((accumulatedActual / monthlyTarget) * 100);
+    }
+
+    // Forecast Calculation
+    let weeksInMonth = 4;
+    const refPeriods = MASTER_KPI_DATA["SCVN"]?.["VM1-I02.01"]?.periods || {};
+    if (refPeriods[`weekly_${currentM}_5`]) {
+      weeksInMonth = 5;
+    }
+    const forecastActual = currentW > 0 ? (accumulatedActual / currentW) * weeksInMonth : 0;
+    forecastPct = monthlyTarget > 0 ? Math.round((forecastActual / monthlyTarget) * 100) : 0;
+
+    // Quarterly completion calculation (for monthly report)
+    currentQuarterNum = Math.ceil(currentM / 3);
+    const qRec = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", `quarterly_${currentQuarterNum}`);
+    const qTarget = qRec?.target || 0;
+    const qActual = qRec?.actual || 0;
+
+    let sumMonthAct = 0;
+    const startM = (currentQuarterNum - 1) * 3 + 1;
+    for (let mIdx = startM; mIdx < startM + 3; mIdx++) {
+      let mAct = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${mIdx}`)?.actual || 0;
+      if (mAct === 0) {
+        for (let w = 1; w <= 5; w++) {
+          mAct += uPeriods[`weekly_${mIdx}_${w}`]?.actual || 0;
+        }
+      }
+      sumMonthAct += mAct;
+    }
+    const qActualReal = qActual > 0 ? qActual : sumMonthAct;
+    quarterCompletionPct = qTarget > 0 ? Math.round((qActualReal / qTarget) * 100) : (qRec?.pct ? Math.round(qRec.pct * 100) : 0);
+
+    // Yearly completion calculation
+    const yRec = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", "yearly_2026");
+    const yTarget = yRec?.target || 0;
+    const yActual = yRec?.actual || 0;
+    yearCompletionPct = yTarget > 0 ? Math.round((yActual / yTarget) * 100) : (yRec?.pct ? Math.round(yRec.pct * 100) : 0);
+  }
+
   // Card 1: Doanh thu & Tiến độ hoàn thành SCVN
   const revTargetVal = scvnRevRec?.target ? (scvnRevRec.target >= 1e9 ? `${(scvnRevRec.target / 1e9).toFixed(2)} Tỷ VNĐ` : `${(scvnRevRec.target / 1e6).toFixed(0)} Triệu VNĐ`) : "7.98 Tỷ VNĐ";
   const revActualVal = scvnRevRec?.actual ? (scvnRevRec.actual >= 1e9 ? `${(scvnRevRec.actual / 1e9).toFixed(2)} Tỷ VNĐ` : `${(scvnRevRec.actual / 1e6).toFixed(0)} Triệu VNĐ`) : "3.76 Tỷ VNĐ";
@@ -155,6 +249,141 @@ export default function DashboardPage() {
 
   const isWeeklyReport = filters.periodType === "weekly";
   const prevWeeklyKey = getPrevWeeklyPeriodKey(filters.month, filters.week);
+
+  const unitPrevWeeklyRec = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", prevWeeklyKey);
+  const unitCurrWeeklyAct = scvnRevRec?.actual || 0;
+  const unitPrevWeeklyAct = unitPrevWeeklyRec?.actual || 0;
+  const unitWeeklyDiff = unitCurrWeeklyAct - unitPrevWeeklyAct;
+  const unitWeeklyPct = unitPrevWeeklyAct > 0 ? Math.round((unitWeeklyDiff / unitPrevWeeklyAct) * 100) : (unitCurrWeeklyAct > 0 ? 100 : 0);
+
+  // Helper function to build weekly trend data for charts
+  const getWeeklyTrendData = () => {
+    const m = Number(filters.month) || 7;
+    const data = [];
+    const uPeriods = getSelectedUnitRevenuePeriods();
+    for (let w = 1; w <= 5; w++) {
+      const wKey = `weekly_${m}_${w}`;
+      
+      // Check if this week has any data for the selected unit
+      let hasWeek = false;
+      const u = MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
+      for (const k in u) {
+        if (u[k].periods?.[wKey]) {
+          hasWeek = true;
+          break;
+        }
+      }
+      if (!hasWeek) continue;
+
+      const revAct = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", wKey)?.actual ?? 0;
+      const revTgt = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", wKey)?.target ?? 0;
+      
+      // Get traffic actuals
+      let trafAct = 0;
+      const uDict = MASTER_KPI_DATA[filters.unitCode] || {};
+      for (const k in uDict) {
+        const v = uDict[k];
+        const t = (v.title || "").toUpperCase();
+        const uStr = (v.unit || "").toUpperCase();
+        const kStr = k.toUpperCase();
+        if (
+          (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+          !uStr.includes("CTR") &&
+          !uStr.includes("TB/1")
+        ) {
+          const pData = v.periods?.[wKey];
+          if (pData && pData.actual !== undefined) {
+            trafAct = pData.actual;
+            break;
+          }
+        }
+      }
+      
+      // Get traffic target
+      let trafTgt = 0;
+      for (const k in uDict) {
+        const v = uDict[k];
+        const t = (v.title || "").toUpperCase();
+        const uStr = (v.unit || "").toUpperCase();
+        const kStr = k.toUpperCase();
+        if (
+          (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+          !uStr.includes("CTR") &&
+          !uStr.includes("TB/1")
+        ) {
+          const pData = v.periods?.[wKey];
+          if (pData && pData.target !== undefined) {
+            trafTgt = pData.target;
+            break;
+          }
+        }
+      }
+
+      data.push({
+        name: `Tuần ${w}`,
+        revenue: Math.round(revAct / 1e6), // in Millions
+        revenueTarget: Math.round(revTgt / 1e6),
+        traffic: Number((trafAct / 1e6).toFixed(2)), // in Millions views
+        trafficTarget: Number((trafTgt / 1e6).toFixed(2)),
+      });
+    }
+    return data;
+  };
+
+  const weeklyTrendData = getWeeklyTrendData();
+
+  // Helper function to build monthly trend data for child units (from Month 1 to Month 12)
+  const getMonthlyTrendData = () => {
+    const data = [];
+    for (let m = 1; m <= 12; m++) {
+      const mKey = `monthly_${m}`;
+      
+      // Check if this month has any data for the selected unit
+      let hasMonth = false;
+      const u = MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
+      for (const k in u) {
+        if (u[k].periods?.[mKey]) {
+          hasMonth = true;
+          break;
+        }
+      }
+      if (!hasMonth) continue;
+
+      const revAct = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", mKey)?.actual ?? 0;
+      const revTgt = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", mKey)?.target ?? 0;
+      
+      // Get traffic actuals
+      let trafAct = 0;
+      const uDict = MASTER_KPI_DATA[filters.unitCode] || {};
+      for (const k in uDict) {
+        const v = uDict[k];
+        const t = (v.title || "").toUpperCase();
+        const uStr = (v.unit || "").toUpperCase();
+        const kStr = k.toUpperCase();
+        if (
+          (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+          !uStr.includes("CTR") &&
+          !uStr.includes("TB/1")
+        ) {
+          const pData = v.periods?.[mKey];
+          if (pData && pData.actual !== undefined) {
+            trafAct = pData.actual;
+            break;
+          }
+        }
+      }
+
+      data.push({
+        name: `Th ${m}`,
+        revenue: Math.round(revAct / 1e6), // in Millions
+        revenueTarget: Math.round(revTgt / 1e6),
+        traffic: Number((trafAct / 1e6).toFixed(2)), // in Millions views
+      });
+    }
+    return data;
+  };
+
+  const monthlyTrendData = getMonthlyTrendData();
 
   const weeklyChanges = unitList.map(u => {
     const currRec = getMasterKpiRecord(u.code, "VM1-I02.01", periodKey);
@@ -482,17 +711,6 @@ export default function DashboardPage() {
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
   // Tính toán so sánh Doanh thu đơn vị kỳ liền trước & cùng kỳ tháng trước (cho Card 1) - Tăng trưởng của doanh thu thực tế
-  const getSelectedUnitRevenuePeriods = () => {
-    const u = MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
-    let kpiItem = u?.["VM1-I02.01"];
-    if (filters.unitCode === "TCT") {
-      kpiItem = u?.["TM1-I02.01"];
-    } else if (!kpiItem) {
-      kpiItem = u?.["2.1"] || Object.values(u || {}).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
-    }
-    return kpiItem?.periods || {};
-  };
-
   const scvnRevRecPrev = getMasterKpiRecord(filters.unitCode, "VM1-I02.01", prevPeriodKey);
   
   let currActVal = scvnRevRec?.actual || 0;
@@ -578,68 +796,168 @@ export default function DashboardPage() {
         
         {/* KHỐI BÊN TRÁI: TIẾN ĐỘ THÁNG (KHI LÀ TUẦN) HOẶC BÁNH XE MỤC TIÊU (KHI LÀ THÁNG/QUÝ/NĂM) */}
         {isWeeklyReport ? (
-          <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
-            <div className="flex-1 flex flex-col justify-between">
-              <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
-                📈 TIẾN ĐỘ HOÀN THÀNH DOANH THU THÁNG {filters.month}/2026 (%)
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] mt-1.5 font-semibold">
-                Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng
-              </p>
-              <MonthlyRevenueProgressChart />
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
-              Biểu đồ thể hiện mức độ hoàn thành tiến độ doanh thu của SCVN và các đơn vị thành viên
-            </div>
-          </div>
-        ) : (
-          <div className="lg:col-span-6 glass-panel p-5 flex flex-col md:flex-row gap-5 min-h-[380px]">
-            {/* Radar Chart */}
-            <div className="flex-1 flex flex-col justify-between">
-              <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
-                🎯 BÁNH XE MỤC TIÊU SỨC KHỎE ({radarData.unitName})
-              </h3>
-              <ObjectiveRadarChart />
-              <div className="flex justify-center gap-4 text-xs font-bold mt-2">
-                <span className="flex items-center gap-1.5 text-emerald-500">
-                  <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> {radarData.unitName} ({radarData.labelCurr})
-                </span>
-                <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
-                  <span className="w-2.5 h-1 bg-slate-500 inline-block border-t border-dashed rounded"></span> Kỳ trước ({radarData.labelPrev})
-                </span>
+          isParentUnit ? (
+            <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
+              <div className="flex-1 flex flex-col justify-between">
+                <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
+                  📈 TIẾN ĐỘ HOÀN THÀNH DOANH THU THÁNG {filters.month}/2026 (%)
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] mt-1.5 font-semibold">
+                  Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng
+                </p>
+                <MonthlyRevenueProgressChart />
+              </div>
+              <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
+                Biểu đồ thể hiện mức độ hoàn thành tiến độ doanh thu của SCVN và các đơn vị thành viên
               </div>
             </div>
+          ) : (
+            <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
+              <div className="flex-1 flex flex-col">
+                <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2 mb-4">
+                  📊 XU HƯỚNG TUẦN ĐƠN VỊ: {getUnitName(filters.unitCode).toUpperCase()} (THÁNG {filters.month})
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1">
+                  {/* Revenue trend chart */}
+                  <div className="h-[210px] flex flex-col justify-between">
+                    <span className="text-xs font-black text-slate-300 block text-center">Doanh thu từng tuần (Triệu VNĐ)</span>
+                    <ResponsiveContainer width="100%" height="88%">
+                      <ComposedChart data={weeklyTrendData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={9} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={9} tickLine={false} />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: "#0f172a", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px" }} 
+                          labelStyle={{ fontWeight: "bold", color: "#fff" }}
+                        />
+                        <Bar dataKey="revenue" name="Thực tế" fill="#8b5cf6" radius={[3, 3, 0, 0]} barSize={16} />
+                        <Line type="monotone" dataKey="revenue" name="Xu hướng" stroke="#f59e0b" strokeWidth={2.5} dot={{ r: 3, fill: "#f59e0b" }} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
 
-            {/* Chi tiết biến động */}
-            <div className="w-full md:w-72 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-5">
-              <h4 className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                📈 CHI TIẾT BIẾN ĐỘNG (7 MẶT MT)
-              </h4>
-              <div className="space-y-2.5 text-xs flex-1">
-                <div className="flex justify-between text-xs text-[var(--text-muted)] font-black border-b border-white/10 pb-1.5 uppercase tracking-wider">
-                  <span>MỤC TIÊU</span>
-                  <div className="flex gap-4">
-                    <span>HIỆN TẠI</span>
-                    <span>BIẾN ĐỘNG</span>
+                  {/* Traffic trend chart */}
+                  <div className="h-[210px] flex flex-col justify-between">
+                    <span className="text-xs font-black text-slate-300 block text-center">Traffic từng tuần (M views)</span>
+                    <ResponsiveContainer width="100%" height="88%">
+                      <ComposedChart data={weeklyTrendData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={9} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={9} tickLine={false} />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: "#0f172a", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px" }} 
+                          labelStyle={{ fontWeight: "bold", color: "#fff" }}
+                        />
+                        <Bar dataKey="traffic" name="Thực tế" fill="#06b6d4" radius={[3, 3, 0, 0]} barSize={16} />
+                        <Line type="monotone" dataKey="traffic" name="Xu hướng" stroke="#ec4899" strokeWidth={2.5} dot={{ r: 3, fill: "#ec4899" }} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
-                {radarData.points.map(item => {
-                  const isUp = item.change >= 0;
-                  return (
-                    <div key={item.code} className="flex justify-between items-center py-1.5 border-b border-white/5 text-xs gap-2">
-                      <span className="text-[var(--text-muted)] font-bold whitespace-nowrap">{item.subject}</span>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className="font-extrabold text-white min-w-[32px] text-right text-xs">{item["Kỳ này"]}%</span>
-                        <span className={`font-black min-w-[42px] text-right text-xs ${isUp ? "text-emerald-500" : "text-rose-500"}`}>
-                          {isUp ? "▲" : "▼"} {isUp ? `+${item.change}%` : `${item.change}%`}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+              </div>
+              <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
+                Biểu đồ xu hướng biểu diễn sự thay đổi kết quả tuần nội bộ đơn vị {getUnitName(filters.unitCode)}
               </div>
             </div>
-          </div>
+          )
+        ) : (
+          isParentUnit ? (
+            <div className="lg:col-span-6 glass-panel p-5 flex flex-col md:flex-row gap-5 min-h-[380px]">
+              {/* Radar Chart */}
+              <div className="flex-1 flex flex-col justify-between">
+                <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
+                  🎯 BÁNH XE MỤC TIÊU SỨC KHỎE ({radarData.unitName})
+                </h3>
+                <ObjectiveRadarChart />
+                <div className="flex justify-center gap-4 text-xs font-bold mt-2">
+                  <span className="flex items-center gap-1.5 text-emerald-500">
+                    <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> {radarData.unitName} ({radarData.labelCurr})
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                    <span className="w-2.5 h-1 bg-slate-500 inline-block border-t border-dashed rounded"></span> Kỳ trước ({radarData.labelPrev})
+                  </span>
+                </div>
+              </div>
+
+              {/* Chi tiết biến động */}
+              <div className="w-full md:w-72 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-5">
+                <h4 className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  📈 CHI TIẾT BIẾN ĐỘNG (7 MẶT MT)
+                </h4>
+                <div className="space-y-2.5 text-xs flex-1">
+                  <div className="flex justify-between text-xs text-[var(--text-muted)] font-black border-b border-white/10 pb-1.5 uppercase tracking-wider">
+                    <span>MỤC TIÊU</span>
+                    <div className="flex gap-4">
+                      <span>HIỆN TẠI</span>
+                      <span>BIẾN ĐỘNG</span>
+                    </div>
+                  </div>
+                  {radarData.points.map(item => {
+                    const isUp = item.change >= 0;
+                    return (
+                      <div key={item.code} className="flex justify-between items-center py-1.5 border-b border-white/5 text-xs gap-2">
+                        <span className="text-[var(--text-muted)] font-bold whitespace-nowrap">{item.subject}</span>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="font-extrabold text-white min-w-[32px] text-right text-xs">{item["Kỳ này"]}%</span>
+                          <span className={`font-black min-w-[42px] text-right text-xs ${isUp ? "text-emerald-500" : "text-rose-500"}`}>
+                            {isUp ? "▲" : "▼"} {isUp ? `+${item.change}%` : `${item.change}%`}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
+              <div className="flex-1 flex flex-col">
+                <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2 mb-4">
+                  📊 XU HƯỚNG THÁNG ĐƠN VỊ: {getUnitName(filters.unitCode).toUpperCase()} (NĂM 2026)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1">
+                  {/* Monthly Revenue Trend Chart */}
+                  <div className="h-[210px] flex flex-col justify-between">
+                    <span className="text-xs font-black text-slate-300 block text-center">Doanh thu qua các tháng (Triệu VNĐ)</span>
+                    <ResponsiveContainer width="100%" height="88%">
+                      <ComposedChart data={monthlyTrendData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={9} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={9} tickLine={false} />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: "#0f172a", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px" }} 
+                          labelStyle={{ fontWeight: "bold", color: "#fff" }}
+                        />
+                        <Bar dataKey="revenue" name="Thực tế" fill="#8b5cf6" radius={[3, 3, 0, 0]} barSize={16} />
+                        <Line type="monotone" dataKey="revenue" name="Xu hướng" stroke="#f59e0b" strokeWidth={2.5} dot={{ r: 3, fill: "#f59e0b" }} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Monthly Traffic Trend Chart */}
+                  <div className="h-[210px] flex flex-col justify-between">
+                    <span className="text-xs font-black text-slate-300 block text-center">Traffic qua các tháng (M views)</span>
+                    <ResponsiveContainer width="100%" height="88%">
+                      <ComposedChart data={monthlyTrendData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={9} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={9} tickLine={false} />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: "#0f172a", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px" }} 
+                          labelStyle={{ fontWeight: "bold", color: "#fff" }}
+                        />
+                        <Bar dataKey="traffic" name="Thực tế" fill="#06b6d4" radius={[3, 3, 0, 0]} barSize={16} />
+                        <Line type="monotone" dataKey="traffic" name="Xu hướng" stroke="#ec4899" strokeWidth={2.5} dot={{ r: 3, fill: "#ec4899" }} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+              <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
+                Biểu đồ xu hướng biểu diễn kết quả tháng nội bộ đơn vị {getUnitName(filters.unitCode)}
+              </div>
+            </div>
+          )
         )}
 
         {/* CỤM KPI CARDS (COL-SPAN-6 CỐ ĐỊNH CÂN ĐỐI) */}
@@ -649,7 +967,7 @@ export default function DashboardPage() {
           <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[175px]">
             <div>
               <span className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider block">
-                DOANH THU & TIẾN ĐỘ HOÀN THÀNH (SCVN)
+                DOANH THU & TIẾN ĐỘ HOÀN THÀNH ({getUnitName(filters.unitCode)})
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
                 <span className="text-4xl font-black text-white">{revPct}%</span>
@@ -686,59 +1004,118 @@ export default function DashboardPage() {
           <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-emerald-500 min-h-[175px]">
             <div>
               <span className="text-xs font-black text-emerald-500 uppercase tracking-wider block">
-                SẢN LƯỢNG VIDEO HOÀN THÀNH (SCVN)
+                SẢN LƯỢNG SẢN XUẤT ({getUnitName(filters.unitCode)})
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
-                <span className="text-4xl font-black text-emerald-500">{volActualVal} Video</span>
+                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (filters.unitCode === "SCS" ? "Sản phẩm" : "Video")}</span>
               </div>
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
                 Đạt {volPct}% Kế hoạch
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} Video)</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (filters.unitCode === "SCS" ? "Sản phẩm" : "Video")})</span>
             </div>
           </div>
 
-          {/* Card 3: Đơn vị HT Doanh thu cao nhất */}
-          <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-cyan)] min-h-[175px]">
-            <div>
-              <span className="text-xs font-black text-[var(--accent-cyan)] uppercase tracking-wider block">
-                ĐƠN VỊ HT DOANH THU CAO NHẤT
-              </span>
-              <div className="mt-1.5">
-                <span className="text-3xl font-black text-white truncate block">
-                  {topUnit.name} - {topUnit.completion}%
-                </span>
-              </div>
-            </div>
-            <div className="text-xs text-[var(--text-muted)] border-t border-white/5 pt-2 font-bold">
-              Đơn vị trực thuộc xuất sắc nhất kỳ
-            </div>
-          </div>
-
-          {/* Card 4: Tuần vs Tháng/Quý/Năm */}
-          {isWeeklyReport ? (
-            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
+          {/* Card 3: Đơn vị HT Doanh thu cao nhất (Parent) hoặc Tiến độ doanh thu (Child) */}
+          {isParentUnit ? (
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-cyan)] min-h-[175px]">
               <div>
-                <span className="text-xs font-black text-[var(--accent-pink)] uppercase tracking-wider block">
-                  BIẾN ĐỘNG DOANH THU SO VỚI TUẦN TRƯỚC
+                <span className="text-xs font-black text-[var(--accent-cyan)] uppercase tracking-wider block">
+                  ĐƠN VỊ HT DOANH THU CAO NHẤT
                 </span>
-                <div className="mt-2.5 space-y-2">
-                  {weeklyTopRows.map((r, i) => (
-                    <div key={i} className="flex justify-between items-center text-xs border-b border-white/5 pb-1.5">
-                      <span className="text-[var(--text-muted)] font-bold">{r.label}:</span>
-                      <span className={`font-black text-sm ${r.isUp ? "text-emerald-400" : "text-rose-400"}`}>
-                        {r.text}
-                      </span>
-                    </div>
-                  ))}
+                <div className="mt-1.5">
+                  <span className="text-3xl font-black text-white truncate block">
+                    {topUnit.name} - {topUnit.completion}%
+                  </span>
                 </div>
               </div>
               <div className="text-xs text-[var(--text-muted)] border-t border-white/5 pt-2 font-bold">
-                Thống kê tăng / giảm mạnh nhất so với tuần trước
+                Đơn vị trực thuộc xuất sắc nhất kỳ
               </div>
             </div>
+          ) : (
+            isWeeklyReport ? (
+              <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-cyan)] min-h-[175px]">
+                <div>
+                  <span className="text-xs font-black text-[var(--accent-cyan)] uppercase tracking-wider block">
+                    TIẾN ĐỘ DOANH THU THÁNG
+                  </span>
+                  <div className="mt-1.5">
+                    <span className="text-4xl font-black text-white block">
+                      {monthlyCompletionPct}%
+                    </span>
+                  </div>
+                </div>
+                <div className="text-xs text-slate-300 border-t border-white/5 pt-2 font-bold">
+                  <span className={forecastPct >= 100 ? "text-emerald-400" : "text-rose-400"}>
+                    Dự báo cả tháng: {forecastPct}%
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-cyan)] min-h-[175px]">
+                <div>
+                  <span className="text-xs font-black text-[var(--accent-cyan)] uppercase tracking-wider block">
+                    {filters.periodType === "monthly" ? "TIẾN ĐỘ DOANH THU QUÝ" : "TIẾN ĐỘ DOANH THU NĂM"}
+                  </span>
+                  <div className="mt-1.5">
+                    <span className="text-4xl font-black text-white block">
+                      {filters.periodType === "monthly" ? quarterCompletionPct : yearCompletionPct}%
+                    </span>
+                  </div>
+                </div>
+                <div className="text-xs text-[var(--text-muted)] border-t border-white/5 pt-2 font-bold">
+                  {filters.periodType === "monthly" ? `Tiến độ hoàn thành doanh thu Quý ${currentQuarterNum}` : "Tiến độ hoàn thành doanh thu Năm 2026"}
+                </div>
+              </div>
+            )
+          )}
+
+          {/* Card 4: Tuần vs Tháng/Quý/Năm */}
+          {isWeeklyReport ? (
+            isParentUnit ? (
+              <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
+                <div>
+                  <span className="text-xs font-black text-[var(--accent-pink)] uppercase tracking-wider block">
+                    BIẾN ĐỘNG DOANH THU SO VỚI TUẦN TRƯỚC
+                  </span>
+                  <div className="mt-2.5 space-y-2">
+                    {weeklyTopRows.map((r, i) => (
+                      <div key={i} className="flex justify-between items-center text-xs border-b border-white/5 pb-1.5">
+                        <span className="text-[var(--text-muted)] font-bold">{r.label}:</span>
+                        <span className={`font-black text-sm ${r.isUp ? "text-emerald-400" : "text-rose-400"}`}>
+                          {r.text}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-xs text-[var(--text-muted)] border-t border-white/5 pt-2 font-bold">
+                  Thống kê tăng / giảm mạnh nhất so với tuần trước
+                </div>
+              </div>
+            ) : (
+              <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
+                <div>
+                  <span className="text-xs font-black text-[var(--accent-pink)] uppercase tracking-wider block">
+                    TĂNG TRƯỞNG TUẦN NÀY
+                  </span>
+                  <div className="mt-2 flex flex-col justify-center min-h-[70px]">
+                    <span className={`text-3xl font-black ${unitWeeklyDiff >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                      {unitWeeklyDiff >= 0 ? "▲ +" : "▼ "}{Math.abs(unitWeeklyPct)}%
+                    </span>
+                    <span className="text-[10px] text-[var(--text-muted)] font-semibold mt-1">
+                      Doanh thu tuần này so với tuần trước
+                    </span>
+                  </div>
+                </div>
+                <div className="text-xs text-[var(--text-muted)] border-t border-white/5 pt-2 font-bold">
+                  Tăng trưởng doanh thu nội bộ
+                </div>
+              </div>
+            )
           ) : (
             <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
               <div>
@@ -753,7 +1130,7 @@ export default function DashboardPage() {
               </div>
               <div className="my-1">
                 <p className="text-sm font-extrabold text-emerald-500">
-                  Kỷ luật tuân thủ nhân sự
+                  Kỷ luật tuân thủ nhân sự ({getUnitName(filters.unitCode)})
                 </p>
                 <span className="text-xs text-[var(--text-muted)] font-semibold">(Mục tiêu: &gt; 98.0%)</span>
               </div>
@@ -853,17 +1230,28 @@ export default function DashboardPage() {
             📊 Tỷ trọng Cơ cấu Doanh thu (M1)
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-4 font-semibold">
-            Cơ cấu đóng góp doanh thu theo Đơn vị và theo Nguồn phát sinh doanh thu
+            {isParentUnit ? "Cơ cấu đóng góp doanh thu theo Đơn vị và theo Nguồn phát sinh doanh thu" : "Cơ cấu đóng góp doanh thu theo Nguồn phát sinh doanh thu"}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/5 pt-4">
-            <div>
-              <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Đơn vị</h4>
-              <RevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
-            </div>
-            <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
-              <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
-              <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
-            </div>
+            {isParentUnit ? (
+              <>
+                <div>
+                  <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Đơn vị</h4>
+                  <RevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
+                </div>
+                <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
+                  <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
+                  <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
+                </div>
+              </>
+            ) : (
+              <div className="col-span-2">
+                <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
+                <div className="max-w-[320px] mx-auto">
+                  <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -895,81 +1283,83 @@ export default function DashboardPage() {
       </div>
 
       {/* 5. CỤM 3 BẢNG XẾP HẠNG (BXH DOANH THU, SẢN XUẤT, TRAFFIC) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        
-        {/* BXH Tăng trưởng Doanh thu */}
-        <div className="glass-panel p-5">
-          <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            📝 BXH Tăng trưởng Doanh thu
-          </h3>
-          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
-          <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
-            {bxhRevenueSorted.map(row => (
-              <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
-                row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
-              }`}>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
-                  <span className="font-extrabold text-white text-xs">{row.name}</span>
+      {isParentUnit && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          
+          {/* BXH Tăng trưởng Doanh thu */}
+          <div className="glass-panel p-5">
+            <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              📝 BXH Tăng trưởng Doanh thu
+            </h3>
+            <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
+            <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+              {bxhRevenueSorted.map(row => (
+                <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
+                  row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
+                    <span className="font-extrabold text-white text-xs">{row.name}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
+                    <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
-                  <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* BXH Hoàn thành Sản xuất */}
-        <div className="glass-panel p-5">
-          <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            🎬 BXH Hoàn thành Sản xuất
-          </h3>
-          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Mức độ hoàn thành kế hoạch số lượng video</p>
-          <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
-            {bxhProductionSorted.map(row => (
-              <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
-                row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
-              }`}>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
-                  <span className="font-extrabold text-white text-xs">{row.name}</span>
+          {/* BXH Hoàn thành Sản xuất */}
+          <div className="glass-panel p-5">
+            <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              🎬 BXH Hoàn thành Sản xuất
+            </h3>
+            <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Mức độ hoàn thành kế hoạch số lượng video</p>
+            <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+              {bxhProductionSorted.map(row => (
+                <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
+                  row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
+                    <span className="font-extrabold text-white text-xs">{row.name}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
+                    <span className="font-black text-emerald-500 text-xs">{row.pctStr}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
-                  <span className="font-black text-emerald-500 text-xs">{row.pctStr}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* BXH Tăng trưởng Traffic */}
-        <div className="glass-panel p-5">
-          <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            🌐 BXH Tăng trưởng Traffic
-          </h3>
-          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng traffic views</p>
-          <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
-            {bxhTrafficSorted.map(row => (
-              <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
-                row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
-              }`}>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
-                  <span className="font-extrabold text-white text-xs">{row.name}</span>
+          {/* BXH Tăng trưởng Traffic */}
+          <div className="glass-panel p-5">
+            <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              🌐 BXH Tăng trưởng Traffic
+            </h3>
+            <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng traffic views</p>
+            <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+              {bxhTrafficSorted.map(row => (
+                <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
+                  row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
+                    <span className="font-extrabold text-white text-xs">{row.name}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
+                    <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
-                  <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-      </div>
+        </div>
+      )}
 
       {/* 6. KHU VỰC CHỈ ĐẠO CỦA BOD (BOTTOM SECTION) */}
       <div className="glass-panel p-5 space-y-4">
