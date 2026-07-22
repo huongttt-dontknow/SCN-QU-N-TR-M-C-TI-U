@@ -835,27 +835,42 @@ export default function OkrStrategyPage() {
 
           {/* BẢNG THEO DÕI & CẬP NHẬT SỐ LIỆU OKR (TỪNG OBJECTIVE LÀ 1 BẢNG NỔI CHUẨN NGUYÊN MẪU) */}
           {objectives.map(obj => (
-            <div key={obj.id} className="glass-panel p-5 relative overflow-hidden">
+            <div 
+              key={obj.id} 
+              className={`p-5 relative overflow-hidden rounded-2xl border transition-all duration-300 ${
+                theme === "light"
+                  ? "bg-white border-emerald-600 shadow-[0_4px_20px_rgba(16,185,129,0.08)] text-slate-800"
+                  : "glass-panel"
+              }`}
+            >
               
               {/* Objective Card Header */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/10 pb-3 mb-4 gap-3">
+              <div className={`flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-3 mb-4 gap-3 ${
+                theme === "light" ? "border-slate-200" : "border-white/10"
+              }`}>
                 <div>
-                  <span className="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-black px-2.5 py-0.5 rounded uppercase tracking-wider">
+                  <span className={`text-[10px] font-black px-2.5 py-0.5 rounded uppercase tracking-wider ${
+                    theme === "light"
+                      ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                      : "bg-amber-500/10 border border-amber-500/30 text-amber-400"
+                  }`}>
                     MỤC TIÊU TRỌNG SỐ {obj.weight}%
                   </span>
-                  <h3 className="font-extrabold text-sm text-white mt-1.5">
+                  <h3 className={`font-extrabold text-sm mt-1.5 ${theme === "light" ? "text-slate-800" : "text-white"}`}>
                     {obj.title}
                   </h3>
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="text-right">
-                    <span className="text-[10px] text-[var(--text-muted)] font-bold uppercase block">TIẾN ĐỘ CHUNG</span>
-                    <span className="text-sm font-black text-[var(--accent-cyan)]">{obj.progress}%</span>
+                    <span className="text-[10px] font-bold uppercase block text-slate-400 dark:text-[var(--text-muted)]">TIẾN ĐỘ CHUNG</span>
+                    <span className={`text-sm font-black ${theme === "light" ? "text-emerald-600" : "text-[var(--accent-cyan)]"}`}>{obj.progress}%</span>
                   </div>
                   <div className="w-24 bg-slate-900 h-2.5 rounded-full overflow-hidden border border-white/10">
                     <div 
-                      className="h-full bg-gradient-to-r from-[var(--accent-cyan)] to-emerald-400 transition-all"
+                      className={`h-full transition-all ${
+                        theme === "light" ? "bg-gradient-to-r from-emerald-500 to-teal-400" : "bg-gradient-to-r from-[var(--accent-cyan)] to-emerald-400"
+                      }`}
                       style={{ width: `${obj.progress}%` }}
                     />
                   </div>
@@ -863,15 +878,21 @@ export default function OkrStrategyPage() {
               </div>
 
               {/* BẢNG CÁC KRs VÀ ACTIONs CON */}
-              <div className="overflow-x-auto border border-white/5 rounded-lg mb-4">
+              <div className={`overflow-x-auto rounded-lg mb-4 border ${
+                theme === "light" ? "border-slate-200" : "border-white/5"
+              }`}>
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="border-b border-white/10 text-[var(--text-muted)] font-bold bg-slate-900/60 text-[10px] uppercase">
-                      <th className="p-3">Mục tiêu / Kết quả / Hành động</th>
-                      <th className="p-3 w-36 text-center">Phụ trách</th>
-                      <th className="p-3 w-40 text-center">Tiến độ (%)</th>
-                      <th className="p-3 w-36 text-center">Trạng thái</th>
-                      <th className="p-3">Ghi chú kết quả thực tế</th>
+                    <tr className={`border-b font-bold text-[10px] uppercase ${
+                      theme === "light"
+                        ? "border-emerald-200 bg-emerald-100/60 text-emerald-950"
+                        : "border-white/10 text-[var(--text-muted)] bg-slate-900/60"
+                    }`}>
+                      <th className="p-3 w-[25%] min-w-[200px]">Mục tiêu / Kết quả / Hành động</th>
+                      <th className="p-3 w-24 text-center">Phụ trách</th>
+                      <th className="p-3 w-28 text-center">Tiến độ (%)</th>
+                      <th className="p-3 w-24 text-center">Trạng thái</th>
+                      <th className="p-3 w-[45%] min-w-[320px]">Ghi chú kết quả thực tế</th>
                       <th className="p-3 w-20 text-center">Thao tác</th>
                     </tr>
                   </thead>
@@ -879,26 +900,40 @@ export default function OkrStrategyPage() {
                     {obj.keyResults.map(kr => (
                       <React.Fragment key={kr.id}>
                         {/* HÀNG KEY RESULT */}
-                        <tr className="border-b border-white/5 bg-slate-900/30 font-bold text-white">
+                        <tr className={`border-b font-bold transition-all ${
+                          theme === "light"
+                            ? "border-slate-200 bg-slate-50/50 text-slate-800"
+                            : "border-white/5 bg-slate-900/30 text-white"
+                        }`}>
                           <td className="p-3">
-                            <div className="flex items-center gap-2">
-                              <span className="text-[var(--accent-purple)]">↳</span>
-                              <span>{kr.title}</span>
-                              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase ${
-                                kr.priority === "High" ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" : "bg-amber-500/20 text-amber-400"
+                            <div className="flex items-start gap-2 whitespace-normal break-words">
+                              <span className="text-purple-600 dark:text-[var(--accent-purple)] shrink-0">↳</span>
+                              <span className="whitespace-normal break-words leading-relaxed">{kr.title}</span>
+                              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase shrink-0 ${
+                                kr.priority === "High" 
+                                  ? theme === "light"
+                                    ? "bg-rose-100 text-rose-800 border border-rose-200"
+                                    : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+                                  : theme === "light"
+                                    ? "bg-amber-100 text-amber-800 border border-amber-200"
+                                    : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                               }`}>
                                 {kr.priority}
                               </span>
                             </div>
                           </td>
-                          <td className="p-3 text-center text-[var(--text-muted)] font-medium">{kr.pic}</td>
+                          <td className={`p-3 text-center font-medium ${theme === "light" ? "text-slate-600" : "text-[var(--text-muted)]"}`}>{kr.pic}</td>
                           <td className="p-3 text-center">
                             <div className="flex items-center gap-2 justify-center">
                               <input
                                 type="number"
                                 value={kr.progress}
                                 onChange={(e) => handleUpdateItem("kr", obj.id, kr.id, null, "progress", parseFloat(e.target.value) || 0)}
-                                className="w-12 bg-slate-950 border border-white/10 rounded text-center py-1 font-bold text-white text-xs focus:outline-none"
+                                className={`w-12 border rounded text-center py-1 font-bold text-xs focus:outline-none ${
+                                  theme === "light"
+                                    ? "bg-white border-slate-300 text-slate-800 focus:border-emerald-500"
+                                    : "bg-slate-950 border-white/10 text-white focus:border-[var(--accent-cyan)]"
+                                }`}
                               />
                               <div className="w-16 bg-slate-900 h-2 rounded-full overflow-hidden border border-white/10">
                                 <div className={`h-full ${kr.progress >= 70 ? "bg-emerald-400" : kr.progress >= 40 ? "bg-amber-400" : "bg-rose-500"}`} style={{ width: `${kr.progress}%` }} />
@@ -906,17 +941,29 @@ export default function OkrStrategyPage() {
                             </div>
                           </td>
                           <td className="p-3 text-center">
-                            <span className="text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">
+                            <span className={`text-[10px] font-extrabold px-2 py-1 rounded ${
+                              kr.progress === 100 
+                                ? theme === "light"
+                                  ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                                  : "bg-emerald-500/10 text-emerald-400"
+                                : theme === "light"
+                                  ? "bg-sky-100 text-sky-800 border border-sky-200"
+                                  : "bg-sky-500/10 text-sky-400"
+                            }`}>
                               {kr.progress === 100 ? "Hoàn thành" : "Đang thực hiện"}
                             </span>
                           </td>
                           <td className="p-3">
-                            <input
-                              type="text"
+                            <textarea
                               value={kr.notes || ""}
                               onChange={(e) => handleUpdateItem("kr", obj.id, kr.id, null, "notes", e.target.value)}
                               placeholder="Nhập ghi chú báo cáo..."
-                              className="w-full bg-slate-950/80 border border-white/10 rounded px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-[var(--accent-cyan)]"
+                              rows={2}
+                              className={`w-full border rounded px-2.5 py-1 text-xs focus:outline-none resize-none whitespace-normal break-words ${
+                                theme === "light"
+                                  ? "bg-white border-slate-300 text-slate-800 focus:border-emerald-500 placeholder-slate-400"
+                                  : "bg-slate-950/80 border-white/10 text-slate-200 focus:border-[var(--accent-cyan)]"
+                              }`}
                             />
                           </td>
                           <td className="p-3 text-center">
@@ -931,21 +978,32 @@ export default function OkrStrategyPage() {
 
                         {/* HÀNG ACTIONs CON */}
                         {kr.actions.map(act => (
-                          <tr key={act.id} className="border-b border-white/5 hover:bg-white/5 text-[11px] text-slate-300">
+                          <tr 
+                            key={act.id} 
+                            className={`border-b text-[11px] transition-all ${
+                              theme === "light"
+                                ? "border-slate-100 bg-white hover:bg-slate-50 text-slate-700"
+                                : "border-white/5 hover:bg-white/5 text-slate-300"
+                            }`}
+                          >
                             <td className="p-3 pl-8">
-                              <div className="flex items-center gap-1.5 italic text-slate-300">
-                                <span className="text-[var(--accent-cyan)]">↳ Action:</span>
-                                <span>{act.title}</span>
+                              <div className="flex items-start gap-1.5 italic whitespace-normal break-words">
+                                <span className="text-sky-600 dark:text-[var(--accent-cyan)] shrink-0">↳ Action:</span>
+                                <span className="whitespace-normal break-words leading-relaxed">{act.title}</span>
                               </div>
                             </td>
-                            <td className="p-3 text-center text-[var(--text-muted)]">{act.pic}</td>
+                            <td className={`p-3 text-center ${theme === "light" ? "text-slate-500" : "text-[var(--text-muted)]"}`}>{act.pic}</td>
                             <td className="p-3 text-center">
                               <div className="flex items-center gap-2 justify-center">
                                 <input
                                   type="number"
                                   value={act.progress}
                                   onChange={(e) => handleUpdateItem("action", obj.id, kr.id, act.id, "progress", parseFloat(e.target.value) || 0)}
-                                  className="w-12 bg-slate-950 border border-white/10 rounded text-center py-1 font-bold text-white text-xs focus:outline-none"
+                                  className={`w-12 border rounded text-center py-1 font-bold text-xs focus:outline-none ${
+                                    theme === "light"
+                                      ? "bg-white border-slate-300 text-slate-800 focus:border-emerald-500"
+                                      : "bg-slate-950 border-white/10 text-white focus:border-[var(--accent-cyan)]"
+                                  }`}
                                 />
                                 <div className="w-16 bg-slate-900 h-2 rounded-full overflow-hidden border border-white/10">
                                   <div className={`h-full ${act.progress >= 70 ? "bg-emerald-400" : act.progress >= 40 ? "bg-amber-400" : "bg-rose-500"}`} style={{ width: `${act.progress}%` }} />
@@ -956,7 +1014,11 @@ export default function OkrStrategyPage() {
                               <select
                                 value={act.status}
                                 onChange={(e) => handleUpdateItem("action", obj.id, kr.id, act.id, "status", e.target.value)}
-                                className="bg-slate-950 border border-white/10 text-[10px] font-bold text-white rounded px-2 py-1 focus:outline-none"
+                                className={`border text-[10px] font-bold rounded px-2 py-1 focus:outline-none ${
+                                  theme === "light"
+                                    ? "bg-white border-slate-300 text-slate-800 focus:border-emerald-500"
+                                    : "bg-slate-950 border-white/10 text-white"
+                                }`}
                               >
                                 <option value="Chưa thực hiện">Chưa thực hiện</option>
                                 <option value="Đang thực hiện">Đang thực hiện</option>
@@ -965,12 +1027,16 @@ export default function OkrStrategyPage() {
                               </select>
                             </td>
                             <td className="p-3">
-                              <input
-                                type="text"
+                              <textarea
                                 value={act.notes || ""}
                                 onChange={(e) => handleUpdateItem("action", obj.id, kr.id, act.id, "notes", e.target.value)}
                                 placeholder="Ghi chú báo cáo thực tế..."
-                                className="w-full bg-slate-950/80 border border-white/10 rounded px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-[var(--accent-cyan)]"
+                                rows={2}
+                                className={`w-full border rounded px-2.5 py-1 text-xs focus:outline-none resize-none whitespace-normal break-words ${
+                                  theme === "light"
+                                    ? "bg-white border-slate-300 text-slate-800 focus:border-emerald-500 placeholder-slate-400"
+                                    : "bg-slate-950/80 border-white/10 text-slate-200 focus:border-[var(--accent-cyan)]"
+                                }`}
                               />
                             </td>
                             <td className="p-3 text-center">
