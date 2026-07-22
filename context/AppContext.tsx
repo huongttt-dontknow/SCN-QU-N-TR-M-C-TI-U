@@ -101,14 +101,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (Array.isArray(data)) {
         setUsersList(data);
-        if (typeof window !== "undefined") {
-          const savedUser = localStorage.getItem("sconnect_user");
-          if (!savedUser && !currentLoggedUser && data.length > 0) {
-            // Default to first user if no session
-            const admin = data.find(u => u.role === "Admin") || data[0];
-            setCurrentLoggedUserState(admin);
-          }
-        }
       }
     } catch (e) {
       console.error("Lỗi fetch users:", e);
