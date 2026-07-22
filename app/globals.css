@@ -267,6 +267,12 @@ html.light button[class*="from-emerald-600"] {
   color: #ffffff !important;
 }
 
+/* Custom override for amber outline buttons in light mode to ensure readability */
+html.light button.btn-outline-amber,
+html.light button.btn-outline-amber * {
+  color: #78350f !important;
+}
+
 /* ==========================================================================
    INDIGO AI CARD (CARD 2 TAB 2) HIGH CONTRAST STYLING
    ========================================================================== */

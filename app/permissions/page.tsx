@@ -393,7 +393,7 @@ export default function PermissionsPage() {
                             isActive 
                               ? "bg-emerald-500 text-slate-950 font-extrabold" 
                               : theme === "light"
-                                ? "bg-amber-50 text-amber-600 border border-amber-300 hover:bg-amber-100"
+                                ? "bg-amber-50 text-amber-600 border border-amber-300 hover:bg-amber-100 btn-outline-amber"
                                 : "bg-white/5 text-white border border-white/10 hover:bg-white/15"
                           }`}
                         >
