@@ -183,6 +183,38 @@ const SCVN_STRATEGIES: StrategyItem[] = [
   }
 ];
 
+const renderFormattedAiText = (text: string, theme: string) => {
+  if (!text) return null;
+  if (text.startsWith("Chưa có nhận định")) {
+    return <span className={theme === "light" ? "text-slate-500 font-medium" : "text-slate-400"}>{text}</span>;
+  }
+
+  // Split key phrases to apply colors (red/purple) for highlighting key metrics
+  const parts = text.split(/(AI Agent nhận định:|TỐT|90%|95%|Đề xuất:|chuẩn hóa kho asset 3D)/g);
+  return (
+    <span className={theme === "light" ? "text-slate-700 font-semibold" : "text-slate-300"}>
+      {parts.map((part, i) => {
+        if (part === "AI Agent nhận định:") {
+          return <span key={i} className="text-purple-600 dark:text-purple-400 font-black">{part}</span>;
+        }
+        if (part === "TỐT") {
+          return <span key={i} className="text-emerald-600 dark:text-emerald-400 font-extrabold">{part}</span>;
+        }
+        if (part === "90%" || part === "95%") {
+          return <span key={i} className="text-rose-600 dark:text-rose-400 font-black">{part}</span>;
+        }
+        if (part === "Đề xuất:") {
+          return <span key={i} className="text-indigo-600 dark:text-indigo-400 font-black">{part}</span>;
+        }
+        if (part === "chuẩn hóa kho asset 3D") {
+          return <span key={i} className="text-purple-600 dark:text-purple-400 font-black">{part}</span>;
+        }
+        return part;
+      })}
+    </span>
+  );
+};
+
 export default function OkrStrategyPage() {
   const { filters, currentLoggedUser, setCurrentLoggedUser, theme } = useApp();
   const isCorporateLevel = filters.unitCode === "TCT" || filters.unitCode === "SCVN";
@@ -837,16 +869,25 @@ export default function OkrStrategyPage() {
               </div>
 
               {/* HỘP TRỢ LÝ AI ĐÁNH GIÁ MỤC TIÊU (ASSESSOR) KHỚP NGUYÊN MẪU */}
-              <div className="bg-slate-950/60 border border-[var(--accent-purple)]/30 rounded-xl p-3.5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+              <div className={`rounded-xl p-3.5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border transition-all ${
+                theme === "light"
+                  ? "bg-white border-[#32CD32] shadow-[0_2px_10px_rgba(50,205,50,0.06)]"
+                  : "bg-slate-950/60 border-[var(--accent-purple)]/30"
+              }`}>
                 <div className="flex items-start gap-2.5">
                   <span className="text-base">🤖</span>
                   <div>
-                    <h4 className="text-xs font-bold text-[var(--accent-purple)] tracking-wider uppercase">
+                    <h4 className={`text-xs font-black tracking-wider uppercase ${
+                      theme === "light" ? "text-[#228B22]" : "text-[var(--accent-purple)]"
+                    }`}>
                       TRỢ LÝ AI ĐÁNH GIÁ MỤC TIÊU (ASSESSOR)
                     </h4>
-                    <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                      {aiAssessments[obj.id] || "Chưa có nhận định. Nhấn nút \"AI Đánh giá\" để nhận phân tích từ AI Agent."}
-                    </p>
+                    <div className="text-[11px] mt-0.5 leading-relaxed">
+                      {renderFormattedAiText(
+                        aiAssessments[obj.id] || "Chưa có nhận định. Nhấn nút \"AI Đánh giá\" để nhận phân tích từ AI Agent.",
+                        theme
+                      )}
+                    </div>
                   </div>
                 </div>
 
