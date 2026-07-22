@@ -24,19 +24,6 @@ import {
 
 export default function DashboardPage() {
   const { filters, theme } = useApp();
-  const [bodComment, setBodComment] = useState("");
-  const [isSaved, setIsSaved] = useState(false);
-
-  useEffect(() => {
-    setBodComment("");
-    setIsSaved(false);
-  }, [filters]);
-
-  const handleSaveComment = () => {
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
-  };
-
   // Helper tính periodKey dựa trên bộ lọc
   const getPeriodKey = () => {
     if (filters.periodType === "weekly") {
@@ -48,6 +35,29 @@ export default function DashboardPage() {
     } else {
       return `yearly_2026`;
     }
+  };
+
+  const [bodComment, setBodComment] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const pKey = getPeriodKey();
+      const key = `bod_comment_${filters.unitCode}_${pKey}`;
+      const saved = localStorage.getItem(key) || "";
+      setBodComment(saved);
+    }
+    setIsSaved(false);
+  }, [filters]);
+
+  const handleSaveComment = () => {
+    if (typeof window !== "undefined") {
+      const pKey = getPeriodKey();
+      const key = `bod_comment_${filters.unitCode}_${pKey}`;
+      localStorage.setItem(key, bodComment);
+    }
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
   };
 
   const periodKey = getPeriodKey();
