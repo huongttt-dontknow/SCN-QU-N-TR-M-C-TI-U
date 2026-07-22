@@ -440,6 +440,38 @@ export default function DashboardPage() {
   // Card 5: ROI
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
+  // Tính toán so sánh Doanh thu SCVN kỳ liền trước & cùng kỳ tháng trước (cho Card 1)
+  const scvnRevRecPrev = getMasterKpiRecord("SCVN", "VM1-I02.01", prevPeriodKey);
+  const prevRevPct = scvnRevRecPrev?.pct ? Math.round(scvnRevRecPrev.pct * 100) : (scvnRevRecPrev?.target && scvnRevRecPrev.target > 0 ? Math.round(((scvnRevRecPrev.actual || 0) / scvnRevRecPrev.target) * 100) : 0);
+  const diffPrev = revPct - prevRevPct;
+
+  const getSamePeriodLastMonthKey = (type: string, mStr: string, wStr: string, qStr: string, yStr: string) => {
+    const m = Number(mStr) || 7;
+    const w = Number(wStr) || 1;
+    if (type === "weekly") {
+      if (m > 1) {
+        const prevMonth = m - 1;
+        const targetKey = `weekly_${prevMonth}_${w}`;
+        const hasWeekRecord = MASTER_KPI_DATA["SCVN"]?.["VM1-I02.01"]?.periods?.[targetKey];
+        if (hasWeekRecord) {
+          return targetKey;
+        }
+      }
+      return null;
+    }
+    return null;
+  };
+
+  const samePeriodLastMonthKey = getSamePeriodLastMonthKey(filters.periodType, filters.month, filters.week, filters.quarter, filters.year);
+  let diffLastMonth: number | null = null;
+  if (samePeriodLastMonthKey) {
+    const scvnRevRecSameLastMonth = getMasterKpiRecord("SCVN", "VM1-I02.01", samePeriodLastMonthKey);
+    if (scvnRevRecSameLastMonth) {
+      const sameLastMonthRevPct = scvnRevRecSameLastMonth.pct ? Math.round(scvnRevRecSameLastMonth.pct * 100) : (scvnRevRecSameLastMonth.target && scvnRevRecSameLastMonth.target > 0 ? Math.round(((scvnRevRecSameLastMonth.actual || 0) / scvnRevRecSameLastMonth.target) * 100) : 0);
+      diffLastMonth = revPct - sameLastMonthRevPct;
+    }
+  }
+
   // Dữ liệu Bánh xe mục tiêu 7 mặt M1 -> M7 từ Excel
   const radarData = getRadarScores(
     filters.unitCode,
@@ -524,6 +556,23 @@ export default function DashboardPage() {
                 {revActualVal} | Thực tế đạt được
               </p>
               <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {revTargetVal})</span>
+            </div>
+
+            <div className="mt-2.5 pt-2 border-t border-white/5 space-y-1 text-[10px] font-bold text-slate-400">
+              <div className="flex justify-between items-center">
+                <span>Kỳ liền trước:</span>
+                <span className={diffPrev >= 0 ? "text-emerald-400" : "text-rose-400"}>
+                  {diffPrev >= 0 ? `▲ +${diffPrev}%` : `▼ ${diffPrev}%`}
+                </span>
+              </div>
+              {diffLastMonth !== null && (
+                <div className="flex justify-between items-center">
+                  <span>Cùng kỳ tháng trước:</span>
+                  <span className={diffLastMonth >= 0 ? "text-emerald-400" : "text-rose-400"}>
+                    {diffLastMonth >= 0 ? `▲ +${diffLastMonth}%` : `▼ ${diffLastMonth}%`}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
