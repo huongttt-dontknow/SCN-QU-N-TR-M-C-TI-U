@@ -67,9 +67,36 @@ export default function DashboardPage() {
 
   const barComparisonData = unitList.map(u => {
     const rec = getMasterKpiRecord(u.code, "VM1-I02.01", periodKey);
-    const target = rec?.target ? Math.round(rec.target / 1e6) : 0;
-    const revenue = rec?.actual ? Math.round(rec.actual / 1e6) : 0;
-    const completion = rec?.pct ? Math.round(rec.pct * 100) : (target > 0 ? Math.round((revenue / target) * 100) : 0);
+    let target = rec?.target ? Math.round(rec.target / 1e6) : 0;
+    let revenue = rec?.actual ? Math.round(rec.actual / 1e6) : 0;
+
+    // Nếu là báo cáo tháng và chưa có số liệu thực tế tháng, cộng dồn từ các tuần của tháng đó
+    if (filters.periodType === "monthly" && revenue === 0) {
+      const uDict = MASTER_KPI_DATA[u.code] || {};
+      const key = u.code === "NDTH" ? "2.1" : "VM1-I02.01";
+      const kpiItem = uDict[key];
+      if (kpiItem && kpiItem.periods) {
+        let sumAct = 0;
+        const m = Number(filters.month) || 7;
+        for (let w = 1; w <= 5; w++) {
+          const wKey = `weekly_${m}_${w}`;
+          if (kpiItem.periods[wKey]) {
+            sumAct += kpiItem.periods[wKey].actual ?? 0;
+          }
+        }
+        if (sumAct > 0) {
+          revenue = Math.round(sumAct / 1e6);
+        }
+      }
+    }
+
+    let completion = 0;
+    if (rec?.pct !== undefined && rec.pct !== null && rec.pct < 10) {
+      completion = Math.round(rec.pct * 100);
+    } else if (target > 0) {
+      completion = Math.round((revenue / target) * 100);
+    }
+
     return {
       name: u.label,
       target,
