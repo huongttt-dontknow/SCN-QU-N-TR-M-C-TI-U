@@ -183,35 +183,134 @@ const SCVN_STRATEGIES: StrategyItem[] = [
   }
 ];
 
+const renderHighlightedSpans = (lineText: string, theme: string) => {
+  // Parse inline bolding **text**
+  let segments: { text: string; isBold: boolean }[] = [];
+  const parts = lineText.split(/(\*\*.*?\*\*)/g);
+  
+  parts.forEach(part => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      segments.push({ text: part.slice(2, -2), isBold: true });
+    } else {
+      segments.push({ text: part, isBold: false });
+    }
+  });
+
+  return (
+    <>
+      {segments.map((seg, idx) => {
+        if (seg.isBold) {
+          return (
+            <strong key={idx} className={theme === "light" ? "text-purple-700 font-extrabold" : "text-amber-300 font-black"}>
+              {seg.text}
+            </strong>
+          );
+        }
+        // Highlight specific terms inside standard text segments
+        const subParts = seg.text.split(/(AI Agent nhận định:|TỐT|90%|95%|Đề xuất:|chuẩn hóa kho asset 3D|CỰC KỲ BÁO ĐỘNG|0%)/g);
+        return (
+          <span key={idx}>
+            {subParts.map((sub, sIdx) => {
+              if (sub === "AI Agent nhận định:") {
+                return <span key={sIdx} className="text-purple-600 dark:text-purple-400 font-black">{sub}</span>;
+              }
+              if (sub === "TỐT") {
+                return <span key={sIdx} className="text-emerald-600 dark:text-emerald-400 font-extrabold">{sub}</span>;
+              }
+              if (sub === "90%" || sub === "95%") {
+                return <span key={sIdx} className="text-rose-600 dark:text-rose-400 font-black">{sub}</span>;
+              }
+              if (sub === "Đề xuất:") {
+                return <span key={sIdx} className="text-indigo-600 dark:text-indigo-400 font-black">{sub}</span>;
+              }
+              if (sub === "chuẩn hóa kho asset 3D") {
+                return <span key={sIdx} className="text-purple-600 dark:text-purple-400 font-black">{sub}</span>;
+              }
+              if (sub === "CỰC KỲ BÁO ĐỘNG" || sub === "0%") {
+                return <span key={sIdx} className="text-rose-500 dark:text-rose-400 font-extrabold">{sub}</span>;
+              }
+              return sub;
+            })}
+          </span>
+        );
+      })}
+    </>
+  );
+};
+
 const renderFormattedAiText = (text: string, theme: string) => {
   if (!text) return null;
   if (text.startsWith("Chưa có nhận định")) {
     return <span className={theme === "light" ? "text-slate-500 font-medium" : "text-slate-200"}>{text}</span>;
   }
 
-  // Split key phrases to apply colors (red/purple) for highlighting key metrics
-  const parts = text.split(/(AI Agent nhận định:|TỐT|90%|95%|Đề xuất:|chuẩn hóa kho asset 3D)/g);
+  // Tách dòng để xử lý định dạng markdown
+  const lines = text.split("\n");
+  
   return (
-    <span className={theme === "light" ? "text-slate-700 font-semibold" : "text-white"}>
-      {parts.map((part, i) => {
-        if (part === "AI Agent nhận định:") {
-          return <span key={i} className="text-purple-600 dark:text-purple-400 font-black">{part}</span>;
+    <div className={`space-y-3.5 text-xs ${theme === "light" ? "text-slate-700 font-medium" : "text-slate-200"}`}>
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={idx} className="h-1.5" />;
+
+        // Header cấp 1 hoặc 2 hoặc 3 (ví dụ ### )
+        if (trimmed.startsWith("### ")) {
+          const content = trimmed.substring(4);
+          return (
+            <h4 key={idx} className={`font-black text-xs uppercase tracking-wider mt-4 mb-2 pb-1 border-b ${
+              theme === "light" 
+                ? "text-emerald-800 border-slate-100" 
+                : "text-amber-400 border-white/5"
+            }`}>
+              {content}
+            </h4>
+          );
         }
-        if (part === "TỐT") {
-          return <span key={i} className="text-emerald-600 dark:text-emerald-400 font-extrabold">{part}</span>;
+
+        // Header cấp 4 (ví dụ #### )
+        if (trimmed.startsWith("#### ")) {
+          const content = trimmed.substring(5);
+          return (
+            <h5 key={idx} className={`font-extrabold text-[11px] mt-3 mb-1.5 ${
+              theme === "light" ? "text-slate-800" : "text-amber-300"
+            }`}>
+              {content}
+            </h5>
+          );
         }
-        if (part === "90%" || part === "95%") {
-          return <span key={i} className="text-rose-600 dark:text-rose-400 font-black">{part}</span>;
+
+        // Dòng gạch đầu dòng danh sách con
+        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+          const content = trimmed.substring(2);
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-4 leading-relaxed">
+              <span className="text-emerald-500 shrink-0 mt-1">•</span>
+              <span className="flex-1">{renderHighlightedSpans(content, theme)}</span>
+            </div>
+          );
         }
-        if (part === "Đề xuất:") {
-          return <span key={i} className="text-indigo-600 dark:text-indigo-400 font-black">{part}</span>;
+
+        // Dòng đánh số (ví dụ 1. )
+        if (/^\d+\.\s/.test(trimmed)) {
+          const match = trimmed.match(/^(\d+\.\s)(.*)/);
+          if (match) {
+            return (
+              <div key={idx} className="flex items-start gap-2 pl-2 leading-relaxed">
+                <span className="font-extrabold text-purple-500 shrink-0">{match[1]}</span>
+                <span className="flex-1">{renderHighlightedSpans(match[2], theme)}</span>
+              </div>
+            );
+          }
         }
-        if (part === "chuẩn hóa kho asset 3D") {
-          return <span key={i} className="text-purple-600 dark:text-purple-400 font-black">{part}</span>;
-        }
-        return part;
+
+        // Dòng thường
+        return (
+          <p key={idx} className="leading-relaxed pl-1">
+            {renderHighlightedSpans(trimmed, theme)}
+          </p>
+        );
       })}
-    </span>
+    </div>
   );
 };
 
