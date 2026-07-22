@@ -609,49 +609,61 @@ export default function OkrStrategyPage() {
 
       {/* thanh ĐIỀU HƯỚNG 4 MODULE CON */}
       <div className="flex flex-wrap gap-2 border-b border-white/10 pb-2">
-        <button
+        <div
+          role="button"
           onClick={() => setActiveTab("5.1")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
             activeTab === "5.1"
-              ? "bg-[var(--accent-purple)] text-white shadow-[0_0_15px_rgba(139,92,246,0.4)]"
-              : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
+              ? "bg-[var(--accent-purple)] !text-white shadow-[0_0_15px_rgba(139,92,246,0.4)]"
+              : theme === "light"
+                ? "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 border border-slate-200"
+                : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
           }`}
         >
           <Target size={15} /> 5.1 Thiết lập Chiến lược & OKRs
-        </button>
+        </div>
 
-        <button
+        <div
+          role="button"
           onClick={() => setActiveTab("5.2")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
             activeTab === "5.2"
               ? "bg-[var(--accent-cyan)] text-slate-950 shadow-[0_0_15px_rgba(0,242,254,0.4)]"
-              : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
+              : theme === "light"
+                ? "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 border border-slate-200"
+                : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
           }`}
         >
           <TrendingUp size={15} /> 5.2 Cập nhật & Theo dõi Tiến độ
-        </button>
+        </div>
 
-        <button
+        <div
+          role="button"
           onClick={() => setActiveTab("5.3")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
             activeTab === "5.3"
-              ? "bg-[var(--accent-pink)] text-white shadow-[0_0_15px_rgba(255,75,114,0.4)]"
-              : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
+              ? "bg-[var(--accent-pink)] !text-white shadow-[0_0_15px_rgba(255,75,114,0.4)]"
+              : theme === "light"
+                ? "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 border border-slate-200"
+                : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
           }`}
         >
           <Bot size={15} /> 5.3 AI Review & Phản tỉnh (Reflection)
-        </button>
+        </div>
 
-        <button
+        <div
+          role="button"
           onClick={() => setActiveTab("5.4")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold transition-all cursor-pointer select-none ${
             activeTab === "5.4"
               ? "bg-emerald-500 text-slate-950 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-              : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
+              : theme === "light"
+                ? "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800 border border-slate-200"
+                : "bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-900 hover:text-white"
           }`}
         >
           <GitBranch size={15} /> 5.4 Sơ đồ Liên kết (Alignment Tree)
-        </button>
+        </div>
       </div>
 
       {/* FREEZE PANEL FILTER HEADER */}
@@ -1150,13 +1162,21 @@ export default function OkrStrategyPage() {
                       <span className="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">
                         Trọng số: {obj.weight}%
                       </span>
-                      <button
-                        onClick={() => handleOpenKrModal(obj.id)}
-                        disabled={!isEditable}
-                        className="bg-white/5 border border-white/10 text-xs font-bold px-3 py-1.5 rounded transition-all disabled:opacity-50"
+                      <div
+                        role="button"
+                        onClick={() => {
+                          if (isEditable) handleOpenKrModal(obj.id);
+                        }}
+                        className={`text-xs font-extrabold px-3 py-1.5 rounded-lg border transition-all select-none ${
+                          !isEditable
+                            ? "opacity-50 cursor-not-allowed"
+                            : theme === "light"
+                              ? "bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100 cursor-pointer shadow-sm"
+                              : "bg-white/5 border border-white/10 text-emerald-400 hover:bg-white/10 cursor-pointer"
+                        }`}
                       >
                         + Thêm KR con
-                      </button>
+                      </div>
                     </div>
                   </div>
 
@@ -1165,13 +1185,21 @@ export default function OkrStrategyPage() {
                       <div key={kr.id} className="bg-slate-950/40 border border-white/5 p-3 rounded-lg">
                         <div className="flex justify-between items-center">
                           <span className="font-bold text-xs text-white">↳ KR: {kr.title} (Trọng số: {kr.weight}%)</span>
-                          <button
-                            onClick={() => handleOpenActionModal(kr.id)}
-                            disabled={!isEditable}
-                            className="bg-[var(--accent-purple)]/10 text-[var(--accent-purple)] text-[10px] font-bold px-2 py-1 rounded"
+                          <div
+                            role="button"
+                            onClick={() => {
+                              if (isEditable) handleOpenActionModal(kr.id);
+                            }}
+                            className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg border transition-all select-none ${
+                              !isEditable
+                                ? "opacity-50 cursor-not-allowed"
+                                : theme === "light"
+                                  ? "bg-purple-50 border-purple-300 text-purple-700 hover:bg-purple-100 cursor-pointer shadow-sm"
+                                  : "bg-[var(--accent-purple)]/10 border-transparent text-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/20 cursor-pointer"
+                            }`}
                           >
                             + Thêm Action
-                          </button>
+                          </div>
                         </div>
                       </div>
                     ))}
