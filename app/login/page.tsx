@@ -135,14 +135,14 @@ export default function LoginPage() {
         )}
 
         {/* GOOGLE SIGN IN (PRIMARY OPTION) */}
-        <div className="space-y-4">
-          <div className="text-center">
-            <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase">
-              XÁC THỰC DOANH NGHIỆP
-            </span>
-          </div>
+        {googleClientId && (
+          <div className="space-y-4">
+            <div className="text-center">
+              <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase">
+                XÁC THỰC DOANH NGHIỆP
+              </span>
+            </div>
 
-          {googleClientId ? (
             <div className="flex flex-col items-center justify-center py-4 bg-slate-900/40 border border-white/5 rounded-xl gap-2">
               <div
                 id="g_id_onload"
@@ -165,20 +165,17 @@ export default function LoginPage() {
                 Sử dụng tài khoản Google Sconnect Workspace
               </p>
             </div>
-          ) : (
-            <div className="bg-amber-500/10 border border-amber-500/30 text-amber-400 p-3.5 rounded-xl text-[11px] leading-relaxed">
-              <span className="font-bold uppercase block mb-1">⚠️ Chưa cấu hình Google OAuth Client ID</span>
-              Hãy điền biến `NEXT_PUBLIC_GOOGLE_CLIENT_ID` vào tệp `.env` để kích hoạt đăng nhập Google. Bạn có thể sử dụng form đăng nhập nhanh bên dưới để chạy thử.
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* OR DIVIDER */}
-        <div className="relative flex py-2 items-center">
-          <div className="flex-grow border-t border-white/5" />
-          <span className="flex-shrink mx-4 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Hoặc</span>
-          <div className="flex-grow border-t border-white/5" />
-        </div>
+        {googleClientId && (
+          <div className="relative flex py-2 items-center">
+            <div className="flex-grow border-t border-white/5" />
+            <span className="flex-shrink mx-4 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Hoặc</span>
+            <div className="flex-grow border-t border-white/5" />
+          </div>
+        )}
 
         {/* DIRECT EMAIL LOGIN (FALLBACK/DEMO FLOW) */}
         <form onSubmit={handleEmailLogin} className="space-y-4">
@@ -209,14 +206,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* HELPFUL TIPS FOR SEEDED USERS */}
-        <div className="bg-slate-900/60 p-4 rounded-xl border border-white/5 flex gap-2.5 items-start text-[10px] text-slate-400 leading-relaxed mt-2">
-          <ShieldCheck className="text-emerald-500 shrink-0 mt-0.5" size={16} />
-          <div>
-            <span className="font-bold text-white uppercase block mb-0.5">Danh sách Email được cấp quyền</span>
-            Nhập email của bạn (Ví dụ: `lyttd@s-connect.net`, `khoald@s-connect.net`, `hoangtm@s-connect.net`...) để đăng nhập tức thì.
-          </div>
-        </div>
+
 
       </div>
     </div>
