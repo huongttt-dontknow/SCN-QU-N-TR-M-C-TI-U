@@ -878,8 +878,8 @@ export default function DashboardPage() {
             📝 BXH Tăng trưởng Doanh thu
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
-          <div className="space-y-2.5 text-xs">
-            {bxhRevenueSorted.slice(0, 6).map(row => (
+          <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+            {bxhRevenueSorted.map(row => (
               <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
@@ -902,8 +902,8 @@ export default function DashboardPage() {
             🎬 BXH Hoàn thành Sản xuất
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Mức độ hoàn thành kế hoạch số lượng video</p>
-          <div className="space-y-2.5 text-xs">
-            {bxhProductionSorted.slice(0, 6).map(row => (
+          <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+            {bxhProductionSorted.map(row => (
               <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
@@ -926,8 +926,8 @@ export default function DashboardPage() {
             🌐 BXH Tăng trưởng Traffic
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng traffic views</p>
-          <div className="space-y-2.5 text-xs">
-            {bxhTrafficSorted.slice(0, 6).map(row => (
+          <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+            {bxhTrafficSorted.map(row => (
               <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
                 row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
               }`}>
