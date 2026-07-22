@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 import { 
   LayoutDashboard, 
@@ -18,7 +18,20 @@ import {
 
 export default function SidebarLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { currentLoggedUser, theme, toggleTheme } = useApp();
+  const router = useRouter();
+  const { currentLoggedUser, setCurrentLoggedUser, theme, toggleTheme } = useApp();
+
+  React.useEffect(() => {
+    // Nếu chưa đăng nhập và không nằm ở trang login, chuyển hướng về login
+    if (!currentLoggedUser && pathname !== "/login") {
+      router.push("/login");
+    }
+  }, [currentLoggedUser, pathname, router]);
+
+  // Nếu đang ở trang login, render màn hình trần không bọc sidebar
+  if (pathname === "/login") {
+    return <>{children}</>;
+  }
 
   const menuItems = [
     { name: "Dashboard Tổng Hợp", path: "/", icon: <LayoutDashboard size={18} /> },
@@ -97,29 +110,40 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
 
           {/* FOOTER USER DISPLAY */}
           {currentLoggedUser && (
-            <div className="pt-3 border-t border-[var(--glass-border)] flex items-center gap-3">
-              <div 
-                className="w-9 h-9 rounded-full flex items-center justify-center font-black text-slate-950 text-xs shadow-inner"
-                style={{
-                  background: currentLoggedUser.role === "Admin" 
-                    ? "var(--accent-pink)" 
-                    : currentLoggedUser.role === "Trưởng đơn vị" 
-                      ? "var(--accent-purple)" 
-                      : currentLoggedUser.role === "Người dùng" 
-                        ? "var(--accent-emerald)" 
-                        : "var(--accent-cyan)"
+            <div className="pt-3 border-t border-[var(--glass-border)] flex flex-col gap-2.5">
+              <div className="flex items-center gap-3">
+                <div 
+                  className="w-9 h-9 rounded-full flex items-center justify-center font-black text-slate-950 text-xs shadow-inner"
+                  style={{
+                    background: currentLoggedUser.role === "Admin" 
+                      ? "var(--accent-pink)" 
+                      : currentLoggedUser.role === "Trưởng đơn vị" 
+                        ? "var(--accent-purple)" 
+                        : currentLoggedUser.role === "Người dùng" 
+                          ? "var(--accent-emerald)" 
+                          : "var(--accent-cyan)"
+                  }}
+                >
+                  {currentLoggedUser.fullname.charAt(0)}
+                </div>
+                <div className="overflow-hidden flex-1">
+                  <h4 className="text-xs font-bold text-[var(--text-main)] truncate">
+                    {currentLoggedUser.fullname}
+                  </h4>
+                  <p className="text-[10px] text-[var(--text-muted)] truncate font-semibold">
+                    {currentLoggedUser.role} @ {currentLoggedUser.unitCode}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setCurrentLoggedUser(null);
+                  router.push("/login");
                 }}
+                className="w-full py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-extrabold transition-all"
               >
-                {currentLoggedUser.fullname.charAt(0)}
-              </div>
-              <div className="overflow-hidden">
-                <h4 className="text-xs font-bold text-[var(--text-main)] truncate">
-                  {currentLoggedUser.fullname}
-                </h4>
-                <p className="text-[10px] text-[var(--text-muted)] truncate">
-                  {currentLoggedUser.role} @ {currentLoggedUser.unitCode}
-                </p>
-              </div>
+                🚪 ĐĂNG XUẤT
+              </button>
             </div>
           )}
         </div>
@@ -131,14 +155,14 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
         <header className="glass-panel w-full p-4 mb-4 flex justify-between items-center">
           <div className="flex items-center gap-2 text-emerald-500 font-bold text-xs tracking-wider">
             <UserCheck2 size={16} />
-            <span>MÔ PHỎNG ĐANG KÍCH HOẠT:</span>
+            <span>TÀI KHOẢN:</span>
             {currentLoggedUser && (
-              <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-black ml-1">
+              <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-black ml-1 uppercase">
                 {currentLoggedUser.fullname} ({currentLoggedUser.role} - {currentLoggedUser.unitCode})
               </span>
             )}
           </div>
-          <div className="text-xs text-[var(--text-muted)] font-medium">
+          <div className="text-xs text-[var(--text-muted)] font-bold">
             Hệ thống Quản trị Mục tiêu & Chiến dịch OKR 2026
           </div>
         </header>

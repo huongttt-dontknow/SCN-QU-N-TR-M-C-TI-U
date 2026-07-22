@@ -35,7 +35,7 @@ interface AppContextType {
   permissions: RolePermission[];
   filters: AppFilters;
   theme: "dark" | "light";
-  setCurrentLoggedUser: (user: User) => void;
+  setCurrentLoggedUser: (user: User | null) => void;
   setFilters: React.Dispatch<React.SetStateAction<AppFilters>>;
   toggleTheme: () => void;
   refreshUsers: () => Promise<void>;
@@ -59,19 +59,37 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     year: "2026",
   });
 
-  // Load theme from localStorage on initial render
+  // Load theme and user session from localStorage on initial render
   useEffect(() => {
-    const savedTheme = localStorage.getItem("sconnect_theme") as "dark" | "light";
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-      document.documentElement.classList.toggle("light", savedTheme === "light");
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("sconnect_theme") as "dark" | "light";
+      if (savedTheme === "light" || savedTheme === "dark") {
+        setTheme(savedTheme);
+        document.documentElement.classList.toggle("light", savedTheme === "light");
+      }
+
+      const savedUser = localStorage.getItem("sconnect_user");
+      if (savedUser) {
+        try {
+          const parsed = JSON.parse(savedUser);
+          setCurrentLoggedUserState(parsed);
+          const isRestricted = parsed.role === "Trưởng đơn vị" || parsed.role === "Người dùng";
+          if (isRestricted) {
+            setFilters(prev => ({ ...prev, unitCode: parsed.unitCode }));
+          }
+        } catch (e) {
+          console.error("Lỗi parse sconnect_user:", e);
+        }
+      }
     }
   }, []);
 
   const toggleTheme = () => {
     setTheme(prev => {
       const nextTheme = prev === "dark" ? "light" : "dark";
-      localStorage.setItem("sconnect_theme", nextTheme);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("sconnect_theme", nextTheme);
+      }
       document.documentElement.classList.toggle("light", nextTheme === "light");
       return nextTheme;
     });
@@ -83,9 +101,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (Array.isArray(data)) {
         setUsersList(data);
-        if (!currentLoggedUser && data.length > 0) {
-          const admin = data.find(u => u.role === "Admin") || data[0];
-          setCurrentLoggedUserState(admin);
+        if (typeof window !== "undefined") {
+          const savedUser = localStorage.getItem("sconnect_user");
+          if (!savedUser && !currentLoggedUser && data.length > 0) {
+            // Default to first user if no session
+            const admin = data.find(u => u.role === "Admin") || data[0];
+            setCurrentLoggedUserState(admin);
+          }
         }
       }
     } catch (e) {
@@ -110,14 +132,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     refreshPermissions();
   }, []);
 
-  const setCurrentLoggedUser = (user: User) => {
+  const setCurrentLoggedUser = (user: User | null) => {
     setCurrentLoggedUserState(user);
-    const isRestricted = user.role === "Trưởng đơn vị" || user.role === "Người dùng";
-    if (isRestricted) {
-      setFilters(prev => ({
-        ...prev,
-        unitCode: user.unitCode,
-      }));
+    if (typeof window !== "undefined") {
+      if (user) {
+        localStorage.setItem("sconnect_user", JSON.stringify(user));
+        const isRestricted = user.role === "Trưởng đơn vị" || user.role === "Người dùng";
+        if (isRestricted) {
+          setFilters(prev => ({
+            ...prev,
+            unitCode: user.unitCode,
+          }));
+        }
+      } else {
+        localStorage.removeItem("sconnect_user");
+      }
     }
   };
 

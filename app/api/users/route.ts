@@ -8,14 +8,28 @@ export async function GET() {
       orderBy: { employeeCode: "asc" },
     });
 
-    // Nếu CSDL trống, tự động nạp các user mặc định
-    if (users.length === 0) {
+    // Nếu CSDL trống hoặc chứa dữ liệu cũ SCN001, tự động nạp danh sách thực tế của Sconnect
+    if (users.length === 0 || users.some(u => u.employeeCode === "SCN001")) {
+      // Clear old mock data if exists
+      if (users.length > 0) {
+        await prisma.user.deleteMany({});
+      }
+
       const defaultUsers = [
-        { employeeCode: "SCN001", fullname: "Nguyễn Minh Trí", email: "trinm@s-connect.net", role: "Admin", unitCode: "SCVN" },
-        { employeeCode: "SCN002", fullname: "Lê Quỳnh Nga", email: "ngalq@s-connect.net", role: "Quản trị viên", unitCode: "SCVN" },
-        { employeeCode: "SCN003", fullname: "Lê Đăng Khoa", email: "khoald@s-connect.net", role: "Trưởng đơn vị", unitCode: "Wofloo" },
-        { employeeCode: "SCN004", fullname: "Phạm Thùy Linh", email: "linhpt@s-connect.net", role: "Trưởng đơn vị", unitCode: "Music" },
-        { employeeCode: "SCN005", fullname: "Trần Anh Tuấn", email: "tuanta@s-connect.net", role: "Người dùng", unitCode: "DA01" },
+        { employeeCode: "SCN0066", fullname: "Trần Thị Diệu Ly", email: "lyttd@s-connect.net", role: "Admin", unitCode: "SCVN" },
+        { employeeCode: "SCN0071", fullname: "Lê Đăng Khoa", email: "khoald@s-connect.net", role: "Trưởng đơn vị", unitCode: "Wofloo" },
+        { employeeCode: "SCN0452", fullname: "Lê Quỳnh Nga", email: "ngalq@s-connect.net", role: "Trưởng đơn vị", unitCode: "Lego" },
+        { employeeCode: "SCN0237", fullname: "Trịnh Quốc Thịnh", email: "thinhtq1@s-connect.net", role: "Trưởng đơn vị", unitCode: "AS" },
+        { employeeCode: "SCN0149", fullname: "Vũ Trung Đức", email: "ductvt@s-connect.net", role: "Trưởng đơn vị", unitCode: "Music" },
+        { employeeCode: "SCN0043", fullname: "Lò Quế Hằng", email: "hanglq@s-connect.net", role: "Trưởng đơn vị", unitCode: "NDTH" },
+        { employeeCode: "SCN2695", fullname: "Nguyễn Quang Khánh", email: "khanhnq@s-connect.net", role: "Trưởng đơn vị", unitCode: "CR" },
+        { employeeCode: "SCN1021", fullname: "Đào Thanh Công", email: "congdt@s-connect.net", role: "Trưởng đơn vị", unitCode: "CN" },
+        { employeeCode: "SCN0009", fullname: "Nguyễn Ánh Tùng", email: "tungna@s-connect.net", role: "Trưởng đơn vị", unitCode: "SCS" },
+        { employeeCode: "SCN0001", fullname: "Tạ Mạnh Hoàng", email: "hoangtm@s-connect.net", role: "Quản trị viên", unitCode: "SCVN" },
+        { employeeCode: "SCN1451", fullname: "Phạm Thị Thanh Hiền", email: "hienptt@s-connect.net", role: "Admin", unitCode: "SCVN" },
+        { employeeCode: "SCN0405", fullname: "Trần Thị Thu Hương", email: "huongttt@s-connect.net", role: "Admin", unitCode: "SCVN" },
+        { employeeCode: "SCN0909", fullname: "Trần Thị Hồng", email: "hongtt@s-connect.net", role: "Trưởng đơn vị", unitCode: "DA01" },
+        { employeeCode: "SCN1142", fullname: "Dương Tuấn Linh", email: "linhdt1@s-connect.net", role: "Trưởng đơn vị", unitCode: "DA01" },
       ];
 
       await prisma.user.createMany({ data: defaultUsers });

@@ -8,7 +8,9 @@ import {
   UserPlus, 
   Trash2, 
   ShieldCheck, 
-  ToggleLeft 
+  ToggleLeft,
+  Upload,
+  Download
 } from "lucide-react";
 
 export default function PermissionsPage() {
@@ -31,6 +33,68 @@ export default function PermissionsPage() {
 
   // Security Check: Only Admin can edit permissions
   const isAdmin = currentLoggedUser?.role === "Admin";
+
+  const handleCsvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      const text = evt.target?.result as string;
+      if (!text) return;
+
+      const lines = text.split(/\r?\n/);
+      if (lines.length < 2) {
+        alert("File CSV rỗng hoặc không hợp lệ!");
+        return;
+      }
+
+      // Parse headers
+      const headers = lines[0].split(",").map(h => h.trim().replace(/^["']|["']$/g, ""));
+      const parsedUsers = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const cols = line.split(",").map(c => c.trim().replace(/^["']|["']$/g, ""));
+        if (cols.length < headers.length) continue;
+
+        const uObj: any = {};
+        headers.forEach((h, idx) => {
+          uObj[h] = cols[idx];
+        });
+        parsedUsers.push(uObj);
+      }
+
+      if (parsedUsers.length === 0) {
+        alert("Không tìm thấy người dùng hợp lệ để nhập!");
+        return;
+      }
+
+      try {
+        setSubmitting(true);
+        const res = await fetch("/api/users/import", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ users: parsedUsers }),
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert(`✓ Nhập thành công: ${data.message}`);
+          refreshUsers();
+        } else {
+          alert(`Lỗi: ${data.error}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Lỗi kết nối khi gửi dữ liệu CSV.");
+      } finally {
+        setSubmitting(false);
+      }
+    };
+    reader.readAsText(file, "UTF-8");
+    e.target.value = ""; // Clear input
+  };
 
   const handleSimulateUser = (user: User) => {
     setCurrentLoggedUser(user);
@@ -143,6 +207,47 @@ export default function PermissionsPage() {
             <Users size={16} className="text-[var(--accent-cyan)]" />
             👥 QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG
           </h3>
+
+          {/* CSV Import Section */}
+          <div className="bg-slate-950/40 p-4 rounded-lg border border-white/5 flex flex-col gap-3">
+            <h4 className="text-xs font-bold text-[var(--accent-cyan)] uppercase tracking-wider flex items-center justify-between">
+              <span>📥 Nhập hàng loạt qua file CSV</span>
+              <button 
+                type="button"
+                onClick={() => {
+                  const csvContent = "data:text/csv;charset=utf-8,employeeCode,fullname,email,role,unitCode\nSCN0066,Trần Thị Diệu Ly,lyttd@s-connect.net,Admin,SCVN\nSCN0071,Lê Đăng Khoa,khoald@s-connect.net,Trưởng đơn vị,Wofloo";
+                  const encodedUri = encodeURI(csvContent);
+                  const link = document.createElement("a");
+                  link.setAttribute("href", encodedUri);
+                  link.setAttribute("download", "sconnect_users_template.csv");
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="text-[9px] bg-slate-900 border border-white/10 hover:border-[var(--accent-cyan)] px-2 py-0.5 rounded text-white flex items-center gap-1 font-extrabold"
+              >
+                <Download size={10} /> Tải file mẫu
+              </button>
+            </h4>
+            <div className="flex items-center gap-3">
+              <label 
+                htmlFor="csv-upload-file" 
+                className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 text-slate-950 text-xs font-black py-2 px-3 rounded hover:shadow-[0_0_10px_rgba(16,185,129,0.3)] transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow"
+              >
+                <Upload size={14} /> TẢI FILE CSV PHÂN QUYỀN
+              </label>
+              <input 
+                id="csv-upload-file"
+                type="file" 
+                accept=".csv"
+                onChange={handleCsvUpload}
+                className="hidden" 
+              />
+            </div>
+            <p className="text-[10px] text-slate-500 leading-normal font-semibold">
+              * Hỗ trợ cập nhật tự động (Upsert). Hãy tải file mẫu để xem đúng định dạng tiêu đề cột.
+            </p>
+          </div>
 
           {/* Create User Form */}
           <form onSubmit={handleCreateUser} className="bg-slate-950/40 p-4 rounded-lg border border-white/5 space-y-3">
