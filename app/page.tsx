@@ -468,10 +468,42 @@ export default function DashboardPage() {
   // Card 5: ROI
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
-  // Tính toán so sánh Doanh thu SCVN kỳ liền trước & cùng kỳ tháng trước (cho Card 1)
+  // Tính toán so sánh Doanh thu SCVN kỳ liền trước & cùng kỳ tháng trước (cho Card 1) - Tăng trưởng của doanh thu thực tế
   const scvnRevRecPrev = getMasterKpiRecord("SCVN", "VM1-I02.01", prevPeriodKey);
-  const prevRevPct = scvnRevRecPrev?.pct ? Math.round(scvnRevRecPrev.pct * 100) : (scvnRevRecPrev?.target && scvnRevRecPrev.target > 0 ? Math.round(((scvnRevRecPrev.actual || 0) / scvnRevRecPrev.target) * 100) : 0);
-  const diffPrev = revPct - prevRevPct;
+  
+  let currActVal = scvnRevRec?.actual || 0;
+  if (filters.periodType === "monthly" && currActVal === 0) {
+    const periods = MASTER_KPI_DATA["SCVN"]?.["VM1-I02.01"]?.periods || {};
+    let sumAct = 0;
+    const m = Number(filters.month) || 7;
+    for (let w = 1; w <= 5; w++) {
+      const wKey = `weekly_${m}_${w}`;
+      if (periods[wKey]) {
+        sumAct += periods[wKey].actual ?? 0;
+      }
+    }
+    if (sumAct > 0) {
+      currActVal = sumAct;
+    }
+  }
+
+  let prevActVal = scvnRevRecPrev?.actual || 0;
+  if (filters.periodType === "monthly" && prevActVal === 0 && prevPeriodKey) {
+    const periods = MASTER_KPI_DATA["SCVN"]?.["VM1-I02.01"]?.periods || {};
+    let sumAct = 0;
+    const prevM = Number(filters.month) > 1 ? Number(filters.month) - 1 : 12;
+    for (let w = 1; w <= 5; w++) {
+      const wKey = `weekly_${prevM}_${w}`;
+      if (periods[wKey]) {
+        sumAct += periods[wKey].actual ?? 0;
+      }
+    }
+    if (sumAct > 0) {
+      prevActVal = sumAct;
+    }
+  }
+
+  const diffPrev = prevActVal > 0 ? Number(((currActVal - prevActVal) / prevActVal * 100).toFixed(1)) : null;
 
   const getSamePeriodLastMonthKey = (type: string, mStr: string, wStr: string, qStr: string, yStr: string) => {
     const m = Number(mStr) || 7;
@@ -495,8 +527,10 @@ export default function DashboardPage() {
   if (samePeriodLastMonthKey) {
     const scvnRevRecSameLastMonth = getMasterKpiRecord("SCVN", "VM1-I02.01", samePeriodLastMonthKey);
     if (scvnRevRecSameLastMonth) {
-      const sameLastMonthRevPct = scvnRevRecSameLastMonth.pct ? Math.round(scvnRevRecSameLastMonth.pct * 100) : (scvnRevRecSameLastMonth.target && scvnRevRecSameLastMonth.target > 0 ? Math.round(((scvnRevRecSameLastMonth.actual || 0) / scvnRevRecSameLastMonth.target) * 100) : 0);
-      diffLastMonth = revPct - sameLastMonthRevPct;
+      const sameLastMonthActVal = scvnRevRecSameLastMonth.actual || 0;
+      if (sameLastMonthActVal > 0) {
+        diffLastMonth = Number(((currActVal - sameLastMonthActVal) / sameLastMonthActVal * 100).toFixed(1));
+      }
     }
   }
 
@@ -604,12 +638,14 @@ export default function DashboardPage() {
             </div>
 
             <div className="mt-2.5 pt-2 border-t border-white/5 space-y-1 text-[10px] font-bold text-slate-400">
-              <div className="flex justify-between items-center">
-                <span>Kỳ liền trước:</span>
-                <span className={diffPrev >= 0 ? "text-emerald-400" : "text-rose-400"}>
-                  {diffPrev >= 0 ? `▲ +${diffPrev}%` : `▼ ${diffPrev}%`}
-                </span>
-              </div>
+              {diffPrev !== null && (
+                <div className="flex justify-between items-center">
+                  <span>Kỳ liền trước:</span>
+                  <span className={diffPrev >= 0 ? "text-emerald-400" : "text-rose-400"}>
+                    {diffPrev >= 0 ? `▲ +${diffPrev}%` : `▼ ${diffPrev}%`}
+                  </span>
+                </div>
+              )}
               {diffLastMonth !== null && (
                 <div className="flex justify-between items-center">
                   <span>Cùng kỳ tháng trước:</span>
