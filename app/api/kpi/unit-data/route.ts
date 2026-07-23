@@ -103,6 +103,30 @@ export async function GET(request: Request) {
       }
     }
 
+    // Tự động tính gộp dữ liệu từ con lên cha cho các chỉ tiêu cha trung gian (ví dụ: VM1-I02.02, VM1-I02.03, VM1-I02.04)
+    for (const row of allRows) {
+      if (row.isParent && row.code !== "M1" && row.code !== "M2" && row.code !== "M3" && row.code !== "M4" && row.code !== "M5" && row.code !== "M6" && row.code !== "M7") {
+        const subChildren = allRows.filter(r => r.parentCode === row.code);
+        if (subChildren.length > 0) {
+          row.targetWeek = 0; row.actualWeek = 0;
+          row.targetMonth = 0; row.actualMonth = 0;
+          row.targetQuarter = 0; row.actualQuarter = 0;
+          row.targetYear = 0; row.actualYear = 0;
+          
+          for (const child of subChildren) {
+            row.targetWeek += child.targetWeek;
+            row.actualWeek += child.actualWeek;
+            row.targetMonth += child.targetMonth;
+            row.actualMonth += child.actualMonth;
+            row.targetQuarter += child.targetQuarter;
+            row.actualQuarter += child.actualQuarter;
+            row.targetYear += child.targetYear;
+            row.actualYear += child.actualYear;
+          }
+        }
+      }
+    }
+
     // Tự động tính gộp dữ liệu từ con lên cha cho các chỉ tiêu cha hoặc nhóm cha
     // Để đơn giản và trực quan, ta thực hiện tính tổng doanh thu/sản lượng cho nhóm M1, M2, M3 từ các con trực tiếp
     for (const gCode of ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]) {
