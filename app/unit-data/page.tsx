@@ -215,12 +215,10 @@ export default function UnitDataPage() {
 
   // Tìm chỉ tiêu doanh thu thực tế (Tổng doanh thu hoặc doanh thu kênh)
   const revRow = kpiRows.find(r => 
-    !r.isParent && 
-    (r.code.includes("M1-I02.01") || 
-     r.title.toLowerCase().includes("tổng doanh thu") || 
-     r.title.toLowerCase() === "doanh thu" ||
-     r.title.toLowerCase().includes("doanh thu kênh")
-    )
+    r.code.includes("M1-I02.01") || 
+    r.title.toLowerCase().includes("tổng doanh thu") || 
+    r.title.toLowerCase() === "doanh thu" ||
+    r.title.toLowerCase().includes("doanh thu kênh")
   );
   const actualRev = revRow ? getActualValue(revRow) : 0;
   const targetRev = revRow ? getTargetValue(revRow) : 0;
@@ -228,13 +226,12 @@ export default function UnitDataPage() {
 
   // Tìm chỉ tiêu traffic thực tế (Tổng traffic hoặc view)
   const trafficRow = kpiRows.find(r => 
-    !r.isParent && 
-    (r.code.includes("M3-I01.02") || 
-     r.code.includes("M3-I01.03") || 
-     r.title.toLowerCase().includes("traffic") || 
-     r.title.toLowerCase().includes("lượt view") || 
-     r.title.toLowerCase().includes("view youtube")
-    )
+    r.code.includes("M3-I01.02") || 
+    r.code.includes("M3-I01.03") || 
+    r.code.includes("M3-I01.01") || 
+    r.title.toLowerCase().includes("traffic") || 
+    r.title.toLowerCase().includes("lượt view") || 
+    r.title.toLowerCase().includes("view youtube")
   );
   const actualTraffic = trafficRow ? getActualValue(trafficRow) : 0;
   const targetTraffic = trafficRow ? getTargetValue(trafficRow) : 0;
@@ -489,7 +486,7 @@ export default function UnitDataPage() {
                         </td>
                       )}
                       <td 
-                        colSpan={showCodeColumn ? 2 : 3} 
+                        colSpan={2} 
                         className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white" 
                         style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
                       >
