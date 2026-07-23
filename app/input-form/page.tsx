@@ -1517,23 +1517,81 @@ export default function InputFormPage() {
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-2">
                   🏆 XẾP HẠNG PSH SẢN PHẨM NỘI BỘ ({filters.unitCode})
                 </span>
-                <div className="space-y-2 text-xs">
-                  {unitProductRankings.map((p, idx) => (
-                    <div
-                      key={p.id}
-                      className={`p-2 rounded-lg flex justify-between items-center ${
-                        p.id === activeProductId ? "bg-purple-600/30 border border-purple-500/50 font-bold" : "bg-white/5"
-                      }`}
-                    >
-                      <span className="truncate max-w-[170px]">
-                        #{idx + 1} {p.name}
-                      </span>
-                      <span className="font-black text-purple-300 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-500/30 text-[11px]">
-                        {p.score} điểm
-                      </span>
+                
+                {filters.unitCode === "SCVN" || filters.unitCode === "TCT" ? (
+                  <div className="space-y-4 text-xs">
+                    {/* TOP 5 CAO ĐIỂM NHẤT */}
+                    <div className="space-y-1.5">
+                      <div className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        🟢 TOP 5 CAO ĐIỂM NHẤT
+                      </div>
+                      {unitProductRankings.slice(0, 5).map((p, idx) => (
+                        <div
+                          key={p.id}
+                          className={`p-2 rounded-lg flex justify-between items-center border transition-all ${
+                            p.id === activeProductId 
+                              ? "bg-purple-100 dark:bg-purple-950/50 border-purple-500/50 font-bold text-purple-900 dark:text-purple-200" 
+                              : "bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-200/50 dark:border-emerald-900/20 text-emerald-800 dark:text-emerald-300"
+                          }`}
+                        >
+                          <span className="truncate max-w-[170px] font-medium">
+                            #{idx + 1} {p.name}
+                          </span>
+                          <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-extrabold px-2 py-0.5 rounded border border-emerald-400/20">
+                            {p.score} điểm
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+
+                    {/* TOP 5 THẤP ĐIỂM NHẤT */}
+                    <div className="space-y-1.5">
+                      <div className="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        🔴 TOP 5 THẤP ĐIỂM NHẤT
+                      </div>
+                      {unitProductRankings.slice(-5).map((p, idx) => {
+                        const rankNum = unitProductRankings.length - 5 + idx + 1;
+                        return (
+                          <div
+                            key={p.id}
+                            className={`p-2 rounded-lg flex justify-between items-center border transition-all ${
+                              p.id === activeProductId 
+                                ? "bg-purple-100 dark:bg-purple-950/50 border-purple-500/50 font-bold text-purple-900 dark:text-purple-200" 
+                                : "bg-rose-50/70 dark:bg-rose-950/20 border-rose-200/50 dark:border-rose-900/20 text-rose-800 dark:text-rose-300"
+                            }`}
+                          >
+                            <span className="truncate max-w-[170px] font-medium">
+                              #{rankNum} {p.name}
+                            </span>
+                            <span className="text-[10px] bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-300 font-extrabold px-2 py-0.5 rounded border border-rose-400/20">
+                              {p.score} điểm
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2 text-xs max-h-[350px] overflow-y-auto pr-1">
+                    {unitProductRankings.map((p, idx) => (
+                      <div
+                        key={p.id}
+                        className={`p-2 rounded-lg flex justify-between items-center border transition-all ${
+                          p.id === activeProductId 
+                            ? "bg-purple-100 dark:bg-purple-950/50 border-purple-500/50 font-bold text-purple-900 dark:text-purple-200" 
+                            : "bg-slate-100 dark:bg-slate-900/60 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300"
+                        }`}
+                      >
+                        <span className="truncate max-w-[170px] font-medium">
+                          #{idx + 1} {p.name}
+                        </span>
+                        <span className="text-[10px] bg-slate-200 dark:bg-slate-950 text-slate-700 dark:text-slate-400 font-extrabold px-2 py-0.5 rounded border border-slate-300 dark:border-white/10">
+                          {p.score} điểm
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
