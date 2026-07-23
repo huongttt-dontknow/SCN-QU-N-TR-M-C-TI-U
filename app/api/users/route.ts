@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createAuditLog } from "@/lib/audit";
 
 // GET /api/users - Lấy danh sách người dùng
 export async function GET() {
@@ -46,6 +47,7 @@ export async function GET() {
 // POST /api/users - Tạo người dùng mới
 export async function POST(request: Request) {
   try {
+    const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
     const { employeeCode, fullname, email, role, unitCode } = await request.json();
 
     if (!employeeCode || !fullname || !email || !role || !unitCode) {
@@ -67,6 +69,14 @@ export async function POST(request: Request) {
       data: { employeeCode, fullname, email, role, unitCode },
     });
 
+    // Ghi log tạo tài khoản
+    await createAuditLog(
+      operator,
+      "CREATE",
+      "permissions",
+      `Tạo tài khoản mới: ${fullname} (${email}), vai trò ${role}, đơn vị ${unitCode}`
+    );
+
     return NextResponse.json(newUser, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -76,6 +86,7 @@ export async function POST(request: Request) {
 // DELETE /api/users - Xóa người dùng
 export async function DELETE(request: Request) {
   try {
+    const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
@@ -83,7 +94,21 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Thiếu ID người dùng" }, { status: 400 });
     }
 
+    // Lấy thông tin user trước khi xóa để làm log chi tiết
+    const targetUser = await prisma.user.findUnique({ where: { id } });
+
     await prisma.user.delete({ where: { id } });
+
+    if (targetUser) {
+      // Ghi log xóa tài khoản
+      await createAuditLog(
+        operator,
+        "DELETE",
+        "permissions",
+        `Xóa tài khoản: ${targetUser.fullname} (${targetUser.email})`
+      );
+    }
+
     return NextResponse.json({ message: "Xóa người dùng thành công" });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -93,16 +118,30 @@ export async function DELETE(request: Request) {
 // PUT /api/users - Cập nhật vai trò người dùng
 export async function PUT(request: Request) {
   try {
+    const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
     const { id, role } = await request.json();
 
     if (!id || !role) {
       return NextResponse.json({ error: "Thiếu ID hoặc vai trò để cập nhật" }, { status: 400 });
     }
 
+    // Lấy thông tin cũ để ghi log thay đổi
+    const oldUser = await prisma.user.findUnique({ where: { id } });
+
     const updatedUser = await prisma.user.update({
       where: { id },
       data: { role },
     });
+
+    if (oldUser) {
+      // Ghi log đổi vai trò
+      await createAuditLog(
+        operator,
+        "UPDATE",
+        "permissions",
+        `Thay đổi vai trò của ${oldUser.fullname} (${oldUser.email}) từ ${oldUser.role} thành ${role}`
+      );
+    }
 
     return NextResponse.json(updatedUser);
   } catch (error: any) {

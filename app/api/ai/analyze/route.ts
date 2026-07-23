@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { createAuditLog } from "@/lib/audit";
 
 const apiKey = process.env.GEMINI_API_KEY || "";
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
@@ -7,11 +8,20 @@ const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 // POST /api/ai/analyze - Phân tích hiệu suất KPI và tạo dự báo qua Gemini AI
 export async function POST(request: Request) {
   try {
+    const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
     const { unitCode, periodKey, periodType, kpis } = await request.json();
 
     if (!kpis || !Array.isArray(kpis)) {
       return NextResponse.json({ error: "Thiếu dữ liệu KPIs để phân tích" }, { status: 400 });
     }
+
+    // Ghi log kích hoạt AI đề xuất
+    await createAuditLog(
+      operator,
+      "SYNC",
+      "system",
+      `Kích hoạt AI Agent phân tích và đề xuất Action cho đơn vị: ${unitCode || ""} (${periodType || ""} - ${periodKey || ""})`
+    );
 
     if (!genAI) {
       // Mock AI response if API Key is not set yet (helpful for initial deployment setup)

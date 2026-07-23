@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { PRODUCTS_CATALOG } from "@/lib/products_catalog";
+import { createAuditLog } from "@/lib/audit";
 
 const unitToProductUnitMap: Record<string, string> = {
   "Wofloo": "Wofloo",
@@ -264,6 +265,7 @@ export async function GET(request: Request) {
 // POST /api/kpi - Cập nhật số liệu thực tế và giải trình của KPI
 export async function POST(request: Request) {
   try {
+    const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
     const body = await request.json();
     const { unitCode, productCode, periodKey, periodType, kpiUpdates } = body; // kpiUpdates: array of { id, actualValue, explanation, status }
 
@@ -290,6 +292,20 @@ export async function POST(request: Request) {
     const updatedRecords = await prisma.kpiData.findMany({
       where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
+
+    // Xác định hành động (Lưu nháp vs Gửi duyệt)
+    const isApprovedOrPending = kpiUpdates.some(u => u.status === "Chờ duyệt" || u.status === "Đã duyệt" || u.status === "Yêu cầu hiệu chỉnh");
+    const actionLabel = isApprovedOrPending ? "SYNC" : "UPDATE";
+    const statusMsg = isApprovedOrPending 
+      ? `Thay đổi trạng thái báo cáo KPI đơn vị ${unitCode || ""} (${periodType} - ${periodKey}) thành ${kpiUpdates[0]?.status || "Đang thực hiện"}`
+      : `Lưu nháp số liệu KPI đơn vị ${unitCode || ""} sản phẩm ${productCode || "Không"}, ${kpiUpdates.length} chỉ tiêu`;
+
+    await createAuditLog(
+      operator,
+      actionLabel,
+      "kpi",
+      statusMsg
+    );
 
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công", data: updatedRecords });
   } catch (error: any) {

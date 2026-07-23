@@ -639,7 +639,10 @@ export default function InputFormPage() {
     try {
       const res = await fetch("/api/kpi", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "x-operator-email": currentLoggedUser?.email || ""
+        },
         body: JSON.stringify({
           unitCode: filters.unitCode,
           periodKey: pKey,
@@ -671,7 +674,10 @@ export default function InputFormPage() {
     try {
       const res = await fetch("/api/kpi", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "x-operator-email": currentLoggedUser?.email || ""
+        },
         body: JSON.stringify({
           unitCode: filters.unitCode,
           productCode: activeProductId,
@@ -791,7 +797,8 @@ export default function InputFormPage() {
       const res = await fetch("/api/ai/analyze", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "x-operator-email": currentLoggedUser?.email || ""
         },
         body: JSON.stringify({
           unitCode: filters.unitCode,
@@ -836,7 +843,8 @@ export default function InputFormPage() {
       const res = await fetch("/api/ai/analyze", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "x-operator-email": currentLoggedUser?.email || ""
         },
         body: JSON.stringify({
           unitCode: currentProduct?.name || activeProductId,

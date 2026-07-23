@@ -213,15 +213,32 @@ export default function UnitDataPage() {
     return row.actualYear;
   };
 
-  const revRow = kpiRows.find(r => r.code === "VM1-I02.01");
+  // Tìm chỉ tiêu doanh thu thực tế (Tổng doanh thu hoặc doanh thu kênh)
+  const revRow = kpiRows.find(r => 
+    !r.isParent && 
+    (r.code.includes("M1-I02.01") || 
+     r.title.toLowerCase().includes("tổng doanh thu") || 
+     r.title.toLowerCase() === "doanh thu" ||
+     r.title.toLowerCase().includes("doanh thu kênh")
+    )
+  );
   const actualRev = revRow ? getActualValue(revRow) : 0;
-  const targetRev = revRow ? getTargetValue(revRow) : 1;
-  const revCompletion = Math.round((actualRev / targetRev) * 100);
+  const targetRev = revRow ? getTargetValue(revRow) : 0;
+  const revCompletion = targetRev > 0 ? Math.round((actualRev / targetRev) * 100) : 0;
 
-  const trafficRow = kpiRows.find(r => r.code === "TM3-I01.02");
+  // Tìm chỉ tiêu traffic thực tế (Tổng traffic hoặc view)
+  const trafficRow = kpiRows.find(r => 
+    !r.isParent && 
+    (r.code.includes("M3-I01.02") || 
+     r.code.includes("M3-I01.03") || 
+     r.title.toLowerCase().includes("traffic") || 
+     r.title.toLowerCase().includes("lượt view") || 
+     r.title.toLowerCase().includes("view youtube")
+    )
+  );
   const actualTraffic = trafficRow ? getActualValue(trafficRow) : 0;
-  const targetTraffic = trafficRow ? getTargetValue(trafficRow) : 1;
-  const trafficCompletion = Math.round((actualTraffic / targetTraffic) * 100);
+  const targetTraffic = trafficRow ? getTargetValue(trafficRow) : 0;
+  const trafficCompletion = targetTraffic > 0 ? Math.round((actualTraffic / targetTraffic) * 100) : 0;
 
   const visibleRows = kpiRows.filter(row => {
     if (row.isParent) {

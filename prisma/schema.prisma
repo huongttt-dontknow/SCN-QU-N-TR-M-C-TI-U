@@ -104,3 +104,13 @@ model Action {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }
+
+// Bảng Logs Hệ thống & Kiểm toán
+model AuditLog {
+  id        String   @id @default(uuid())
+  timestamp DateTime @default(now())
+  operator  String   // Email người thực hiện
+  action    String   // LOGIN, LOGOUT, SYNC, CREATE, UPDATE, DELETE
+  module    String   // system, youtube, kpi, okr, permissions
+  details   String   @db.Text // Nội dung chi tiết
+}

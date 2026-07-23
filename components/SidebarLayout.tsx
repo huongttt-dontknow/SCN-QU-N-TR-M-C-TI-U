@@ -13,7 +13,8 @@ import {
   KeyRound, 
   UserCheck2,
   Sun,
-  Moon
+  Moon,
+  Settings
 } from "lucide-react";
 
 export default function SidebarLayout({ children }: { children: React.ReactNode }) {
@@ -41,6 +42,14 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
     { name: "Chiến Lược & OKRs", path: "/okr-strategy", icon: <TrendingUp size={18} /> },
     { name: "Phân Quyền", path: "/permissions", icon: <KeyRound size={18} /> },
   ];
+
+  if (currentLoggedUser?.role === "Admin") {
+    menuItems.push({
+      name: "Hệ thống & Logs",
+      path: "/system-logs",
+      icon: <Settings size={18} />
+    });
+  }
 
   return (
     <div className="flex min-h-screen">

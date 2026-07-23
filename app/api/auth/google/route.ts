@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   try {
@@ -40,6 +41,14 @@ export async function POST(request: Request) {
         error: `Tài khoản '${email}' chưa được phân quyền trên hệ thống. Vui lòng liên hệ Admin.` 
       }, { status: 403 });
     }
+
+    // Ghi nhận lịch sử đăng nhập vào Access Logs
+    await createAuditLog(
+      email,
+      "LOGIN",
+      "system",
+      `${user.fullname} (Đăng nhập hệ thống)`
+    );
 
     // Trả về thông tin người dùng và quyền truy cập
     return NextResponse.json({

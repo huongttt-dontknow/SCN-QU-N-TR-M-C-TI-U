@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   try {
+    const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
     const { users } = await request.json();
 
     if (!Array.isArray(users)) {
@@ -30,6 +32,14 @@ export async function POST(request: Request) {
 
       results.push(upsertedUser);
     }
+
+    // Ghi log nhập CSV thành công
+    await createAuditLog(
+      operator,
+      "CREATE",
+      "permissions",
+      `Đồng bộ / Nhập danh sách nhân sự từ CSV: ${results.length} người dùng.`
+    );
 
     return NextResponse.json({
       success: true,
