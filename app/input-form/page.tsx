@@ -591,7 +591,7 @@ export default function InputFormPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           unitCode: filters.unitCode,
-          productCode: selectedProdId,
+          productCode: activeProductId,
           periodKey: pKey,
           periodType: pType,
           kpiUpdates
@@ -879,13 +879,15 @@ export default function InputFormPage() {
               <table className="w-full text-left text-sm border-collapse">
                 <thead className="sticky top-0 z-10 bg-slate-950 shadow">
                   <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
-                    {showCodeColumn && <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>}
-                    <th className="p-3">Mục tiêu / Chỉ tiêu cần báo cáo</th>
+                    {showCodeColumn && <th className="p-3 w-24 text-center">Mã chỉ tiêu</th>}
+                    <th className="p-3 max-w-[250px] w-[250px]">Mục tiêu / Chỉ tiêu cần báo cáo</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
-                    <th className="p-3 w-56">Cách tính</th>
+                    <th className="p-3 w-48">Cách tính</th>
                     <th className="p-3 w-32 text-center bg-sky-950/30 text-sky-300">KH Định Kỳ</th>
                     <th className="p-3 w-36 text-center bg-purple-950/30 text-purple-300">Kết quả Thực tế</th>
                     <th className="p-3 w-24 text-center">% Hoàn thành</th>
+                    <th className="p-3 w-[200px] text-center">Ghi chú kết quả</th>
+                    <th className="p-3 w-[120px] text-center">Trạng thái duyệt</th>
                     <th className="p-3 w-24 text-center">Thao tác</th>
                   </tr>
                 </thead>
@@ -895,7 +897,7 @@ export default function InputFormPage() {
                     return (
                       <React.Fragment key={groupName}>
                         <tr className="bg-slate-900/50 text-[#10b981] font-black border-b border-white/5 uppercase text-xs">
-                          <td colSpan={showCodeColumn ? 8 : 7} className="p-2.5 tracking-wider">
+                          <td colSpan={showCodeColumn ? 10 : 9} className="p-2.5 tracking-wider">
                             {groupName}
                           </td>
                         </tr>
@@ -904,11 +906,11 @@ export default function InputFormPage() {
                           return (
                             <tr key={kpi.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                               {showCodeColumn && (
-                                <td className="p-3">
+                                <td className="p-3 w-24 text-center">
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
                                 </td>
                               )}
-                              <td className={`p-3 font-bold max-w-[250px] break-words ${isImportantIndicator(kpi.title) ? "text-[#10b981] dark:text-[#34d399]" : "text-white"}`}>{kpi.title}</td>
+                              <td className={`p-3 font-bold max-w-[250px] w-[250px] break-words ${isImportantIndicator(kpi.title) ? "text-[#10b981] dark:text-[#34d399]" : "text-white"}`}>{kpi.title}</td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>
                               <td className="p-3 italic text-slate-400 text-xs truncate max-w-[150px]" title={kpi.formula}>
                                 {kpi.formula}
@@ -950,6 +952,21 @@ export default function InputFormPage() {
                               <td className="p-3 text-center font-black text-sm">
                                 <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
                                   {isNaN(pct) || !isFinite(pct) ? "0%" : `${pct}%`}
+                                </span>
+                              </td>
+                              <td className="p-3 text-center w-[200px]">
+                                <input
+                                  type="text"
+                                  value={explanations[kpi.code] || ""}
+                                  placeholder="Ghi chú ngắn kết quả..."
+                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                  onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.code]: e.target.value }))}
+                                  className="w-full bg-slate-950 border border-[var(--glass-border)] text-white text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                />
+                              </td>
+                              <td className="p-3 text-center w-[120px]">
+                                <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${getStatusStyle(kpi.status)}`}>
+                                  {kpi.status}
                                 </span>
                               </td>
                               <td className="p-3 text-center">
@@ -1414,7 +1431,7 @@ export default function InputFormPage() {
                     <div
                       key={p.id}
                       className={`p-2 rounded-lg flex justify-between items-center ${
-                        p.id === selectedProdId ? "bg-purple-600/30 border border-purple-500/50 font-bold" : "bg-white/5"
+                        p.id === activeProductId ? "bg-purple-600/30 border border-purple-500/50 font-bold" : "bg-white/5"
                       }`}
                     >
                       <span className="truncate max-w-[170px]">
