@@ -1277,7 +1277,7 @@ export default function InputFormPage() {
                 <button
                   onClick={handleAiSuggestActions}
                   disabled={isAiGenerating}
-                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white !text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white !text-white force-text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ color: "#ffffff" }}
                 >
                   {isAiGenerating ? "⌛ Đang đề xuất..." : "✨ AI Agent Đề xuất Action"}
@@ -1285,7 +1285,7 @@ export default function InputFormPage() {
                 <button
                   onClick={handleAddCustomAction}
                   disabled={isReadOnly}
-                  className="bg-purple-800 hover:bg-purple-700 text-white !text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow transition-all"
+                  className="bg-purple-800 hover:bg-purple-700 text-white !text-white force-text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow transition-all"
                   style={{ color: "#ffffff" }}
                 >
                   <Plus size={14} /> Thêm hành động chủ động
@@ -1316,7 +1316,7 @@ export default function InputFormPage() {
                       <td className="p-3 text-center text-slate-300">{act.impact}</td>
                       <td className="p-3 text-center">
                         <span 
-                          className="text-[10px] bg-amber-950 text-amber-300 font-bold px-2 py-1 rounded border border-amber-500/20"
+                          className="text-[10px] bg-amber-950 text-amber-300 force-text-amber font-bold px-2 py-1 rounded border border-amber-500/20"
                           style={{ color: "#fcd34d" }}
                         >
                           {act.status}
@@ -1326,14 +1326,14 @@ export default function InputFormPage() {
                         <div className="flex justify-center items-center gap-2">
                           <button
                             onClick={() => handleAcceptAction(act.id)}
-                            className="bg-indigo-600 hover:bg-indigo-500 text-white !text-white text-[10px] font-black px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"
+                            className="bg-indigo-600 hover:bg-indigo-500 text-white !text-white force-text-white text-[10px] font-black px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"
                             style={{ color: "#ffffff" }}
                           >
                             ✓ Chọn
                           </button>
                           <button
                             onClick={() => handleSkipAction(act.id)}
-                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 !text-slate-300 text-[10px] font-black px-2.5 py-1.5 rounded-lg border border-white/10"
+                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 !text-slate-300 force-text-slate text-[10px] font-black px-2.5 py-1.5 rounded-lg border border-white/10"
                             style={{ color: "#cbd5e1" }}
                           >
                             ✖ Bỏ qua
@@ -1396,7 +1396,7 @@ export default function InputFormPage() {
                 <>
                   <button
                     onClick={handleSaveDraft}
-                    className="bg-slate-800 hover:bg-slate-700 text-white !text-white text-xs font-extrabold px-5 py-2.5 rounded-xl border border-white/10 shadow transition-all"
+                    className="bg-slate-800 hover:bg-slate-700 text-white !text-white force-text-white text-xs font-extrabold px-5 py-2.5 rounded-xl border border-white/10 shadow transition-all"
                     style={{ color: "#ffffff" }}
                   >
                     💾 Lưu nháp (Draft)
@@ -1404,7 +1404,7 @@ export default function InputFormPage() {
                   <button
                     onClick={handleSendReport}
                     disabled={reportStatus === "Chờ duyệt"}
-                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white !text-white text-xs font-black px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all disabled:opacity-50"
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white !text-white force-text-white text-xs font-black px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all disabled:opacity-50"
                     style={{ color: "#ffffff" }}
                   >
                     🚀 Gửi báo cáo cho Giám đốc BU
@@ -1762,7 +1762,7 @@ export default function InputFormPage() {
                 <button
                   onClick={handleProdAiSuggestActions}
                   disabled={isProdAiGenerating || activeProductId === "all"}
-                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white !text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white !text-white force-text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ color: "#ffffff" }}
                 >
                   {isProdAiGenerating ? "⌛ Đang đề xuất..." : "✨ AI Agent Đề xuất Action"}
@@ -1770,7 +1770,7 @@ export default function InputFormPage() {
                 <button
                   onClick={handleAddCustomProdAction}
                   disabled={isReadOnly || activeProductId === "all"}
-                  className="bg-purple-800 hover:bg-purple-700 text-white !text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-purple-800 hover:bg-purple-700 text-white !text-white force-text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ color: "#ffffff" }}
                 >
                   <Plus size={14} /> Thêm Action Sản Phẩm
@@ -1786,7 +1786,7 @@ export default function InputFormPage() {
                     <p className="text-[11px] text-slate-400">Kỳ vọng: {act.impact}</p>
                   </div>
                   <span 
-                    className="text-[10px] bg-purple-950 text-purple-300 font-bold px-2.5 py-1 rounded border border-purple-500/30"
+                    className="text-[10px] bg-purple-950 text-purple-300 force-text-purple font-bold px-2.5 py-1 rounded border border-purple-500/30"
                     style={{ color: "#d8b4fe" }}
                   >
                     {act.status}
@@ -1802,7 +1802,7 @@ export default function InputFormPage() {
               <button
                 disabled={activeProductId === "all"}
                 onClick={() => alert(`🚀 Đã gửi thành công Báo cáo Điểm PSH cho sản phẩm: ${currentProduct?.name}`)}
-                className={`text-white !text-white text-xs font-black px-6 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(147,51,234,0.4)] disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`text-white !text-white force-text-white text-xs font-black px-6 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(147,51,234,0.4)] disabled:opacity-40 disabled:cursor-not-allowed ${
                   activeProductId === "all"
                     ? "bg-slate-800 border border-slate-700 text-slate-500 shadow-none"
                     : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500"

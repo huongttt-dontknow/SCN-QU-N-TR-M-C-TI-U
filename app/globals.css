@@ -441,3 +441,24 @@ html.light ::-webkit-scrollbar-thumb:hover {
   color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
+
+/* Utility classes to force text colors on buttons/badges */
+.force-text-white,
+.force-text-white * {
+  color: #ffffff !important;
+}
+
+.force-text-amber,
+.force-text-amber * {
+  color: #fcd34d !important;
+}
+
+.force-text-purple,
+.force-text-purple * {
+  color: #d8b4fe !important;
+}
+
+.force-text-slate,
+.force-text-slate * {
+  color: #cbd5e1 !important;
+}
