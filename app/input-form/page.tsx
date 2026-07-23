@@ -137,6 +137,15 @@ export default function InputFormPage() {
   const [productKpis, setProductKpis] = useState<ProductKpiItem[]>(defaultProductKpisMap["p1"]);
   const [productNote, setProductNote] = useState("");
   const [showCodeColumn, setShowCodeColumn] = useState(false);
+  const [editingCell, setEditingCell] = useState<{ kpiCode: string, field: "target" | "actual", value: string } | null>(null);
+
+  const formatValue = (val: number, unit: string) => {
+    if (val === undefined || val === null || isNaN(val)) return "0";
+    if (Number.isInteger(val)) {
+      return val.toLocaleString("en-US");
+    }
+    return val.toString();
+  };
 
   const [reportNotes, setReportNotes] = useState("");
   const [reportStatus, setReportStatus] = useState("Đang nhập");
@@ -550,20 +559,36 @@ export default function InputFormPage() {
                               </td>
                               <td className="p-3 text-center">
                                 <input
-                                  type="number"
-                                  value={kpi.target}
+                                  type="text"
+                                  value={editingCell?.kpiCode === kpi.code && editingCell?.field === "target" ? editingCell.value : formatValue(kpi.target, kpi.unit)}
                                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onChange={(e) => handleTargetChange(kpi.code, e.target.value)}
-                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-black text-sm rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                  onFocus={() => setEditingCell({ kpiCode: kpi.code, field: "target", value: kpi.target.toString() })}
+                                  onChange={(e) => setEditingCell({ kpiCode: kpi.code, field: "target", value: e.target.value })}
+                                  onBlur={() => {
+                                    if (editingCell) {
+                                      const val = parseFloat(editingCell.value) || 0;
+                                      handleTargetChange(kpi.code, val.toString());
+                                      setEditingCell(null);
+                                    }
+                                  }}
+                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
                                 />
                               </td>
                               <td className="p-3 text-center">
                                 <input
-                                  type="number"
-                                  value={kpi.actual}
+                                  type="text"
+                                  value={editingCell?.kpiCode === kpi.code && editingCell?.field === "actual" ? editingCell.value : formatValue(kpi.actual, kpi.unit)}
                                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onChange={(e) => handleInputChange(kpi.code, e.target.value)}
-                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-black text-sm rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                  onFocus={() => setEditingCell({ kpiCode: kpi.code, field: "actual", value: kpi.actual.toString() })}
+                                  onChange={(e) => setEditingCell({ kpiCode: kpi.code, field: "actual", value: e.target.value })}
+                                  onBlur={() => {
+                                    if (editingCell) {
+                                      const val = parseFloat(editingCell.value) || 0;
+                                      handleInputChange(kpi.code, val.toString());
+                                      setEditingCell(null);
+                                    }
+                                  }}
+                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
                                 />
                               </td>
                               <td className="p-3 text-center font-black text-sm">
