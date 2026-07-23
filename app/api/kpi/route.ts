@@ -140,6 +140,7 @@ export async function POST(request: Request) {
           actualValue: parseFloat(u.actualValue) || 0,
           explanation: u.explanation || "",
           status: u.status || "Đang thực hiện",
+          isOverridden: true,
         },
       });
     });

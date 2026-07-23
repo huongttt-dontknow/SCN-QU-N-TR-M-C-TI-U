@@ -47,7 +47,11 @@ model KpiData {
   formula       String?  @db.Text // Cách thức đo
   group         String?  // Phân nhóm cha (M1 - M7)
   parentCode    String?  // Mã chỉ tiêu cha để liên kết dạng cây
+  frequency         String?  // tuần, tháng, quý
+  aggregationMethod String?  // SUM, AVERAGE, WEIGHTED_AVERAGE, SNAPSHOT, END_OF_PERIOD
+  isOverridden      Boolean  @default(false)
   createdAt     DateTime @default(now())
+
   updatedAt     DateTime @updatedAt
 
   @@unique([indicatorCode, unitCode, periodKey])
