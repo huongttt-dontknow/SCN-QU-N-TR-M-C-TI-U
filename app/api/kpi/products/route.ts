@@ -4,7 +4,7 @@ import path from "path";
 
 export async function GET() {
   try {
-    const jsonPath = path.resolve(process.cwd(), "scratch/excel_products.json");
+    const jsonPath = path.resolve(process.cwd(), "../scratch/excel_products.json");
     if (!fs.existsSync(jsonPath)) {
       return NextResponse.json([]);
     }

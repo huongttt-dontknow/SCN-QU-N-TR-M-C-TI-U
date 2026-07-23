@@ -91,7 +91,11 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
             </span>
             <button
               onClick={toggleTheme}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/60 border border-white/10 hover:border-emerald-500/50 transition-all shadow-inner"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all shadow-sm ${
+                theme === "dark"
+                  ? "bg-slate-900/60 border border-white/10 hover:border-emerald-500/50 shadow-inner"
+                  : "bg-emerald-500 border border-transparent shadow-md hover:bg-emerald-600"
+              }`}
               title="Bấm để chuyển đổi giao diện Sáng / Tối chuẩn Sconnect"
             >
               {theme === "dark" ? (
@@ -101,8 +105,8 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
                 </>
               ) : (
                 <>
-                  <Sun size={14} className="text-emerald-500" />
-                  <span className="text-[10px] font-bold text-emerald-600">Sáng</span>
+                  <Sun size={14} className="text-yellow-300" />
+                  <span className="text-[10px] font-black text-white">Sáng</span>
                 </>
               )}
             </button>
