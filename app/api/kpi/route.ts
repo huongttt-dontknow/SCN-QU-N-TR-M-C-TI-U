@@ -263,52 +263,35 @@ export async function GET(request: Request) {
 
     return NextResponse.json(kpiRecords);
   } catch (error: any) {
-    console.warn("Lấy KPI thất bại (hạn mức DB), sử dụng dữ liệu dự phòng:", error);
+    console.warn("Lấy KPI thất bại (hạn mức DB), sử dụng dữ liệu JSON dự phòng:", error);
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
+      const jsonPath = path.join(process.cwd(), "lib", filename);
+      
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        const kpiList = JSON.parse(raw);
+        
+        const pType = periodType || "weekly";
+        const pKey = periodKey || "";
+        
+        const filtered = kpiList.filter((r: any) => {
+          if (productCode) {
+            return r.productCode === productCode && r.periodKey === pKey && r.periodType === pType;
+          } else {
+            return r.unitCode === unitCode && (!r.productCode) && r.periodKey === pKey && r.periodType === pType;
+          }
+        });
+        
+        return NextResponse.json(filtered);
+      }
+    } catch (fsErr) {
+      console.error("Lỗi đọc file JSON dự phòng:", fsErr);
+    }
     
-    // Tạo danh sách chỉ tiêu giả lập dự phòng
-    const defaultIndicators = [
-      { code: "VM1-I01.01", title: "Tỷ suất lợi nhuận ROI (%)", target: 15, pic: "Lê Đăng Khoa", type: "monthly", unit: "%", group: "M1. TÀI CHÍNH" },
-      { code: "VM1-I05.03", title: "Chi phí mua công cụ AI mới (VNĐ)", target: 50000000, pic: "Lê Quỳnh Nga", type: "monthly", unit: "VNĐ", group: "M1. TÀI CHÍNH" },
-      { code: "VM1-I05.04", title: "Chi phí CTV (Cộng tác viên)", target: 120000000, pic: "Vũ Trung Đức", type: "monthly", unit: "VNĐ", group: "M1. TÀI CHÍNH" },
-      { code: "VM2-I01.01", title: "Số lượng video hoàn thành sản xuất (Video)", target: 16, pic: "Lê Đăng Khoa", type: "weekly", unit: "Video", group: "M2. SẢN PHẨM" },
-      { code: "VM2-I01.02", title: "Số lượng video biên tập hoàn thành (funny) (Video)", target: 30, pic: "Lò Quế Hằng", type: "weekly", unit: "Video", group: "M2. SẢN PHẨM" },
-      { code: "VM2-I02.01", title: "Số sản phẩm phái sinh & khai thác (Sản phẩm)", target: 5, pic: "Vũ Trung Đức", type: "weekly", unit: "Sản phẩm", group: "M2. SẢN PHẨM" },
-      { code: "MM2-I01.01", title: "Số lượng sản phẩm âm nhạc hoàn thành (Bài)", target: 8, pic: "Vũ Trung Đức", type: "weekly", unit: "Bài", group: "M2. SẢN PHẨM" },
-      { code: "VM2-I01.3", title: "Số lượng ý tưởng mới (Ý tưởng)", target: 25, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2. SẢN PHẨM" },
-      { code: "VM2-I01.4", title: "Số lượng ý tưởng được chọn (Ý tưởng)", target: 15, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2. SẢN PHẨM" },
-      { code: "VM2-I01.5", title: "Tỷ lệ chọn ý tưởng (%)", target: 60, pic: "Lê Đăng Khoa", type: "weekly", unit: "%", group: "M2. SẢN PHẨM" },
-      { code: "VM2-I01.6", title: "SL Kịch bản mới SX (Kịch bản)", target: 10, pic: "Lê Đăng Khoa", type: "weekly", unit: "Kịch bản", group: "M2. SẢN PHẨM" },
-      { code: "TM3-I01.02", title: "Tổng traffic đơn vị (Views)", target: 120000000, pic: "Lê Đăng Khoa", type: "weekly", unit: "Views", group: "M3. KHÁCH HÀNG" },
-      { code: "TM3-I01.03", title: "Số lượng video upload (nội dung)", target: 45, pic: "Trịnh Quốc Thịnh", type: "weekly", unit: "Video", group: "M3. KHÁCH HÀNG" },
-      { code: "TM4-I01.01", title: "Độ phủ thương hiệu mới (Sub/Follower)", target: 50000, pic: "Lê Đăng Khoa", type: "monthly", unit: "Sub", group: "M4. THƯƠNG HIỆU" },
-      { code: "TM4-I02.01", title: "Số kênh đạt ngưỡng 10k $/tháng (Kênh)", target: 4, pic: "Trần Như Quỳnh", type: "monthly", unit: "Kênh", group: "M4. THƯƠNG HIỆU" },
-      { code: "VM4-I02.04", title: "Số vi phạm chính sách (Lần)", target: 0, pic: "Đào Thanh Công", type: "monthly", unit: "Lần", group: "M4. THƯƠNG HIỆU" },
-      { code: "VM5-I02.01", title: "Thời gian sản xuất TB 1 video (Ngày)", target: 5, pic: "Nguyễn Ánh Tùng", type: "weekly", unit: "Ngày", group: "M5. VẬN HÀNH" },
-      { code: "VM7-I03.01", title: "Tỷ lệ nhân sự không vi phạm kỷ luật (%)", target: 100, pic: "Trần Thị Diệu Ly", type: "monthly", unit: "%", group: "M7. VĂN HÓA" },
-    ];
-
-    const pType = periodType || "weekly";
-    const filtered = defaultIndicators.filter(ind => ind.type === pType);
-    const fallbackKpis = filtered.map((ind, idx) => ({
-      id: `fallback-kpi-${idx}-${ind.code}`,
-      indicatorCode: ind.code,
-      unitCode: unitCode || "SCVN",
-      productCode: productCode || null,
-      periodType: pType,
-      periodKey: periodKey || "weekly-1-7-2026",
-      targetValue: ind.target,
-      actualValue: 0,
-      pic: ind.pic,
-      status: "Chưa thực hiện",
-      explanation: "",
-      title: ind.title,
-      unit: ind.unit,
-      formula: "",
-      group: ind.group,
-      parentCode: ind.code.split("-")[0]
-    }));
-
-    return NextResponse.json(fallbackKpis);
+    return NextResponse.json([]);
   }
 }
 

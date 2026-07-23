@@ -134,9 +134,28 @@ export async function GET(request: Request) {
     }
 
     // Lấy toàn bộ bản ghi KPI của đơn vị hoặc sản phẩm trong năm
-    const records = await prisma.kpiData.findMany({
-      where: productCode ? { productCode } : { unitCode, productCode: null }
-    });
+    let records: any[] = [];
+    try {
+      records = await prisma.kpiData.findMany({
+        where: productCode ? { productCode } : { unitCode, productCode: null }
+      });
+    } catch (dbErr) {
+      console.warn("Lấy KPI từ DB thất bại (hạn mức), sử dụng dữ liệu JSON dự phòng:", dbErr);
+      const fs = require("fs");
+      const path = require("path");
+      const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
+      const jsonPath = path.join(process.cwd(), "lib", filename);
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        records = JSON.parse(raw).filter((r: any) => {
+          if (productCode) {
+            return r.productCode === productCode;
+          } else {
+            return r.unitCode === unitCode && (!r.productCode);
+          }
+        });
+      }
+    }
 
     const targetWeekKey = `weekly_${month}_${week}`;
     const targetMonthKey = `monthly_${month}`;
@@ -360,91 +379,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(allRows);
   } catch (error: any) {
-    console.warn("Lấy dữ liệu KPI đơn vị thất bại (hạn mức DB), dùng mock fallback:", error);
-    
-    // Trả về danh sách chỉ tiêu mặc định tự sinh để giao diện hiển thị được bình thường
-    const defaultIndicators = [
-      { code: "VM1-I01.01", title: "Tỷ suất lợi nhuận ROI (%)", target: 15, pic: "Lê Đăng Khoa", type: "monthly", unit: "%", group: "M1" },
-      { code: "VM1-I05.03", title: "Chi phí mua công cụ AI mới (VNĐ)", target: 50000000, pic: "Lê Quỳnh Nga", type: "monthly", unit: "VNĐ", group: "M1" },
-      { code: "VM1-I05.04", title: "Chi phí CTV (Cộng tác viên)", target: 120000000, pic: "Vũ Trung Đức", type: "monthly", unit: "VNĐ", group: "M1" },
-      { code: "VM2-I01.01", title: "Số lượng video hoàn thành sản xuất (Video)", target: 16, pic: "Lê Đăng Khoa", type: "weekly", unit: "Video", group: "M2" },
-      { code: "VM2-I01.02", title: "Số lượng video biên tập hoàn thành (funny) (Video)", target: 30, pic: "Lò Quế Hằng", type: "weekly", unit: "Video", group: "M2" },
-      { code: "VM2-I02.01", title: "Số sản phẩm phái sinh & khai thác (Sản phẩm)", target: 5, pic: "Vũ Trung Đức", type: "weekly", unit: "Sản phẩm", group: "M2" },
-      { code: "MM2-I01.01", title: "Số lượng sản phẩm âm nhạc hoàn thành (Bài)", target: 8, pic: "Vũ Trung Đức", type: "weekly", unit: "Bài", group: "M2" },
-      { code: "VM2-I01.3", title: "Số lượng ý tưởng mới (Ý tưởng)", target: 25, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2" },
-      { code: "VM2-I01.4", title: "Số lượng ý tưởng được chọn (Ý tưởng)", target: 15, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2" },
-      { code: "VM2-I01.5", title: "Tỷ lệ chọn ý tưởng (%)", target: 60, pic: "Lê Đăng Khoa", type: "weekly", unit: "%", group: "M2" },
-      { code: "VM2-I01.6", title: "SL Kịch bản mới SX (Kịch bản)", target: 10, pic: "Lê Đăng Khoa", type: "weekly", unit: "Kịch bản", group: "M2" },
-      { code: "TM3-I01.02", title: "Tổng traffic đơn vị (Views)", target: 120000000, pic: "Lê Đăng Khoa", type: "weekly", unit: "Views", group: "M3" },
-      { code: "TM3-I01.03", title: "Số lượng video upload (nội dung)", target: 45, pic: "Trịnh Quốc Thịnh", type: "weekly", unit: "Video", group: "M3" },
-      { code: "TM4-I01.01", title: "Độ phủ thương hiệu mới (Sub/Follower)", target: 50000, pic: "Lê Đăng Khoa", type: "monthly", unit: "Sub", group: "M4" },
-      { code: "TM4-I02.01", title: "Số kênh đạt ngưỡng 10k $/tháng (Kênh)", target: 4, pic: "Trần Như Quỳnh", type: "monthly", unit: "Kênh", group: "M4" },
-      { code: "VM4-I02.04", title: "Số vi phạm chính sách (Lần)", target: 0, pic: "Đào Thanh Công", type: "monthly", unit: "Lần", group: "M4" },
-      { code: "VM5-I02.01", title: "Thời gian sản xuất TB 1 video (Ngày)", target: 5, pic: "Nguyễn Ánh Tùng", type: "weekly", unit: "Ngày", group: "M5" },
-      { code: "VM7-I03.01", title: "Tỷ lệ nhân sự không vi phạm kỷ luật (%)", target: 100, pic: "Trần Thị Diệu Ly", type: "monthly", unit: "%", group: "M7" },
-    ];
-
-    const groupNameMap: Record<string, string> = {
-      "M1": "M1. TÀI CHÍNH / KINH DOANH",
-      "M2": "M2. SẢN PHẨM / SẢN XUẤT",
-      "M3": "M3. KHÁCH HÀNG / DỊCH VỤ",
-      "M4": "M4. THƯƠNG HIỆU / KÊNH KINH DOANH",
-      "M5": "M5. QUẢN TRỊ VẬN HÀNH",
-      "M6": "M6. NHÂN SỰ TỔ CHỨC",
-      "M7": "M7. VĂN HÓA DOANH NGHIỆP"
-    };
-
-    const fallbackRows: any[] = [];
-
-    // Thêm các dòng cha lớn M1 - M7
-    for (const [gCode, gName] of Object.entries(groupNameMap)) {
-      fallbackRows.push({
-        code: productCode ? `${productCode}-${gCode}` : gCode,
-        displayCode: gCode,
-        title: gName,
-        unit: "",
-        targetWeek: 0, actualWeek: 0,
-        targetMonth: 0, actualMonth: 0,
-        targetQuarter: 0, actualQuarter: 0,
-        targetYear: 0, actualYear: 0,
-        isParent: true,
-        parentCode: undefined
-      });
-    }
-
-    // Thêm các chỉ tiêu mặc định vào fallbackRows
-    defaultIndicators.forEach(ind => {
-      const parentKey = productCode ? `${productCode}-${ind.group}` : ind.group;
-      const rowCode = ind.code;
-      let displayCode = ind.code;
-      if (productCode && displayCode.startsWith(productCode + "-")) {
-        displayCode = displayCode.substring(productCode.length + 1);
-      }
-
-      const freq = ind.type === "weekly" ? "tuần" : ind.type === "monthly" ? "tháng" : "quý";
-      const targetVal = ind.target;
-      const actualVal = Math.round(targetVal * 0.95);
-
-      fallbackRows.push({
-        code: rowCode,
-        displayCode: displayCode,
-        title: ind.title,
-        unit: ind.unit,
-        targetWeek: freq === "tuần" ? targetVal : 0,
-        actualWeek: freq === "tuần" ? actualVal : 0,
-        targetMonth: targetVal,
-        actualMonth: actualVal,
-        targetQuarter: targetVal * 3,
-        actualQuarter: actualVal * 3,
-        targetYear: targetVal * 12,
-        actualYear: actualVal * 12,
-        isParent: false,
-        parentCode: parentKey,
-        frequency: freq,
-        aggregationMethod: "SUM"
-      });
-    });
-
-    return NextResponse.json(fallbackRows);
+    console.error("Lỗi xử lý dữ liệu KPI đơn vị:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
