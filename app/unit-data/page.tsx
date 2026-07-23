@@ -490,11 +490,13 @@ export default function UnitDataPage() {
                       )}
                       <td 
                         colSpan={showCodeColumn ? 2 : 3} 
-                        className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white flex items-center gap-1.5" 
+                        className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white" 
                         style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
                       >
-                        {!showCodeColumn && (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
-                        {row.title}
+                        <div className="flex items-center gap-1.5">
+                          {!showCodeColumn && (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
+                          {row.title}
+                        </div>
                       </td>
                       
                       {/* Cột kỳ chính */}
