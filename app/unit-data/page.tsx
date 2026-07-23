@@ -27,6 +27,7 @@ interface KpiRow {
   isParent: boolean;
   parentCode?: string;
   pic?: string;
+  frequency?: string;
 }
 
 export default function UnitDataPage() {
@@ -92,6 +93,97 @@ export default function UnitDataPage() {
     setExpandedRows(prev => ({ ...prev, [code]: !prev[code] }));
   };
 
+  const shouldShowByFrequency = (freq: string | undefined, title: string, code: string) => {
+    const periodType = filters.periodType || "weekly";
+    const f = (freq || "").toLowerCase().trim();
+    const t = title.toLowerCase();
+    const c = code.toLowerCase();
+
+    // Detect quarterly indicators by frequency field or keywords in title/code
+    const isQuarterly = f === "quý" || f === "quarterly" || t.includes("roi") || t.includes("ros") || t.includes("tỷ suất lợi nhuận");
+    
+    // Detect monthly indicators by frequency field or keywords in title/code
+    const isMonthly = f === "tháng" || f === "monthly" || t.includes("chi phí mua công cụ") || t.includes("chi phí ctv") || t.includes("độ phủ thương hiệu") || t.includes("kỷ luật") || t.includes("nhân sự fulltime") || t.includes("đào tạo") || t.includes("ngân sách");
+
+    if (periodType === "weekly") {
+      if (isQuarterly || isMonthly) return false;
+    } else if (periodType === "monthly") {
+      if (isQuarterly) return false;
+    }
+    
+    return true;
+  };
+
+  const hasVisibleDescendants = (parentCode: string, allRows: KpiRow[]): boolean => {
+    const directChildren = allRows.filter(r => r.parentCode === parentCode);
+    for (const child of directChildren) {
+      if (!child.isParent && shouldShowByFrequency(child.frequency, child.title, child.code)) {
+        return true;
+      }
+      if (child.isParent && hasVisibleDescendants(child.code, allRows)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const getOrderedRows = (rows: KpiRow[]) => {
+    const rootParents = rows.filter(r => r.isParent && !r.parentCode);
+    const result: KpiRow[] = [];
+
+    const addChildren = (parentCode: string) => {
+      const children = rows.filter(r => r.parentCode === parentCode);
+      children.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true, sensitivity: 'base' }));
+
+      for (const child of children) {
+        result.push(child);
+        if (child.isParent) {
+          addChildren(child.code);
+        }
+      }
+    };
+
+    rootParents.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true, sensitivity: 'base' }));
+
+    for (const parent of rootParents) {
+      result.push(parent);
+      addChildren(parent.code);
+    }
+
+    for (const row of rows) {
+      if (!result.find(r => r.code === row.code)) {
+        result.push(row);
+      }
+    }
+
+    return result;
+  };
+
+  const isAncestorCollapsed = (row: KpiRow, rows: KpiRow[]) => {
+    let current = row;
+    while (current.parentCode) {
+      if (!expandedRows[current.parentCode]) {
+        return true;
+      }
+      const parent = rows.find(r => r.code === current.parentCode);
+      if (!parent) break;
+      current = parent;
+    }
+    return false;
+  };
+
+  const getRowDepth = (row: KpiRow, rows: KpiRow[]) => {
+    let depth = 0;
+    let current = row;
+    while (current.parentCode) {
+      depth++;
+      const parent = rows.find(r => r.code === current.parentCode);
+      if (!parent) break;
+      current = parent;
+    }
+    return depth;
+  };
+
   const getTargetValue = (row: KpiRow) => {
     if (filters.periodType === "weekly") return row.targetWeek;
     if (filters.periodType === "monthly") return row.targetMonth;
@@ -128,7 +220,16 @@ export default function UnitDataPage() {
   const targetTraffic = trafficRow ? getTargetValue(trafficRow) : 1;
   const trafficCompletion = Math.round((actualTraffic / targetTraffic) * 100);
 
-  const warningList = kpiRows
+  const visibleRows = kpiRows.filter(row => {
+    if (row.isParent) {
+      return hasVisibleDescendants(row.code, kpiRows);
+    }
+    return shouldShowByFrequency(row.frequency, row.title, row.code);
+  });
+
+  const orderedRows = getOrderedRows(visibleRows);
+
+  const warningList = visibleRows
     .filter(r => !r.isParent)
     .map(r => {
       const act = getActualValue(r);
@@ -148,7 +249,7 @@ export default function UnitDataPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 text-white text-sm">
+    <div className="flex flex-col gap-6 text-slate-800 dark:text-white text-sm">
       {/* 1. FREEZE FILTERS PANEL */}
       <FiltersHeader />
 
@@ -247,28 +348,28 @@ export default function UnitDataPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900/60 uppercase text-xs tracking-wider">
+              <tr className="border-b border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-black bg-slate-100 dark:bg-slate-900/60 uppercase text-xs tracking-wider">
                 <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>
                 <th className="p-3">Mục tiêu / Chỉ tiêu cấp bộ phận</th>
                 <th className="p-3 w-20 text-center">ĐVT</th>
                 
                 {/* CỤM CỘT THEO KỲ CHÍNH (XANH LAM) */}
-                <th className="p-3 w-32 text-center bg-sky-950/40 text-sky-300 border-l border-white/10">KH {primaryTitle}</th>
-                <th className="p-3 w-32 text-center bg-sky-950/40 text-sky-300">Thực tế {primaryTitle}</th>
-                <th className="p-3 w-28 text-center bg-sky-950/40 text-sky-300 border-r border-white/10">% HT {primaryTitle}</th>
+                <th className="p-3 w-32 text-center bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-l border-slate-200 dark:border-white/10">KH {primaryTitle}</th>
+                <th className="p-3 w-32 text-center bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300">Thực tế {primaryTitle}</th>
+                <th className="p-3 w-28 text-center bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-r border-slate-200 dark:border-white/10">% HT {primaryTitle}</th>
 
                 {/* CỤM CỘT LŨY KẾ KỲ TIẾP THEO (TÍM) */}
                 {filters.periodType !== "yearly" && (
                   <>
-                    <th className="p-3 w-32 text-center bg-purple-950/40 text-purple-300">KH {cumulativeTitle}</th>
-                    <th className="p-3 w-32 text-center bg-purple-950/40 text-purple-300">Thực tế {cumulativeTitle}</th>
-                    <th className="p-3 w-28 text-center bg-purple-950/40 text-purple-300">% HT {cumulativeTitle}</th>
+                    <th className="p-3 w-32 text-center bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">KH {cumulativeTitle}</th>
+                    <th className="p-3 w-32 text-center bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">Thực tế {cumulativeTitle}</th>
+                    <th className="p-3 w-28 text-center bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">% HT {cumulativeTitle}</th>
                   </>
                 )}
               </tr>
             </thead>
             <tbody>
-              {kpiRows.map(row => {
+              {orderedRows.map(row => {
                 const targetPri = getTargetValue(row);
                 const actualPri = getActualValue(row);
                 const pctPri = targetPri > 0 ? Math.round((actualPri / targetPri) * 100) : 100;
@@ -279,40 +380,44 @@ export default function UnitDataPage() {
 
                 if (row.isParent) {
                   const isExpanded = expandedRows[row.code];
+                  const depth = getRowDepth(row, orderedRows);
                   return (
                     <tr 
                       key={row.code} 
                       onClick={() => toggleRow(row.code)}
-                      className="bg-slate-900/80 hover:bg-slate-800 text-[var(--accent-cyan)] font-black border-b border-white/10 cursor-pointer select-none transition-all text-sm"
+                      className="bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-[var(--accent-cyan)] font-black border-b border-slate-200 dark:border-white/10 cursor-pointer select-none transition-all text-sm"
                     >
                       <td className="p-3 text-center">
-                        <span className="inline-flex items-center justify-center gap-1 font-mono">
+                        <span 
+                          className="inline-flex items-center justify-center gap-1 font-mono"
+                          style={{ paddingLeft: `${depth * 1.0}rem` }}
+                        >
                           {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                           {row.code}
                         </span>
                       </td>
-                      <td colSpan={2} className="p-3 uppercase tracking-wider font-black text-white">
+                      <td colSpan={2} className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white" style={{ paddingLeft: `${depth * 1.0 + 0.5}rem` }}>
                         {row.title}
                       </td>
                       
                       {/* Cột kỳ chính */}
-                      <td className="p-3 text-center font-black border-l border-white/10 text-slate-200">
+                      <td className="p-3 text-center font-black border-l border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200">
                         {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
                       </td>
-                      <td className="p-3 text-center font-black text-white">
+                      <td className="p-3 text-center font-black text-slate-900 dark:text-white">
                         {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
                       </td>
-                      <td className={`p-3 text-center font-black border-r border-white/10 ${getPctColor(pctPri)}`}>
+                      <td className={`p-3 text-center font-black border-r border-slate-200 dark:border-white/10 ${getPctColor(pctPri)}`}>
                         {pctPri}%
                       </td>
 
                       {/* Cột lũy kế */}
                       {filters.periodType !== "yearly" && (
                         <>
-                          <td className="p-3 text-center font-black text-slate-300">
+                          <td className="p-3 text-center font-black text-slate-600 dark:text-slate-300">
                             {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
                           </td>
-                          <td className="p-3 text-center font-black text-purple-200">
+                          <td className="p-3 text-center font-black text-purple-700 dark:text-purple-200">
                             {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
                           </td>
                           <td className={`p-3 text-center font-black ${getPctColor(pctCum)}`}>
@@ -324,44 +429,45 @@ export default function UnitDataPage() {
                   );
                 }
 
-                // Dòng con
-                if (row.parentCode && !expandedRows[row.parentCode]) {
+                // Dòng con - Ẩn nếu tổ tiên bị collapsed
+                if (row.parentCode && isAncestorCollapsed(row, orderedRows)) {
                   return null;
                 }
 
+                const depth = getRowDepth(row, orderedRows);
                 return (
-                  <tr key={row.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
+                  <tr key={row.code} className="border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 text-sm text-slate-700 dark:text-slate-200">
                     <td className="p-3 text-center">
-                      <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs border border-sky-500/20 font-bold">
+                      <code className="bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 px-2 py-0.5 rounded font-mono text-xs border border-sky-300 dark:border-sky-500/20 font-bold">
                         {row.code}
                       </code>
                     </td>
-                    <td className="p-3 font-semibold text-white pl-6">
+                    <td className="p-3 font-semibold text-slate-800 dark:text-white" style={{ paddingLeft: `${depth * 1.5}rem` }}>
                       {row.title}
                     </td>
-                    <td className="p-3 text-center text-slate-400 font-extrabold text-xs">{row.unit}</td>
+                    <td className="p-3 text-center text-slate-500 dark:text-slate-400 font-extrabold text-xs">{row.unit}</td>
 
                     {/* Dữ liệu Kỳ chính */}
-                    <td className="p-3 text-center font-bold text-slate-300 border-l border-white/5 bg-sky-950/10">
+                    <td className="p-3 text-center font-bold text-slate-600 dark:text-slate-300 border-l border-slate-100 dark:border-white/5 bg-sky-50/50 dark:bg-sky-950/10">
                       {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
                     </td>
-                    <td className="p-3 text-center font-extrabold text-white bg-sky-950/10">
+                    <td className="p-3 text-center font-extrabold text-slate-800 dark:text-white bg-sky-50/50 dark:bg-sky-950/10">
                       {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
                     </td>
-                    <td className={`p-3 text-center font-black border-r border-white/5 bg-sky-950/10 ${getPctColor(pctPri)}`}>
+                    <td className={`p-3 text-center font-black border-r border-slate-100 dark:border-white/5 bg-sky-50/50 dark:bg-sky-950/10 ${getPctColor(pctPri)}`}>
                       {pctPri}%
                     </td>
 
                     {/* Dữ liệu Lũy kế */}
                     {filters.periodType !== "yearly" && (
                       <>
-                        <td className="p-3 text-center font-bold text-slate-400 bg-purple-950/10">
+                        <td className="p-3 text-center font-bold text-slate-500 dark:text-slate-400 bg-purple-50/50 dark:bg-purple-950/10">
                           {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
                         </td>
-                        <td className="p-3 text-center font-extrabold text-purple-300 bg-purple-950/10">
+                        <td className="p-3 text-center font-extrabold text-purple-700 dark:text-purple-300 bg-purple-50/50 dark:bg-purple-950/10">
                           {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
                         </td>
-                        <td className={`p-3 text-center font-black bg-purple-950/10 ${getPctColor(pctCum)}`}>
+                        <td className={`p-3 text-center font-black bg-purple-50/50 dark:bg-purple-950/10 ${getPctColor(pctCum)}`}>
                           {pctCum}%
                         </td>
                       </>

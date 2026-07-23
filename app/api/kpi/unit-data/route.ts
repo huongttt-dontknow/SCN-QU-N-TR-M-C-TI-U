@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+function detectFrequency(freq: string | null, title: string, code: string): string {
+  if (freq) return freq.toLowerCase().trim();
+  const t = (title || "").toLowerCase();
+  const c = (code || "").toLowerCase();
+
+  // Detect quarterly
+  if (t.includes("roi") || t.includes("ros") || t.includes("tỷ suất lợi nhuận") || c.includes("-q")) {
+    return "quý";
+  }
+  
+  // Detect monthly
+  if (t.includes("chi phí mua công cụ") || t.includes("chi phí ctv") || t.includes("độ phủ thương hiệu") || t.includes("kỷ luật") || t.includes("nhân sự fulltime") || t.includes("đào tạo") || t.includes("ngân sách") || c.includes("-m")) {
+    return "tháng";
+  }
+
+  return "tuần";
+}
+
 // Helper function to aggregate a list of target/actual values based on aggregation method
 function aggregateValues(items: { target: number, actual: number }[], method: string) {
   if (items.length === 0) return { target: 0, actual: 0 };
@@ -179,7 +197,7 @@ export async function GET(request: Request) {
           targetYear: 0, actualYear: 0,
           isParent: false,
           parentCode: parentCode,
-          frequency: r.frequency || "tuần",
+          frequency: detectFrequency(r.frequency, r.title || "", r.indicatorCode),
           aggregationMethod: r.aggregationMethod || "SUM",
           isOverriddenWeek: false,
           isOverriddenMonth: false,
