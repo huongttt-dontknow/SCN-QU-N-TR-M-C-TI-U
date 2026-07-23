@@ -136,6 +136,7 @@ export default function InputFormPage() {
   const [kpis, setKpis] = useState<KpiItem[]>(defaultWolfooKpis);
   const [productKpis, setProductKpis] = useState<ProductKpiItem[]>(defaultProductKpisMap["p1"]);
   const [productNote, setProductNote] = useState("");
+  const [showCodeColumn, setShowCodeColumn] = useState(false);
 
   const [reportNotes, setReportNotes] = useState("");
   const [reportStatus, setReportStatus] = useState("Đang nhập");
@@ -195,6 +196,15 @@ export default function InputFormPage() {
             group: d.group || "Chỉ số bổ sung"
           }));
           setKpis(mapped);
+          
+          // Nạp các ghi thích/giải trình từ DB vào state explanations
+          const loadedExplanations: Record<string, string> = {};
+          data.forEach((d: any) => {
+            if (d.explanation) {
+              loadedExplanations[d.indicatorCode] = d.explanation;
+            }
+          });
+          setExplanations(loadedExplanations);
           
           // Đặt trạng thái báo cáo chung dựa trên trạng thái của chỉ số đầu tiên có trạng thái
           const firstWithStatus = data.find((d: any) => d.status);
@@ -471,21 +481,30 @@ export default function InputFormPage() {
         <>
           {/* KHỐI 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: SCVN */}
           <div className="glass-panel p-5">
-            <h3 className="text-sm font-black text-[#10b981] tracking-wider uppercase mb-4 flex items-center gap-2">
-              <Building2 size={16} /> 🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
-            </h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-sm font-black text-[#10b981] tracking-wider uppercase flex items-center gap-2">
+                <Building2 size={16} /> 🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
+              </h3>
+              <button
+                onClick={() => setShowCodeColumn(!showCodeColumn)}
+                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5"
+              >
+                {showCodeColumn ? "🙈 Ẩn Mã chỉ tiêu" : "👁️ Hiện Mã chỉ tiêu"}
+              </button>
+            </div>
 
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
               <table className="w-full text-left text-sm border-collapse">
                 <thead className="sticky top-0 z-10 bg-slate-950 shadow">
                   <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
-                    <th className="p-3 w-28">Mã chỉ tiêu</th>
-                    <th className="p-3">Mục tiêu / Chi tiêu cần báo cáo</th>
+                    {showCodeColumn && <th className="p-3 w-24">Mã chỉ tiêu</th>}
+                    <th className="p-3 max-w-[280px]">Mục tiêu / Chỉ tiêu cần báo cáo</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
-                    <th className="p-3 w-56">Cách tính</th>
-                    <th className="p-3 w-36 text-center">Kế hoạch định kỳ</th>
+                    <th className="p-3 w-48">Cách tính</th>
+                    <th className="p-3 w-32 text-center">Kế hoạch định kỳ</th>
                     <th className="p-3 w-32 text-center">Kết quả thực tế đã nhập</th>
                     <th className="p-3 w-24 text-center">Tỷ lệ hoàn thành</th>
+                    <th className="p-3 w-48 text-center">Ghi chú kết quả</th>
                     <th className="p-3 w-28 text-center">Trạng thái duyệt</th>
                     <th className="p-3 w-24 text-center">Thao tác</th>
                   </tr>
@@ -496,7 +515,7 @@ export default function InputFormPage() {
                     return (
                       <React.Fragment key={groupName}>
                         <tr className="bg-slate-900/50 text-[var(--accent-cyan)] font-black border-b border-white/5 uppercase text-xs">
-                          <td colSpan={9} className="p-2.5 tracking-wider">
+                          <td colSpan={showCodeColumn ? 10 : 9} className="p-2.5 tracking-wider">
                             {groupName}
                           </td>
                         </tr>
@@ -504,12 +523,14 @@ export default function InputFormPage() {
                           const pct = Math.round((kpi.actual / kpi.target) * 100);
                           return (
                             <tr key={kpi.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
-                              <td className="p-3">
-                                <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
-                              </td>
-                              <td className="p-3 font-bold text-white">{kpi.title}</td>
+                              {showCodeColumn && (
+                                <td className="p-3">
+                                  <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
+                                </td>
+                              )}
+                              <td className="p-3 font-bold text-white max-w-[280px] break-words">{kpi.title}</td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>
-                              <td className="p-3 italic text-slate-400 text-xs truncate max-w-[200px]" title={kpi.formula}>
+                              <td className="p-3 italic text-slate-400 text-xs truncate max-w-[150px]" title={kpi.formula}>
                                 {kpi.formula}
                               </td>
                               <td className="p-3 text-center">
@@ -536,6 +557,16 @@ export default function InputFormPage() {
                                 </span>
                               </td>
                               <td className="p-3 text-center">
+                                <input
+                                  type="text"
+                                  value={explanations[kpi.code] || ""}
+                                  placeholder="Ghi chú ngắn kết quả..."
+                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                  onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.code]: e.target.value }))}
+                                  className="w-full bg-slate-950 border border-[var(--glass-border)] text-white text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                />
+                              </td>
+                              <td className="p-3 text-center">
                                 <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${getStatusStyle(kpi.status)}`}>
                                   {kpi.status}
                                 </span>
@@ -544,7 +575,7 @@ export default function InputFormPage() {
                                 <button
                                   onClick={() => handleSaveRow(kpi.code)}
                                   disabled={isReadOnly}
-                                  className="bg-indigo-600/90 hover:bg-indigo-600 text-white text-xs font-black px-3.5 py-1.5 rounded-lg transition-all shadow"
+                                  className="bg-indigo-600/90 hover:bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-md transition-all shadow"
                                 >
                                   Lưu dòng
                                 </button>
