@@ -214,7 +214,7 @@ export default function UnitDataPage() {
   };
 
   // Tìm chỉ tiêu doanh thu thực tế (Tổng doanh thu hoặc doanh thu kênh)
-  const revRow = kpiRows.find(r => 
+  const revRow = kpiRows.find(r => r.code === "VM1-I02.01" || (r.code.startsWith("VM1-") && r.code.includes("I02.01"))) || kpiRows.find(r => 
     r.code.includes("M1-I02.01") || 
     r.title.toLowerCase().includes("tổng doanh thu") || 
     r.title.toLowerCase() === "doanh thu" ||
@@ -486,7 +486,6 @@ export default function UnitDataPage() {
                         </td>
                       )}
                       <td 
-                        colSpan={2} 
                         className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white" 
                         style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
                       >
@@ -495,6 +494,7 @@ export default function UnitDataPage() {
                           {row.title}
                         </div>
                       </td>
+                      <td className="p-3 text-center text-slate-500 dark:text-slate-400 font-extrabold text-xs"></td>
                       
                       {/* Cột kỳ chính */}
                       <td className="p-3 text-center font-black border-l border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200">
