@@ -9,7 +9,9 @@ import {
   AlertOctagon, 
   ChevronRight, 
   ChevronDown,
-  Download
+  Download,
+  Eye,
+  EyeOff
 } from "lucide-react";
 
 interface KpiRow {
@@ -36,6 +38,7 @@ export default function UnitDataPage() {
     "M1": true, "M2": true, "M3": true, "M4": true, "M5": true, "M6": true, "M7": true
   });
   const [kpiRows, setKpiRows] = useState<KpiRow[]>([]);
+  const [showCodeColumn, setShowCodeColumn] = useState(true);
 
   // Tên đơn vị hiển thị
   const unitNameMap: Record<string, string> = {
@@ -248,6 +251,67 @@ export default function UnitDataPage() {
     return "text-emerald-500 font-black";
   };
 
+  const handleExportExcel = () => {
+    let html = `
+      <meta charset="utf-8">
+      <table border="1">
+        <tr style="background-color: #1e3a8a; color: #ffffff; font-weight: bold; height: 35px;">
+          ${showCodeColumn ? '<th style="width: 120px;">Mã chỉ tiêu</th>' : ''}
+          <th style="width: 350px;">Mục tiêu / Chỉ tiêu cấp bộ phận</th>
+          <th style="width: 80px;">ĐVT</th>
+          <th style="width: 150px;">KH ${primaryTitle}</th>
+          <th style="width: 150px;">Thực tế ${primaryTitle}</th>
+          <th style="width: 100px;">% HT ${primaryTitle}</th>
+          ${filters.periodType !== "yearly" ? `
+            <th style="width: 150px;">KH ${cumulativeTitle}</th>
+            <th style="width: 150px;">Thực tế ${cumulativeTitle}</th>
+            <th style="width: 100px;">% HT ${cumulativeTitle}</th>
+          ` : ""}
+        </tr>
+    `;
+
+    orderedRows.forEach(row => {
+      const targetPri = getTargetValue(row);
+      const actualPri = getActualValue(row);
+      const pctPri = targetPri > 0 ? Math.round((actualPri / targetPri) * 100) : 100;
+
+      const targetCum = getCumulativeTarget(row);
+      const actualCum = getCumulativeActual(row);
+      const pctCum = targetCum > 0 ? Math.round((actualCum / targetCum) * 100) : 100;
+
+      const indent = getRowDepth(row, orderedRows);
+      const titleText = "&nbsp;".repeat(indent * 4) + row.title;
+
+      html += `
+        <tr style="height: 30px; ${row.isParent ? "font-weight: bold; background-color: #f1f5f9; color: #0f172a;" : "color: #334155;"}">
+          ${showCodeColumn ? `<td style="text-align: center; font-family: monospace;">${row.code}</td>` : ''}
+          <td style="${row.isParent ? "text-transform: uppercase;" : ""}">${titleText}</td>
+          <td style="text-align: center;">${row.unit}</td>
+          <td style="text-align: right;">${row.unit === "%" ? targetPri + "%" : targetPri.toLocaleString()}</td>
+          <td style="text-align: right;">${row.unit === "%" ? actualPri + "%" : actualPri.toLocaleString()}</td>
+          <td style="text-align: right; font-weight: bold; color: ${pctPri < 80 ? "#ef4444" : pctPri < 100 ? "#f59e0b" : "#10b981"};">${pctPri}%</td>
+          ${filters.periodType !== "yearly" ? `
+            <td style="text-align: right;">${row.unit === "%" ? targetCum + "%" : targetCum.toLocaleString()}</td>
+            <td style="text-align: right;">${row.unit === "%" ? actualCum + "%" : actualCum.toLocaleString()}</td>
+            <td style="text-align: right; font-weight: bold; color: ${pctCum < 80 ? "#ef4444" : pctCum < 100 ? "#f59e0b" : "#10b981"};">${pctCum}%</td>
+          ` : ""}
+        </tr>
+      `;
+    });
+
+    html += "</table>";
+
+    const blob = new Blob(["\ufeff", html], { type: "application/vnd.ms-excel;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `KPI_Bao_Cao_${filters.unitCode}_${getPeriodLabel().replace(/\s+/g, "_")}.xls`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="flex flex-col gap-6 text-slate-800 dark:text-white text-sm">
       {/* 1. FREEZE FILTERS PANEL */}
@@ -332,16 +396,25 @@ export default function UnitDataPage() {
       <div className="glass-panel p-5 overflow-hidden">
         
         {/* HEADER BẢNG THÔNG TIN CÓ NÚT XUẤT FILE EXCEL */}
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-4 border-b border-white/10 pb-3">
-          <h3 className="text-base font-black text-sky-400 tracking-wide uppercase">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-4 border-b border-slate-200 dark:border-white/10 pb-3">
+          <h3 className="text-base font-black text-sky-500 dark:text-sky-400 tracking-wide uppercase">
             Bộ Chỉ Tiêu: {currentUnitName} ({getPeriodLabel()})
           </h3>
-          <button
-            onClick={() => alert("Hệ thống đang xuất file Excel dữ liệu bộ 7 chỉ tiêu...")}
-            className="bg-indigo-800 hover:bg-indigo-700 text-white text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all"
-          >
-            <Download size={15} /> Xuất File Excel
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowCodeColumn(!showCodeColumn)}
+              className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 border border-slate-300 dark:border-white/10 transition-all shadow-sm"
+            >
+              {showCodeColumn ? <EyeOff size={15} /> : <Eye size={15} />}
+              {showCodeColumn ? "Ẩn mã chỉ tiêu" : "Hiện mã chỉ tiêu"}
+            </button>
+            <button
+              onClick={handleExportExcel}
+              className="bg-indigo-600 hover:bg-indigo-700 !text-white text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all"
+            >
+              <Download size={15} /> Xuất File Excel
+            </button>
+          </div>
         </div>
 
         {/* BẢNG THÔNG TIN DỮ LIỆU */}
@@ -349,7 +422,7 @@ export default function UnitDataPage() {
           <table className="w-full text-left text-sm border-collapse">
             <thead>
               <tr className="border-b border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-black bg-slate-100 dark:bg-slate-900/60 uppercase text-xs tracking-wider">
-                <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>
+                {showCodeColumn && <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>}
                 <th className="p-3">Mục tiêu / Chỉ tiêu cấp bộ phận</th>
                 <th className="p-3 w-20 text-center">ĐVT</th>
                 
@@ -387,16 +460,23 @@ export default function UnitDataPage() {
                       onClick={() => toggleRow(row.code)}
                       className="bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-[var(--accent-cyan)] font-black border-b border-slate-200 dark:border-white/10 cursor-pointer select-none transition-all text-sm"
                     >
-                      <td className="p-3 text-center">
-                        <span 
-                          className="inline-flex items-center justify-center gap-1 font-mono"
-                          style={{ paddingLeft: `${depth * 1.0}rem` }}
-                        >
-                          {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                          {row.code}
-                        </span>
-                      </td>
-                      <td colSpan={2} className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white" style={{ paddingLeft: `${depth * 1.0 + 0.5}rem` }}>
+                      {showCodeColumn && (
+                        <td className="p-3 text-center">
+                          <span 
+                            className="inline-flex items-center justify-center gap-1 font-mono"
+                            style={{ paddingLeft: `${depth * 1.0}rem` }}
+                          >
+                            {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                            {row.code}
+                          </span>
+                        </td>
+                      )}
+                      <td 
+                        colSpan={showCodeColumn ? 2 : 3} 
+                        className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white flex items-center gap-1.5" 
+                        style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
+                      >
+                        {!showCodeColumn && (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
                         {row.title}
                       </td>
                       
@@ -437,11 +517,13 @@ export default function UnitDataPage() {
                 const depth = getRowDepth(row, orderedRows);
                 return (
                   <tr key={row.code} className="border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 text-sm text-slate-700 dark:text-slate-200">
-                    <td className="p-3 text-center">
-                      <code className="bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 px-2 py-0.5 rounded font-mono text-xs border border-sky-300 dark:border-sky-500/20 font-bold">
-                        {row.code}
-                      </code>
-                    </td>
+                    {showCodeColumn && (
+                      <td className="p-3 text-center">
+                        <code className="bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 px-2 py-0.5 rounded font-mono text-xs border border-sky-300 dark:border-sky-500/20 font-bold">
+                          {row.code}
+                        </code>
+                      </td>
+                    )}
                     <td className="p-3 font-semibold text-slate-800 dark:text-white" style={{ paddingLeft: `${depth * 1.5}rem` }}>
                       {row.title}
                     </td>
