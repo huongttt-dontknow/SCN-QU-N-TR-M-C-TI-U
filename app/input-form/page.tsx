@@ -385,6 +385,8 @@ export default function InputFormPage() {
   ]);
 
   const [directorComment, setDirectorComment] = useState("");
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
+  const [isProdAiGenerating, setIsProdAiGenerating] = useState(false);
   const isReadOnly = currentLoggedUser?.role === "Người dùng";
 
   // Helper mapping for filters.unitCode to Excel product unit field
@@ -778,6 +780,96 @@ export default function InputFormPage() {
 
   const handleSkipAction = (id: number) => {
     setActions(prev => prev.map(a => a.id === id ? { ...a, status: "Bỏ qua" } : a));
+  };
+
+  const handleAiSuggestActions = async () => {
+    if (isReadOnly || isAiGenerating) return;
+    setIsAiGenerating(true);
+    try {
+      const pKey = getPeriodKey();
+      const pType = filters.periodType || "weekly";
+      const res = await fetch("/api/ai/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          unitCode: filters.unitCode,
+          periodKey: pKey,
+          periodType: pType,
+          kpis: kpis.map(k => ({
+            indicatorCode: k.code,
+            title: k.title,
+            targetValue: k.target,
+            actualValue: k.actual,
+            pic: k.pic
+          }))
+        })
+      });
+      const data = await res.json();
+      if (data && Array.isArray(data.suggestedActions)) {
+        const newActions = data.suggestedActions.map((act: any, idx: number) => ({
+          id: Date.now() + idx,
+          title: act.title,
+          indicator: act.targetIndicator || "Chỉ số liên quan",
+          impact: act.impact,
+          status: "Chờ quyết định"
+        }));
+        setActions(prev => [...prev, ...newActions]);
+      } else {
+        alert("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("❌ Lỗi khi kết nối với AI Agent: " + err.message);
+    } finally {
+      setIsAiGenerating(false);
+    }
+  };
+
+  const handleProdAiSuggestActions = async () => {
+    if (isReadOnly || isProdAiGenerating) return;
+    setIsProdAiGenerating(true);
+    try {
+      const pKey = getPeriodKey();
+      const pType = filters.periodType || "weekly";
+      const res = await fetch("/api/ai/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          unitCode: currentProduct?.name || activeProductId,
+          periodKey: pKey,
+          periodType: pType,
+          kpis: productKpis.map(k => ({
+            indicatorCode: k.code,
+            title: k.title,
+            targetValue: k.target,
+            actualValue: k.actual,
+            pic: ""
+          }))
+        })
+      });
+      const data = await res.json();
+      if (data && Array.isArray(data.suggestedActions)) {
+        const newActions = data.suggestedActions.map((act: any, idx: number) => ({
+          id: Date.now() + idx,
+          title: act.title,
+          indicator: act.targetIndicator || "Chỉ số liên quan",
+          impact: act.impact,
+          status: "Chờ quyết định"
+        }));
+        setProductActions(prev => [...prev, ...newActions]);
+      } else {
+        alert("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("❌ Lỗi khi kết nối với AI Agent: " + err.message);
+    } finally {
+      setIsProdAiGenerating(false);
+    }
   };
 
   const handleAddCustomAction = () => {
@@ -1181,13 +1273,24 @@ export default function InputFormPage() {
                   Đề xuất tự động từ AI Agent dựa trên bối cảnh dữ liệu. Hãy chọn các giải pháp phù hợp để chốt kế hoạch kỳ sau.
                 </p>
               </div>
-              <button
-                onClick={handleAddCustomAction}
-                disabled={isReadOnly}
-                className="bg-purple-800 hover:bg-purple-700 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow transition-all"
-              >
-                <Plus size={14} /> Thêm hành động chủ động
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleAiSuggestActions}
+                  disabled={isAiGenerating}
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white !text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ color: "#ffffff" }}
+                >
+                  {isAiGenerating ? "⌛ Đang đề xuất..." : "✨ AI Agent Đề xuất Action"}
+                </button>
+                <button
+                  onClick={handleAddCustomAction}
+                  disabled={isReadOnly}
+                  className="bg-purple-800 hover:bg-purple-700 text-white !text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow transition-all"
+                  style={{ color: "#ffffff" }}
+                >
+                  <Plus size={14} /> Thêm hành động chủ động
+                </button>
+              </div>
             </div>
 
             <div className="overflow-x-auto">
@@ -1212,7 +1315,10 @@ export default function InputFormPage() {
                       </td>
                       <td className="p-3 text-center text-slate-300">{act.impact}</td>
                       <td className="p-3 text-center">
-                        <span className="text-[10px] bg-amber-950 text-amber-300 font-bold px-2 py-1 rounded border border-amber-500/20">
+                        <span 
+                          className="text-[10px] bg-amber-950 text-amber-300 font-bold px-2 py-1 rounded border border-amber-500/20"
+                          style={{ color: "#fcd34d" }}
+                        >
                           {act.status}
                         </span>
                       </td>
@@ -1220,13 +1326,15 @@ export default function InputFormPage() {
                         <div className="flex justify-center items-center gap-2">
                           <button
                             onClick={() => handleAcceptAction(act.id)}
-                            className="bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-black px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"
+                            className="bg-indigo-600 hover:bg-indigo-500 text-white !text-white text-[10px] font-black px-3 py-1.5 rounded-lg flex items-center gap-1 shadow"
+                            style={{ color: "#ffffff" }}
                           >
                             ✓ Chọn
                           </button>
                           <button
                             onClick={() => handleSkipAction(act.id)}
-                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-black px-2.5 py-1.5 rounded-lg border border-white/10"
+                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 !text-slate-300 text-[10px] font-black px-2.5 py-1.5 rounded-lg border border-white/10"
+                            style={{ color: "#cbd5e1" }}
                           >
                             ✖ Bỏ qua
                           </button>
@@ -1288,14 +1396,16 @@ export default function InputFormPage() {
                 <>
                   <button
                     onClick={handleSaveDraft}
-                    className="bg-slate-800 hover:bg-slate-700 text-white text-xs font-extrabold px-5 py-2.5 rounded-xl border border-white/10 shadow transition-all"
+                    className="bg-slate-800 hover:bg-slate-700 text-white !text-white text-xs font-extrabold px-5 py-2.5 rounded-xl border border-white/10 shadow transition-all"
+                    style={{ color: "#ffffff" }}
                   >
                     💾 Lưu nháp (Draft)
                   </button>
                   <button
                     onClick={handleSendReport}
                     disabled={reportStatus === "Chờ duyệt"}
-                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-black px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all"
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white !text-white text-xs font-black px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all disabled:opacity-50"
+                    style={{ color: "#ffffff" }}
                   >
                     🚀 Gửi báo cáo cho Giám đốc BU
                   </button>
@@ -1648,13 +1758,24 @@ export default function InputFormPage() {
               <h3 className="text-sm font-black text-indigo-400 tracking-wider uppercase flex items-center gap-2">
                 ⚡ KHỐI 4: ĐỀ XUẤT HÀNH ĐỘNG CẢI TIẾN PSH SẢN PHẨM
               </h3>
-              <button
-                onClick={handleAddCustomProdAction}
-                disabled={isReadOnly || activeProductId === "all"}
-                className="bg-purple-800 hover:bg-purple-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Plus size={14} /> Thêm Action Sản Phẩm
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleProdAiSuggestActions}
+                  disabled={isProdAiGenerating || activeProductId === "all"}
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white !text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ color: "#ffffff" }}
+                >
+                  {isProdAiGenerating ? "⌛ Đang đề xuất..." : "✨ AI Agent Đề xuất Action"}
+                </button>
+                <button
+                  onClick={handleAddCustomProdAction}
+                  disabled={isReadOnly || activeProductId === "all"}
+                  className="bg-purple-800 hover:bg-purple-700 text-white !text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ color: "#ffffff" }}
+                >
+                  <Plus size={14} /> Thêm Action Sản Phẩm
+                </button>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -1664,7 +1785,10 @@ export default function InputFormPage() {
                     <h4 className="text-xs font-bold text-white">{act.title}</h4>
                     <p className="text-[11px] text-slate-400">Kỳ vọng: {act.impact}</p>
                   </div>
-                  <span className="text-[10px] bg-purple-950 text-purple-300 font-bold px-2.5 py-1 rounded border border-purple-500/30">
+                  <span 
+                    className="text-[10px] bg-purple-950 text-purple-300 font-bold px-2.5 py-1 rounded border border-purple-500/30"
+                    style={{ color: "#d8b4fe" }}
+                  >
                     {act.status}
                   </span>
                 </div>
@@ -1678,11 +1802,12 @@ export default function InputFormPage() {
               <button
                 disabled={activeProductId === "all"}
                 onClick={() => alert(`🚀 Đã gửi thành công Báo cáo Điểm PSH cho sản phẩm: ${currentProduct?.name}`)}
-                className={`text-white text-xs font-black px-6 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(147,51,234,0.4)] disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`text-white !text-white text-xs font-black px-6 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(147,51,234,0.4)] disabled:opacity-40 disabled:cursor-not-allowed ${
                   activeProductId === "all"
                     ? "bg-slate-800 border border-slate-700 text-slate-500 shadow-none"
                     : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500"
                 }`}
+                style={{ color: "#ffffff" }}
               >
                 🚀 Gửi Báo Cáo Sản Phẩm Phê Duyệt
               </button>
