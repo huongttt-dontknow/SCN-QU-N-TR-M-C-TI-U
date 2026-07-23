@@ -318,6 +318,7 @@ interface KpiItem {
   status: string;
   pic: string;
   group: string;
+  frequency?: string;
 }
 
 interface ActionItem {
@@ -344,6 +345,7 @@ interface ProductKpiItem {
   target: number;
   actual: number;
   group: string;
+  frequency?: string;
 }
 
 export default function InputFormPage() {
@@ -534,7 +536,8 @@ export default function InputFormPage() {
             actual: d.actualValue,
             status: d.status || "Chờ duyệt",
             pic: d.pic || "",
-            group: d.group || "Chỉ số bổ sung"
+            group: d.group || "Chỉ số bổ sung",
+            frequency: d.frequency || ""
           }));
           setKpis(mapped);
           
@@ -578,7 +581,8 @@ export default function InputFormPage() {
             formula: d.formula || "",
             target: d.targetValue,
             actual: d.actualValue,
-            group: d.group || "Chỉ số bổ sung"
+            group: d.group || "Chỉ số bổ sung",
+            frequency: d.frequency || ""
           }));
           setProductKpis(mapped);
         }
@@ -840,8 +844,34 @@ export default function InputFormPage() {
     }
   };
 
-  const groups = Array.from(new Set(kpis.map(k => k.group)));
-  const prodGroups = Array.from(new Set(productKpis.map(k => k.group)));
+  const shouldShowByFrequency = (freq: string | undefined, title: string, code: string) => {
+    const periodType = filters.periodType || "weekly";
+    const f = (freq || "").toLowerCase().trim();
+    const t = title.toLowerCase();
+    const c = code.toLowerCase();
+
+    // Detect quarterly indicators by frequency field or keywords in title/code
+    const isQuarterly = f === "quý" || f === "quarterly" || t.includes("roi") || t.includes("ros") || t.includes("tỷ suất lợi nhuận");
+    
+    // Detect monthly indicators by frequency field or keywords in title/code
+    const isMonthly = f === "tháng" || f === "monthly" || t.includes("chi phí mua công cụ") || t.includes("chi phí ctv") || t.includes("độ phủ thương hiệu") || t.includes("kỷ luật") || t.includes("nhân sự fulltime") || t.includes("đào tạo") || t.includes("ngân sách");
+
+    if (periodType === "weekly") {
+      // Weekly reports: hide both monthly and quarterly indicators
+      if (isQuarterly || isMonthly) return false;
+    } else if (periodType === "monthly") {
+      // Monthly reports: hide quarterly indicators, show monthly & weekly indicators
+      if (isQuarterly) return false;
+    }
+    
+    return true;
+  };
+
+  const visibleKpis = kpis.filter(k => shouldShowByFrequency(k.frequency, k.title, k.code));
+  const groups = Array.from(new Set(visibleKpis.map(k => k.group).filter(Boolean)));
+
+  const visibleProductKpis = productKpis.filter(pk => shouldShowByFrequency(pk.frequency, pk.title, pk.code));
+  const prodGroups = Array.from(new Set(visibleProductKpis.map(pk => pk.group).filter(Boolean)));
 
   // Thuật toán PSH cho Tab 2
   const isWeekly = filters.periodType === "weekly";
@@ -970,7 +1000,7 @@ export default function InputFormPage() {
                 </thead>
                 <tbody>
                   {groups.map(groupName => {
-                    const items = kpis.filter(k => k.group === groupName);
+                    const items = visibleKpis.filter(k => k.group === groupName);
                     return (
                       <React.Fragment key={groupName}>
                         <tr className="bg-slate-900/50 text-[#10b981] font-black border-b border-white/5 uppercase text-xs">
@@ -1349,7 +1379,7 @@ export default function InputFormPage() {
                 </thead>
                 <tbody>
                   {prodGroups.map(groupName => {
-                    const items = productKpis.filter(k => k.group === groupName);
+                    const items = visibleProductKpis.filter(k => k.group === groupName);
                     return (
                       <React.Fragment key={groupName}>
                         <tr className="bg-slate-900/50 text-sky-400 font-black border-b border-white/5 uppercase text-xs">
