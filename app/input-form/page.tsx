@@ -282,6 +282,21 @@ export default function InputFormPage() {
     return "bg-slate-100 text-slate-600 border border-slate-300 dark:bg-slate-800/40 dark:text-slate-300 dark:border-slate-700/30";
   };
 
+  const isImportantIndicator = (title: string) => {
+    const t = title.toLowerCase().trim();
+    const importantKeywords = [
+      "tổng doanh thu",
+      "số lượt view youtube",
+      "sl video đạt ngưỡng 1 triệu view",
+      "số lượng video hoàn thành sản xuất",
+      "số sản phẩm phái sinh & khai thác",
+      "tổng số kênh kinh doanh",
+      "số kênh bkt",
+      "tỷ lệ nhân sự không vi phạm kỷ luật"
+    ];
+    return importantKeywords.some(keyword => t.includes(keyword));
+  };
+
   const handleProdInputChange = (code: string, val: string) => {
     setProductKpis(prev => prev.map(k => k.code === code ? { ...k, actual: parseFloat(val) || 0 } : k));
   };
@@ -498,14 +513,14 @@ export default function InputFormPage() {
                 <thead className="sticky top-0 z-10 bg-slate-950 shadow">
                   <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
                     {showCodeColumn && <th className="p-3 w-24">Mã chỉ tiêu</th>}
-                    <th className="p-3 max-w-[280px]">Mục tiêu / Chỉ tiêu cần báo cáo</th>
+                    <th className="p-3 max-w-[250px]">Mục tiêu / Chỉ tiêu cần báo cáo</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
                     <th className="p-3 w-48">Cách tính</th>
                     <th className="p-3 w-32 text-center">Kế hoạch định kỳ</th>
                     <th className="p-3 w-32 text-center">Kết quả thực tế đã nhập</th>
                     <th className="p-3 w-24 text-center">Tỷ lệ hoàn thành</th>
-                    <th className="p-3 w-48 text-center">Ghi chú kết quả</th>
-                    <th className="p-3 w-28 text-center">Trạng thái duyệt</th>
+                    <th className="p-3 w-[200px] text-center">Ghi chú kết quả</th>
+                    <th className="p-3 w-[120px] text-center">Trạng thái duyệt</th>
                     <th className="p-3 w-24 text-center">Thao tác</th>
                   </tr>
                 </thead>
@@ -528,7 +543,7 @@ export default function InputFormPage() {
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
                                 </td>
                               )}
-                              <td className="p-3 font-bold text-white max-w-[280px] break-words">{kpi.title}</td>
+                              <td className={`p-3 font-bold max-w-[250px] break-words ${isImportantIndicator(kpi.title) ? "text-[#10b981] dark:text-[#34d399]" : "text-white"}`}>{kpi.title}</td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>
                               <td className="p-3 italic text-slate-400 text-xs truncate max-w-[150px]" title={kpi.formula}>
                                 {kpi.formula}
