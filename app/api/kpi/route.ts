@@ -5,22 +5,23 @@ import { prisma } from "@/lib/prisma";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const unitCode = searchParams.get("unitCode");
-    const periodKey = searchParams.get("periodKey");
+    const unitCode = searchParams.get("unitCode") || "";
+    const productCode = searchParams.get("productCode") || undefined;
+    const periodKey = searchParams.get("periodKey") || "";
     const periodType = searchParams.get("periodType") || "weekly";
 
-    if (!unitCode || !periodKey) {
-      return NextResponse.json({ error: "Thiếu unitCode hoặc periodKey" }, { status: 400 });
+    if ((!unitCode && !productCode) || !periodKey) {
+      return NextResponse.json({ error: "Thiếu unitCode/productCode hoặc periodKey" }, { status: 400 });
     }
 
     // Lấy dữ liệu đã lưu
     let kpiRecords = await prisma.kpiData.findMany({
-      where: { unitCode, periodKey, periodType },
+      where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
 
     // Tự động kiểm tra và đồng bộ hóa danh sách chỉ tiêu của đơn vị (Self-healing mechanism)
     const unitTemplates = await prisma.kpiData.findMany({
-      where: { unitCode },
+      where: productCode ? { productCode } : { unitCode, productCode: null },
       distinct: ["indicatorCode"]
     });
 
@@ -45,7 +46,8 @@ export async function GET(request: Request) {
 
           return {
             indicatorCode: t.indicatorCode,
-            unitCode,
+            unitCode: t.unitCode || unitCode,
+            productCode: productCode || null,
             periodType,
             periodKey,
             targetValue: defaultTarget,
@@ -65,7 +67,7 @@ export async function GET(request: Request) {
 
         // Tải lại toàn bộ dữ liệu đã được bổ sung đầy đủ
         kpiRecords = await prisma.kpiData.findMany({
-          where: { unitCode, periodKey, periodType },
+          where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
         });
       }
     } else {
@@ -125,9 +127,9 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { unitCode, periodKey, periodType, kpiUpdates } = body; // kpiUpdates: array of { id, actualValue, explanation, status }
+    const { unitCode, productCode, periodKey, periodType, kpiUpdates } = body; // kpiUpdates: array of { id, actualValue, explanation, status }
 
-    if (!unitCode || !periodKey || !kpiUpdates || !Array.isArray(kpiUpdates)) {
+    if ((!unitCode && !productCode) || !periodKey || !kpiUpdates || !Array.isArray(kpiUpdates)) {
       return NextResponse.json({ error: "Thiếu thông tin hoặc dữ liệu cập nhật không hợp lệ" }, { status: 400 });
     }
 
@@ -148,7 +150,7 @@ export async function POST(request: Request) {
     await prisma.$transaction(updatePromises);
 
     const updatedRecords = await prisma.kpiData.findMany({
-      where: { unitCode, periodKey, periodType },
+      where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
 
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công", data: updatedRecords });

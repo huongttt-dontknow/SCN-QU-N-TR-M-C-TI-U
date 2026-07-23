@@ -43,7 +43,6 @@ function aggregateValues(items: { target: number, actual: number }[], method: st
     };
   }
 
-  // Fallback default: SUM
   return {
     target: items.reduce((sum, i) => sum + i.target, 0),
     actual: items.reduce((sum, i) => sum + i.actual, 0)
@@ -102,19 +101,20 @@ function resolveYearValues(code: string, yKey: string, records: any[], freq: str
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const unitCode = searchParams.get("unitCode");
+    const unitCode = searchParams.get("unitCode") || "";
+    const productCode = searchParams.get("productCode") || undefined;
     const month = parseInt(searchParams.get("month") || "7");
     const week = parseInt(searchParams.get("week") || "1");
     const quarter = searchParams.get("quarter") || "Q3";
     const year = searchParams.get("year") || "2026";
 
-    if (!unitCode) {
-      return NextResponse.json({ error: "Thiếu unitCode" }, { status: 400 });
+    if (!unitCode && !productCode) {
+      return NextResponse.json({ error: "Thiếu unitCode hoặc productCode" }, { status: 400 });
     }
 
-    // Lấy toàn bộ bản ghi KPI của đơn vị trong năm
+    // Lấy toàn bộ bản ghi KPI của đơn vị hoặc sản phẩm trong năm
     const records = await prisma.kpiData.findMany({
-      where: { unitCode }
+      where: productCode ? { productCode } : { unitCode, productCode: null }
     });
 
     const targetWeekKey = `weekly_${month}_${week}`;
@@ -135,10 +135,12 @@ export async function GET(request: Request) {
 
     const compiledRows: Record<string, any> = {};
 
-    // Khởi tạo các nhóm cha trong compiledRows
+    // Khởi tạo các nhóm cha trong compiledRows (tiền tố productCode nếu có)
     for (const [gCode, gName] of Object.entries(groupNameMap)) {
-      compiledRows[gCode] = {
-        code: gCode,
+      const codeKey = productCode ? `${productCode}-${gCode}` : gCode;
+      compiledRows[codeKey] = {
+        code: codeKey,
+        displayCode: gCode,
         title: gName,
         unit: "",
         targetWeek: 0, actualWeek: 0,
@@ -153,15 +155,22 @@ export async function GET(request: Request) {
     // Tập hợp dữ liệu thời gian cho từng chỉ tiêu
     for (const r of records) {
       const code = r.indicatorCode;
+      
+      let displayCode = code;
+      if (productCode && displayCode.startsWith(productCode + "-")) {
+        displayCode = displayCode.substring(productCode.length + 1);
+      }
+
       if (!compiledRows[code]) {
         let parentCode = r.parentCode;
         if (!parentCode || parentCode === "") {
           const groupPrefix = r.group ? r.group.split(".")[0].trim() : "M1";
-          parentCode = groupPrefix;
+          parentCode = productCode ? `${productCode}-${groupPrefix}` : groupPrefix;
         }
 
         compiledRows[code] = {
           code: code,
+          displayCode: displayCode,
           title: r.title || code,
           unit: r.unit || "",
           targetWeek: 0, actualWeek: 0,
@@ -202,7 +211,7 @@ export async function GET(request: Request) {
     // Xác định xem chỉ tiêu nào có chỉ tiêu con thì mark isParent = true
     const allRows = Object.values(compiledRows);
     for (const row of allRows) {
-      if (row.code !== "M1" && row.code !== "M2" && row.code !== "M3" && row.code !== "M4" && row.code !== "M5" && row.code !== "M6" && row.code !== "M7") {
+      if (row.displayCode !== "M1" && row.displayCode !== "M2" && row.displayCode !== "M3" && row.displayCode !== "M4" && row.displayCode !== "M5" && row.displayCode !== "M6" && row.displayCode !== "M7") {
         const hasChildren = allRows.some(r => r.parentCode === row.code);
         if (hasChildren) {
           row.isParent = true;
@@ -212,11 +221,10 @@ export async function GET(request: Request) {
 
     // Tải và chuẩn hóa tất cả các dòng chỉ tiêu không phải là dòng cha lớn
     for (const row of allRows) {
-      if (row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7") {
+      if (row.displayCode === "M1" || row.displayCode === "M2" || row.displayCode === "M3" || row.displayCode === "M4" || row.displayCode === "M5" || row.displayCode === "M6" || row.displayCode === "M7") {
         continue;
       }
       if (row.isParent) {
-        // Tạm thời bỏ qua, dòng này sẽ được cộng dồn từ các con của nó ở bước sau
         continue;
       }
 
@@ -247,7 +255,7 @@ export async function GET(request: Request) {
 
     // Tự động tính gộp dữ liệu từ con lên cha cho các chỉ tiêu cha trung gian (ví dụ: VM1-I02.02, VM1-I02.03, VM1-I02.04)
     for (const row of allRows) {
-      if (row.isParent && row.code !== "M1" && row.code !== "M2" && row.code !== "M3" && row.code !== "M4" && row.code !== "M5" && row.code !== "M6" && row.code !== "M7") {
+      if (row.isParent && row.displayCode !== "M1" && row.displayCode !== "M2" && row.displayCode !== "M3" && row.displayCode !== "M4" && row.displayCode !== "M5" && row.displayCode !== "M6" && row.displayCode !== "M7") {
         const subChildren = allRows.filter(r => r.parentCode === row.code);
         if (subChildren.length > 0) {
           row.targetWeek = 0; row.actualWeek = 0;
@@ -271,10 +279,12 @@ export async function GET(request: Request) {
 
     // Tự động tính gộp dữ liệu từ con lên cha cho các nhóm lớn M1 - M7 từ các con trực tiếp
     for (const gCode of ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]) {
-      const children = allRows.filter(r => r.parentCode === gCode);
-      const parent = compiledRows[gCode];
+      const parentKey = productCode ? `${productCode}-${gCode}` : gCode;
+      const children = allRows.filter(r => r.parentCode === parentKey);
+      const parent = compiledRows[parentKey];
+      if (!parent) continue;
+
       for (const child of children) {
-        // Chỉ cộng dồn nếu đơn vị tương thích
         if (child.unit === "VNĐ" || child.unit === "Nội dung" || child.unit === "Video" || child.unit === "Views" || child.unit === "Lượt" || child.unit === "Ý tưởng" || child.unit === "Kịch bản" || child.unit === "SL" || child.unit === "Tài liệu" || child.unit === "Kênh") {
           parent.targetWeek += child.targetWeek;
           parent.actualWeek += child.actualWeek;
