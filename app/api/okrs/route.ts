@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { okrData } from "@/lib/okr_data_q3";
 
 // GET /api/okrs - Lấy danh sách OKR (Objective -> KeyResult -> Action) theo Đơn vị và Kỳ
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const unitCode = searchParams.get("unitCode");
-    const period = searchParams.get("period"); // Q1_2026, M7_2026...
+    const unitCode = searchParams.get("unitCode") || "";
+    const period = searchParams.get("period") || ""; // Q1_2026, M7_2026...
 
     if (!unitCode || !period) {
       return NextResponse.json({ error: "Thiếu unitCode hoặc period" }, { status: 400 });
@@ -24,93 +25,39 @@ export async function GET(request: Request) {
       orderBy: { createdAt: "asc" },
     });
 
-    // Nếu kỳ này chưa có OKR nào, tự động seeding dữ liệu mặc định từ đặc tả nghiệp vụ
-    if (objectives.length === 0 && unitCode === "Wofloo") {
-      // Seed Objective 1 cho Wolfoo
-      const obj1 = await prisma.objective.create({
-        data: {
-          unitCode: "Wofloo",
-          title: "Tăng tốc hoàn thiện toàn diện và chuẩn hóa mô hình quy trình sản xuất AIVA-AI",
-          weight: 40,
-          period,
-          keyResults: {
-            create: [
-              {
-                title: "Đảm bảo 100% quy trình quản lý sản xuất cho tất cả các dòng sản phẩm",
-                weight: 30,
-                progress: 40,
-                pic: "Lê Đăng Khoa",
-                deadline: new Date("2026-09-30"),
-                actions: {
-                  create: [
-                    { unitCode: "Wofloo", title: "Viết tài liệu quy trình AIVA Standard", pic: "Trần Anh Tuấn", startDate: new Date("2026-07-01"), endDate: new Date("2026-07-15"), progress: 100, status: "Hoàn thành" },
-                    { unitCode: "Wofloo", title: "Training cho 100% Leads các tổ sản xuất", pic: "Lê Đăng Khoa", startDate: new Date("2026-07-10"), endDate: new Date("2026-08-30"), progress: 30, status: "Đang thực hiện" },
-                  ]
-                }
-              },
-              {
-                title: "Tăng hiệu suất sản xuất ND 2D trung bình lên 150%",
-                weight: 40,
-                progress: 60,
-                pic: "Lê Đăng Khoa",
-                deadline: new Date("2026-09-30"),
-                actions: {
-                  create: [
-                    { unitCode: "Wofloo", title: "Ứng dụng AI tạo phác thảo bối cảnh tự động", pic: "Phạm Thùy Linh", startDate: new Date("2026-07-05"), endDate: new Date("2026-08-15"), progress: 80, status: "Đang thực hiện" }
-                  ]
-                }
-              },
-              {
-                title: "Giảm thời gian sản xuất trung bình của 1 video về 4.5 ngày",
-                weight: 30,
-                progress: 20,
-                pic: "Lê Đăng Khoa",
-                deadline: new Date("2026-09-30"),
-                actions: {
-                  create: [
-                    { unitCode: "Wofloo", title: "Chuẩn hóa thư viện Assets reusable", pic: "Trần Anh Tuấn", startDate: new Date("2026-07-15"), endDate: new Date("2026-09-15"), progress: 20, status: "Đang thực hiện" }
-                  ]
-                }
-              }
-            ]
-          }
-        }
-      });
+    // Nếu kỳ này chưa có OKR nào, tự động seeding dữ liệu mặc định từ đặc tả nghiệp vụ (Self-healing)
+    if (objectives.length === 0 && okrData[unitCode]) {
+      const buckets = okrData[unitCode];
+      let objsToSeed = [];
+      if (period.startsWith("M7_")) {
+        objsToSeed = buckets.M7 && buckets.M7.length > 0 ? buckets.M7 : buckets.Q3;
+      } else {
+        objsToSeed = buckets.Q3 || [];
+      }
 
-      // Seed Objective 2 cho Wolfoo
-      const obj2 = await prisma.objective.create({
-        data: {
-          unitCode: "Wofloo",
-          title: "Tối đa hóa hiệu suất khai thác nội dung để tạo đột phá doanh thu",
-          weight: 60,
-          period,
-          keyResults: {
-            create: [
-              {
-                title: "Mở rộng kênh Tiktok Beta và đạt tỷ trọng doanh thu tối thiểu 2% tổng DT",
-                weight: 50,
-                progress: 10,
-                pic: "Lê Đăng Khoa",
-                deadline: new Date("2026-09-30"),
-                actions: {
-                  create: [
-                    { unitCode: "Wofloo", title: "Setup hệ thống 5 kênh Tiktok Beta mới", pic: "Nguyễn Minh Trí", startDate: new Date("2026-07-01"), endDate: new Date("2026-07-30"), progress: 50, status: "Đang thực hiện" }
-                  ]
-                }
-              },
-              {
-                title: "Tăng trưởng doanh thu từ hệ thống kinh doanh cũ thêm 50%",
-                weight: 50,
-                progress: 50,
-                pic: "Lê Đăng Khoa",
-                deadline: new Date("2026-09-30"),
-              }
-            ]
+      for (const obj of objsToSeed) {
+        await prisma.objective.create({
+          data: {
+            unitCode,
+            title: obj.title,
+            weight: obj.weight,
+            period,
+            progress: 0,
+            keyResults: {
+              create: obj.keyResults.map((kr: any) => ({
+                title: kr.title,
+                weight: kr.weight,
+                progress: 0,
+                priority: "Medium",
+                pic: kr.pic,
+                deadline: period.startsWith("M7_") ? new Date("2026-07-31") : new Date("2026-09-30")
+              }))
+            }
           }
-        }
-      });
+        });
+      }
 
-      // Truy vấn lại để trả về dữ liệu vừa seed
+      // Lấy lại danh sách objectives vừa tạo
       objectives = await prisma.objective.findMany({
         where: { unitCode, period },
         include: {
