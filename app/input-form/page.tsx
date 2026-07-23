@@ -16,6 +16,297 @@ import {
   Crown
 } from "lucide-react";
 
+const PRODUCTS_CATALOG = [
+  {
+    "id": "ND-1899-001",
+    "name": "STICKER",
+    "type": "Sản xuất mới",
+    "unit": "NDTH",
+    "pic": "Lò Quế Hằng",
+    "fte": 2.25,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "ND-1899-002",
+    "name": "TOCA",
+    "type": "Sản xuất mới",
+    "unit": "NDTH",
+    "pic": "Lò Quế Hằng",
+    "fte": 3.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "ND-1899-003",
+    "name": "3DKIDS SONG",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "NDTH",
+    "pic": "Lò Quế Hằng",
+    "fte": 2.5,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "ND-1899-004",
+    "name": "Khai thác chung",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "NDTH",
+    "pic": "Lò Quế Hằng",
+    "fte": 1.5,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "ND-1899-005",
+    "name": "Spotify",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "NDTH",
+    "pic": "Lò Quế Hằng",
+    "fte": 1.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "CR-2026-001",
+    "name": "Quiz - SCCH",
+    "type": "Sản xuất mới",
+    "unit": "Creative Hub",
+    "pic": "Trần Như Quỳnh",
+    "fte": 1.8,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "CR-2026-002",
+    "name": "Khai thác Lego",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Creative Hub",
+    "pic": "Trần Như Quỳnh",
+    "fte": 0.2,
+    "status": "Đang setup"
+  },
+  {
+    "id": "LE-1899-001",
+    "name": "Lego Automation",
+    "type": "Sản xuất mới",
+    "unit": "Lego",
+    "pic": "Lê Quỳnh Nga",
+    "fte": 7.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "LE-1899-002",
+    "name": "Lego AI",
+    "type": "Sản xuất mới",
+    "unit": "Lego",
+    "pic": "Lê Quỳnh Nga",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "AN-1899-001",
+    "name": "MDA",
+    "type": "Sản xuất mới",
+    "unit": "Animated Story",
+    "pic": "Thịnh Trịnh Quốc",
+    "fte": 12.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "AN-2026-002",
+    "name": "English Stories",
+    "type": "Sản xuất mới",
+    "unit": "Animated Story",
+    "pic": "Thịnh Trịnh Quốc",
+    "fte": 3.0,
+    "status": "Đang setup"
+  },
+  {
+    "id": "MU-1899-001",
+    "name": "Lofi Dân Ca",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 1.0,
+    "status": "Đang setup"
+  },
+  {
+    "id": "MU-2026-002",
+    "name": "Country Cover",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "MU-1899-003",
+    "name": "Kid Songs",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "MU-1899-004",
+    "name": "Cumbias Songs",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 1.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "MU-1899-005",
+    "name": "Relaxing Music",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 2.0,
+    "status": "Đang setup"
+  },
+  {
+    "id": "MU-1899-006",
+    "name": "NHẠC NGOẠI CÓ LỜI",
+    "type": "Sản xuất mới",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "MU-1899-007",
+    "name": "NHẠC VIỆT",
+    "type": "Sản xuất mới",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "MU-1899-008",
+    "name": "HALLOWEEN & CHRISTMAS SONGS",
+    "type": "Sản xuất mới",
+    "unit": "Music",
+    "pic": "Vũ Trung Đức",
+    "fte": 1.0,
+    "status": "Đang setup"
+  },
+  {
+    "id": "CN-2026-001",
+    "name": "Game",
+    "type": "Sản xuất mới",
+    "unit": "CNGP",
+    "pic": "Vũ Thị Thu Hiền",
+    "fte": 4.5,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "CN-2026-002",
+    "name": "DA QTK",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "CNGP",
+    "pic": "Đào Thanh Công",
+    "fte": 4.5,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "WO-1899-001",
+    "name": "Wolfoo 2D Stories",
+    "type": "Sản xuất mới",
+    "unit": "Wofloo",
+    "pic": "Lê Đăng Khoa",
+    "fte": 20.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "WO-2026-002",
+    "name": "Wolfoo 2D LEO",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Wofloo",
+    "pic": "Lê Đăng Khoa",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "WO-2026-003",
+    "name": "Wolfoo 2D Kid Song",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "Wofloo",
+    "pic": "Lê Đăng Khoa",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "SC-1899-001",
+    "name": "Kids song_01",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "SCS",
+    "pic": "Đạt Đặng Tất",
+    "fte": 5.4,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "SC-1899-002",
+    "name": "Kids song_02",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "SCS",
+    "pic": "Nguyễn Thị Bích",
+    "fte": 5.4,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "SC-1899-003",
+    "name": "Trạng Quỳnh",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "SCS",
+    "pic": "Đạt Đặng Tất",
+    "fte": 2.25,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "DA-2026-001",
+    "name": "Teen Story Spotify",
+    "type": "Sản xuất mới",
+    "unit": "DA01",
+    "pic": "Trần Thị Hồng",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "DA-2026-002",
+    "name": "Tiny Jack Kids Songs",
+    "type": "Sản xuất mới",
+    "unit": "DA01",
+    "pic": "Dương Tuấn Linh",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "DA-2026-003",
+    "name": "DA QuizZ",
+    "type": "Sản xuất mới",
+    "unit": "DA01",
+    "pic": "Nguyễn Thị Phương Thảo",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "DA-2026-004",
+    "name": "3D Kid Song (Boobabies)",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "DA01",
+    "pic": "Trần Trung Thành",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  },
+  {
+    "id": "DA-2026-005",
+    "name": "DA Teen Đức",
+    "type": "Phái sinh/ Khai thác",
+    "unit": "DA01",
+    "pic": "Trần Thị Hồng",
+    "fte": 2.0,
+    "status": "Hoạt động"
+  }
+];
+
 interface KpiItem {
   id?: string;
   code: string;
@@ -56,7 +347,7 @@ interface ProductKpiItem {
 }
 
 export default function InputFormPage() {
-  const { filters, currentLoggedUser, setCurrentLoggedUser } = useApp();
+  const { filters, currentLoggedUser, setCurrentLoggedUser, theme } = useApp();
 
   // Tab State: "unit" vs "product"
   const [activeTab, setActiveTab] = useState<"unit" | "product">("unit");
@@ -68,7 +359,7 @@ export default function InputFormPage() {
   const [simulatedRole, setSimulatedRole] = useState<"TĐV" | "GĐBU">("TĐV");
 
   // Dynamic products list fetched from database API
-  const [productsList, setProductsList] = useState<ProductLine[]>([]);
+  const [productsList, setProductsList] = useState<ProductLine[]>(PRODUCTS_CATALOG.map(p => ({ id: p.id, name: p.name, code: p.id, unitCode: p.unit })));
   const [kpis, setKpis] = useState<KpiItem[]>([]);
   const [productKpis, setProductKpis] = useState<ProductKpiItem[]>([]);
   const [productsRankings, setProductsRankings] = useState<{ id: string, name: string, score: number }[]>([]);
@@ -126,30 +417,15 @@ export default function InputFormPage() {
     }
   };
 
-  // 1. Fetch products list on mount
-  useEffect(() => {
-    fetch("/api/kpi/products")
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          const mapped = data.map((d: any) => ({
-            id: d.id,
-            name: d.name,
-            code: d.id,
-            unitCode: d.unit
-          }));
-          setProductsList(mapped);
-        }
-      })
-      .catch(err => console.error("Lỗi tải danh sách sản phẩm:", err));
-  }, []);
+  // 1. Products list is statically initialized from PRODUCTS_CATALOG
 
   const currentUnitName = unitCodeToNameMap[filters.unitCode] || filters.unitCode;
   const currentUnitProducts = filters.unitCode === "SCVN"
     ? productsList
     : productsList.filter(p => p.unitCode === currentUnitName);
 
-  const currentProduct = currentUnitProducts.find(p => p.id === selectedProdId) || currentUnitProducts[0] || null;
+  const activeProductId = selectedProdId || currentUnitProducts[0]?.id || "";
+  const currentProduct = currentUnitProducts.find(p => p.id === activeProductId) || currentUnitProducts[0] || null;
 
   // Auto-select first product when currentUnitProducts changes
   useEffect(() => {
@@ -159,7 +435,7 @@ export default function InputFormPage() {
         setSelectedProdId(currentUnitProducts[0].id);
       }
     }
-  }, [filters.unitCode, currentUnitProducts]);
+  }, [filters.unitCode, currentUnitProducts, selectedProdId]);
 
   // 2. Fetch unit-level KPI data
   useEffect(() => {
@@ -208,12 +484,12 @@ export default function InputFormPage() {
 
   // 3. Fetch product-level KPI data
   useEffect(() => {
-    if (!selectedProdId) return;
+    if (!activeProductId) return;
     let isMounted = true;
     const pKey = getPeriodKey();
     const pType = filters.periodType || "weekly";
     
-    fetch(`/api/kpi?productCode=${selectedProdId}&periodKey=${pKey}&periodType=${pType}`)
+    fetch(`/api/kpi?productCode=${activeProductId}&periodKey=${pKey}&periodType=${pType}`)
       .then(res => res.json())
       .then(data => {
         if (isMounted && Array.isArray(data)) {
@@ -235,7 +511,7 @@ export default function InputFormPage() {
     return () => {
       isMounted = false;
     };
-  }, [selectedProdId, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
+  }, [activeProductId, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   // 4. Fetch dynamic rankings for current unit products
   useEffect(() => {
@@ -698,17 +974,31 @@ export default function InputFormPage() {
 
           {/* KHỐI 2: KHU VỰC GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (DƯỚI 80% KẾ HOẠCH) */}
           <div className="glass-panel p-5 space-y-4">
-            <h3 className="text-sm font-black text-rose-500 tracking-wider uppercase flex items-center gap-2">
-              <AlertTriangle size={16} /> 🔴 KHU VỰC 2: GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (DƯỚI 80% KẾ HOẠCH)
-            </h3>
+            <div className={theme === "light" ? "bg-[#FEF2F2] border border-[#FEE2E2] p-3 rounded-xl" : ""}>
+              <h3 className={`text-sm font-black tracking-wider uppercase flex items-center gap-2 ${
+                theme === "light" ? "text-[#B91C1C]" : "text-rose-500"
+              }`}>
+                <AlertTriangle size={16} className={theme === "light" ? "text-[#B91C1C]" : "text-rose-500"} /> 🔴 KHU VỰC 2: GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (DƯỚI 80% KẾ HOẠCH)
+              </h3>
+            </div>
             <div className="space-y-3">
               {kpis
                 .filter(k => k.target > 0 && (k.actual / k.target) < 0.8)
                 .map(k => (
-                  <div key={k.code} className="bg-slate-900/60 p-4 rounded-xl border border-rose-500/20 space-y-2">
+                  <div key={k.code} className={`p-4 rounded-xl space-y-2 transition-all ${
+                    theme === "light" 
+                      ? "bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(0,0,0,0.04)]" 
+                      : "bg-slate-900/60 p-4 rounded-xl border border-rose-500/20"
+                  }`}>
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-white text-xs">{k.title}</span>
-                      <span className="text-[10px] bg-rose-950 text-rose-300 font-extrabold px-2 py-0.5 rounded border border-rose-500/30">
+                      <span className={`font-semibold text-sm ${theme === "light" ? "text-[#1A382B]" : "text-white"}`}>
+                        {k.title}
+                      </span>
+                      <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-md transition-all ${
+                        theme === "light" 
+                          ? "bg-[#FEE2E2] text-[#DC2626]" 
+                          : "bg-rose-950 text-rose-300 border border-rose-500/30"
+                      }`}>
                         {Math.round((k.actual / k.target) * 100)}% kế hoạch
                       </span>
                     </div>
@@ -718,14 +1008,22 @@ export default function InputFormPage() {
                       onChange={(e) => setExplanations(prev => ({ ...prev, [k.code]: e.target.value }))}
                       placeholder="Nhập chi tiết nguyên nhân khách quan/chủ quan và đề xuất hướng khắc phục cụ thể..."
                       rows={2}
-                      className="w-full bg-slate-950 border border-white/10 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-rose-400 resize-none"
+                      className={`w-full rounded-xl p-2.5 text-xs resize-none transition-all focus:outline-none ${
+                        theme === "light" 
+                          ? "bg-white border border-[#E2E8F0] text-slate-800 placeholder-[#94A3B8] focus:border-[#00A651] focus:ring-2 focus:ring-[#00A651]/10" 
+                          : "bg-slate-950 border border-white/10 text-white focus:border-rose-400"
+                      }`}
                     />
                   </div>
                 ))}
               <div className="flex justify-end">
                 <button
                   onClick={handleSaveExplanations}
-                  className="bg-rose-700 hover:bg-rose-600 text-white text-xs font-bold px-4 py-1.5 rounded-lg flex items-center gap-1.5 shadow"
+                  className={`text-xs font-semibold px-4 py-1.5 rounded-lg flex items-center gap-1.5 shadow transition-all ${
+                    theme === "light" 
+                      ? "bg-[#00A651] hover:bg-[#008A45] text-white" 
+                      : "bg-rose-700 hover:bg-rose-600 text-white"
+                  }`}
                 >
                   <Save size={14} /> Lưu Giải Trình
                 </button>
@@ -903,7 +1201,7 @@ export default function InputFormPage() {
             </div>
 
             <select
-              value={selectedProdId}
+              value={activeProductId}
               onChange={(e) => setSelectedProdId(e.target.value)}
               className="bg-slate-950 border border-purple-500/40 text-white font-bold text-xs rounded-xl px-4 py-2.5 focus:outline-none focus:border-purple-400 shadow-inner"
             >
