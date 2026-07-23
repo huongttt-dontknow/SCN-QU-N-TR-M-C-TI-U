@@ -174,22 +174,12 @@ export async function GET(request: Request) {
     for (const r of records) {
       const code = r.indicatorCode;
       
-      if (unitCode === "SCVN") {
-        // Loại bỏ các chỉ tiêu con chi tiết của các đơn vị thành viên
-        // Chỉ giữ lại các chỉ tiêu tổng hợp của BU SCVN
-        const isDetailedSub = code.includes("-sub-") || 
-                              (code.includes("-") && 
-                               (code.startsWith("MU-") || 
-                                code.startsWith("WO-") || 
-                                code.startsWith("DA-") || 
-                                code.startsWith("SM-") || 
-                                code.startsWith("NM-") || 
-                                code.startsWith("CM-")
-                               ) && 
-                               !code.endsWith("I02.01") && 
-                               !code.endsWith("I02.02")
-                              );
-        if (isDetailedSub) continue;
+      if (unitCode === "SCVN" && !productCode) {
+        // Loại bỏ các chỉ tiêu con chi tiết của các đơn vị thành viên (các chỉ tiêu có parentCode là các mã chỉ tiêu doanh thu của thành viên)
+        const subUnitRevenueCodes = ["DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01"];
+        if (r.parentCode && subUnitRevenueCodes.includes(r.parentCode)) {
+          continue;
+        }
       }
       
       let displayCode = code;
@@ -205,7 +195,7 @@ export async function GET(request: Request) {
         }
 
         // Ép cấu trúc cây cho SCVN theo bảng Excel
-        if (unitCode === "SCVN") {
+        if (unitCode === "SCVN" && !productCode) {
           if (code === "VM1-I02.01") {
             parentCode = "M1";
           } else if (code === "DM1-I02.01" || code === "SM1-I02.01" || code === "MM1-I02.01" || code === "NM1-I02.01" || code === "CM1-I02.01") {
@@ -264,7 +254,7 @@ export async function GET(request: Request) {
       }
       
       // Ép cấu trúc phẳng cho các đơn vị con của SCVN
-      if (unitCode === "SCVN") {
+      if (unitCode === "SCVN" && !productCode) {
         if (row.code === "DM1-I02.01" || row.code === "SM1-I02.01" || row.code === "MM1-I02.01" || row.code === "NM1-I02.01" || row.code === "CM1-I02.01") {
           row.isParent = false;
         }
@@ -308,7 +298,7 @@ export async function GET(request: Request) {
     // Tự động tính gộp dữ liệu từ con lên cha cho các chỉ tiêu cha trung gian (ví dụ: VM1-I02.02, VM1-I02.03, VM1-I02.04)
     for (const row of allRows) {
       if (row.isParent && row.displayCode !== "M1" && row.displayCode !== "M2" && row.displayCode !== "M3" && row.displayCode !== "M4" && row.displayCode !== "M5" && row.displayCode !== "M6" && row.displayCode !== "M7") {
-        if (unitCode === "SCVN" && row.code === "VM1-I02.01") {
+        if (unitCode === "SCVN" && !productCode && row.code === "VM1-I02.01") {
           // Không tự động gộp cho Tổng doanh thu của SCVN để giữ số kế hoạch/thực tế từ Excel (không cộng SCMU/CNGP)
           continue;
         }
