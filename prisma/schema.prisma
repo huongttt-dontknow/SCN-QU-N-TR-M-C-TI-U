@@ -42,6 +42,11 @@ model KpiData {
   pic           String?
   status        String   @default("Chưa thực hiện")
   explanation   String?  @db.Text // Giải trình bắt buộc nếu lỗi
+  title         String?  // Tên chỉ tiêu
+  unit          String?  // ĐVT
+  formula       String?  @db.Text // Cách thức đo
+  group         String?  // Phân nhóm cha (M1 - M7)
+  parentCode    String?  // Mã chỉ tiêu cha để liên kết dạng cây
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

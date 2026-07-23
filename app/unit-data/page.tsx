@@ -67,44 +67,26 @@ export default function UnitDataPage() {
   };
 
   useEffect(() => {
-    const defaultData: KpiRow[] = [
-      // M1. TÀI CHÍNH / KINH DOANH
-      { code: "M1", title: "M1. TÀI CHÍNH / KINH DOANH", unit: "VNĐ", targetWeek: 350000000, actualWeek: 310000000, targetMonth: 1400000000, actualMonth: 1550000000, targetQuarter: 4200000000, actualQuarter: 4500000000, targetYear: 16800000000, actualYear: 17500000000, isParent: true },
-      { code: "VM1-I01.01", title: "Tỷ suất lợi nhuận ROI", unit: "%", targetWeek: 100, actualWeek: 85, targetMonth: 95, actualMonth: 100, targetQuarter: 100, actualQuarter: 105, targetYear: 100, actualYear: 110, isParent: false, parentCode: "M1" },
-      { code: "VM1-I02.01", title: "Tổng doanh thu", unit: "VNĐ", targetWeek: 273600000, actualWeek: 246240000, targetMonth: 1094400000, actualMonth: 1253664000, targetQuarter: 3283200000, actualQuarter: 3600000000, targetYear: 13132800000, actualYear: 14200000000, isParent: false, parentCode: "M1" },
-      { code: "VM1-I05.03", title: "Chi phí mua công cụ AI mới", unit: "VNĐ", targetWeek: 16680000, actualWeek: 14428200, targetMonth: 13740000, actualMonth: 15388800, targetQuarter: 45000000, actualQuarter: 48000000, targetYear: 180000000, actualYear: 190000000, isParent: false, parentCode: "M1" },
-      { code: "VM1-I05.04", title: "Chi phí CTV (Cộng tác viên)", unit: "VNĐ", targetWeek: 36720000, actualWeek: 27540000, targetMonth: 36576000, actualMonth: 45537120, targetQuarter: 110000000, actualQuarter: 125000000, targetYear: 440000000, actualYear: 480000000, isParent: false, parentCode: "M1" },
+    let isMounted = true;
+    const pType = filters.periodType || "weekly";
+    const m = filters.month || "7";
+    const w = filters.week || "1";
+    const q = filters.quarter || "Q3";
+    const y = filters.year || "2026";
+    
+    fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`)
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted && Array.isArray(data)) {
+          setKpiRows(data);
+        }
+      })
+      .catch(err => console.error("Lỗi tải dữ liệu KPI:", err));
 
-      // M2. SẢN PHẨM / SẢN XUẤT
-      { code: "M2", title: "M2. SẢN PHẨM / SẢN XUẤT", unit: "Video", targetWeek: 30, actualWeek: 36, targetMonth: 120, actualMonth: 177, targetQuarter: 360, actualQuarter: 450, targetYear: 1440, actualYear: 1600, isParent: true },
-      { code: "VM2-I01.01", title: "Số lượng video hoàn thành sản xuất", unit: "Video", targetWeek: 30, actualWeek: 36, targetMonth: 120, actualMonth: 177, targetQuarter: 360, actualQuarter: 450, targetYear: 1440, actualYear: 1600, isParent: false, parentCode: "M2" },
-      { code: "↳ Ban WO", title: "Wolfoo (WO)", unit: "Video", targetWeek: 3, actualWeek: 3, targetMonth: 12, actualMonth: 15, targetQuarter: 36, actualQuarter: 45, targetYear: 144, actualYear: 160, isParent: false, parentCode: "M2" },
-      { code: "VM2-I01.03", title: "Số lượng ý tưởng mới", unit: "Ý tưởng", targetWeek: 15, actualWeek: 18, targetMonth: 60, actualMonth: 72, targetQuarter: 180, actualQuarter: 210, targetYear: 720, actualYear: 800, isParent: false, parentCode: "M2" },
-
-      // M3. KHÁCH HÀNG / DỊCH VỤ
-      { code: "M3", title: "M3. KHÁCH HÀNG / DỊCH VỤ", unit: "Triệu views", targetWeek: 30, actualWeek: 28, targetMonth: 120, actualMonth: 110, targetQuarter: 360, actualQuarter: 340, targetYear: 1440, actualYear: 1380, isParent: true },
-      { code: "TM3-I01.02", title: "Tổng traffic đơn vị (Views)", unit: "Triệu", targetWeek: 30, actualWeek: 28, targetMonth: 120, actualMonth: 110, targetQuarter: 360, actualQuarter: 340, targetYear: 1440, actualYear: 1380, isParent: false, parentCode: "M3" },
-      { code: "TM3-I01.03", title: "Số lượng video upload", unit: "Video", targetWeek: 40, actualWeek: 42, targetMonth: 160, actualMonth: 175, targetQuarter: 480, actualQuarter: 520, targetYear: 1920, actualYear: 2000, isParent: false, parentCode: "M3" },
-
-      // M4. THƯƠNG HIỆU / KÊNH KINH DOANH
-      { code: "M4", title: "M4. THƯƠNG HIỆU / KÊNH KINH DOANH", unit: "Kênh", targetWeek: 2, actualWeek: 2, targetMonth: 8, actualMonth: 9, targetQuarter: 24, actualQuarter: 28, targetYear: 96, actualYear: 105, isParent: true },
-      { code: "TM4-I02.01", title: "Số kênh đạt ngưỡng 10k $/tháng", unit: "Kênh", targetWeek: 1, actualWeek: 1, targetMonth: 4, actualMonth: 5, targetQuarter: 12, actualQuarter: 15, targetYear: 48, actualYear: 55, isParent: false, parentCode: "M4" },
-
-      // M5. QUẢN TRỊ VẬN HÀNH
-      { code: "M5", title: "M5. QUẢN TRỊ VẬN HÀNH", unit: "Điểm", targetWeek: 10, actualWeek: 9.2, targetMonth: 10, actualMonth: 9.5, targetQuarter: 10, actualQuarter: 9.6, targetYear: 10, actualYear: 9.7, isParent: true },
-      { code: "VM5-I02.01", title: "Thời gian sản xuất TB 1 video", unit: "Ngày", targetWeek: 5, actualWeek: 5.5, targetMonth: 5, actualMonth: 5.2, targetQuarter: 5, actualQuarter: 4.9, targetYear: 5, actualYear: 4.8, isParent: false, parentCode: "M5" },
-
-      // M6. NHÂN SỰ TỔ CHỨC
-      { code: "M6", title: "M6. NHÂN SỰ TỔ CHỨC", unit: "%", targetWeek: 100, actualWeek: 95, targetMonth: 100, actualMonth: 96, targetQuarter: 100, actualQuarter: 97, targetYear: 100, actualYear: 98, isParent: true },
-      { code: "TM6-I01.02", title: "Tỷ lệ nhân sự tham gia đào tạo", unit: "%", targetWeek: 90, actualWeek: 85, targetMonth: 90, actualMonth: 92, targetQuarter: 90, actualQuarter: 94, targetYear: 90, actualYear: 95, isParent: false, parentCode: "M6" },
-
-      // M7. VĂN HÓA DOANH NGHIỆP
-      { code: "M7", title: "M7. VĂN HÓA DOANH NGHIỆP", unit: "%", targetWeek: 100, actualWeek: 98, targetMonth: 100, actualMonth: 98.5, targetQuarter: 100, actualQuarter: 99, targetYear: 100, actualYear: 99.5, isParent: true },
-      { code: "TM7-I01.01", title: "Tỷ lệ tuân thủ quy trình văn hóa", unit: "%", targetWeek: 100, actualWeek: 98, targetMonth: 100, actualMonth: 98.5, targetQuarter: 100, actualQuarter: 99, targetYear: 100, actualYear: 99.5, isParent: false, parentCode: "M7" },
-    ];
-
-    setKpiRows(defaultData);
-  }, [filters.unitCode]);
+    return () => {
+      isMounted = false;
+    };
+  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   const toggleRow = (code: string) => {
     setExpandedRows(prev => ({ ...prev, [code]: !prev[code] }));

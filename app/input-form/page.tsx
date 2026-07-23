@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 interface KpiItem {
+  id?: string;
   code: string;
   title: string;
   unit: string;
@@ -153,6 +154,93 @@ export default function InputFormPage() {
   const [directorComment, setDirectorComment] = useState("");
   const isReadOnly = currentLoggedUser?.role === "Người dùng";
 
+  // Helper tính periodKey dựa trên bộ lọc
+  const getPeriodKey = () => {
+    const pType = filters.periodType || "weekly";
+    const m = filters.month || "7";
+    const w = filters.week || "1";
+    const q = filters.quarter || "Q3";
+    const y = filters.year || "2026";
+    if (pType === "weekly") {
+      return `weekly_${m}_${w}`;
+    } else if (pType === "monthly") {
+      return `monthly_${m}`;
+    } else if (pType === "quarterly") {
+      return `quarterly_${q.toLowerCase().replace("q", "")}`;
+    } else {
+      return `yearly_${y}`;
+    }
+  };
+
+  // Fetch KPI data dynamically from database API
+  useEffect(() => {
+    let isMounted = true;
+    const pKey = getPeriodKey();
+    const pType = filters.periodType || "weekly";
+    
+    fetch(`/api/kpi?unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}`)
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          const mapped = data.map((d: any) => ({
+            id: d.id,
+            code: d.indicatorCode,
+            title: d.title || d.indicatorCode,
+            unit: d.unit || "",
+            formula: d.formula || "",
+            target: d.targetValue,
+            actual: d.actualValue,
+            status: d.status || "Chờ duyệt",
+            pic: d.pic || "",
+            group: d.group || "Chỉ số bổ sung"
+          }));
+          setKpis(mapped);
+          
+          // Đặt trạng thái báo cáo chung dựa trên trạng thái của chỉ số đầu tiên có trạng thái
+          const firstWithStatus = data.find((d: any) => d.status);
+          if (firstWithStatus) {
+            setReportStatus(firstWithStatus.status);
+          }
+        }
+      })
+      .catch(err => console.error("Lỗi tải dữ liệu nhập liệu KPI:", err));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
+
+  // Hàm lưu KPI đồng bộ với cơ sở dữ liệu
+  const saveKpisToDatabase = async (kpiList: KpiItem[], statusOverride?: string) => {
+    const pKey = getPeriodKey();
+    const pType = filters.periodType || "weekly";
+    const kpiUpdates = kpiList.map(k => ({
+      id: k.id,
+      actualValue: k.actual,
+      explanation: explanations[k.code] || "",
+      status: statusOverride || k.status || "Đang thực hiện"
+    })).filter(k => k.id);
+
+    try {
+      const res = await fetch("/api/kpi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          unitCode: filters.unitCode,
+          periodKey: pKey,
+          periodType: pType,
+          kpiUpdates
+        })
+      });
+      if (res.ok) {
+        return true;
+      }
+    } catch (err) {
+      console.error("Lỗi khi lưu KPI vào DB:", err);
+    }
+    return false;
+  };
+
   useEffect(() => {
     const defaultData = defaultProductKpisMap[selectedProdId] || defaultProductKpisMap["p1"];
     setProductKpis(defaultData);
@@ -166,9 +254,16 @@ export default function InputFormPage() {
     setProductKpis(prev => prev.map(k => k.code === code ? { ...k, actual: parseFloat(val) || 0 } : k));
   };
 
-  const handleSaveRow = (code: string) => {
+  const handleSaveRow = async (code: string) => {
     if (isReadOnly) return;
-    alert(`✓ Đã lưu tạm dữ liệu của chỉ tiêu: ${code}`);
+    const item = kpis.find(k => k.code === code);
+    if (!item) return;
+    const success = await saveKpisToDatabase([item]);
+    if (success) {
+      alert(`✓ Đã lưu thành công dữ liệu chỉ tiêu: ${item.title}`);
+    } else {
+      alert(`❌ Có lỗi xảy ra khi lưu chỉ tiêu: ${item.title}`);
+    }
   };
 
   const handleSaveProdRow = (code: string) => {
@@ -212,23 +307,48 @@ export default function InputFormPage() {
     ]);
   };
 
-  const handleSendReport = () => {
-    setReportStatus("Chờ duyệt");
-    alert("🚀 Đã gửi báo cáo cho Giám đốc BU SCVN thành công!");
+  const handleSendReport = async () => {
+    if (isReadOnly) return;
+    const success = await saveKpisToDatabase(kpis, "Chờ duyệt");
+    if (success) {
+      setReportStatus("Chờ duyệt");
+      alert("🚀 Đã gửi báo cáo cho Giám đốc BU SCVN thành công!");
+    } else {
+      alert("❌ Có lỗi xảy ra khi gửi báo cáo.");
+    }
   };
 
-  const handleApproveReport = () => {
-    setReportStatus("Đã duyệt");
-    alert("✓ Giám đốc BU đã phê duyệt báo cáo toàn kỳ!");
+  const handleApproveReport = async () => {
+    if (isReadOnly) return;
+    const success = await saveKpisToDatabase(kpis, "Đã duyệt");
+    if (success) {
+      setReportStatus("Đã duyệt");
+      alert("✓ Giám đốc BU đã phê duyệt báo cáo toàn kỳ!");
+    } else {
+      alert("❌ Có lỗi xảy ra khi duyệt báo cáo.");
+    }
   };
 
-  const handleRejectReport = () => {
-    setReportStatus("Yêu cầu hiệu chỉnh");
-    alert("✖ Đã gửi yêu cầu hiệu chỉnh báo cáo về Trưởng đơn vị!");
+  const handleRejectReport = async () => {
+    if (isReadOnly) return;
+    const success = await saveKpisToDatabase(kpis, "Yêu cầu hiệu chỉnh");
+    if (success) {
+      setReportStatus("Yêu cầu hiệu chỉnh");
+      alert("✖ Đã gửi yêu cầu hiệu chỉnh báo cáo về Trưởng đơn vị!");
+    } else {
+      alert("❌ Có lỗi xảy ra.");
+    }
   };
 
-  const handleSaveDraft = () => {
-    alert("💾 Đã lưu nháp báo cáo toàn kỳ thành công!");
+  const handleSaveDraft = async () => {
+    if (isReadOnly) return;
+    const success = await saveKpisToDatabase(kpis, "Đang thực hiện");
+    if (success) {
+      setReportStatus("Đang nhập");
+      alert("💾 Đã lưu nháp báo cáo toàn kỳ thành công!");
+    } else {
+      alert("❌ Có lỗi xảy ra khi lưu nháp báo cáo.");
+    }
   };
 
   const groups = Array.from(new Set(kpis.map(k => k.group)));
