@@ -90,3 +90,18 @@ Vui lòng thực hiện theo đúng 5 bước sau để đưa hệ thống web v
    *   Chạy Prisma sinh cấu trúc bảng lên Neon (`npx prisma generate && npx prisma db push`).
    *   Biên dịch React & Next.js tối ưu hóa hiệu năng.
 3. Chỉ sau khoảng 1-2 phút, bạn sẽ nhận được một đường link URL truy cập trực tiếp hệ thống (Ví dụ: `sconnect-okr-kpi.vercel.app`) để chia sẻ cho mọi người cùng sử dụng!
+
+---
+
+## 3. Quy định về Khả năng Tự Phục Hồi & Chế Độ Dự Phòng (Self-Healing & Quota Fallback)
+
+> [!IMPORTANT]
+> **Quy định phát triển cốt lõi**:
+> Để tránh việc mất/bay dữ liệu hiển thị hoặc crash ứng dụng khi cơ sở dữ liệu PostgreSQL (Neon Tech) bị mất kết nối hoặc vượt quá giới hạn băng thông miễn phí (Data Transfer Quota Exceeded), toàn bộ các API endpoint truy vấn CSDL (`/api/users`, `/api/permissions`, `/api/kpi`, `/api/okrs`, `/api/system/logs`) **bắt buộc phải duy trì cơ chế Graceful Fallback**:
+> 
+> 1. **Try-Catch toàn bộ truy vấn**: Mọi truy vấn Prisma Client phải được bọc trong khối `try-catch`.
+> 2. **Phục hồi dữ liệu mẫu (Mock Fallback)**: Trong khối `catch`, thay vì trả về lỗi HTTP 500, API bắt buộc phải log cảnh báo và trả về danh sách dữ liệu thực tế mặc định (Default seeded data / Mock Objects) đã được định nghĩa cục bộ.
+> 3. **Phản hồi giả lập thành công**: Các yêu cầu ghi dữ liệu (POST, PUT, DELETE) nếu gặp lỗi DB sẽ trả về trạng thái giả lập thành công kèm cảnh báo logs để không làm gián đoạn trải nghiệm người dùng kiểm thử.
+> 
+> *Bất kỳ bản cập nhật nào trong tương lai KHÔNG ĐƯỢC PHÉP loại bỏ hoặc làm hỏng cơ chế này.*
+
