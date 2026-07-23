@@ -9,7 +9,8 @@ import RevenueDonutChart from "@/components/RevenueDonutChart";
 import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
 import { getMasterKpiRecord, MASTER_KPI_DATA } from "@/lib/kpiMasterData";
 import { getRadarScores } from "@/lib/radarMasterData";
-import { BarChart3 } from "lucide-react";
+import { PRODUCTS_CATALOG } from "@/lib/products_catalog";
+import { BarChart3, AlertTriangle, Award } from "lucide-react";
 import { 
   ComposedChart, 
   Bar, 
@@ -41,6 +42,17 @@ export default function DashboardPage() {
   const [savedComment, setSavedComment] = useState("");
   const [isSaved, setIsSaved] = useState(false);
 
+  interface ProductHealthRanking {
+    id: string;
+    name: string;
+    score: number;
+    unit: string;
+    status: string;
+    badgeColor: string;
+  }
+  const [productHealthRankings, setProductHealthRankings] = useState<ProductHealthRanking[]>([]);
+  const [isLoadingHealth, setIsLoadingHealth] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const pKey = getPeriodKey();
@@ -51,6 +63,67 @@ export default function DashboardPage() {
     }
     setIsSaved(false);
   }, [filters]);
+
+  useEffect(() => {
+    const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
+    const isNotWeekly = filters.periodType !== "weekly";
+    
+    if (!isParentUnit || !isNotWeekly) {
+      setProductHealthRankings([]);
+      return;
+    }
+    
+    setIsLoadingHealth(true);
+    const pType = filters.periodType || "monthly";
+    const pKey = getPeriodKey();
+    
+    Promise.all(PRODUCTS_CATALOG.map(async (p) => {
+      try {
+        const res = await fetch(`/api/kpi?productCode=${p.id}&periodKey=${pKey}&periodType=${pType}`);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const mapped = data.map((d: any) => ({
+            code: d.indicatorCode,
+            title: d.title || "",
+            target: d.targetValue || 0,
+            actual: d.actualValue || 0
+          }));
+          
+          const rev = mapped.find(i => i.code.includes("M1") || i.title.toLowerCase().includes("doanh thu"));
+          const vol = mapped.find(i => i.code.includes("M2") || i.title.toLowerCase().includes("video hoàn thành") || i.title.toLowerCase().includes("sản lượng"));
+          const view = mapped.find(i => i.code.includes("M3") || i.title.toLowerCase().includes("traffic") || i.title.toLowerCase().includes("view"));
+
+          const rRev = rev && rev.target > 0 ? Math.min(1.2, rev.actual / rev.target) * 100 : 100;
+          const rVol = vol && vol.target > 0 ? Math.min(1.2, vol.actual / vol.target) * 100 : 100;
+          const rView = view && view.target > 0 ? Math.min(1.2, view.actual / view.target) * 100 : 100;
+
+          const phs = Math.round(0.4 * rRev + 0.3 * rVol + 0.2 * rView + 10);
+          
+          let status = "🟢 Khỏe mạnh";
+          let badgeColor = "bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20";
+          if (phs < 70) {
+            status = "🔴 Nguy kịch";
+            badgeColor = "bg-rose-500/10 text-rose-500 dark:text-rose-400 border border-rose-500/20";
+          } else if (phs < 90) {
+            status = "🟡 Cảnh báo";
+            badgeColor = "bg-amber-500/10 text-amber-500 dark:text-amber-400 border border-amber-500/20";
+          }
+          
+          return { id: p.id, name: p.name, score: phs, unit: p.unit, status, badgeColor };
+        }
+      } catch (err) {
+        console.error("Lỗi khi tính điểm PSH cho sản phẩm " + p.id, err);
+      }
+      return { id: p.id, name: p.name, score: 100, unit: p.unit, status: "🟢 Khỏe mạnh", badgeColor: "bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20" };
+    })).then(results => {
+      const sorted = results.sort((a, b) => b.score - a.score);
+      setProductHealthRankings(sorted);
+      setIsLoadingHealth(false);
+    }).catch(err => {
+      console.error(err);
+      setIsLoadingHealth(false);
+    });
+  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
 
   const handleSaveComment = () => {
     if (typeof window !== "undefined") {
@@ -1289,7 +1362,8 @@ export default function DashboardPage() {
 
       {/* 5. CỤM 3 BẢNG XẾP HẠNG (BXH DOANH THU, SẢN XUẤT, TRAFFIC) */}
       {isParentUnit && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {/* BXH Tăng trưởng Doanh thu */}
           <div className="glass-panel p-5">
@@ -1364,7 +1438,99 @@ export default function DashboardPage() {
           </div>
 
         </div>
-      )}
+
+        {/* BẢNG ĐÁNH GIÁ & CHẤM ĐIỂM SỨC KHỎE PSH CÁC SẢN PHẨM */}
+        {filters.periodType !== "weekly" && (
+          <div className="space-y-4">
+            <h3 className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2 mt-2">
+              <Award size={18} className="text-purple-600 dark:text-purple-400" /> BẢNG ĐÁNH GIÁ & CHẤM ĐIỂM SỨC KHỎE PSH CÁC SẢN PHẨM
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* TOP 5 SẢN PHẨM HIỆU QUẢ */}
+              <div className="glass-panel p-5 border border-emerald-200/50 dark:border-white/5 shadow-sm">
+                <h4 className="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  🟢 TOP 5 SẢN PHẨM HIỆU QUẢ (ĐIỂM PSH CAO NHẤT)
+                </h4>
+                <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Các sản phẩm dẫn đầu về sức khỏe vận hành và tăng trưởng</p>
+                
+                {isLoadingHealth ? (
+                  <div className="flex flex-col items-center justify-center py-12 gap-2">
+                    <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                    <span className="text-xs text-slate-400 font-semibold animate-pulse">Đang tính toán điểm PSH...</span>
+                  </div>
+                ) : productHealthRankings.length === 0 ? (
+                  <div className="text-center py-10 text-slate-500 text-xs font-semibold">Không có dữ liệu sản phẩm trong kỳ này.</div>
+                ) : (
+                  <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+                    {productHealthRankings.slice(0, 5).map((p, idx) => (
+                      <div key={p.id} className="flex justify-between items-center p-2.5 rounded-lg border bg-white dark:bg-slate-900/40 border-slate-100 dark:border-white/5 shadow-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="font-black text-emerald-500 w-6 text-sm">#{idx + 1}</span>
+                          <div className="flex flex-col">
+                            <span className="font-bold text-[#1A382B] dark:text-white text-xs">{p.name}</span>
+                            <span className="text-[10px] text-slate-400 font-bold">Đơn vị: {p.unit}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${p.badgeColor}`}>
+                            {p.status}
+                          </span>
+                          <span className="font-black text-emerald-600 dark:text-emerald-400 text-xs bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-500/20 px-2 py-0.5 rounded">
+                            {p.score} điểm
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* TOP 5 SẢN PHẨM CẢNH BÁO */}
+              <div className="glass-panel p-5 border border-emerald-200/50 dark:border-white/5 shadow-sm">
+                <h4 className="text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  🔴 TOP 5 SẢN PHẨM CẢNH BÁO (ĐIỂM PSH THẤP NHẤT)
+                </h4>
+                <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Các sản phẩm đang có hiệu suất sụt giảm cần lưu ý</p>
+                
+                {isLoadingHealth ? (
+                  <div className="flex flex-col items-center justify-center py-12 gap-2">
+                    <div className="w-6 h-6 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                    <span className="text-xs text-slate-400 font-semibold animate-pulse">Đang tính toán điểm PSH...</span>
+                  </div>
+                ) : productHealthRankings.length === 0 ? (
+                  <div className="text-center py-10 text-slate-500 text-xs font-semibold">Không có dữ liệu sản phẩm trong kỳ này.</div>
+                ) : (
+                  <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+                    {productHealthRankings.slice(-5).reverse().map((p, idx) => {
+                      const rankNum = productHealthRankings.length - idx;
+                      return (
+                        <div key={p.id} className="flex justify-between items-center p-2.5 rounded-lg border bg-white dark:bg-slate-900/40 border-slate-100 dark:border-white/5 shadow-sm">
+                          <div className="flex items-center gap-2">
+                            <span className="font-black text-rose-500 w-6 text-sm">#{rankNum}</span>
+                            <div className="flex flex-col">
+                              <span className="font-bold text-[#1A382B] dark:text-white text-xs">{p.name}</span>
+                              <span className="text-[10px] text-slate-400 font-bold">Đơn vị: {p.unit}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2.5">
+                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${p.badgeColor}`}>
+                              {p.status}
+                            </span>
+                            <span className="font-black text-rose-600 dark:text-rose-400 text-xs bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/20 px-2 py-0.5 rounded">
+                              {p.score} điểm
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    )}
 
       {/* 6. KHU VỰC CHỈ ĐẠO CỦA BOD (BOTTOM SECTION) */}
       <div className="glass-panel p-5 space-y-4">
