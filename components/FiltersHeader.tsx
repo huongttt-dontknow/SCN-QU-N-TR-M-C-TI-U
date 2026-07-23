@@ -5,9 +5,10 @@ import { useApp } from "@/context/AppContext";
 
 export interface FiltersHeaderProps {
   hideFrequency?: boolean;
+  children?: React.ReactNode;
 }
 
-export default function FiltersHeader({ hideFrequency = false }: FiltersHeaderProps = {}) {
+export default function FiltersHeader({ hideFrequency = false, children }: FiltersHeaderProps = {}) {
   const { filters, setFilters, currentLoggedUser } = useApp();
 
   const isRestricted = 
@@ -146,6 +147,7 @@ export default function FiltersHeader({ hideFrequency = false }: FiltersHeaderPr
             <option value="2027">Năm 2027</option>
           </select>
         </div>
+        {children}
       </div>
 
       {/* Tóm tắt bộ lọc active */}
