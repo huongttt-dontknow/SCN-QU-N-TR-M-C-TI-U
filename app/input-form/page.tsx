@@ -420,22 +420,23 @@ export default function InputFormPage() {
   // 1. Products list is statically initialized from PRODUCTS_CATALOG
 
   const currentUnitName = unitCodeToNameMap[filters.unitCode] || filters.unitCode;
-  const currentUnitProducts = filters.unitCode === "SCVN"
+  const rawUnitProducts = (filters.unitCode === "SCVN" || filters.unitCode === "TCT")
     ? productsList
     : productsList.filter(p => p.unitCode === currentUnitName);
 
-  const activeProductId = selectedProdId || currentUnitProducts[0]?.id || "";
+  // Thêm tùy chọn "Tất cả sản phẩm" lên đầu danh mục sản phẩm của đơn vị
+  const currentUnitProducts = [
+    { id: "all", name: "✨ Tất cả sản phẩm", code: "all", unitCode: filters.unitCode },
+    ...rawUnitProducts
+  ];
+
+  const activeProductId = selectedProdId || "all";
   const currentProduct = currentUnitProducts.find(p => p.id === activeProductId) || currentUnitProducts[0] || null;
 
-  // Auto-select first product when currentUnitProducts changes
+  // Tự động chọn "Tất cả sản phẩm" làm mặc định khi đổi đơn vị bộ lọc chính
   useEffect(() => {
-    if (currentUnitProducts.length > 0) {
-      const match = currentUnitProducts.find(p => p.id === selectedProdId);
-      if (!match) {
-        setSelectedProdId(currentUnitProducts[0].id);
-      }
-    }
-  }, [filters.unitCode, currentUnitProducts, selectedProdId]);
+    setSelectedProdId("all");
+  }, [filters.unitCode]);
 
   const [prevKpis, setPrevKpis] = useState<Record<string, number>>({});
 
@@ -1377,7 +1378,7 @@ export default function InputFormPage() {
                                 <input
                                   type="text"
                                   value={editingCell?.kpiCode === pk.code && editingCell?.field === "target" ? editingCell.value : formatValue(pk.target, pk.unit)}
-                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                  disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
                                   onFocus={() => setEditingCell({ kpiCode: pk.code, field: "target", value: pk.target.toString() })}
                                   onChange={(e) => setEditingCell({ kpiCode: pk.code, field: "target", value: e.target.value })}
                                   onBlur={() => {
@@ -1394,7 +1395,7 @@ export default function InputFormPage() {
                                 <input
                                   type="text"
                                   value={editingCell?.kpiCode === pk.code && editingCell?.field === "actual" ? editingCell.value : formatValue(pk.actual, pk.unit)}
-                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                  disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
                                   onFocus={() => setEditingCell({ kpiCode: pk.code, field: "actual", value: pk.actual.toString() })}
                                   onChange={(e) => setEditingCell({ kpiCode: pk.code, field: "actual", value: e.target.value })}
                                   onBlur={() => {
@@ -1415,7 +1416,7 @@ export default function InputFormPage() {
                               <td className="p-3 text-center">
                                 <button
                                   onClick={() => handleSaveProdRow(pk.code)}
-                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                  disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
                                   className="bg-purple-700 hover:bg-purple-600 text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
                                 >
                                   Lưu dòng
@@ -1603,9 +1604,10 @@ export default function InputFormPage() {
               <input
                 type="text"
                 value={productNote}
+                disabled={activeProductId === "all" || isReadOnly}
                 onChange={(e) => setProductNote(e.target.value)}
-                placeholder="Nhập nhận định nhanh (Ví dụ: Sản phẩm giữ vững tốc độ sản xuất, doanh thu tăng trưởng đúng lộ trình)..."
-                className="w-full bg-slate-950 border border-white/10 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-purple-400"
+                placeholder={activeProductId === "all" ? "Vui lòng chọn từng sản phẩm cụ thể để điền nhận định." : "Nhập nhận định nhanh (Ví dụ: Sản phẩm giữ vững tốc độ sản xuất, doanh thu tăng trưởng đúng lộ trình)..."}
+                className="w-full bg-slate-950 border border-white/10 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-purple-400 disabled:opacity-50"
               />
             </div>
           </div>
@@ -1618,8 +1620,8 @@ export default function InputFormPage() {
               </h3>
               <button
                 onClick={handleAddCustomProdAction}
-                disabled={isReadOnly}
-                className="bg-purple-800 hover:bg-purple-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all"
+                disabled={isReadOnly || activeProductId === "all"}
+                className="bg-purple-800 hover:bg-purple-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Plus size={14} /> Thêm Action Sản Phẩm
               </button>
@@ -1641,11 +1643,16 @@ export default function InputFormPage() {
 
             <div className="pt-4 border-t border-white/10 flex justify-between items-center">
               <span className="text-xs text-slate-400 italic">
-                Sau khi kiểm tra Điểm PSH sản phẩm, bấm Gửi báo cáo sản phẩm để trình Giám đốc BU
+                {activeProductId === "all" ? "Vui lòng chọn từng sản phẩm cụ thể để gửi báo cáo Điểm PSH trình Giám đốc BU" : `Sau khi kiểm tra Điểm PSH sản phẩm, bấm Gửi báo cáo sản phẩm để trình Giám đốc BU`}
               </span>
               <button
+                disabled={activeProductId === "all"}
                 onClick={() => alert(`🚀 Đã gửi thành công Báo cáo Điểm PSH cho sản phẩm: ${currentProduct?.name}`)}
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-black px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(147,51,234,0.4)] transition-all"
+                className={`text-white text-xs font-black px-6 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(147,51,234,0.4)] disabled:opacity-40 disabled:cursor-not-allowed ${
+                  activeProductId === "all"
+                    ? "bg-slate-800 border border-slate-700 text-slate-500 shadow-none"
+                    : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500"
+                }`}
               >
                 🚀 Gửi Báo Cáo Sản Phẩm Phê Duyệt
               </button>

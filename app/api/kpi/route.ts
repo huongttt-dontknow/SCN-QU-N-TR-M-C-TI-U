@@ -1,5 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { PRODUCTS_CATALOG } from "@/lib/products_catalog";
+
+const unitToProductUnitMap: Record<string, string> = {
+  "Wofloo": "Wofloo",
+  "Lego": "Lego",
+  "AS": "Animated Story",
+  "DA01": "DA01",
+  "Music": "Music",
+  "NDTH": "NDTH",
+  "CR": "Creative Hub",
+  "CN": "CNGP",
+  "SCS": "SCS"
+};
 
 // GET /api/kpi - Lấy dữ liệu KPI mục tiêu/thực tế theo Đơn vị và Kỳ
 export async function GET(request: Request) {
@@ -12,6 +25,131 @@ export async function GET(request: Request) {
 
     if ((!unitCode && !productCode) || !periodKey) {
       return NextResponse.json({ error: "Thiếu unitCode/productCode hoặc periodKey" }, { status: 400 });
+    }
+
+    // Nếu productCode === "all", lấy danh mục sản phẩm tương ứng với unitCode và gộp lại
+    if (productCode === "all") {
+      let targetProductCodes: string[] = [];
+      if (unitCode === "SCVN" || unitCode === "TCT") {
+        targetProductCodes = PRODUCTS_CATALOG.map(p => p.id);
+      } else {
+        const prodUnitName = unitToProductUnitMap[unitCode] || unitCode;
+        targetProductCodes = PRODUCTS_CATALOG.filter(p => p.unit === prodUnitName).map(p => p.id);
+      }
+
+      if (targetProductCodes.length === 0) {
+        return NextResponse.json([]);
+      }
+
+      // Tự động kiểm tra và đồng bộ hóa danh sách chỉ tiêu cho từng sản phẩm (Self-healing)
+      for (const pCode of targetProductCodes) {
+        const count = await prisma.kpiData.count({
+          where: { productCode: pCode, periodKey, periodType }
+        });
+        if (count === 0) {
+          const templates = await prisma.kpiData.findMany({
+            where: { productCode: pCode },
+            distinct: ["indicatorCode"]
+          });
+          if (templates.length > 0) {
+            const newKpis = templates.map(t => {
+              let defaultTarget = 0;
+              if (periodType === "weekly" && t.periodKey.startsWith("weekly")) {
+                defaultTarget = t.targetValue;
+              } else if (periodType === "monthly" && t.periodKey.startsWith("monthly")) {
+                defaultTarget = t.targetValue;
+              } else if (periodType === "quarterly" && t.periodKey.startsWith("quarterly")) {
+                defaultTarget = t.targetValue;
+              } else if (periodType === "yearly" && t.periodKey.startsWith("yearly")) {
+                defaultTarget = t.targetValue;
+              }
+              return {
+                indicatorCode: t.indicatorCode,
+                unitCode: t.unitCode || unitCode,
+                productCode: pCode,
+                periodType,
+                periodKey,
+                targetValue: defaultTarget,
+                actualValue: 0,
+                pic: t.pic,
+                status: "Chưa thực hiện",
+                explanation: "",
+                title: t.title,
+                unit: t.unit,
+                formula: t.formula,
+                group: t.group,
+                parentCode: t.parentCode
+              };
+            });
+            await prisma.kpiData.createMany({ data: newKpis });
+          }
+        }
+      }
+
+      // Lấy toàn bộ bản ghi sản phẩm của kỳ hiện tại
+      const records = await prisma.kpiData.findMany({
+        where: {
+          productCode: { in: targetProductCodes },
+          periodKey,
+          periodType
+        }
+      });
+
+      // Nhóm và gộp dữ liệu theo indicatorCode
+      const groups: Record<string, typeof records> = {};
+      records.forEach(r => {
+        groups[r.indicatorCode] = groups[r.indicatorCode] || [];
+        groups[r.indicatorCode].push(r);
+      });
+
+      const aggregatedRecords = Object.entries(groups).map(([indicatorCode, items]) => {
+        const first = items[0];
+        const isPercentage = first.unit === "%" || (first.title && first.title.toLowerCase().includes("tỷ lệ"));
+        
+        let sumTarget = 0;
+        let sumActual = 0;
+        items.forEach(item => {
+          sumTarget += item.targetValue || 0;
+          sumActual += item.actualValue || 0;
+        });
+
+        const targetValue = isPercentage ? (sumTarget / items.length) : sumTarget;
+        const actualValue = isPercentage ? (sumActual / items.length) : sumActual;
+
+        let status = "Chưa thực hiện";
+        const statuses = items.map(i => i.status);
+        if (statuses.includes("Yêu cầu hiệu chỉnh")) {
+          status = "Yêu cầu hiệu chỉnh";
+        } else if (statuses.includes("Chờ duyệt")) {
+          status = "Chờ duyệt";
+        } else if (statuses.every(s => s === "Đã duyệt" || s === "Chưa thực hiện") && statuses.includes("Đã duyệt")) {
+          status = "Đã duyệt";
+        } else if (statuses.some(s => s === "Đang thực hiện" || s === "Đã duyệt" || s === "Đang nhập")) {
+          status = "Đang thực hiện";
+        }
+
+        return {
+          id: "all-" + indicatorCode,
+          indicatorCode,
+          unitCode,
+          productCode: "all",
+          periodType,
+          periodKey,
+          targetValue,
+          actualValue,
+          status,
+          explanation: items.map(i => i.explanation).filter(Boolean).join("; "),
+          title: first.title,
+          unit: first.unit,
+          formula: first.formula,
+          group: first.group,
+          parentCode: first.parentCode,
+          frequency: first.frequency,
+          aggregationMethod: first.aggregationMethod
+        };
+      });
+
+      return NextResponse.json(aggregatedRecords);
     }
 
     // Lấy dữ liệu đã lưu
