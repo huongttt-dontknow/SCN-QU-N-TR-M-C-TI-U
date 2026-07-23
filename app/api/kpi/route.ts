@@ -113,10 +113,10 @@ export async function POST(request: Request) {
 
     // Cập nhật từng KPI bằng Prisma transaction
     const updatePromises = kpiUpdates.map(u => {
-      // Đánh giá trạng thái tự động dựa trên thực tế vs kế hoạch
       return prisma.kpiData.update({
         where: { id: u.id },
         data: {
+          targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : undefined,
           actualValue: parseFloat(u.actualValue) || 0,
           explanation: u.explanation || "",
           status: u.status || "Đang thực hiện",

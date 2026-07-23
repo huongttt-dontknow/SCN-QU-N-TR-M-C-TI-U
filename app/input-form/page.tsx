@@ -216,6 +216,7 @@ export default function InputFormPage() {
     const pType = filters.periodType || "weekly";
     const kpiUpdates = kpiList.map(k => ({
       id: k.id,
+      targetValue: k.target,
       actualValue: k.actual,
       explanation: explanations[k.code] || "",
       status: statusOverride || k.status || "Đang thực hiện"
@@ -248,6 +249,27 @@ export default function InputFormPage() {
 
   const handleInputChange = (code: string, val: string) => {
     setKpis(prev => prev.map(k => k.code === code ? { ...k, actual: parseFloat(val) || 0 } : k));
+  };
+
+  const handleTargetChange = (code: string, val: string) => {
+    setKpis(prev => prev.map(k => k.code === code ? { ...k, target: parseFloat(val) || 0 } : k));
+  };
+
+  const getStatusStyle = (status: string) => {
+    const s = status ? status.trim() : "";
+    if (s === "Đã duyệt" || s === "Hoàn thành" || s === "Đạt") {
+      return "bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/30";
+    }
+    if (s === "Chờ duyệt") {
+      return "bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/30";
+    }
+    if (s === "Yêu cầu hiệu chỉnh") {
+      return "bg-rose-100 text-rose-800 border border-rose-300 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/30";
+    }
+    if (s === "Đang thực hiện" || s === "Đang nhập") {
+      return "bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800/30";
+    }
+    return "bg-slate-100 text-slate-600 border border-slate-300 dark:bg-slate-800/40 dark:text-slate-300 dark:border-slate-700/30";
   };
 
   const handleProdInputChange = (code: string, val: string) => {
@@ -453,10 +475,10 @@ export default function InputFormPage() {
               <Building2 size={16} /> 🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
             </h3>
 
-            <div className="overflow-x-auto">
+            <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
               <table className="w-full text-left text-sm border-collapse">
-                <thead>
-                  <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900/60 uppercase text-xs">
+                <thead className="sticky top-0 z-10 bg-slate-950 shadow">
+                  <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
                     <th className="p-3 w-28">Mã chỉ tiêu</th>
                     <th className="p-3">Mục tiêu / Chi tiêu cần báo cáo</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
@@ -490,8 +512,14 @@ export default function InputFormPage() {
                               <td className="p-3 italic text-slate-400 text-xs truncate max-w-[200px]" title={kpi.formula}>
                                 {kpi.formula}
                               </td>
-                              <td className="p-3 text-center font-extrabold text-slate-300">
-                                {kpi.target.toLocaleString()} {kpi.unit}
+                              <td className="p-3 text-center">
+                                <input
+                                  type="number"
+                                  value={kpi.target}
+                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                  onChange={(e) => handleTargetChange(kpi.code, e.target.value)}
+                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-black text-sm rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                />
                               </td>
                               <td className="p-3 text-center">
                                 <input
@@ -504,11 +532,11 @@ export default function InputFormPage() {
                               </td>
                               <td className="p-3 text-center font-black text-sm">
                                 <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
-                                  {pct}%
+                                  {isNaN(pct) || !isFinite(pct) ? "0%" : `${pct}%`}
                                 </span>
                               </td>
                               <td className="p-3 text-center">
-                                <span className="text-xs bg-slate-800 text-amber-300 font-extrabold px-2.5 py-1 rounded-lg border border-amber-500/20">
+                                <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${getStatusStyle(kpi.status)}`}>
                                   {kpi.status}
                                 </span>
                               </td>
@@ -900,10 +928,10 @@ export default function InputFormPage() {
               </span>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
               <table className="w-full text-left text-sm border-collapse">
-                <thead>
-                  <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900/60 uppercase text-xs">
+                <thead className="sticky top-0 z-10 bg-slate-950 shadow">
+                  <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
                     <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>
                     <th className="p-3">Mục tiêu / Chỉ tiêu dòng sản phẩm</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
