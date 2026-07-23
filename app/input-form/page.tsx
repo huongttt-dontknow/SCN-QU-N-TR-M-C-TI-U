@@ -437,6 +437,82 @@ export default function InputFormPage() {
     }
   }, [filters.unitCode, currentUnitProducts, selectedProdId]);
 
+  const [prevKpis, setPrevKpis] = useState<Record<string, number>>({});
+
+  const getPrevPeriodKey = () => {
+    const pType = filters.periodType || "weekly";
+    const m = parseInt(filters.month || "7");
+    const w = parseInt(filters.week || "1");
+    const q = filters.quarter || "Q3";
+    const y = parseInt(filters.year || "2026");
+
+    if (pType === "weekly") {
+      if (w > 1) {
+        return `weekly_${m}_${w - 1}`;
+      } else {
+        const prevM = m > 1 ? m - 1 : 12;
+        const prevW = [1, 3, 5, 7, 8, 10, 12].includes(prevM) ? 5 : 4;
+        return `weekly_${prevM}_${prevW}`;
+      }
+    } else if (pType === "monthly") {
+      const prevM = m > 1 ? m - 1 : 12;
+      return `monthly_${prevM}`;
+    } else if (pType === "quarterly") {
+      const qNum = parseInt(q.replace("Q", ""));
+      const prevQ = qNum > 1 ? qNum - 1 : 4;
+      return `quarterly_${prevQ}`;
+    } else {
+      const prevY = y - 1;
+      return `yearly_${prevY}`;
+    }
+  };
+
+  const checkKpiNeedsExplanation = (k: KpiItem) => {
+    if (k.target <= 0) return false;
+    
+    const currentActual = k.actual;
+    const target = k.target;
+    const completionRate = currentActual / target;
+
+    // Rule 1: completion rate is under 70%
+    if (completionRate < 0.7) return true;
+
+    // Rule 2: completion rate is under 100% AND drop compared to previous period actual is > 5%
+    if (completionRate < 1.0) {
+      const prevActual = prevKpis[k.code] || 0;
+      if (prevActual > 0) {
+        const drop = (prevActual - currentActual) / prevActual;
+        if (drop > 0.05) return true;
+      }
+    }
+
+    return false;
+  };
+
+  // Fetch previous period KPI data
+  useEffect(() => {
+    let isMounted = true;
+    const prevKey = getPrevPeriodKey();
+    const pType = filters.periodType || "weekly";
+    
+    fetch(`/api/kpi?unitCode=${filters.unitCode}&periodKey=${prevKey}&periodType=${pType}`)
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted && Array.isArray(data)) {
+          const dict: Record<string, number> = {};
+          data.forEach((d: any) => {
+            dict[d.indicatorCode] = d.actualValue || 0;
+          });
+          setPrevKpis(dict);
+        }
+      })
+      .catch(err => console.error("Lỗi tải dữ liệu KPI kỳ trước:", err));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
+
   // 2. Fetch unit-level KPI data
   useEffect(() => {
     let isMounted = true;
@@ -989,50 +1065,65 @@ export default function InputFormPage() {
             </div>
           </div>
 
-          {/* KHỐI 2: KHU VỰC GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (DƯỚI 80% KẾ HOẠCH) */}
+          {/* KHỐI 2: KHU VỰC GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (HOÀN THÀNH < 70% HOẶC GIẢM KỲ TRƯỚC > 5%) */}
           <div className="glass-panel p-5 space-y-4">
             <div className={theme === "light" ? "bg-[#FEF2F2] border border-[#FEE2E2] p-3 rounded-xl" : ""}>
               <h3 className={`text-sm font-black tracking-wider uppercase flex items-center gap-2 ${
                 theme === "light" ? "text-[#B91C1C]" : "text-rose-500"
               }`}>
-                <AlertTriangle size={16} className={theme === "light" ? "text-[#B91C1C]" : "text-rose-500"} /> 🔴 KHU VỰC 2: GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (DƯỚI 80% KẾ HOẠCH)
+                <AlertTriangle size={16} className={theme === "light" ? "text-[#B91C1C]" : "text-rose-500"} /> 🔴 KHU VỰC 2: GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (HOÀN THÀNH &lt; 70% HOẶC GIẢM KỲ TRƯỚC &gt; 5%)
               </h3>
             </div>
             <div className="space-y-3">
               {kpis
-                .filter(k => k.target > 0 && (k.actual / k.target) < 0.8)
-                .map(k => (
-                  <div key={k.code} className={`p-4 rounded-xl space-y-2 transition-all ${
-                    theme === "light" 
-                      ? "bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(0,0,0,0.04)]" 
-                      : "bg-slate-900/60 p-4 rounded-xl border border-rose-500/20"
-                  }`}>
-                    <div className="flex justify-between items-center">
-                      <span className={`font-semibold text-sm ${theme === "light" ? "text-[#1A382B]" : "text-white"}`}>
-                        {k.title}
-                      </span>
-                      <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-md transition-all ${
-                        theme === "light" 
-                          ? "bg-[#FEE2E2] text-[#DC2626]" 
-                          : "bg-rose-950 text-rose-300 border border-rose-500/30"
-                      }`}>
-                        {Math.round((k.actual / k.target) * 100)}% kế hoạch
-                      </span>
+                .filter(k => checkKpiNeedsExplanation(k))
+                .map(k => {
+                  const currentActual = k.actual;
+                  const target = k.target;
+                  const completionRate = currentActual / target;
+                  const prevActual = prevKpis[k.code] || 0;
+                  const drop = prevActual > 0 ? (prevActual - currentActual) / prevActual : 0;
+                  
+                  let reasonText = "";
+                  if (completionRate < 0.7) {
+                    reasonText = `Hoàn thành ${Math.round(completionRate * 100)}% (< 70% kế hoạch)`;
+                  } else {
+                    reasonText = `Đạt ${Math.round(completionRate * 100)}% (Giảm ${Math.round(drop * 100)}% so với kỳ trước)`;
+                  }
+
+                  return (
+                    <div key={k.code} className={`p-4 rounded-xl space-y-2 transition-all ${
+                      theme === "light" 
+                        ? "bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(0,0,0,0.04)]" 
+                        : "bg-slate-900/60 p-4 rounded-xl border border-rose-500/20"
+                    }`}>
+                      <div className="flex justify-between items-center">
+                        <span className={`font-semibold text-sm ${theme === "light" ? "text-[#1A382B]" : "text-white"}`}>
+                          {k.title}
+                        </span>
+                        <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-md transition-all ${
+                          theme === "light" 
+                            ? "bg-[#FEE2E2] text-[#DC2626]" 
+                            : "bg-rose-950 text-rose-300 border border-rose-500/30"
+                        }`}>
+                          {reasonText}
+                        </span>
+                      </div>
+                      <textarea
+                        value={explanations[k.code] || ""}
+                        disabled={isReadOnly}
+                        onChange={(e) => setExplanations(prev => ({ ...prev, [k.code]: e.target.value }))}
+                        placeholder="Nhập chi tiết nguyên nhân khách quan/chủ quan và đề xuất hướng khắc phục cụ thể..."
+                        rows={2}
+                        className={`w-full rounded-xl p-2.5 text-xs resize-none transition-all focus:outline-none ${
+                          theme === "light" 
+                            ? "bg-white border border-[#E2E8F0] text-slate-800 placeholder-[#94A3B8] focus:border-[#00A651] focus:ring-2 focus:ring-[#00A651]/10" 
+                            : "bg-slate-950 border border-white/10 text-white focus:border-rose-400"
+                        }`}
+                      />
                     </div>
-                    <textarea
-                      value={explanations[k.code] || ""}
-                      disabled={isReadOnly}
-                      onChange={(e) => setExplanations(prev => ({ ...prev, [k.code]: e.target.value }))}
-                      placeholder="Nhập chi tiết nguyên nhân khách quan/chủ quan và đề xuất hướng khắc phục cụ thể..."
-                      rows={2}
-                      className={`w-full rounded-xl p-2.5 text-xs resize-none transition-all focus:outline-none ${
-                        theme === "light" 
-                          ? "bg-white border border-[#E2E8F0] text-slate-800 placeholder-[#94A3B8] focus:border-[#00A651] focus:ring-2 focus:ring-[#00A651]/10" 
-                          : "bg-slate-950 border border-white/10 text-white focus:border-rose-400"
-                      }`}
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               <div className="flex justify-end">
                 <button
                   onClick={handleSaveExplanations}
