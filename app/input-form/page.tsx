@@ -308,7 +308,7 @@ const PRODUCTS_CATALOG = [
 ];
 
 interface KpiItem {
-  id?: string;
+  id: string;
   code: string;
   title: string;
   unit: string;
@@ -337,7 +337,7 @@ interface ProductLine {
 }
 
 interface ProductKpiItem {
-  id?: string;
+  id: string;
   code: string;
   title: string;
   unit: string;
@@ -368,13 +368,11 @@ export default function InputFormPage() {
 
   const [productNote, setProductNote] = useState("");
   const [showCodeColumn, setShowCodeColumn] = useState(false);
-  const [editingCell, setEditingCell] = useState<{ kpiCode: string, field: "target" | "actual", value: string } | null>(null);
+  const [editingCell, setEditingCell] = useState<{ kpiId: string, field: "target" | "actual", value: string } | null>(null);
 
   const [reportNotes, setReportNotes] = useState("");
   const [reportStatus, setReportStatus] = useState("Đang nhập");
-  const [explanations, setExplanations] = useState<Record<string, string>>({
-    "VM2-I01.01": "Giải trình lý do cụ thể do nhân sự thiết kế chính xin nghỉ 3 ngày giữa tuần ảnh hưởng tốc độ kết xuất."
-  });
+  const [explanations, setExplanations] = useState<Record<string, string>>({});
   
   const [actions, setActions] = useState<ActionItem[]>([
     { id: 1, title: "Chuẩn hóa thư viện asset dùng chung để đẩy nhanh tốc độ diễn hoạt", indicator: "VM2-I01.01", impact: "Tăng sản lượng thêm 2 tập/tuần", status: "Chờ quyết định" }
@@ -546,7 +544,7 @@ export default function InputFormPage() {
           const loadedExplanations: Record<string, string> = {};
           data.forEach((d: any) => {
             if (d.explanation) {
-              loadedExplanations[d.indicatorCode] = d.explanation;
+              loadedExplanations[d.id] = d.explanation;
             }
           });
           setExplanations(loadedExplanations);
@@ -651,7 +649,7 @@ export default function InputFormPage() {
       id: k.id,
       targetValue: k.target,
       actualValue: k.actual,
-      explanation: explanations[k.code] || "",
+      explanation: explanations[k.id] || "",
       status: statusOverride || k.status || "Đang thực hiện"
     })).filter(k => k.id);
 
@@ -714,20 +712,20 @@ export default function InputFormPage() {
     return false;
   };
 
-  const handleInputChange = (code: string, val: string) => {
-    setKpis(prev => prev.map(k => k.code === code ? { ...k, actual: parseFloat(val) || 0 } : k));
+  const handleInputChange = (id: string, val: string) => {
+    setKpis(prev => prev.map(k => k.id === id ? { ...k, actual: parseFloat(val) || 0 } : k));
   };
 
-  const handleTargetChange = (code: string, val: string) => {
-    setKpis(prev => prev.map(k => k.code === code ? { ...k, target: parseFloat(val) || 0 } : k));
+  const handleTargetChange = (id: string, val: string) => {
+    setKpis(prev => prev.map(k => k.id === id ? { ...k, target: parseFloat(val) || 0 } : k));
   };
 
-  const handleProdInputChange = (code: string, val: number) => {
-    setProductKpis(prev => prev.map(k => k.code === code ? { ...k, actual: val } : k));
+  const handleProdInputChange = (id: string, val: number) => {
+    setProductKpis(prev => prev.map(k => k.id === id ? { ...k, actual: val } : k));
   };
 
-  const handleProdTargetChange = (code: string, val: number) => {
-    setProductKpis(prev => prev.map(k => k.code === code ? { ...k, target: val } : k));
+  const handleProdTargetChange = (id: string, val: number) => {
+    setProductKpis(prev => prev.map(k => k.id === id ? { ...k, target: val } : k));
   };
 
   const formatValue = (val: number, unit: string) => {
@@ -767,9 +765,9 @@ export default function InputFormPage() {
     return importantKeywords.some(keyword => t.includes(keyword));
   };
 
-  const handleSaveRow = async (code: string) => {
+  const handleSaveRow = async (id: string) => {
     if (isReadOnly) return;
-    const item = kpis.find(k => k.code === code);
+    const item = kpis.find(k => k.id === id);
     if (!item) return;
     const success = await saveKpisToDatabase([item]);
     if (success) {
@@ -779,9 +777,9 @@ export default function InputFormPage() {
     }
   };
 
-  const handleSaveProdRow = async (code: string) => {
+  const handleSaveProdRow = async (id: string) => {
     if (isReadOnly) return;
-    const item = productKpis.find(k => k.code === code);
+    const item = productKpis.find(k => k.id === id);
     if (!item) return;
     const success = await saveProductKpisToDatabase([item]);
     if (success) {
@@ -1130,7 +1128,7 @@ export default function InputFormPage() {
                         {items.map(kpi => {
                           const pct = kpi.target > 0 ? Math.round((kpi.actual / kpi.target) * 100) : 0;
                           return (
-                            <tr key={kpi.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
+                            <tr key={kpi.id} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                               {showCodeColumn && (
                                 <td className="p-3 w-24 text-center">
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
@@ -1144,14 +1142,14 @@ export default function InputFormPage() {
                               <td className="p-3 text-center">
                                 <input
                                   type="text"
-                                  value={editingCell?.kpiCode === kpi.code && editingCell?.field === "target" ? editingCell.value : formatValue(kpi.target, kpi.unit)}
+                                  value={editingCell?.kpiId === kpi.id && editingCell?.field === "target" ? editingCell.value : formatValue(kpi.target, kpi.unit)}
                                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiCode: kpi.code, field: "target", value: kpi.target.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiCode: kpi.code, field: "target", value: e.target.value })}
+                                  onFocus={() => setEditingCell({ kpiId: kpi.id, field: "target", value: kpi.target.toString() })}
+                                  onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "target", value: e.target.value })}
                                   onBlur={() => {
                                     if (editingCell) {
                                       const val = parseFloat(editingCell.value) || 0;
-                                      handleTargetChange(kpi.code, val.toString());
+                                      handleTargetChange(kpi.id, val.toString());
                                       setEditingCell(null);
                                     }
                                   }}
@@ -1161,14 +1159,14 @@ export default function InputFormPage() {
                               <td className="p-3 text-center">
                                 <input
                                   type="text"
-                                  value={editingCell?.kpiCode === kpi.code && editingCell?.field === "actual" ? editingCell.value : formatValue(kpi.actual, kpi.unit)}
+                                  value={editingCell?.kpiId === kpi.id && editingCell?.field === "actual" ? editingCell.value : formatValue(kpi.actual, kpi.unit)}
                                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiCode: kpi.code, field: "actual", value: kpi.actual.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiCode: kpi.code, field: "actual", value: e.target.value })}
+                                  onFocus={() => setEditingCell({ kpiId: kpi.id, field: "actual", value: kpi.actual.toString() })}
+                                  onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "actual", value: e.target.value })}
                                   onBlur={() => {
                                     if (editingCell) {
                                       const val = parseFloat(editingCell.value) || 0;
-                                      handleInputChange(kpi.code, val.toString());
+                                      handleInputChange(kpi.id, val.toString());
                                       setEditingCell(null);
                                     }
                                   }}
@@ -1183,10 +1181,10 @@ export default function InputFormPage() {
                               <td className="p-3 text-center w-[200px]">
                                 <input
                                   type="text"
-                                  value={explanations[kpi.code] || ""}
+                                  value={explanations[kpi.id] || ""}
                                   placeholder="Ghi chú ngắn kết quả..."
                                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.code]: e.target.value }))}
+                                  onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.id]: e.target.value }))}
                                   className="w-full bg-slate-950 border border-[var(--glass-border)] text-white text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
                                 />
                               </td>
@@ -1197,7 +1195,7 @@ export default function InputFormPage() {
                               </td>
                               <td className="p-3 text-center">
                                 <button
-                                  onClick={() => handleSaveRow(kpi.code)}
+                                  onClick={() => handleSaveRow(kpi.id)}
                                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
                                   className="bg-[#10b981] hover:bg-[#34d399] text-slate-950 text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
                                 >
@@ -1242,7 +1240,7 @@ export default function InputFormPage() {
                   }
 
                   return (
-                    <div key={k.code} className={`p-4 rounded-xl space-y-2 transition-all ${
+                    <div key={k.id} className={`p-4 rounded-xl space-y-2 transition-all ${
                       theme === "light" 
                         ? "bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(0,0,0,0.04)]" 
                         : "bg-slate-900/60 p-4 rounded-xl border border-rose-500/20"
@@ -1260,9 +1258,9 @@ export default function InputFormPage() {
                         </span>
                       </div>
                       <textarea
-                        value={explanations[k.code] || ""}
+                        value={explanations[k.id] || ""}
                         disabled={isReadOnly}
-                        onChange={(e) => setExplanations(prev => ({ ...prev, [k.code]: e.target.value }))}
+                        onChange={(e) => setExplanations(prev => ({ ...prev, [k.id]: e.target.value }))}
                         placeholder="Nhập chi tiết nguyên nhân khách quan/chủ quan và đề xuất hướng khắc phục cụ thể..."
                         rows={2}
                         className={`w-full rounded-xl p-2.5 text-xs resize-none transition-all focus:outline-none ${
@@ -1525,7 +1523,7 @@ export default function InputFormPage() {
                           const pct = pk.target > 0 ? Math.round((pk.actual / pk.target) * 100) : 100;
                           const displayCode = selectedProdId ? pk.code.replace(selectedProdId + "-", "") : pk.code;
                           return (
-                            <tr key={pk.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
+                            <tr key={pk.id} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                               {showCodeColumn && (
                                 <td className="p-3 text-center">
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">
@@ -1541,14 +1539,14 @@ export default function InputFormPage() {
                               <td className="p-3 text-center">
                                 <input
                                   type="text"
-                                  value={editingCell?.kpiCode === pk.code && editingCell?.field === "target" ? editingCell.value : formatValue(pk.target, pk.unit)}
+                                  value={editingCell?.kpiId === pk.id && editingCell?.field === "target" ? editingCell.value : formatValue(pk.target, pk.unit)}
                                   disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiCode: pk.code, field: "target", value: pk.target.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiCode: pk.code, field: "target", value: e.target.value })}
+                                  onFocus={() => setEditingCell({ kpiId: pk.id, field: "target", value: pk.target.toString() })}
+                                  onChange={(e) => setEditingCell({ kpiId: pk.id, field: "target", value: e.target.value })}
                                   onBlur={() => {
                                     if (editingCell) {
                                       const val = parseFloat(editingCell.value) || 0;
-                                      handleProdTargetChange(pk.code, val);
+                                      handleProdTargetChange(pk.id, val);
                                       setEditingCell(null);
                                     }
                                   }}
@@ -1558,14 +1556,14 @@ export default function InputFormPage() {
                               <td className="p-3 text-center">
                                 <input
                                   type="text"
-                                  value={editingCell?.kpiCode === pk.code && editingCell?.field === "actual" ? editingCell.value : formatValue(pk.actual, pk.unit)}
+                                  value={editingCell?.kpiId === pk.id && editingCell?.field === "actual" ? editingCell.value : formatValue(pk.actual, pk.unit)}
                                   disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiCode: pk.code, field: "actual", value: pk.actual.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiCode: pk.code, field: "actual", value: e.target.value })}
+                                  onFocus={() => setEditingCell({ kpiId: pk.id, field: "actual", value: pk.actual.toString() })}
+                                  onChange={(e) => setEditingCell({ kpiId: pk.id, field: "actual", value: e.target.value })}
                                   onBlur={() => {
                                     if (editingCell) {
                                       const val = parseFloat(editingCell.value) || 0;
-                                      handleProdInputChange(pk.code, val);
+                                      handleProdInputChange(pk.id, val);
                                       setEditingCell(null);
                                     }
                                   }}
@@ -1579,7 +1577,7 @@ export default function InputFormPage() {
                               </td>
                               <td className="p-3 text-center">
                                 <button
-                                  onClick={() => handleSaveProdRow(pk.code)}
+                                  onClick={() => handleSaveProdRow(pk.id)}
                                   disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
                                   className="bg-purple-700 hover:bg-purple-600 text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
                                 >
