@@ -101,6 +101,11 @@ export async function GET(request: Request) {
         }
       });
 
+      const aggregate = searchParams.get("aggregate") ?? "true";
+      if (aggregate === "false") {
+        return NextResponse.json(records);
+      }
+
       // Nhóm và gộp dữ liệu theo indicatorCode
       const groups: Record<string, typeof records> = {};
       records.forEach(r => {

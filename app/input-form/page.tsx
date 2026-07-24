@@ -596,33 +596,52 @@ export default function InputFormPage() {
     };
   }, [activeProductId, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
-  // 4. Fetch dynamic rankings for current unit products
+  // 4. Fetch dynamic rankings for current unit products (optimized to single API call with delay)
   useEffect(() => {
     if (currentUnitProducts.length === 0) return;
     const pType = filters.periodType || "weekly";
-    
-    Promise.all(currentUnitProducts.map(async (p) => {
+    const pKey = getPeriodKey();
+    let isMounted = true;
+
+    const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/kpi?productCode=${p.id}&unitCode=${filters.unitCode}&periodKey=${getPeriodKey()}&periodType=${pType}`);
+        const res = await fetch(`/api/kpi?productCode=all&unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}&aggregate=false`);
         const data = await res.json();
-        if (Array.isArray(data)) {
-          const mapped = data.map((d: any) => ({
-            code: d.indicatorCode,
-            title: d.title,
-            target: d.targetValue,
-            actual: d.actualValue
-          }));
-          const score = isWeekly ? calcWeeklyPHS(mapped).phsWeekly : calcOfficialPHS(mapped).phs;
-          return { id: p.id, name: p.name, score };
+        
+        if (isMounted && Array.isArray(data)) {
+          // Group records by productCode in-memory
+          const productGroups: Record<string, any[]> = {};
+          data.forEach((d: any) => {
+            if (d.productCode) {
+              productGroups[d.productCode] = productGroups[d.productCode] || [];
+              productGroups[d.productCode].push({
+                code: d.indicatorCode,
+                title: d.title,
+                target: d.targetValue || 0,
+                actual: d.actualValue || 0
+              });
+            }
+          });
+
+          // Calculate score for each product
+          const results = currentUnitProducts.map(p => {
+            const mapped = productGroups[p.id] || [];
+            const score = isWeekly ? calcWeeklyPHS(mapped).phsWeekly : calcOfficialPHS(mapped).phs;
+            return { id: p.id, name: p.name, score };
+          });
+
+          setProductsRankings(results.sort((a, b) => b.score - a.score));
         }
       } catch (err) {
-        console.error(err);
+        console.error("Lỗi khi tải bảng xếp hạng PSH sản phẩm:", err);
       }
-      return { id: p.id, name: p.name, score: 0 };
-    })).then(results => {
-      setProductsRankings(results.sort((a, b) => b.score - a.score));
-    });
-  }, [currentUnitProducts, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
+    }, 400); // Trì hoãn 400ms để ưu tiên tải bảng nhập liệu chính
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [currentUnitProducts, filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   // Function to save unit-level KPIs to database
   const saveKpisToDatabase = async (kpiList: KpiItem[], statusOverride?: string) => {
