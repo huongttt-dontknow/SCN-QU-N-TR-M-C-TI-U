@@ -9,7 +9,7 @@ export interface MasterKpiItem {
   title: string;
   unit: string;
   formula?: string;
-  pic?: string;
+  pic?: string | null;
   periods: Record<string, PeriodKpiVal>;
 }
 

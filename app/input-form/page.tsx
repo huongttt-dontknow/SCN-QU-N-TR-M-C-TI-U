@@ -571,7 +571,7 @@ export default function InputFormPage() {
     const pKey = getPeriodKey();
     const pType = filters.periodType || "weekly";
     
-    fetch(`/api/kpi?productCode=${activeProductId}&periodKey=${pKey}&periodType=${pType}`)
+    fetch(`/api/kpi?productCode=${activeProductId}&unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}`)
       .then(res => res.json())
       .then(data => {
         if (isMounted && Array.isArray(data)) {
@@ -603,7 +603,7 @@ export default function InputFormPage() {
     
     Promise.all(currentUnitProducts.map(async (p) => {
       try {
-        const res = await fetch(`/api/kpi?productCode=${p.id}&periodKey=${getPeriodKey()}&periodType=${pType}`);
+        const res = await fetch(`/api/kpi?productCode=${p.id}&unitCode=${filters.unitCode}&periodKey=${getPeriodKey()}&periodType=${pType}`);
         const data = await res.json();
         if (Array.isArray(data)) {
           const mapped = data.map((d: any) => ({
