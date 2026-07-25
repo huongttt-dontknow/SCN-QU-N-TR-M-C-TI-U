@@ -33,7 +33,7 @@ interface KpiRow {
 }
 
 export default function UnitDataPage() {
-  const { filters } = useApp();
+  const { filters, theme } = useApp();
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({
     "M1": true, "M2": true, "M3": true, "M4": true, "M5": true, "M6": true, "M7": true
   });
@@ -344,71 +344,85 @@ export default function UnitDataPage() {
       {/* 2. MICRO CARDS TỔNG QUAN ĐƠN VỊ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Card 1: Doanh thu trong kỳ */}
-        <div className="glass-panel p-5 flex flex-col justify-between min-h-[120px]">
+        <div className={`${
+          theme === "light" 
+            ? "bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.05)] text-slate-800" 
+            : "bg-gradient-to-r from-[#2c4cf5] to-[#3a8bf6] text-white shadow-[0_10px_25px_rgba(44,76,245,0.4)] border-none"
+        } p-5 rounded-2xl flex flex-col justify-between min-h-[140px] transition-all duration-300 hover:scale-[1.02]`}>
           <div className="flex justify-between items-start">
-            <span className="text-xs font-black text-[var(--text-muted)] uppercase tracking-wider">
+            <span className={`text-xs font-black uppercase tracking-wider ${theme === "light" ? "text-slate-500" : "text-blue-100/90"}`}>
               DOANH THU TRONG KỲ ({primaryTitle.toUpperCase()})
             </span>
-            <DollarSign size={18} className="text-emerald-400" />
+            <DollarSign size={18} className={theme === "light" ? "text-emerald-500" : "text-white"} />
           </div>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className={`text-4xl font-black ${revCompletion < 100 ? "text-amber-400" : "text-emerald-400"}`}>
+              <span className={`text-4xl font-extrabold ${theme === "light" ? "text-emerald-600" : "text-white text-shadow-sm"}`}>
                 {revCompletion}%
               </span>
             </div>
-            <div className="w-full h-2 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
+            <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
               <div 
-                className={`h-full rounded-full ${revCompletion < 100 ? "bg-amber-500" : "bg-emerald-500"}`} 
+                className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`} 
                 style={{ width: `${Math.min(100, revCompletion)}%` }} 
               />
             </div>
-            <span className="text-xs text-[var(--text-muted)] font-extrabold block mt-1.5">
+            <span className={`text-xs font-extrabold block mt-1.5 ${theme === "light" ? "text-slate-500" : "text-blue-100/95"}`}>
               Thực tế: {(actualRev / 1000000).toFixed(1)}M / KH: {(targetRev / 1000000).toFixed(1)}M VNĐ
             </span>
           </div>
         </div>
 
         {/* Card 2: Traffic trong kỳ */}
-        <div className="glass-panel p-5 flex flex-col justify-between min-h-[120px]">
+        <div className={`${
+          theme === "light" 
+            ? "bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.05)] text-slate-800" 
+            : "bg-gradient-to-r from-[#179fa9] to-[#25ccd8] text-white shadow-[0_10px_25px_rgba(23,159,169,0.4)] border-none"
+        } p-5 rounded-2xl flex flex-col justify-between min-h-[140px] transition-all duration-300 hover:scale-[1.02]`}>
           <div className="flex justify-between items-start">
-            <span className="text-xs font-black text-[var(--text-muted)] uppercase tracking-wider">
+            <span className={`text-xs font-black uppercase tracking-wider ${theme === "light" ? "text-slate-500" : "text-teal-100/90"}`}>
               TRAFFIC TRONG KỲ ({primaryTitle.toUpperCase()})
             </span>
-            <TrendingUp size={18} className="text-purple-400" />
+            <TrendingUp size={18} className={theme === "light" ? "text-purple-500" : "text-white"} />
           </div>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className={`text-4xl font-black ${trafficCompletion < 100 ? "text-purple-400" : "text-emerald-400"}`}>
+              <span className={`text-4xl font-extrabold ${theme === "light" ? "text-purple-600" : "text-white text-shadow-sm"}`}>
                 {trafficCompletion}%
               </span>
             </div>
-            <div className="w-full h-2 bg-slate-950 rounded-full mt-2 overflow-hidden border border-white/5">
+            <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
               <div 
-                className={`h-full rounded-full ${trafficCompletion < 100 ? "bg-purple-500" : "bg-emerald-500"}`} 
+                className={`h-full rounded-full ${theme === "light" ? "bg-purple-500" : "bg-white"}`} 
                 style={{ width: `${Math.min(100, trafficCompletion)}%` }} 
               />
             </div>
-            <span className="text-xs text-[var(--text-muted)] font-extrabold block mt-1.5">
+            <span className={`text-xs font-extrabold block mt-1.5 ${theme === "light" ? "text-slate-500" : "text-teal-100/95"}`}>
               Thực tế: {actualTraffic >= 100000 ? (actualTraffic / 1000000).toFixed(1) : actualTraffic}M / KH: {targetTraffic >= 100000 ? (targetTraffic / 1000000).toFixed(1) : targetTraffic}M Views
             </span>
           </div>
         </div>
 
         {/* Card 3: Chỉ tiêu báo động (< 80%) */}
-        <div className={`glass-panel p-5 flex flex-col justify-between min-h-[120px] border-l-4 ${warningList.length > 0 ? "border-l-rose-500" : "border-l-emerald-500"}`}>
+        <div className={`${
+          theme === "light" 
+            ? `bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.05)] text-slate-800 border-l-4 ${warningList.length > 0 ? "border-l-rose-500" : "border-l-emerald-500"}` 
+            : warningList.length > 0
+              ? "bg-gradient-to-r from-[#d9167c] to-[#f33c9c] text-white shadow-[0_10px_25px_rgba(217,22,124,0.4)] border-none"
+              : "bg-gradient-to-r from-[#00b074] to-[#00ca84] text-white shadow-[0_10px_25px_rgba(0,176,116,0.4)] border-none"
+        } p-5 rounded-2xl flex flex-col justify-between min-h-[140px] transition-all duration-300 hover:scale-[1.02]`}>
           <div className="flex justify-between items-start">
-            <span className="text-xs font-black text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span className={`text-xs font-black uppercase tracking-wider flex items-center gap-1.5 ${theme === "light" ? "text-rose-500" : "text-white"}`}>
               <AlertOctagon size={16} /> CHỈ TIÊU BÁO ĐỘNG (&lt; 80%)
             </span>
           </div>
-          <div className="space-y-1.5 text-xs font-extrabold text-rose-300">
+          <div className={`space-y-1.5 text-xs font-extrabold ${theme === "light" ? "text-rose-700" : "text-white"}`}>
             {warningList.length > 0 ? (
               warningList.map(w => (
-                <p key={w.code}>• {w.title}: <strong className="text-rose-400 text-sm">{w.pct}%</strong></p>
+                <p key={w.code}>• {w.title}: <strong className={`${theme === "light" ? "text-rose-600" : "text-white underline"} text-sm font-black`}>{w.pct}%</strong></p>
               ))
             ) : (
-              <span className="text-emerald-400 font-black text-sm block py-1">
+              <span className={`font-black text-sm block py-1 ${theme === "light" ? "text-emerald-600" : "text-white"}`}>
                 ✓ Tất cả chỉ tiêu đạt trên 80%
               </span>
             )}
@@ -417,24 +431,41 @@ export default function UnitDataPage() {
       </div>
 
       {/* 3. BẢNG DỮ LỆU BỘ 7 MỤC TIÊU */}
-      <div className="glass-panel p-5 overflow-hidden">
+      {/* 3. BẢNG DỮ LỆU BỘ 7 MỤC TIÊU */}
+      <div className={`${
+        theme === "light" 
+          ? "bg-white border border-slate-200 shadow-sm" 
+          : "bg-[#151226]/90 border border-purple-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+      } p-6 rounded-2xl overflow-hidden`}>
         
         {/* HEADER BẢNG THÔNG TIN CÓ NÚT XUẤT FILE EXCEL */}
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-4 border-b border-slate-200 dark:border-white/10 pb-3">
-          <h3 className="text-base font-black text-sky-500 dark:text-sky-400 tracking-wide uppercase">
+        <div className={`flex flex-wrap justify-between items-center gap-4 mb-4 border-b pb-3 ${
+          theme === "light" ? "border-slate-200" : "border-white/10"
+        }`}>
+          <h3 className={`text-base font-black tracking-wide uppercase ${
+            theme === "light" ? "text-slate-800" : "text-indigo-400"
+          }`}>
             Bộ Chỉ Tiêu: {currentUnitName} ({getPeriodLabel()})
           </h3>
           <div className="flex gap-2">
             <button
               onClick={() => setShowCodeColumn(!showCodeColumn)}
-              className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 border border-slate-300 dark:border-white/10 transition-all shadow-sm"
+              className={`text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 border transition-all shadow-sm ${
+                theme === "light" 
+                  ? "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300" 
+                  : "bg-slate-800 hover:bg-slate-700 text-slate-200 border-white/10"
+              }`}
             >
               {showCodeColumn ? <EyeOff size={15} /> : <Eye size={15} />}
               {showCodeColumn ? "Ẩn mã chỉ tiêu" : "Hiện mã chỉ tiêu"}
             </button>
             <button
               onClick={handleExportExcel}
-              className="bg-indigo-600 hover:bg-indigo-700 !text-white text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all"
+              className={`text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg transition-all ${
+                theme === "light" 
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20" 
+                  : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]"
+              }`}
             >
               <Download size={15} /> Xuất File Excel
             </button>
@@ -445,22 +476,42 @@ export default function UnitDataPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-black bg-slate-100 dark:bg-slate-900/60 uppercase text-xs tracking-wider">
+              <tr className={`border-b font-black uppercase text-xs tracking-wider ${
+                theme === "light" 
+                  ? "border-slate-200 text-slate-600 bg-slate-50" 
+                  : "border-white/10 text-slate-300 bg-[#1c1836]/60"
+              }`}>
                 {showCodeColumn && <th className="p-3 w-28 text-center">Mã chỉ tiêu</th>}
                 <th className="p-3">Mục tiêu / Chỉ tiêu cấp bộ phận</th>
                 <th className="p-3 w-20 text-center">ĐVT</th>
                 
                 {/* CỤM CỘT THEO KỲ CHÍNH (XANH LAM) */}
-                <th className="p-3 w-32 text-center bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-l border-slate-200 dark:border-white/10">KH {primaryTitle}</th>
-                <th className="p-3 w-32 text-center bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300">Thực tế {primaryTitle}</th>
-                <th className="p-3 w-28 text-center bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-r border-slate-200 dark:border-white/10">% HT {primaryTitle}</th>
+                <th className={`p-3 w-32 text-center border-l ${
+                  theme === "light" 
+                    ? "bg-sky-50 text-sky-800 border-slate-200" 
+                    : "bg-sky-500/10 text-sky-300 border-white/10"
+                }`}>KH {primaryTitle}</th>
+                <th className={`p-3 w-32 text-center ${
+                  theme === "light" ? "bg-sky-50 text-sky-800" : "bg-sky-500/10 text-sky-300"
+                }`}>Thực tế {primaryTitle}</th>
+                <th className={`p-3 w-28 text-center border-r ${
+                  theme === "light" 
+                    ? "bg-sky-50 text-sky-800 border-slate-200" 
+                    : "bg-sky-500/10 text-sky-300 border-white/10"
+                }`}>% HT {primaryTitle}</th>
 
                 {/* CỤM CỘT LŨY KẾ KỲ TIẾP THEO (TÍM) */}
                 {filters.periodType !== "yearly" && (
                   <>
-                    <th className="p-3 w-32 text-center bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">KH {cumulativeTitle}</th>
-                    <th className="p-3 w-32 text-center bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">Thực tế {cumulativeTitle}</th>
-                    <th className="p-3 w-28 text-center bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">% HT {cumulativeTitle}</th>
+                    <th className={`p-3 w-32 text-center ${
+                      theme === "light" ? "bg-purple-50 text-purple-800" : "bg-purple-500/10 text-purple-300"
+                    }`}>KH {cumulativeTitle}</th>
+                    <th className={`p-3 w-32 text-center ${
+                      theme === "light" ? "bg-purple-50 text-purple-800" : "bg-purple-500/10 text-purple-300"
+                    }`}>Thực tế {cumulativeTitle}</th>
+                    <th className={`p-3 w-28 text-center border-r ${
+                      theme === "light" ? "bg-purple-50 text-purple-800 border-slate-200" : "bg-purple-500/10 text-purple-300 border-white/10"
+                    }`}>% HT {cumulativeTitle}</th>
                   </>
                 )}
               </tr>
@@ -482,7 +533,11 @@ export default function UnitDataPage() {
                     <tr 
                       key={row.code} 
                       onClick={() => toggleRow(row.code)}
-                      className="bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-[var(--accent-cyan)] font-black border-b border-slate-200 dark:border-white/10 cursor-pointer select-none transition-all text-sm"
+                      className={`${
+                        theme === "light" 
+                          ? "bg-slate-50/90 hover:bg-slate-100 text-[#0284c7] border-b border-slate-200" 
+                          : "bg-[#1f1a3e]/80 hover:bg-[#25204a] text-cyan-300 border-b border-white/5"
+                      } font-black cursor-pointer select-none transition-all text-sm`}
                     >
                       {showCodeColumn && (
                         <td className="p-3 text-center">
@@ -496,7 +551,9 @@ export default function UnitDataPage() {
                         </td>
                       )}
                       <td 
-                        className="p-3 uppercase tracking-wider font-black text-slate-900 dark:text-white" 
+                        className={`p-3 uppercase tracking-wider font-black ${
+                          theme === "light" ? "text-slate-900" : "text-white"
+                        }`} 
                         style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
                       >
                         <div className="flex items-center gap-1.5">
@@ -507,26 +564,38 @@ export default function UnitDataPage() {
                       <td className="p-3 text-center text-slate-500 dark:text-slate-400 font-extrabold text-xs"></td>
                       
                       {/* Cột kỳ chính */}
-                      <td className="p-3 text-center font-black border-l border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200">
+                      <td className={`p-3 text-center font-black border-l ${
+                        theme === "light" ? "border-slate-200 text-slate-700 bg-slate-50/50" : "border-white/5 text-slate-200 bg-[#25204a]/30"
+                      }`}>
                         {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
                       </td>
-                      <td className="p-3 text-center font-black text-slate-900 dark:text-white">
+                      <td className={`p-3 text-center font-black ${
+                        theme === "light" ? "text-slate-900 bg-slate-50/50" : "text-white bg-[#25204a]/30"
+                      }`}>
                         {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
                       </td>
-                      <td className={`p-3 text-center font-black border-r border-slate-200 dark:border-white/10 ${getPctColor(pctPri)}`}>
+                      <td className={`p-3 text-center font-black border-r ${
+                        theme === "light" ? "border-slate-200 bg-slate-50/50" : "border-white/5 bg-[#25204a]/30"
+                      } ${getPctColor(pctPri)}`}>
                         {pctPri}%
                       </td>
 
                       {/* Cột lũy kế */}
                       {filters.periodType !== "yearly" && (
                         <>
-                          <td className="p-3 text-center font-black text-slate-600 dark:text-slate-300">
+                          <td className={`p-3 text-center font-black ${
+                            theme === "light" ? "text-slate-600 bg-purple-50/20" : "text-slate-300 bg-[#2c224a]/20"
+                          }`}>
                             {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
                           </td>
-                          <td className="p-3 text-center font-black text-purple-700 dark:text-purple-200">
+                          <td className={`p-3 text-center font-black ${
+                            theme === "light" ? "text-purple-700 bg-purple-50/20" : "text-purple-200 bg-[#2c224a]/20"
+                          }`}>
                             {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
                           </td>
-                          <td className={`p-3 text-center font-black ${getPctColor(pctCum)}`}>
+                          <td className={`p-3 text-center font-black ${
+                            theme === "light" ? "bg-purple-50/20" : "bg-[#2c224a]/20"
+                          } ${getPctColor(pctCum)}`}>
                             {pctCum}%
                           </td>
                         </>
@@ -542,40 +611,66 @@ export default function UnitDataPage() {
 
                 const depth = getRowDepth(row, orderedRows);
                 return (
-                  <tr key={row.code} className="border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 text-sm text-slate-700 dark:text-slate-200">
+                  <tr key={row.code} className={`border-b ${
+                    theme === "light" 
+                      ? "border-slate-100 hover:bg-slate-50/50 text-slate-700" 
+                      : "border-white/5 hover:bg-[#1a1635]/50 text-slate-200"
+                  } text-sm transition-all`}>
                     {showCodeColumn && (
                       <td className="p-3 text-center">
-                        <code className="bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 px-2 py-0.5 rounded font-mono text-xs border border-sky-300 dark:border-sky-500/20 font-bold">
+                        <code className={`px-2 py-0.5 rounded font-mono text-xs border font-bold ${
+                          theme === "light" 
+                            ? "bg-slate-100 text-sky-600 border-slate-300" 
+                            : "bg-slate-800 text-sky-400 border-sky-500/20"
+                        }`}>
                           {row.code}
                         </code>
                       </td>
                     )}
-                    <td className="p-3 font-semibold text-slate-800 dark:text-white" style={{ paddingLeft: `${depth * 1.5}rem` }}>
+                    <td className={`p-3 font-semibold ${
+                      theme === "light" ? "text-slate-800" : "text-white"
+                    }`} style={{ paddingLeft: `${depth * 1.5}rem` }}>
                       {row.title}
                     </td>
                     <td className="p-3 text-center text-slate-500 dark:text-slate-400 font-extrabold text-xs">{row.unit}</td>
 
                     {/* Dữ liệu Kỳ chính */}
-                    <td className="p-3 text-center font-bold text-slate-600 dark:text-slate-300 border-l border-slate-100 dark:border-white/5 bg-sky-50/50 dark:bg-sky-950/10">
+                    <td className={`p-3 text-center font-bold border-l ${
+                      theme === "light" 
+                        ? "text-slate-600 border-slate-100 bg-sky-50/20" 
+                        : "text-slate-300 border-white/5 bg-sky-500/[0.03]"
+                    }`}>
                       {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
                     </td>
-                    <td className="p-3 text-center font-extrabold text-slate-800 dark:text-white bg-sky-50/50 dark:bg-sky-950/10">
+                    <td className={`p-3 text-center font-extrabold ${
+                      theme === "light" ? "text-slate-800 bg-sky-50/20" : "text-white bg-sky-500/[0.03]"
+                    }`}>
                       {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
                     </td>
-                    <td className={`p-3 text-center font-black border-r border-slate-100 dark:border-white/5 bg-sky-50/50 dark:bg-sky-950/10 ${getPctColor(pctPri)}`}>
+                    <td className={`p-3 text-center font-black border-r ${
+                      theme === "light" 
+                        ? "border-slate-100 bg-sky-50/20" 
+                        : "border-white/5 bg-sky-500/[0.03]"
+                    } ${getPctColor(pctPri)}`}>
                       {pctPri}%
                     </td>
 
                     {/* Dữ liệu Lũy kế */}
                     {filters.periodType !== "yearly" && (
                       <>
-                        <td className="p-3 text-center font-bold text-slate-500 dark:text-slate-400 bg-purple-50/50 dark:bg-purple-950/10">
+                        <td className={`p-3 text-center font-bold ${
+                          theme === "light" ? "text-slate-500 bg-purple-50/10" : "text-slate-400 bg-purple-500/[0.03]"
+                        }`}>
                           {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
                         </td>
-                        <td className="p-3 text-center font-extrabold text-purple-700 dark:text-purple-300 bg-purple-50/50 dark:bg-purple-950/10">
+                        <td className={`p-3 text-center font-extrabold ${
+                          theme === "light" ? "text-purple-700 bg-purple-50/10" : "text-purple-300 bg-purple-500/[0.03]"
+                        }`}>
                           {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
                         </td>
-                        <td className={`p-3 text-center font-black bg-purple-50/50 dark:bg-purple-950/10 ${getPctColor(pctCum)}`}>
+                        <td className={`p-3 text-center font-black ${
+                          theme === "light" ? "bg-purple-50/10" : "bg-purple-500/[0.03]"
+                        } ${getPctColor(pctCum)}`}>
                           {pctCum}%
                         </td>
                       </>
