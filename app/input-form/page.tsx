@@ -527,7 +527,7 @@ export default function InputFormPage() {
       .then(data => {
         if (isMounted && Array.isArray(data) && data.length > 0) {
           const mapped = data.map((d: any) => ({
-            id: d.id,
+            id: d.id || `${d.indicatorCode}_${filters.unitCode}`,
             code: d.indicatorCode,
             title: d.title || d.indicatorCode,
             unit: d.unit || "",
@@ -574,7 +574,7 @@ export default function InputFormPage() {
       .then(data => {
         if (isMounted && Array.isArray(data)) {
           const mapped = data.map((d: any) => ({
-            id: d.id,
+            id: d.id || `${d.indicatorCode}_${activeProductId}`,
             code: d.indicatorCode,
             title: d.title || d.indicatorCode,
             unit: d.unit || "",

@@ -288,7 +288,10 @@ export async function GET(request: Request) {
           } else {
             return r.unitCode === unitCode && (!r.productCode) && r.periodKey === pKey && r.periodType === pType;
           }
-        });
+        }).map((r: any) => ({
+          ...r,
+          id: r.id || `${r.unitCode}-${r.productCode || "unit"}-${r.indicatorCode}-${r.periodKey}`
+        }));
         
         return NextResponse.json(filtered);
       }
