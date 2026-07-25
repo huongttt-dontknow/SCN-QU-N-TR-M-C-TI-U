@@ -7,6 +7,7 @@ import ObjectiveRadarChart from "@/components/ObjectiveRadarChart";
 import MonthlyRevenueProgressChart from "@/components/MonthlyRevenueProgressChart";
 import RevenueDonutChart from "@/components/RevenueDonutChart";
 import SourceRevenueDonutChart from "@/components/SourceRevenueDonutChart";
+import ProductRevenueDonutChart from "@/components/ProductRevenueDonutChart";
 import { getMasterKpiRecord, MASTER_KPI_DATA } from "@/lib/kpiMasterData";
 import { getRadarScores } from "@/lib/radarMasterData";
 import { PRODUCTS_CATALOG } from "@/lib/products_catalog";
@@ -1300,17 +1301,19 @@ export default function DashboardPage() {
       )}
 
       {/* 4. KHU VỰC CƠ CẤU DOANH THU & TRAFFIC */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         {/* Tỷ trọng Cơ cấu Doanh thu (M1) */}
-        <div className="glass-panel p-5">
+        <div className={`glass-panel p-5 ${filters.unitCode === "SCVN" ? "lg:col-span-8" : "lg:col-span-6"}`}>
           <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
             📊 Tỷ trọng Cơ cấu Doanh thu (M1)
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-4 font-semibold">
             {isParentUnit ? "Cơ cấu đóng góp doanh thu theo Đơn vị và theo Nguồn phát sinh doanh thu" : "Cơ cấu đóng góp doanh thu theo Nguồn phát sinh doanh thu"}
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/5 pt-4">
+          <div className={`grid grid-cols-1 ${
+            filters.unitCode === "SCVN" ? "sm:grid-cols-3" : isParentUnit ? "sm:grid-cols-2" : "grid-cols-1"
+          } gap-4 border-t border-white/5 pt-4`}>
             {isParentUnit ? (
               <>
                 <div>
@@ -1321,6 +1324,12 @@ export default function DashboardPage() {
                   <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
                   <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
                 </div>
+                {filters.unitCode === "SCVN" && (
+                  <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
+                    <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Sản phẩm</h4>
+                    <ProductRevenueDonutChart periodKey={periodKey} periodType={filters.periodType || "weekly"} />
+                  </div>
+                )}
               </>
             ) : (
               <div className="col-span-2">
@@ -1334,7 +1343,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Mức độ Hoàn thành Mục tiêu Traffic (M3) */}
-        <div className="glass-panel p-5 flex flex-col justify-between">
+        <div className={`glass-panel p-5 flex flex-col justify-between ${
+          filters.unitCode === "SCVN" ? "lg:col-span-4" : "lg:col-span-6"
+        }`}>
           <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
             📈 Mức độ Hoàn thành Mục tiêu Traffic (M3)
           </h3>

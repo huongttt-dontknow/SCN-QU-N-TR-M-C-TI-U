@@ -93,13 +93,35 @@ export async function GET(request: Request) {
       }
 
       // Lấy toàn bộ bản ghi sản phẩm của kỳ hiện tại
-      const records = await prisma.kpiData.findMany({
+      let records = await prisma.kpiData.findMany({
         where: {
           productCode: { in: targetProductCodes },
           periodKey,
           periodType
         }
       });
+
+      if (records.length === 0) {
+        try {
+          const fs = require("fs");
+          const path = require("path");
+          const jsonPath = path.join(process.cwd(), "lib", "product_kpi_records.json");
+          if (fs.existsSync(jsonPath)) {
+            const raw = fs.readFileSync(jsonPath, "utf-8");
+            const kpiList = JSON.parse(raw);
+            records = kpiList.filter((r: any) => 
+              targetProductCodes.includes(r.productCode) && 
+              r.periodKey === periodKey && 
+              r.periodType === periodType
+            ).map((r: any) => ({
+              ...r,
+              id: r.id || `${r.unitCode}-${r.productCode}-${r.indicatorCode}-${r.periodKey}`
+            }));
+          }
+        } catch (err) {
+          console.error("Lỗi đọc JSON dự phòng cho sản phẩm:", err);
+        }
+      }
 
       const aggregate = searchParams.get("aggregate") ?? "true";
       if (aggregate === "false") {
@@ -167,6 +189,28 @@ export async function GET(request: Request) {
     let kpiRecords = await prisma.kpiData.findMany({
       where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
+
+    if (kpiRecords.length === 0 && productCode) {
+      try {
+        const fs = require("fs");
+        const path = require("path");
+        const jsonPath = path.join(process.cwd(), "lib", "product_kpi_records.json");
+        if (fs.existsSync(jsonPath)) {
+          const raw = fs.readFileSync(jsonPath, "utf-8");
+          const kpiList = JSON.parse(raw);
+          kpiRecords = kpiList.filter((r: any) => 
+            r.productCode === productCode && 
+            r.periodKey === periodKey && 
+            r.periodType === periodType
+          ).map((r: any) => ({
+            ...r,
+            id: r.id || `${r.unitCode}-${r.productCode}-${r.indicatorCode}-${r.periodKey}`
+          }));
+        }
+      } catch (err) {
+        console.error("Lỗi đọc JSON dự phòng cho một sản phẩm:", err);
+      }
+    }
 
     // Tự động kiểm tra và đồng bộ hóa danh sách chỉ tiêu của đơn vị (Self-healing mechanism)
     const unitTemplates = await prisma.kpiData.findMany({
