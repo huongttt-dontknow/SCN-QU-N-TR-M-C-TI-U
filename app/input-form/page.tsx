@@ -592,7 +592,7 @@ export default function InputFormPage() {
     return () => {
       isMounted = false;
     };
-  }, [activeProductId, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
+  }, [activeProductId, filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   // 4. Fetch dynamic rankings for current unit products (optimized to single API call with delay)
   useEffect(() => {
