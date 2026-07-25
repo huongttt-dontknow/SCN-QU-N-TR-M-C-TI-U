@@ -248,6 +248,15 @@ export default function UnitDataPage() {
 
   const warningList = visibleRows
     .filter(r => !r.isParent)
+    .filter(r => {
+      if (filters.unitCode === "SCVN" || filters.unitCode === "TCT") {
+        // Chỉ cảnh báo theo các chỉ tiêu lớn (bắt đầu bằng V hoặc T, không phải mã con chứa hậu tố như -WF, -AS...)
+        const isMainIndicator = r.code.startsWith("V") || r.code.startsWith("T");
+        const hasNoSubUnitSuffix = r.code.split("-").length <= 2;
+        return isMainIndicator && hasNoSubUnitSuffix;
+      }
+      return true;
+    })
     .map(r => {
       const act = getActualValue(r);
       const tgt = getTargetValue(r);
