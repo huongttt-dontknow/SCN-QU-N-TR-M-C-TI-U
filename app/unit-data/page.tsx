@@ -96,11 +96,11 @@ export default function UnitDataPage() {
     setExpandedRows(prev => ({ ...prev, [code]: !prev[code] }));
   };
 
-  const shouldShowByFrequency = (freq: string | undefined, title: string, code: string) => {
+  const shouldShowByFrequency = (freq: string | undefined, title: string | undefined, code: string | undefined) => {
     const periodType = filters.periodType || "weekly";
     const f = (freq || "").toLowerCase().trim();
-    const t = title.toLowerCase();
-    const c = code.toLowerCase();
+    const t = (title || "").toLowerCase();
+    const c = (code || "").toLowerCase();
 
     // Detect quarterly indicators by frequency field or keywords in title/code
     const isQuarterly = f === "quý" || f === "quarterly" || t.includes("roi") || t.includes("ros") || t.includes("tỷ suất lợi nhuận");
@@ -250,6 +250,7 @@ export default function UnitDataPage() {
     .filter(r => !r.isParent)
     .filter(r => {
       if (filters.unitCode === "SCVN" || filters.unitCode === "TCT") {
+        if (!r.code) return false;
         // Chỉ cảnh báo theo các chỉ tiêu lớn (bắt đầu bằng V hoặc T, không phải mã con chứa hậu tố như -WF, -AS...)
         const isMainIndicator = r.code.startsWith("V") || r.code.startsWith("T");
         const hasNoSubUnitSuffix = r.code.split("-").length <= 2;

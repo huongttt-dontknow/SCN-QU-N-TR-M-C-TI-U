@@ -222,9 +222,9 @@ export async function GET(request: Request) {
             parentCode = "M1";
           } else if (code === "DM1-I02.01" || code === "SM1-I02.01" || code === "MM1-I02.01" || code === "NM1-I02.01" || code === "CM1-I02.01") {
             parentCode = "VM1-I02.01";
-          } else if (code.endsWith("7-I03.01")) {
+          } else if (code && code.endsWith("7-I03.01")) {
             parentCode = "VM7-I03.01";
-          } else if (code.endsWith("7-I03.02")) {
+          } else if (code && code.endsWith("7-I03.02")) {
             parentCode = "VM7-I03.02";
           }
         }
