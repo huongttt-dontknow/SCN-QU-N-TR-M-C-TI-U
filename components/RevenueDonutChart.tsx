@@ -85,6 +85,9 @@ export default function RevenueDonutChart({ unitCode = "SCVN", periodKey = "mont
               boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
               fontWeight: "bold"
             }}
+            itemStyle={{
+              color: isLight ? "#0f172a" : "#ffffff"
+            }}
           />
           <Legend
             verticalAlign="bottom"

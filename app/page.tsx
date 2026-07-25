@@ -1303,6 +1303,33 @@ export default function DashboardPage() {
       {/* 4. KHU VỰC CƠ CẤU DOANH THU & TRAFFIC */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
+        {/* Mức độ Hoàn thành Mục tiêu Traffic (M3) */}
+        <div className={`glass-panel p-5 flex flex-col justify-between ${
+          filters.unitCode === "SCVN" ? "lg:col-span-4" : "lg:col-span-6"
+        }`}>
+          <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
+            📈 Mức độ Hoàn thành Mục tiêu Traffic (M3)
+          </h3>
+          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">
+            So sánh lượt xem/truy cập thực tế so với mục tiêu kế hoạch (M triệu views)
+          </p>
+          <div className="space-y-3 overflow-y-auto max-h-[280px] pr-1">
+            {trafficData.map(item => (
+              <div key={item.name} className="space-y-1">
+                <div className="flex justify-between text-xs font-bold">
+                  <span className="text-slate-200 font-extrabold">{item.name}</span>
+                  <span className="text-slate-300 font-black">
+                    {item.actual}M / {item.target}M ({item.pct}%)
+                  </span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                  <div className={`h-full rounded-full ${item.color}`} style={{ width: `${Math.min(100, item.pct)}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Tỷ trọng Cơ cấu Doanh thu (M1) */}
         <div className={`glass-panel p-5 ${filters.unitCode === "SCVN" ? "lg:col-span-8" : "lg:col-span-6"}`}>
           <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
@@ -1339,33 +1366,6 @@ export default function DashboardPage() {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Mức độ Hoàn thành Mục tiêu Traffic (M3) */}
-        <div className={`glass-panel p-5 flex flex-col justify-between ${
-          filters.unitCode === "SCVN" ? "lg:col-span-4" : "lg:col-span-6"
-        }`}>
-          <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
-            📈 Mức độ Hoàn thành Mục tiêu Traffic (M3)
-          </h3>
-          <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">
-            So sánh lượt xem/truy cập thực tế so với mục tiêu kế hoạch (M triệu views)
-          </p>
-          <div className="space-y-3 overflow-y-auto max-h-[280px] pr-1">
-            {trafficData.map(item => (
-              <div key={item.name} className="space-y-1">
-                <div className="flex justify-between text-xs font-bold">
-                  <span className="text-slate-200 font-extrabold">{item.name}</span>
-                  <span className="text-slate-300 font-black">
-                    {item.actual}M / {item.target}M ({item.pct}%)
-                  </span>
-                </div>
-                <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-white/5">
-                  <div className={`h-full rounded-full ${item.color}`} style={{ width: `${Math.min(100, item.pct)}%` }} />
-                </div>
-              </div>
-            ))}
           </div>
         </div>
 
