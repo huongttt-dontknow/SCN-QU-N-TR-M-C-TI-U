@@ -42,7 +42,9 @@ export default function MonthlyRevenueProgressChart() {
 
   const data = unitList.map(u => {
     const uData = MASTER_KPI_DATA[u.code] || {};
-    const kpiItem = uData["VM1-I02.01"] || uData["2.1"];
+    const keys = Object.keys(uData);
+    const kpiKey = keys.find(k => k.endsWith("M1-I02.01")) || "2.1";
+    const kpiItem = uData[kpiKey] || Object.values(uData).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
     const periods = kpiItem?.periods || {};
 
     // 1. Cộng tổng thực tế các tuần trong tháng
