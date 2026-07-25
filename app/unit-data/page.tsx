@@ -380,7 +380,7 @@ export default function UnitDataPage() {
               />
             </div>
             <span className="text-xs text-[var(--text-muted)] font-extrabold block mt-1.5">
-              Thực tế: {actualTraffic}M / KH: {targetTraffic}M Views
+              Thực tế: {actualTraffic >= 100000 ? (actualTraffic / 1000000).toFixed(1) : actualTraffic}M / KH: {targetTraffic >= 100000 ? (targetTraffic / 1000000).toFixed(1) : targetTraffic}M Views
             </span>
           </div>
         </div>

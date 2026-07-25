@@ -320,8 +320,8 @@ export async function GET(request: Request) {
     // Tự động tính gộp dữ liệu từ con lên cha cho các chỉ tiêu cha trung gian (ví dụ: VM1-I02.02, VM1-I02.03, VM1-I02.04)
     for (const row of allRows) {
       if (row.isParent && row.displayCode !== "M1" && row.displayCode !== "M2" && row.displayCode !== "M3" && row.displayCode !== "M4" && row.displayCode !== "M5" && row.displayCode !== "M6" && row.displayCode !== "M7") {
-        if (unitCode === "SCVN" && !productCode && row.code === "VM1-I02.01") {
-          // Không tự động gộp cho Tổng doanh thu của SCVN để giữ số kế hoạch/thực tế từ Excel (không cộng SCMU/CNGP)
+        if (unitCode === "SCVN" && !productCode) {
+          // Không tự động gộp cho bất kỳ chỉ tiêu cha trung gian nào của SCVN để giữ số kế hoạch/thực tế chính xác từ Excel
           continue;
         }
         const subChildren = allRows.filter(r => r.parentCode === row.code);
@@ -347,6 +347,10 @@ export async function GET(request: Request) {
 
     // Tự động tính gộp dữ liệu từ con lên cha cho các nhóm lớn M1 - M7 từ các con trực tiếp
     for (const gCode of ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]) {
+      if (unitCode === "SCVN" && !productCode && (gCode === "M1" || gCode === "M2" || gCode === "M3")) {
+        // Bỏ qua cộng dồn tự động cho các nhóm lớn M1, M2, M3 của SCVN để tránh double-count
+        continue;
+      }
       const parentKey = productCode ? `${productCode}-${gCode}` : gCode;
       const children = allRows.filter(r => r.parentCode === parentKey);
       const parent = compiledRows[parentKey];
@@ -374,6 +378,36 @@ export async function GET(request: Request) {
         parent.actualQuarter = children[0].actualQuarter;
         parent.targetYear = children[0].targetYear;
         parent.actualYear = children[0].actualYear;
+      }
+    }
+
+    // Gán dữ liệu chính xác cho nhóm M1, M2, M3 của SCVN
+    if (unitCode === "SCVN" && !productCode) {
+      const m1Row = compiledRows["VM1-I02.01"];
+      const m1Parent = compiledRows["M1"];
+      if (m1Row && m1Parent) {
+        m1Parent.targetWeek = m1Row.targetWeek; m1Parent.actualWeek = m1Row.actualWeek;
+        m1Parent.targetMonth = m1Row.targetMonth; m1Parent.actualMonth = m1Row.actualMonth;
+        m1Parent.targetQuarter = m1Row.targetQuarter; m1Parent.actualQuarter = m1Row.actualQuarter;
+        m1Parent.targetYear = m1Row.targetYear; m1Parent.actualYear = m1Row.actualYear;
+      }
+
+      const m2Row = compiledRows["VM2-I01.01"];
+      const m2Parent = compiledRows["M2"];
+      if (m2Row && m2Parent) {
+        m2Parent.targetWeek = m2Row.targetWeek; m2Parent.actualWeek = m2Row.actualWeek;
+        m2Parent.targetMonth = m2Row.targetMonth; m2Parent.actualMonth = m2Row.actualMonth;
+        m2Parent.targetQuarter = m2Row.targetQuarter; m2Parent.actualQuarter = m2Row.actualQuarter;
+        m2Parent.targetYear = m2Row.targetYear; m2Parent.actualYear = m2Row.actualYear;
+      }
+
+      const m3Row = compiledRows["TM3-I01.02"];
+      const m3Parent = compiledRows["M3"];
+      if (m3Row && m3Parent) {
+        m3Parent.targetWeek = m3Row.targetWeek; m3Parent.actualWeek = m3Row.actualWeek;
+        m3Parent.targetMonth = m3Row.targetMonth; m3Parent.actualMonth = m3Row.actualMonth;
+        m3Parent.targetQuarter = m3Row.targetQuarter; m3Parent.actualQuarter = m3Row.actualQuarter;
+        m3Parent.targetYear = m3Row.targetYear; m3Parent.actualYear = m3Row.actualYear;
       }
     }
 
