@@ -1158,7 +1158,7 @@ export default function InputFormPage() {
                   disabled={isReadOnly || reportStatus === "Chờ duyệt"}
                   className="text-xs bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
                 >
-                  💾 Lưu tất cả bộ mục tiêu
+                  💾 Lưu tổng bộ mục tiêu
                 </button>
               </div>
             </div>
@@ -1559,11 +1559,17 @@ export default function InputFormPage() {
                   Mã SP: {currentProduct?.code}
                 </span>
                 <button
+                  onClick={() => setShowCodeColumn(!showCodeColumn)}
+                  className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5"
+                >
+                  {showCodeColumn ? "🙈 Ẩn Mã chỉ tiêu" : "👁️ Hiện Mã chỉ tiêu"}
+                </button>
+                <button
                   onClick={handleSaveAllProductRows}
                   disabled={isReadOnly || reportStatus === "Chờ duyệt" || activeProductId === "all"}
                   className="text-xs bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
                 >
-                  💾 Lưu tất cả sản phẩm
+                  💾 Lưu tổng sản phẩm
                 </button>
               </div>
             </div>

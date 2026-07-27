@@ -197,8 +197,11 @@ export async function GET(request: Request) {
       const code = r.indicatorCode;
       
       if (unitCode === "SCVN" && !productCode) {
-        // Loại bỏ các chỉ tiêu con chi tiết của các đơn vị thành viên (các chỉ tiêu có parentCode là các mã chỉ tiêu doanh thu của thành viên)
-        const subUnitRevenueCodes = ["DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01"];
+        // Loại bỏ các chỉ tiêu con chi tiết của các đơn vị thành viên
+        const subUnitRevenueCodes = [
+          "DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01",
+          "VM1-I02.01-WF", "VM1-I02.01-AS", "VM1-I02.01-NDTH", "VM1-I02.01-Lego"
+        ];
         if (r.parentCode && subUnitRevenueCodes.includes(r.parentCode)) {
           continue;
         }
@@ -220,8 +223,18 @@ export async function GET(request: Request) {
         if (unitCode === "SCVN" && !productCode) {
           if (code === "VM1-I02.01") {
             parentCode = "M1";
-          } else if (code === "DM1-I02.01" || code === "SM1-I02.01" || code === "MM1-I02.01" || code === "NM1-I02.01" || code === "CM1-I02.01") {
+          } else if (
+            code === "DM1-I02.01" || code === "SM1-I02.01" || code === "MM1-I02.01" || code === "NM1-I02.01" || code === "CM1-I02.01" ||
+            code === "VM1-I02.01-WF" || code === "VM1-I02.01-AS" || code === "VM1-I02.01-NDTH" || code === "VM1-I02.01-Lego"
+          ) {
             parentCode = "VM1-I02.01";
+          } else if (code === "VM2-I01.01-WF" || code === "VM2-I01.01-AS" || code === "VM2-I01.01-Lego" || code === "VM2-I01.02-NDTH") {
+            parentCode = "VM2-I01.01";
+          } else if (
+            code === "VM3-I01.02-WF" || code === "VM3-I01.02-AS" || code === "VM3-I01.02-Lego" || code === "VM3-I01.02-NDTH" ||
+            code === "DM3-I01.03" || code === "SM3-I01.04" || code === "MM3-I01.01" || code === "NM3-I01.05" || code === "CM3-I01.01"
+          ) {
+            parentCode = "TM3-I01.02";
           } else if (code && code.endsWith("7-I03.01") && code !== "VM7-I03.01") {
             parentCode = "VM7-I03.01";
           } else if (code && code.endsWith("7-I03.02") && code !== "VM7-I03.02") {

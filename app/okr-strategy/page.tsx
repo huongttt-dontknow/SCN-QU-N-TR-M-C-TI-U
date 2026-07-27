@@ -318,6 +318,12 @@ export default function OkrStrategyPage() {
   const { filters, currentLoggedUser, setCurrentLoggedUser, theme } = useApp();
   const isCorporateLevel = filters.unitCode === "TCT" || filters.unitCode === "SCVN";
   
+  const [toast, setToast] = useState<{ message: string, type: "success" | "error" } | null>(null);
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   // Tab chính của Phân hệ 5
   const [activeTab, setActiveTab] = useState<"5.1" | "5.2" | "5.3" | "5.4">("5.2");
   
@@ -539,7 +545,7 @@ export default function OkrStrategyPage() {
   };
 
   const handleSaveRow = async (title: string) => {
-    alert(`✓ Đã lưu thành công kết quả và tiến độ cho: ${title}`);
+    showToast(`✓ Đã lưu thành công kết quả và tiến độ cho: ${title}`);
   };
 
   // Xử lý AI Đánh giá Mục tiêu (Assessor) thực tế qua API
@@ -641,7 +647,7 @@ export default function OkrStrategyPage() {
     };
     setObjectives(prev => [...prev, newObj]);
     setShowAiSuggestModal(false);
-    alert("✓ Đã áp dụng thành công mục tiêu do AI đề xuất vào danh sách thiết lập. Bạn hãy bấm 'Lưu phiên thiết lập' để đồng bộ!");
+    showToast("✓ Đã áp dụng thành công mục tiêu do AI đề xuất vào danh sách thiết lập. Bạn hãy bấm 'Lưu phiên thiết lập' để đồng bộ!");
   };
 
   // -------------------------------------------------------------
@@ -730,15 +736,15 @@ export default function OkrStrategyPage() {
         }),
       });
       if (res.ok) {
-        alert("✓ Đã lưu thành công phiên thiết lập OKRs!");
+        showToast("✓ Đã lưu thành công phiên thiết lập OKRs!");
         await fetchOkrs();
       } else {
         const err = await res.json();
-        alert(`❌ Lỗi khi lưu: ${err.error || "Không rõ nguyên nhân"}`);
+        showToast(`❌ Lỗi khi lưu: ${err.error || "Không rõ nguyên nhân"}`, "error");
       }
     } catch (e) {
       console.error(e);
-      alert("❌ Lỗi mạng khi lưu thiết lập OKRs!");
+      showToast("❌ Lỗi mạng khi lưu thiết lập OKRs!", "error");
     } finally {
       setLoading(false);
     }
@@ -1768,7 +1774,7 @@ export default function OkrStrategyPage() {
                   }`}>Nguồn sinh: AI Review | PIC: Nguyễn Minh Trí</span>
                 </div>
                 <button
-                  onClick={() => alert("✓ Đã đồng bộ thành công Action này sang Module 5.2!")}
+                  onClick={() => showToast("✓ Đã đồng bộ thành công Action này sang Module 5.2!")}
                   className="bg-emerald-500 text-slate-950 font-black text-xs px-3 py-1.5 rounded-lg hover:bg-emerald-600 transition-all"
                 >
                   ✓ Bổ sung vào Module 5.2
@@ -2082,6 +2088,22 @@ export default function OkrStrategyPage() {
                 Đóng
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ease-out animate-pulse">
+          <div className={`flex items-center gap-2.5 px-5 py-3.5 rounded-xl shadow-2xl backdrop-blur-md border font-sans ${
+            toast.type === "success" 
+              ? "bg-emerald-950/90 border-emerald-500/40 text-emerald-300 shadow-emerald-900/30" 
+              : "bg-rose-950/90 border-rose-500/40 text-rose-300 shadow-rose-900/30"
+          }`}>
+            <span className="text-xs font-black uppercase tracking-wider">
+              {toast.type === "success" ? "✓ THÀNH CÔNG" : "❌ THẤT BẠI"}
+            </span>
+            <span className="text-xs font-semibold">{toast.message}</span>
           </div>
         </div>
       )}

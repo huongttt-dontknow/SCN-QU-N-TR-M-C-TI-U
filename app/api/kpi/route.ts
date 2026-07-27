@@ -441,6 +441,13 @@ export async function POST(request: Request) {
       statusMsg
     );
 
+    // Đồng bộ chéo dữ liệu và cộng dồn tự động (Record Rollup & Aggregation)
+    try {
+      await syncKpisBetweenUnits(periodKey, periodType);
+    } catch (syncErr) {
+      console.error("Lỗi đồng bộ chéo KPI giữa các đơn vị:", syncErr);
+    }
+
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công", data: updatedRecords });
   } catch (error: any) {
     console.warn("Cập nhật KPI thất bại (hạn mức DB), sử dụng dữ liệu JSON dự phòng:", error);
@@ -500,5 +507,306 @@ export async function POST(request: Request) {
       console.error("Lỗi cập nhật dữ liệu JSON dự phòng:", fsErr);
     }
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công (Chế độ dự phòng)" });
+  }
+}
+
+// Helper function to sync and aggregate KPIs between child and parent units
+async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
+  const syncMappings = [
+    // Wofloo
+    { fromUnit: "Wofloo", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-WF", title: "BP WF" },
+    { fromUnit: "Wofloo", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-WF", title: "BP WF" },
+    { fromUnit: "Wofloo", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-WF", title: "BP WF" },
+    { fromUnit: "Wofloo", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-WF", title: "BP WF" },
+    { fromUnit: "Wofloo", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-WF", title: "BP WF" },
+    { fromUnit: "Wofloo", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-WF", title: "BP WF" },
+
+    // AS
+    { fromUnit: "AS", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-AS", title: "BP AS" },
+    { fromUnit: "AS", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-AS", title: "BP AS" },
+    { fromUnit: "AS", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-AS", title: "BP AS" },
+    { fromUnit: "AS", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-AS", title: "BP AS" },
+    { fromUnit: "AS", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-AS", title: "BP AS" },
+    { fromUnit: "AS", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-AS", title: "BP AS" },
+
+    // NDTH
+    { fromUnit: "NDTH", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-NDTH", title: "BP NDTH" },
+    { fromUnit: "NDTH", fromCode: "VM2-I01.02", toUnit: "SCVN", toCode: "VM2-I01.02-NDTH", title: "BP NDTH" },
+    { fromUnit: "NDTH", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-NDTH", title: "BP NDTH" },
+    { fromUnit: "NDTH", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-NDTH", title: "BP NDTH" },
+    { fromUnit: "NDTH", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-NDTH", title: "BP NDTH" },
+    { fromUnit: "NDTH", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-NDTH", title: "BP NDTH" },
+
+    // Lego
+    { fromUnit: "Lego", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-Lego", title: "DA Lego" },
+    { fromUnit: "Lego", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-Lego", title: "DA Lego" },
+    { fromUnit: "Lego", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-Lego", title: "DA Lego" },
+    { fromUnit: "Lego", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-Lego", title: "DA Lego" },
+    { fromUnit: "Lego", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-Lego", title: "DA Lego" },
+    { fromUnit: "Lego", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-Lego", title: "DA Lego" },
+
+    // Direct units to SCVN and TCT
+    // DA01
+    { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01", title: "DA 01" },
+    { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "TCT", toCode: "DM1-I02.01", title: "DA01" },
+    // Music
+    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "SCVN", toCode: "MM1-I02.01", title: "SCMU" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "TCT", toCode: "MM1-I02.01", title: "SCMU" },
+    // SCS
+    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "SCVN", toCode: "SM1-I02.01", title: "SCS" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "TCT", toCode: "SM1-I02.01", title: "SCS" },
+    // CN
+    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "SCVN", toCode: "NM1-I02.01", title: "CNGP" },
+    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "TCT", toCode: "NM1-I02.01", title: "CNGP" },
+    // CR
+    { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01", title: "BP Creative" },
+    { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "TCT", toCode: "CM1-I02.01", title: "SCCH" },
+
+    // Wofloo doanh thu VM1-I02.01 -> TCT: WM1-I02.01
+    { fromUnit: "Wofloo", fromCode: "VM1-I02.01", toUnit: "TCT", toCode: "WM1-I02.01", title: "WOA UNI" }
+  ];
+
+  // 1. Đồng bộ các giá trị ngang từ con sang các chỉ tiêu tương ứng của cha
+  for (const map of syncMappings) {
+    const source = await prisma.kpiData.findFirst({
+      where: {
+        unitCode: map.fromUnit,
+        indicatorCode: map.fromCode,
+        periodKey,
+        periodType,
+        productCode: null
+      }
+    });
+
+    if (source) {
+      const existing = await prisma.kpiData.findFirst({
+        where: {
+          unitCode: map.toUnit,
+          indicatorCode: map.toCode,
+          periodKey,
+          periodType,
+          productCode: null
+        }
+      });
+
+      const updateData = {
+        targetValue: source.targetValue,
+        actualValue: source.actualValue,
+        status: source.status,
+        isOverridden: true
+      };
+
+      if (existing) {
+        await prisma.kpiData.update({
+          where: { id: existing.id },
+          data: updateData
+        });
+      } else {
+        await prisma.kpiData.create({
+          data: {
+            unitCode: map.toUnit,
+            indicatorCode: map.toCode,
+            periodKey,
+            periodType,
+            targetValue: source.targetValue,
+            actualValue: source.actualValue,
+            title: map.title,
+            unit: source.unit || "",
+            status: source.status,
+            isOverridden: true
+          }
+        });
+      }
+    }
+  }
+
+  // 2. Tính tổng doanh thu (VM1-I02.01) của SCVN
+  const scvnRevenueCodes = [
+    "VM1-I02.01-WF", "VM1-I02.01-AS", "VM1-I02.01-NDTH", "VM1-I02.01-Lego",
+    "DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01"
+  ];
+  const scvnRevenues = await prisma.kpiData.findMany({
+    where: {
+      unitCode: "SCVN",
+      indicatorCode: { in: scvnRevenueCodes },
+      periodKey,
+      periodType,
+      productCode: null
+    }
+  });
+
+  let scvnRevenueTarget = 0;
+  let scvnRevenueActual = 0;
+  for (const r of scvnRevenues) {
+    scvnRevenueTarget += r.targetValue || 0;
+    scvnRevenueActual += r.actualValue || 0;
+  }
+
+  const scvnRevRecord = await prisma.kpiData.findFirst({
+    where: { unitCode: "SCVN", indicatorCode: "VM1-I02.01", periodKey, periodType, productCode: null }
+  });
+  if (scvnRevRecord) {
+    await prisma.kpiData.update({
+      where: { id: scvnRevRecord.id },
+      data: { targetValue: scvnRevenueTarget, actualValue: scvnRevenueActual }
+    });
+  } else {
+    await prisma.kpiData.create({
+      data: {
+        unitCode: "SCVN",
+        indicatorCode: "VM1-I02.01",
+        periodKey,
+        periodType,
+        targetValue: scvnRevenueTarget,
+        actualValue: scvnRevenueActual,
+        title: "Tổng doanh thu",
+        unit: "VNĐ",
+        status: "Đang thực hiện",
+        isOverridden: true
+      }
+    });
+  }
+
+  // 3. Đồng bộ tổng doanh thu SCVN sang TCT (VM1-I02.01)
+  const tctScvnRecord = await prisma.kpiData.findFirst({
+    where: { unitCode: "TCT", indicatorCode: "VM1-I02.01", periodKey, periodType, productCode: null }
+  });
+  if (tctScvnRecord) {
+    await prisma.kpiData.update({
+      where: { id: tctScvnRecord.id },
+      data: { targetValue: scvnRevenueTarget, actualValue: scvnRevenueActual }
+    });
+  } else {
+    await prisma.kpiData.create({
+      data: {
+        unitCode: "TCT",
+        indicatorCode: "VM1-I02.01",
+        periodKey,
+        periodType,
+        targetValue: scvnRevenueTarget,
+        actualValue: scvnRevenueActual,
+        title: "SCVN",
+        unit: "VNĐ",
+        status: "Đang thực hiện",
+        isOverridden: true
+      }
+    });
+  }
+
+  // 4. Tính tổng doanh thu (TM1-I02.01) của TCT
+  const tctRevenueCodes = [
+    "VM1-I02.01", "DM1-I02.01", "SM1-I02.01", "CM1-I02.01", "MM1-I02.01",
+    "NM1-I02.01", "EM1-I02.01", "HM1-I02.01", "WM1-I02.01", "AM1-I02.01"
+  ];
+  const tctRevenues = await prisma.kpiData.findMany({
+    where: {
+      unitCode: "TCT",
+      indicatorCode: { in: tctRevenueCodes },
+      periodKey,
+      periodType,
+      productCode: null
+    }
+  });
+
+  let tctRevenueTarget = 0;
+  let tctRevenueActual = 0;
+  for (const r of tctRevenues) {
+    tctRevenueTarget += r.targetValue || 0;
+    tctRevenueActual += r.actualValue || 0;
+  }
+
+  const tctRevRecord = await prisma.kpiData.findFirst({
+    where: { unitCode: "TCT", indicatorCode: "TM1-I02.01", periodKey, periodType, productCode: null }
+  });
+  if (tctRevRecord) {
+    await prisma.kpiData.update({
+      where: { id: tctRevRecord.id },
+      data: { targetValue: tctRevenueTarget, actualValue: tctRevenueActual }
+    });
+  } else {
+    await prisma.kpiData.create({
+      data: {
+        unitCode: "TCT",
+        indicatorCode: "TM1-I02.01",
+        periodKey,
+        periodType,
+        targetValue: tctRevenueTarget,
+        actualValue: tctRevenueActual,
+        title: "Tổng doanh thu",
+        unit: "VNĐ",
+        status: "Đang thực hiện",
+        isOverridden: true
+      }
+    });
+  }
+
+  // 5. Tính tổng sản lượng sản xuất (VM2-I01.01) của SCVN
+  const scvnVolCodes = ["VM2-I01.01-WF", "VM2-I01.01-AS", "VM2-I01.01-Lego"];
+  const scvnVols = await prisma.kpiData.findMany({
+    where: {
+      unitCode: "SCVN",
+      indicatorCode: { in: scvnVolCodes },
+      periodKey,
+      periodType,
+      productCode: null
+    }
+  });
+
+  let scvnVolTarget = 0;
+  let scvnVolActual = 0;
+  for (const r of scvnVols) {
+    scvnVolTarget += r.targetValue || 0;
+    scvnVolActual += r.actualValue || 0;
+  }
+
+  const scvnVolRecord = await prisma.kpiData.findFirst({
+    where: { unitCode: "SCVN", indicatorCode: "VM2-I01.01", periodKey, periodType, productCode: null }
+  });
+  if (scvnVolRecord) {
+    await prisma.kpiData.update({
+      where: { id: scvnVolRecord.id },
+      data: { targetValue: scvnVolTarget, actualValue: scvnVolActual }
+    });
+  } else {
+    await prisma.kpiData.create({
+      data: {
+        unitCode: "SCVN",
+        indicatorCode: "VM2-I01.01",
+        periodKey,
+        periodType,
+        targetValue: scvnVolTarget,
+        actualValue: scvnVolActual,
+        title: "Số lượng video hoàn thành sản xuất",
+        unit: "Video",
+        status: "Đang thực hiện",
+        isOverridden: true
+      }
+    });
+  }
+
+  // 6. Đồng bộ tổng sản lượng sản xuất SCVN sang TCT (VM2-I01.01)
+  const tctScvnVolRecord = await prisma.kpiData.findFirst({
+    where: { unitCode: "TCT", indicatorCode: "VM2-I01.01", periodKey, periodType, productCode: null }
+  });
+  if (tctScvnVolRecord) {
+    await prisma.kpiData.update({
+      where: { id: tctScvnVolRecord.id },
+      data: { targetValue: scvnVolTarget, actualValue: scvnVolActual }
+    });
+  } else {
+    await prisma.kpiData.create({
+      data: {
+        unitCode: "TCT",
+        indicatorCode: "VM2-I01.01",
+        periodKey,
+        periodType,
+        targetValue: scvnVolTarget,
+        actualValue: scvnVolActual,
+        title: "Số lượng sp SCVN",
+        unit: "Video",
+        status: "Đang thực hiện",
+        isOverridden: true
+      }
+    });
   }
 }
