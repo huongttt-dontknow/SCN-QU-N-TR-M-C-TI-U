@@ -351,6 +351,19 @@ interface ProductKpiItem {
 export default function InputFormPage() {
   const { filters, currentLoggedUser, setCurrentLoggedUser, theme } = useApp();
 
+  // Toast Notification state
+  const [toast, setToast] = useState<{ message: string, type: "success" | "error" } | null>(null);
+  const toastTimerRef = useRef<any>(null);
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    setToast({ message, type });
+    // Tự động tắt sau 3 giây
+    toastTimerRef.current = setTimeout(() => {
+      setToast(null);
+      toastTimerRef.current = null;
+    }, 3000);
+  };
+
   // Tab State: "unit" vs "product"
   const [activeTab, setActiveTab] = useState<"unit" | "product">("unit");
 
@@ -785,9 +798,23 @@ export default function InputFormPage() {
     if (!item) return;
     const success = await saveKpisToDatabase([item]);
     if (success) {
-      alert(`✓ Đã lưu thành công dữ liệu chỉ tiêu: ${item.title}`);
+      showToast(`✓ Đã lưu thành công dữ liệu chỉ tiêu: ${item.title}`);
     } else {
-      alert(`❌ Có lỗi xảy ra khi lưu chỉ tiêu: ${item.title}`);
+      showToast(`❌ Có lỗi xảy ra khi lưu chỉ tiêu: ${item.title}`, "error");
+    }
+  };
+
+  const handleSaveAllRows = async () => {
+    if (isReadOnly) return;
+    const items = kpisRef.current.length > 0 ? kpisRef.current : kpis;
+    const visibleItems = items.filter(k => shouldShowByFrequency(k.frequency, k.title, k.code));
+    if (visibleItems.length === 0) return;
+    showToast("💾 Đang tiến hành lưu toàn bộ chỉ tiêu đơn vị...", "success");
+    const success = await saveKpisToDatabase(visibleItems);
+    if (success) {
+      showToast("✓ Đã lưu thành công toàn bộ chỉ tiêu của đơn vị!");
+    } else {
+      showToast("❌ Có lỗi xảy ra khi lưu toàn bộ chỉ tiêu!", "error");
     }
   };
 
@@ -797,18 +824,32 @@ export default function InputFormPage() {
     if (!item) return;
     const success = await saveProductKpisToDatabase([item]);
     if (success) {
-      alert(`✓ Đã lưu thành công dữ liệu sản phẩm cho chỉ tiêu: ${item.title}`);
+      showToast(`✓ Đã lưu thành công dữ liệu sản phẩm cho chỉ tiêu: ${item.title}`);
     } else {
-      alert(`❌ Có lỗi xảy ra khi lưu chỉ tiêu sản phẩm: ${item.title}`);
+      showToast(`❌ Có lỗi xảy ra khi lưu chỉ tiêu sản phẩm: ${item.title}`, "error");
+    }
+  };
+
+  const handleSaveAllProductRows = async () => {
+    if (isReadOnly || activeProductId === "all") return;
+    const items = productKpisRef.current.length > 0 ? productKpisRef.current : productKpis;
+    const visibleItems = items.filter(k => shouldShowByFrequency(k.frequency, k.title, k.code));
+    if (visibleItems.length === 0) return;
+    showToast("💾 Đang tiến hành lưu toàn bộ chỉ tiêu sản phẩm...", "success");
+    const success = await saveProductKpisToDatabase(visibleItems);
+    if (success) {
+      showToast("✓ Đã lưu thành công toàn bộ chỉ tiêu của sản phẩm!");
+    } else {
+      showToast("❌ Có lỗi xảy ra khi lưu toàn bộ chỉ tiêu sản phẩm!", "error");
     }
   };
 
   const handleSaveNotes = () => {
-    alert("✓ Đã lưu thành công ý kiến ghi chú của Trưởng đơn vị!");
+    showToast("✓ Đã lưu thành công ý kiến ghi chú của Trưởng đơn vị!");
   };
 
   const handleSaveExplanations = () => {
-    alert("✓ Đã lưu giải trình bắt buộc thành công!");
+    showToast("✓ Đã lưu giải trình bắt buộc thành công!");
   };
 
   const handleAcceptAction = (id: number) => {
@@ -855,11 +896,11 @@ export default function InputFormPage() {
         }));
         setActions(prev => [...prev, ...newActions]);
       } else {
-        alert("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.");
+        showToast("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.", "error");
       }
     } catch (err: any) {
       console.error(err);
-      alert("❌ Lỗi khi kết nối với AI Agent: " + err.message);
+      showToast("❌ Lỗi khi kết nối với AI Agent: " + err.message, "error");
     } finally {
       setIsAiGenerating(false);
     }
@@ -901,11 +942,11 @@ export default function InputFormPage() {
         }));
         setProductActions(prev => [...prev, ...newActions]);
       } else {
-        alert("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.");
+        showToast("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.", "error");
       }
     } catch (err: any) {
       console.error(err);
-      alert("❌ Lỗi khi kết nối với AI Agent: " + err.message);
+      showToast("❌ Lỗi khi kết nối với AI Agent: " + err.message, "error");
     } finally {
       setIsProdAiGenerating(false);
     }
@@ -936,9 +977,9 @@ export default function InputFormPage() {
     const success = await saveKpisToDatabase(kpis, "Chờ duyệt");
     if (success) {
       setReportStatus("Chờ duyệt");
-      alert("🚀 Đã gửi báo cáo cho Giám đốc BU SCVN thành công!");
+      showToast("🚀 Đã gửi báo cáo cho Giám đốc BU SCVN thành công!");
     } else {
-      alert("❌ Có lỗi xảy ra khi gửi báo cáo.");
+      showToast("❌ Có lỗi xảy ra khi gửi báo cáo.", "error");
     }
   };
 
@@ -947,9 +988,9 @@ export default function InputFormPage() {
     const success = await saveKpisToDatabase(kpis, "Đã duyệt");
     if (success) {
       setReportStatus("Đã duyệt");
-      alert("✓ Giám đốc BU đã phê duyệt báo cáo toàn kỳ!");
+      showToast("✓ Giám đốc BU đã phê duyệt báo cáo toàn kỳ!");
     } else {
-      alert("❌ Có lỗi xảy ra khi duyệt báo cáo.");
+      showToast("❌ Có lỗi xảy ra khi duyệt báo cáo.", "error");
     }
   };
 
@@ -958,9 +999,9 @@ export default function InputFormPage() {
     const success = await saveKpisToDatabase(kpis, "Yêu cầu hiệu chỉnh");
     if (success) {
       setReportStatus("Yêu cầu hiệu chỉnh");
-      alert("✖ Đã gửi yêu cầu hiệu chỉnh báo cáo về Trưởng đơn vị!");
+      showToast("✖ Đã gửi yêu cầu hiệu chỉnh báo cáo về Trưởng đơn vị!");
     } else {
-      alert("❌ Có lỗi xảy ra.");
+      showToast("❌ Có lỗi xảy ra.", "error");
     }
   };
 
@@ -969,13 +1010,13 @@ export default function InputFormPage() {
     const success = await saveKpisToDatabase(kpis, "Đang nhập");
     if (success) {
       setReportStatus("Đang nhập");
-      alert("💾 Đã lưu thành công bản nháp báo cáo!");
+      showToast("💾 Đã lưu thành công bản nháp báo cáo!");
     } else {
-      alert("❌ Có lỗi xảy ra khi lưu bản nháp.");
+      showToast("❌ Có lỗi xảy ra khi lưu bản nháp.", "error");
     }
   };
 
-  const shouldShowByFrequency = (freq: string | undefined, title: string, code: string) => {
+  function shouldShowByFrequency(freq: string | undefined, title: string, code: string) {
     const periodType = filters.periodType || "weekly";
     const f = (freq || "").toLowerCase().trim();
     const t = title.toLowerCase();
@@ -996,7 +1037,7 @@ export default function InputFormPage() {
     }
     
     return true;
-  };
+  }
 
   const visibleKpis = kpis.filter(k => shouldShowByFrequency(k.frequency, k.title, k.code));
   const groups = Array.from(new Set(visibleKpis.map(k => k.group).filter(Boolean)));
@@ -1105,12 +1146,21 @@ export default function InputFormPage() {
               <h3 className="text-sm font-black text-[#10b981] tracking-wider uppercase flex items-center gap-2">
                 <Building2 size={16} /> 🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
               </h3>
-              <button
-                onClick={() => setShowCodeColumn(!showCodeColumn)}
-                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5"
-              >
-                {showCodeColumn ? "🙈 Ẩn Mã chỉ tiêu" : "👁️ Hiện Mã chỉ tiêu"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowCodeColumn(!showCodeColumn)}
+                  className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5"
+                >
+                  {showCodeColumn ? "🙈 Ẩn Mã chỉ tiêu" : "👁️ Hiện Mã chỉ tiêu"}
+                </button>
+                <button
+                  onClick={handleSaveAllRows}
+                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                  className="text-xs bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
+                >
+                  💾 Lưu tất cả bộ mục tiêu
+                </button>
+              </div>
             </div>
 
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
@@ -1504,9 +1554,18 @@ export default function InputFormPage() {
               <h3 className="text-sm font-black text-sky-400 tracking-wider uppercase flex items-center gap-2">
                 📋 KHỐI 1: BẢNG NHẬP LIỆU BỘ 7 MỤC TIÊU - SẢN PHẨM: {currentProduct?.name.toUpperCase()}
               </h3>
-              <span className="text-xs font-mono bg-purple-950 text-purple-300 px-3 py-1 rounded-lg border border-purple-500/30">
-                Mã SP: {currentProduct?.code}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono bg-purple-950 text-purple-300 px-3 py-1.5 rounded-lg border border-purple-500/30">
+                  Mã SP: {currentProduct?.code}
+                </span>
+                <button
+                  onClick={handleSaveAllProductRows}
+                  disabled={isReadOnly || reportStatus === "Chờ duyệt" || activeProductId === "all"}
+                  className="text-xs bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
+                >
+                  💾 Lưu tất cả sản phẩm
+                </button>
+              </div>
             </div>
 
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
@@ -1838,7 +1897,7 @@ export default function InputFormPage() {
               </span>
               <button
                 disabled={activeProductId === "all"}
-                onClick={() => alert(`🚀 Đã gửi thành công Báo cáo Điểm PSH cho sản phẩm: ${currentProduct?.name}`)}
+                onClick={() => showToast(`🚀 Đã gửi thành công Báo cáo Điểm PSH cho sản phẩm: ${currentProduct?.name}`)}
                 className={`text-white !text-white text-xs font-black px-6 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(147,51,234,0.4)] disabled:opacity-40 disabled:cursor-not-allowed ${
                   activeProductId === "all"
                     ? "bg-slate-800 border border-slate-700 text-slate-500 shadow-none"
@@ -1850,6 +1909,22 @@ export default function InputFormPage() {
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ease-out animate-pulse">
+          <div className={`flex items-center gap-2.5 px-5 py-3.5 rounded-xl shadow-2xl backdrop-blur-md border font-sans ${
+            toast.type === "success" 
+              ? "bg-emerald-950/90 border-emerald-500/40 text-emerald-300 shadow-emerald-900/30" 
+              : "bg-rose-950/90 border-rose-500/40 text-rose-300 shadow-rose-900/30"
+          }`}>
+            <span className="text-xs font-black uppercase tracking-wider">
+              {toast.type === "success" ? "✓ THÀNH CÔNG" : "❌ THẤT BẠI"}
+            </span>
+            <span className="text-xs font-semibold">{toast.message}</span>
+          </div>
         </div>
       )}
     </div>
