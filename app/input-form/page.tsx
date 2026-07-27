@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import FiltersHeader from "@/components/FiltersHeader";
 import { 
@@ -364,6 +364,10 @@ export default function InputFormPage() {
   const [productsList, setProductsList] = useState<ProductLine[]>(PRODUCTS_CATALOG.map(p => ({ id: p.id, name: p.name, code: p.id, unitCode: p.unit })));
   const [kpis, setKpis] = useState<KpiItem[]>([]);
   const [productKpis, setProductKpis] = useState<ProductKpiItem[]>([]);
+
+  // Synchronize state with refs to resolve React state race conditions during handleSaveRow
+  const kpisRef = useRef<KpiItem[]>([]);
+  const productKpisRef = useRef<ProductKpiItem[]>([]);
   const [productsRankings, setProductsRankings] = useState<{ id: string, name: string, score: number }[]>([]);
 
   const [productNote, setProductNote] = useState("");
@@ -540,6 +544,7 @@ export default function InputFormPage() {
             frequency: d.frequency || ""
           }));
           setKpis(mapped);
+          kpisRef.current = mapped;
           
           const loadedExplanations: Record<string, string> = {};
           data.forEach((d: any) => {
@@ -585,6 +590,7 @@ export default function InputFormPage() {
             frequency: d.frequency || ""
           }));
           setProductKpis(mapped);
+          productKpisRef.current = mapped;
         }
       })
       .catch(err => console.error("Lỗi tải dữ liệu chỉ tiêu sản phẩm:", err));
@@ -647,6 +653,7 @@ export default function InputFormPage() {
     const pType = filters.periodType || "weekly";
     const kpiUpdates = kpiList.map(k => ({
       id: k.id,
+      indicatorCode: k.code,
       targetValue: k.target,
       actualValue: k.actual,
       explanation: explanations[k.id] || "",
@@ -682,6 +689,7 @@ export default function InputFormPage() {
     const pType = filters.periodType || "weekly";
     const kpiUpdates = prodKpiList.map(k => ({
       id: k.id,
+      indicatorCode: k.code,
       targetValue: k.target,
       actualValue: k.actual,
       explanation: "",
@@ -713,19 +721,25 @@ export default function InputFormPage() {
   };
 
   const handleInputChange = (id: string, val: string) => {
-    setKpis(prev => prev.map(k => k.id === id ? { ...k, actual: parseFloat(val) || 0 } : k));
+    const numVal = parseFloat(val) || 0;
+    setKpis(prev => prev.map(k => k.id === id ? { ...k, actual: numVal } : k));
+    kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, actual: numVal } : k);
   };
 
   const handleTargetChange = (id: string, val: string) => {
-    setKpis(prev => prev.map(k => k.id === id ? { ...k, target: parseFloat(val) || 0 } : k));
+    const numVal = parseFloat(val) || 0;
+    setKpis(prev => prev.map(k => k.id === id ? { ...k, target: numVal } : k));
+    kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, target: numVal } : k);
   };
 
   const handleProdInputChange = (id: string, val: number) => {
     setProductKpis(prev => prev.map(k => k.id === id ? { ...k, actual: val } : k));
+    productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, actual: val } : k);
   };
 
   const handleProdTargetChange = (id: string, val: number) => {
     setProductKpis(prev => prev.map(k => k.id === id ? { ...k, target: val } : k));
+    productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, target: val } : k);
   };
 
   const formatValue = (val: number, unit: string) => {
@@ -767,7 +781,7 @@ export default function InputFormPage() {
 
   const handleSaveRow = async (id: string) => {
     if (isReadOnly) return;
-    const item = kpis.find(k => k.id === id);
+    const item = kpisRef.current.find(k => k.id === id) || kpis.find(k => k.id === id);
     if (!item) return;
     const success = await saveKpisToDatabase([item]);
     if (success) {
@@ -779,7 +793,7 @@ export default function InputFormPage() {
 
   const handleSaveProdRow = async (id: string) => {
     if (isReadOnly) return;
-    const item = productKpis.find(k => k.id === id);
+    const item = productKpisRef.current.find(k => k.id === id) || productKpis.find(k => k.id === id);
     if (!item) return;
     const success = await saveProductKpisToDatabase([item]);
     if (success) {

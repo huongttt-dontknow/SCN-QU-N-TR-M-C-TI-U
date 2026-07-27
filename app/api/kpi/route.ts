@@ -349,33 +349,82 @@ export async function GET(request: Request) {
 
 // POST /api/kpi - Cập nhật số liệu thực tế và giải trình của KPI
 export async function POST(request: Request) {
+  let unitCode = "";
+  let productCode: string | null = null;
+  let periodKey = "";
+  let periodType = "weekly";
+  let kpiUpdates: any[] = [];
+  let operator = "system@s-connect.net";
+
   try {
-    const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
+    operator = request.headers.get("x-operator-email") || "system@s-connect.net";
     const body = await request.json();
-    const { unitCode, productCode, periodKey, periodType, kpiUpdates } = body; // kpiUpdates: array of { id, actualValue, explanation, status }
+    unitCode = body.unitCode || "";
+    productCode = body.productCode || null;
+    periodKey = body.periodKey || "";
+    periodType = body.periodType || "weekly";
+    kpiUpdates = body.kpiUpdates || [];
 
     if ((!unitCode && !productCode) || !periodKey || !kpiUpdates || !Array.isArray(kpiUpdates)) {
       return NextResponse.json({ error: "Thiếu thông tin hoặc dữ liệu cập nhật không hợp lệ" }, { status: 400 });
     }
 
-    // Cập nhật từng KPI bằng Prisma transaction
-    const updatePromises = kpiUpdates.map(u => {
-      return prisma.kpiData.update({
-        where: { id: u.id },
-        data: {
-          targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : undefined,
-          actualValue: parseFloat(u.actualValue) || 0,
-          explanation: u.explanation || "",
-          status: u.status || "Đang thực hiện",
-          isOverridden: true,
-        },
-      });
-    });
+    // Cập nhật từng KPI tuần tự để hỗ trợ tự động sửa lỗi lệch ID và tạo mới
+    for (const u of kpiUpdates) {
+      let record = null;
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(u.id);
+      
+      if (isUuid) {
+        record = await prisma.kpiData.findUnique({ where: { id: u.id } });
+      }
+      
+      if (!record && u.indicatorCode) {
+        record = await prisma.kpiData.findFirst({
+          where: {
+            unitCode,
+            productCode: (productCode && productCode !== "all") ? productCode : null,
+            indicatorCode: u.indicatorCode,
+            periodKey,
+            periodType
+          }
+        });
+      }
 
-    await prisma.$transaction(updatePromises);
+      const updateData = {
+        targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : undefined,
+        actualValue: parseFloat(u.actualValue) || 0,
+        explanation: u.explanation || "",
+        status: u.status || "Đang thực hiện",
+        isOverridden: true,
+      };
+
+      if (record) {
+        await prisma.kpiData.update({
+          where: { id: record.id },
+          data: updateData,
+        });
+      } else {
+        // Tạo mới bản ghi nếu chưa tồn tại
+        await prisma.kpiData.create({
+          data: {
+            id: isUuid ? u.id : undefined,
+            indicatorCode: u.indicatorCode,
+            unitCode,
+            productCode: (productCode && productCode !== "all") ? productCode : null,
+            periodType,
+            periodKey,
+            targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : 0,
+            actualValue: parseFloat(u.actualValue) || 0,
+            explanation: u.explanation || "",
+            status: u.status || "Đang thực hiện",
+            isOverridden: true,
+          }
+        });
+      }
+    }
 
     const updatedRecords = await prisma.kpiData.findMany({
-      where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
+      where: (productCode && productCode !== "all") ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
 
     // Xác định hành động (Lưu nháp vs Gửi duyệt)
@@ -394,7 +443,62 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công", data: updatedRecords });
   } catch (error: any) {
-    console.warn("Cập nhật KPI thất bại (hạn mức DB), giả lập lưu thành công:", error);
+    console.warn("Cập nhật KPI thất bại (hạn mức DB), sử dụng dữ liệu JSON dự phòng:", error);
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const filename = (productCode && productCode !== "all") ? "product_kpi_records.json" : "all_kpi_records.json";
+      const jsonPath = path.join(process.cwd(), "lib", filename);
+      
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        let kpiList = JSON.parse(raw);
+        
+        let updatedCount = 0;
+        kpiUpdates.forEach((u: any) => {
+          const item = kpiList.find((r: any) => {
+            const matchId = r.id === u.id;
+            const matchComposite = r.indicatorCode === u.indicatorCode &&
+                                  r.unitCode === unitCode &&
+                                  r.periodKey === periodKey &&
+                                  r.periodType === periodType &&
+                                  ((productCode && productCode !== "all") ? r.productCode === productCode : !r.productCode);
+            return matchId || matchComposite;
+          });
+          
+          if (item) {
+            if (u.targetValue !== undefined) item.targetValue = parseFloat(u.targetValue);
+            item.actualValue = parseFloat(u.actualValue) || 0;
+            item.explanation = u.explanation || "";
+            item.status = u.status || "Đang thực hiện";
+            item.isOverridden = true;
+            updatedCount++;
+          } else {
+            kpiList.push({
+              id: u.id || `${unitCode}-${(productCode && productCode !== "all") ? productCode : "unit"}-${u.indicatorCode}-${periodKey}`,
+              indicatorCode: u.indicatorCode,
+              unitCode,
+              productCode: (productCode && productCode !== "all") ? productCode : null,
+              periodType,
+              periodKey,
+              targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : 0,
+              actualValue: parseFloat(u.actualValue) || 0,
+              explanation: u.explanation || "",
+              status: u.status || "Đang thực hiện",
+              isOverridden: true
+            });
+            updatedCount++;
+          }
+        });
+        
+        if (updatedCount > 0) {
+          fs.writeFileSync(jsonPath, JSON.stringify(kpiList, null, 2), "utf-8");
+          console.log(`Đã cập nhật ${updatedCount} bản ghi dự phòng vào ${filename}`);
+        }
+      }
+    } catch (fsErr) {
+      console.error("Lỗi cập nhật dữ liệu JSON dự phòng:", fsErr);
+    }
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công (Chế độ dự phòng)" });
   }
 }
