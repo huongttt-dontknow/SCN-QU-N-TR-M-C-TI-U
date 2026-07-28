@@ -894,7 +894,7 @@ export default function InputFormPage() {
           impact: act.impact,
           status: "Chờ quyết định"
         }));
-        setActions(prev => [...prev, ...newActions]);
+        setActions(newActions);
       } else {
         showToast("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.", "error");
       }
@@ -940,7 +940,7 @@ export default function InputFormPage() {
           impact: act.impact,
           status: "Chờ quyết định"
         }));
-        setProductActions(prev => [...prev, ...newActions]);
+        setProductActions(newActions);
       } else {
         showToast("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.", "error");
       }

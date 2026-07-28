@@ -61,8 +61,9 @@ function searchMarketTrends(query: string): string {
 
 // Mock KPI Analysis helper
 function getMockKpiAnalysis(unitCode: string, periodKey: string, kpis: any[]) {
-  let summary = `[MOCK AI] Đánh giá tổng hợp cho đơn vị ${unitCode} trong kỳ ${periodKey}: `;
-  let suggestedActions = [];
+  const parsedUnit = unitCode || "SCVN";
+  let summary = `[DỰ BÁO AI DỰ PHÒNG] Đánh giá tổng hợp cho đơn vị ${parsedUnit} trong kỳ ${periodKey}: `;
+  let suggestedActions: any[] = [];
 
   // Parse custom explanations/notes from KPIs
   const explanationsList: string[] = [];
@@ -73,64 +74,93 @@ function getMockKpiAnalysis(unitCode: string, periodKey: string, kpis: any[]) {
   });
 
   const notesSection = explanationsList.length > 0
-    ? `\n\nGhi chú/Giải trình thực tế được ghi nhận: ${explanationsList.join("; ")}.`
+    ? ` Ghi chú/Giải trình thực tế: ${explanationsList.join("; ")}.`
     : "";
 
-  if (unitCode === "SCVN") {
-    summary += `Tiến độ sản xuất Wolfoo 2D/3D đạt kế hoạch. Tuy nhiên, doanh thu từ phái sinh kho gốc (Dự án 01) và các kênh truyện Animated Story cần được gia tốc phân phối đa nền tảng để bù đắp chi phí OPEX.${notesSection}`;
-    suggestedActions = [
-      { title: "BP AS: Sản xuất teen story / drama học đường và tối ưu định dạng audio lên Spotify", targetIndicator: "VM2-I01.01", impact: "Tăng độ phủ và khai thác doanh thu quảng cáo chéo" },
-      { title: "Dự án 01: Đóng gói và biên tập lại kho phim cũ của Sconnect để đưa lên các nền tảng OTT mới", targetIndicator: "VM1-I01.01", impact: "Tận dụng tài nguyên sẵn có để phái sinh doanh thu" },
-      { title: "Phòng CNGP: Tăng tốc phát triển game Wolfoo (nhận bàn giao từ SCCH) và hoàn thiện in-app purchase", targetIndicator: "VM1-I02.01", impact: "Sẵn sàng ra mắt 15 game mới trong 2026" }
-    ];
-  } else if (unitCode === "TCT" || unitCode === "Nhóm AI") {
-    summary += `Hệ điều hành AIVA đang được nhân rộng trong quản trị Shared Services. Cần tiếp tục tiết giảm chi phí OPEX hành chính thông qua số hóa.${notesSection}`;
-    suggestedActions = [
-      { title: "Nhóm AI: Thử nghiệm và triển khai AI Co-Pilot kiểm duyệt tờ trình tự động trong e-office", targetIndicator: "TCT-I01.01", impact: "Giảm thời gian phê duyệt tờ trình xuống <12h" },
-      { title: "Nhóm AI: Tổ chức huấn luyện synergy con người-AI cho nhân sự toàn tổng công ty", targetIndicator: "TCT-I02.01", impact: "Nâng cao năng suất lao động thêm 200%" }
-    ];
-  } else if (unitCode === "Wofloo") {
-    summary += `Tiến độ sản xuất và sản lượng video Wolfoo đạt kế hoạch. Cần tập trung tối ưu hóa chi phí sản xuất và đẩy nhanh tốc độ dựng thô.${notesSection}`;
-    suggestedActions = [
-      { title: "Chuẩn hóa thư viện asset dùng chung để đẩy nhanh tốc độ diễn hoạt Wolfoo 3D", targetIndicator: "VM2-I01.01", impact: "Tăng sản lượng thêm 2 tập/tuần" },
-      { title: "Đẩy mạnh ứng dụng AIVA để tăng tốc độ dựng thô video Wolfoo", targetIndicator: "VM2-I01.01", impact: "Rút ngắn thời gian sản xuất xuống 20%" }
-    ];
-  } else if (unitCode === "Music") {
-    summary += `Doanh thu nhạc số tăng trưởng tốt. Cần tập trung mở rộng bản quyền và nâng cao hiệu suất sáng tác.${notesSection}`;
-    suggestedActions = [
-      { title: "Tổ chức buổi đào tạo về tối ưu prompt âm nhạc AI cho đội ngũ sáng tác SCMU", targetIndicator: "MM2-I01.01", impact: "Nâng cao chất lượng nhạc phái sinh" },
-      { title: "Tăng tốc kiểm duyệt và phân phối bản quyền nhạc số đa nền tảng", targetIndicator: "MM1-I01.01", impact: "Tối ưu hóa doanh thu nhạc số" }
-    ];
-  } else if (unitCode === "Lego") {
-    summary += `Dự án Lego non-KID đạt traffic ban đầu khá tốt. Cần tối ưu hóa nội dung stop-motion chia phe để kích thích tương tác.${notesSection}`;
-    suggestedActions = [
-      { title: "Tập trung sản xuất stop-motion đồ chơi ngách cho tệp khán giả non-KID", targetIndicator: "LM2-I01.01", impact: "Tăng tỷ lệ giữ chân người xem lên 50%" },
-      { title: "Thử nghiệm cốt truyện chia phe chiến tuyến để kích thích tương tác", targetIndicator: "LM2-I01.02", impact: "Tăng 30% tỷ lệ bình luận và tương tác" }
-    ];
-  } else if (unitCode === "AS") {
-    summary += `Animated Story (AS) cần cải thiện tốc độ viết kịch bản và tối ưu phân phối audio drama.${notesSection}`;
-    suggestedActions = [
-      { title: "Chuẩn hóa kịch bản teen story / drama học đường đa kênh", targetIndicator: "AM2-I01.01", impact: "Rút ngắn thời gian duyệt kịch bản xuống <24h" },
-      { title: "Tối ưu hóa định dạng audio drama để phân phối chéo lên Spotify", targetIndicator: "AM1-I01.01", impact: "Tăng trưởng lượng người nghe podcast hàng tháng" }
-    ];
-  } else if (unitCode === "DA01") {
-    summary += `Dự án 01 cần đẩy nhanh biên tập kho nội dung gốc của Sconnect để tạo dòng tiền phái sinh nhanh.${notesSection}`;
-    suggestedActions = [
-      { title: "Đóng gói và tái biên tập kho phim hoạt hình cũ để khai thác thương mại", targetIndicator: "DM2-I01.01", impact: "Khai thác tối đa giá trị kho nội dung gốc" },
-      { title: "Đẩy mạnh đàm phán phân phối bản quyền kho phim lên các nền tảng OTT mới", targetIndicator: "DM1-I01.01", impact: "Tạo dòng tiền phái sinh ổn định" }
-    ];
-  } else if (unitCode === "CN") {
-    summary += `CNGP cần đẩy nhanh kiểm duyệt game app và tối ưu các chỉ số in-app purchase (IAP).${notesSection}`;
-    suggestedActions = [
-      { title: "Hoàn thiện tích hợp in-app purchase (IAP) cho các dự án game Wolfoo mới", targetIndicator: "GM2-I01.01", impact: "Tối ưu hóa tỷ lệ chuyển đổi doanh thu người chơi" },
-      { title: "Tự động hóa hệ thống kênh phân phối video game trên các nền tảng mạng xã hội", targetIndicator: "GM1-I01.01", impact: "Tăng 40% traffic tự nhiên tải game" }
-    ];
+  // 1. Phân tích các KPI chưa đạt kế hoạch (tiến độ < 90%)
+  const underperformingKpis = (kpis || []).filter(k => {
+    const target = k.targetValue || 0;
+    const actual = k.actualValue || 0;
+    const rate = target > 0 ? (actual / target) * 100 : 100;
+    return rate < 90;
+  });
+
+  if (underperformingKpis.length > 0) {
+    summary += `Hệ thống ghi nhận ${underperformingKpis.length} chỉ tiêu có hiệu suất dưới 90% (gồm: ${underperformingKpis.map(k => k.indicatorCode).join(", ")}). Cần tập trung tháo gỡ rủi ro cho các chỉ số này.${notesSection}`;
+    
+    // Sinh các action động khắc phục
+    underperformingKpis.forEach(k => {
+      const target = k.targetValue || 0;
+      const actual = k.actualValue || 0;
+      const rate = target > 0 ? Math.round((actual / target) * 100) : 100;
+      
+      let title = `[AI Khắc phục] Tối ưu hóa chỉ số ${k.indicatorCode}`;
+      let impact = `Khắc phục hiệu suất hiện tại (${rate}%), đưa chỉ số đạt mục tiêu kế hoạch ${target}`;
+      
+      if (parsedUnit === "Wofloo") {
+        if (k.indicatorCode.includes("VM") || k.indicatorCode.includes("V")) {
+          title = `[Wolfoo] Khắc phục chỉ số sản xuất ${k.indicatorCode}: Chuẩn hóa thư viện asset dùng chung và đẩy nhanh tốc độ dựng thô video Wolfoo.`;
+          impact = `Tăng sản lượng và rút ngắn thời gian sản xuất nhằm bù đắp thiếu hụt (hiện đạt ${rate}%)`;
+        } else {
+          title = `[Wolfoo] Thúc đẩy doanh thu ${k.indicatorCode}: Mở rộng phân phối và khai thác thương mại các kênh phái sinh Wolfoo.`;
+          impact = `Nâng doanh thu đạt kế hoạch ${target} VNĐ (hiện đạt ${rate}%)`;
+        }
+      } else if (parsedUnit === "Music") {
+        title = `[Music] Tối ưu chỉ số ${k.indicatorCode}: Tổ chức tập huấn prompt âm nhạc AI (Suno/Udio) và tăng tốc phát hành bản quyền nhạc số SCMU.`;
+        impact = `Nâng cao hiệu suất sáng tác để cải thiện chỉ số từ ${rate}% lên 100%`;
+      } else if (parsedUnit === "Lego") {
+        title = `[Lego] Cải tiến chỉ số ${k.indicatorCode}: Tập trung sản xuất stop-motion đồ chơi ngách non-KID và xây dựng kịch bản chia phe.`;
+        impact = `Gia tăng tỷ lệ giữ chân người xem và tương tác bình luận (hiện đạt ${rate}%)`;
+      } else if (parsedUnit === "AS") {
+        title = `[Animated Story] Tháo gỡ chỉ số ${k.indicatorCode}: Chuẩn hóa kịch bản teen story/drama học đường và tối ưu định dạng Spotify.`;
+        impact = `Rút ngắn thời gian duyệt kịch bản và gia tăng lượng thính giả (hiện đạt ${rate}%)`;
+      } else if (parsedUnit === "DA01") {
+        title = `[Dự án 01] Thúc đẩy chỉ số ${k.indicatorCode}: Đóng gói và tái biên tập kho phim hoạt hình cũ của Sconnect để đưa lên các nền tảng OTT mới.`;
+        impact = `Khai thác tối đa giá trị kho nội dung gốc sẵn có nhằm đạt kế hoạch doanh thu ${target}`;
+      } else if (parsedUnit === "CN") {
+        title = `[CNGP Game] Tối ưu chỉ số ${k.indicatorCode}: Hoàn thiện tích hợp in-app purchase (IAP) và tự động hóa hệ thống kênh game app.`;
+        impact = `Cải thiện tỷ lệ chuyển đổi doanh thu người chơi game Wolfoo (hiện đạt ${rate}%)`;
+      } else {
+        title = `[${parsedUnit}] Khắc phục chỉ số ${k.indicatorCode}: Đẩy mạnh ứng dụng AIVA và rà soát quy trình phối hợp để tháo gỡ điểm nghẽn.`;
+        impact = `Nâng cao hiệu suất thực tế từ ${rate}% đạt mức cam kết 100%`;
+      }
+
+      suggestedActions.push({
+        title,
+        targetIndicator: k.indicatorCode,
+        impact
+      });
+    });
   } else {
-    summary += `Doanh thu và hiệu suất chung đạt tiến độ. Cần tiếp tục tối ưu hóa quy trình nghiệp vụ và ứng dụng nền tảng công nghệ AIVA để tự động hóa.${notesSection}`;
-    suggestedActions = [
-      { title: "Đẩy mạnh ứng dụng AIVA để tăng tốc độ dựng thô video", targetIndicator: "VM2-I01.01", impact: "Rút ngắn thời gian sản xuất xuống 20%" },
-      { title: "Thực hiện đồng bộ hóa thư viện và tối ưu quy trình phối hợp", targetIndicator: "VM1-I01.01", impact: "Tăng hiệu suất làm việc đội ngũ lên 15%" }
-    ];
+    // Tất cả KPI đều đạt hoặc không có dữ liệu yếu
+    summary += `Tất cả các chỉ số KPI của đơn vị ${parsedUnit} đều đạt tiến độ và nằm trong vùng an toàn (>= 90%). Khuyến nghị tiếp tục tối ưu hóa hiệu suất.${notesSection}`;
+    
+    // Sinh các action tối ưu hóa theo đơn vị
+    const firstCode = kpis[0]?.indicatorCode || "VM2-I01.01";
+    if (parsedUnit === "Wofloo") {
+      suggestedActions = [
+        { title: "[Wolfoo] Tiếp tục chuẩn hóa thư viện asset dùng chung để giữ vững đà tăng trưởng sản xuất Wolfoo 3D.", targetIndicator: firstCode, impact: "Duy trì sản lượng ổn định và nâng cao tính kế thừa" },
+        { title: "[Wolfoo] Áp dụng công cụ AI sinh phông nền tự động để giảm OPEX sản xuất phim hoạt hình.", targetIndicator: firstCode, impact: "Tiết kiệm 20% chi phí bối cảnh sản xuất" }
+      ];
+    } else if (parsedUnit === "Music") {
+      suggestedActions = [
+        { title: "[Music] Tăng cường kiểm duyệt và phân phối bản quyền nhạc số đa nền tảng toàn cầu.", targetIndicator: firstCode, impact: "Tối đa hóa doanh thu nhạc số phái sinh" },
+        { title: "[Music] Tổ chức buổi đào tạo nâng cao kỹ năng prompt âm nhạc AI thế hệ mới.", targetIndicator: firstCode, impact: "Nâng cao năng suất sáng tác bài hát nền" }
+      ];
+    } else if (parsedUnit === "Lego") {
+      suggestedActions = [
+        { title: "[Lego] Tiếp tục tối ưu hóa nội dung stop-motion chia phe chiến tuyến cho tệp non-KID.", targetIndicator: firstCode, impact: "Duy trì lượng tương tác bình luận cao hơn 150%" }
+      ];
+    } else if (parsedUnit === "AS") {
+      suggestedActions = [
+        { title: "[Animated Story] Phối hợp PnC và SAMA mở lớp đào tạo biên kịch và viết prompt kịch bản nhanh.", targetIndicator: firstCode, impact: "Đảm bảo cung cấp đủ lượng kịch bản đầu vào" }
+      ];
+    } else {
+      suggestedActions = [
+        { title: `[${parsedUnit}] Đẩy mạnh ứng dụng AIVA để tăng tốc độ tự động hóa quy trình vận hành.`, targetIndicator: firstCode, impact: "Tối ưu hóa năng suất lao động thêm 200%" },
+        { title: `[${parsedUnit}] Thực hiện đồng bộ hóa thư viện và tối ưu quy trình phối hợp nội bộ.`, targetIndicator: firstCode, impact: "Giảm thời gian chu kỳ ra quyết định xuống <24h" }
+      ];
+    }
   }
 
   return {
