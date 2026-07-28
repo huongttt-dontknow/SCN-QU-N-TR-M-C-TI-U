@@ -10,6 +10,19 @@ const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 function getMockOmResponse(question: string): string {
   const q = question.toLowerCase();
   
+  if (q.includes("scvn") && (q.includes("okr") || q.includes("objective") || q.includes("mục tiêu") || q.includes("quý 3") || q.includes("q3"))) {
+    return `**OM Agent:** Trong quý 3 (mã kỳ M7_2026) của **SCVN (Sconnect Việt Nam)**, hệ thống ghi nhận **04 Objectives (Mục tiêu)** cốt lõi sau:
+
+1. **O1: Minh bạch hóa hiệu quả kinh doanh theo từng sản phẩm** (Trọng số 30%)
+   - *Chi tiết:* Rà soát chuẩn hóa danh mục sản phẩm, gán Product Owner và hoàn thành Dashboard P&L chuẩn.
+2. **O2: Tái cấu trúc mô hình vận hành theo chức năng nhằm nâng cao hiệu suất nguồn lực** (Trọng số 25%)
+   - *Chi tiết:* Phân loại nhân sự theo chức năng, cập nhật JD và xây dựng cơ chế điều phối linh hoạt.
+3. **O3: AI hóa quản trị và tối ưu hiệu quả sử dụng nguồn lực số** (Trọng số 20%)
+   - *Chi tiết:* Hoàn thiện AI Playbook V1, thiết kế AIVA Studio và lựa chọn 5 workflow AI ưu tiên triển khai.
+4. **O4: Tăng tốc triển khai và tối ưu hiệu quả các dự án tăng trưởng chiến lược** (Trọng số 25%)
+   - *Chi tiết:* Rà soát dự án chiến lược, gán KPI/Owner và thiết lập Dashboard theo dõi chặt chẽ.`;
+  }
+
   if (q.includes("wolfoo")) {
     return `**OM Agent:** Đối với **BP Wolfoo** trong chiến lược 2026:
 - **Định hướng cốt lõi:** Tập trung vào tối ưu hóa chi phí sản xuất Wolfoo 2D/3D. Mục tiêu then chốt là nâng tỷ lệ tái sử dụng tài nguyên dựng hình thô (assets) lên tối thiểu **60%** để tối ưu hóa lợi nhuận.
