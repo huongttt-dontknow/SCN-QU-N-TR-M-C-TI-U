@@ -681,3 +681,142 @@ S13   TH&ĐN 2026  Chiến lược chức năng    Khách hàng                 
 S13   TH&ĐN 2026  Chiến lược chức năng      Vận hành                                                       PHÁT TRIỂN TRẠM KẾT NỐI CÁC DOANH NGHIỆP SÁNG TẠO ĐỂ LAN TỎA THƯƠNG HIỆU VÀ THÚC ĐẨY HIỆU QUẢ KINH DOANH  Đang triển khai   TH&ĐN3
 S13   TH&ĐN 2026  Chiến lược chức năng      Vận hành                                                        PHÁT TRIỂN KÊNH TRUYỀN THÔNG NỘI BỘ, THÚC ĐẨY GẮN KẾT NỘI BỘ, LAN TỎA TẦM NHÌN SỨ MỆNH, VĂN HÓA AI-FIRST Đang triển khai   TH&ĐN4
 S13   TH&ĐN 2026  Chiến lược chức năng    Khách hàng                                              KẾT NỐI NGUỒN LỰC GIA CƯỜNG THƯƠNG HIỆU DOANH NGHIỆP THAM DỰ ĐẠT CÁC GIẢI THƯỞNG DANH GIÁ TRONG LĨNH VỰC SÁNG TẠO. Đang triển khai   TH&ĐN5
+
+==================================================
+PHẦN 6: TỔNG HỢP CHI TIẾT ĐỊNH HƯỚNG MỤC TIÊU & OKRs QUÝ 3/2026 CỦA CÁC ĐƠN VỊ
+==================================================
+Dưới đây là chi tiết toàn bộ các Objectives, Key Results (KRs) và Actions định hướng cụ thể trong Quý 3/2026 của từng đơn vị trực thuộc SCVN/Sconnect:
+
+
+--- UNIT: OKR - BP WOLFOO (Row 2) ---
+  [Obj] Row   3: Objective 1: Chuẩn hóa mô hình và quy trình sản xuất AIVA-AI-CoreWork
+    [KR] Row   5: Key Result 1: Tự xây dựng 01 hệ thống AIVA - Corework Wolfoo ( Bản nâng cấp từ AIVA gốc áp dụng cho riêng biệt từng khâu của Wolfoo )
+Cá nhân hóa từng dự án để hiệu quả nhất (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row   6: Key Result 2: Tăng hiệu suất 115% với sản phẩm 2D (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row   7: Key Result 3: Xây dựng hệ thống AIVA CoreWork cho hoạt động SEO, Quản trị Kênh Tăng hiệu suất QTK 50% (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+  [Obj] Row  10: Objective 2: Tối Đa Hóa Hiệu Suất Doanh Thu Đa Nền Tảng
+    [KR] Row  12: Key Result 1: Triển khai 01 DA FaceBook ( Facebook vừa update tính năng Kiếm tiền vào 21/06. Khá tương đồng với Youtube ) (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row  13: Key Result 2: Hợp tác cấp quyền khai thác nền tảng OTT chiếm tỉ trọng 4%. Gia tăng 2 đối tác (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row  14: Key Result 3: Tiếp tục Mở rộng hệ thống kinh doanh theo 2 hướng. Mở rộng dạng Nội dung sản xuất mới, mở rộng cách thức khai thác nội dung mới cho kho nội dung Tăng trưởng Doanh thu từ tổng các dòng Nội dung 50% (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+  [Obj] Row  17: Objective 3: Xây dựng và nâng cao hiệu quả dự án từ dữ liệu phái sinh
+    [KR] Row  19: Key Result 1: Sản xuất nội dung KidSong 2D Nhân vật mới 500 ND ( Tiếng Anh, Tiếng Việt , Tây Ban Nha ) (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row  20: Key Result 2: Sản xuất nội dung phái sinh Stories 2D kết hợp Nhân vật mới. Gia tăng DT thương hiệu 30%. Tăng tiềm năng mở rộng hệ sinh thái Wolfoo và những người bạn (Start: 46204.0, End: 46295.0, PIC: TBP)
+  [Obj] Row  23: Objective 4: Phát triển năng lực nhân sự
+    [KR] Row  25: Key Result 1: 100% nhân sự áp dụng được AI Agent vào công việc 1 cách hiệu quả (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+
+--- UNIT: OKR - BP ANIMATED (Row 28) ---
+  [Obj] Row  29: Objective 1: Nâng cấp toàn diện năng lực sáng tạo và siết chặt cơ chế kiểm soát chất lượng nội dung
+    [KR] Row  31: KR1: Ban hành "Bộ công thức sáng tạo & Chuẩn ứng dụng AI" cho khâu biên kịch, 100% nội dung sáng tạo dựa trên vấn đề / nỗi đau tuổi teen, làm nổi bật GTCL trong cách thể hiện (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row  32: KR2: Thiết lập và vận hành chuẩn cơ chế Review - Coaching cho nhân sự, 100% sản phẩm được review và đưa ra định hướng sáng tạo thông qua bộ lọc của Quản lý trước khi NS tiếp nhận thực thi (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TNSX)
+    [KR] Row  33: KR3: Thiết kế hệ thống Dashboard cảnh báo sớm các rủi ro chất lượng nội dung và thumbnail và đề xuất phương án xử lý sớm. Thời gian phát hiện rủi ro nội dung chất lượng thấp và phương án khắc phục tối đa 3 ngày (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row  34: KR4: Thử nghiệm và triển khai thành công ít nhất 02 chủ đề mới đạt hiệu quả traffic cao, traffic trung bình 30 ngày đạt 150k view (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TNSX)
+  [Obj] Row  37: Objective 2: Minh bạch hóa hiệu quả kinh doanh và sử dụng nguồn lực
+    [KR] Row  39: KR1: Xây dựng và áp dụng thành công Bảng định mức tài nguyên trên 100% nội dung (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TNSX)
+    [KR] Row  40: KR2: Phân bổ và tối ưu hóa năng suất, nâng tỷ trọng đóng góp sản lượng nhân sự Fulltime lên mức >= 50% (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TNSX)
+    [KR] Row  41: KR3: Giảm chi phí sản xuất trung bình 1 video xuống >= 10% so với quý II thông qua tối ưu hiệu suất (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TNSX)
+  [Obj] Row  44: Objective 3: Phân tách nguồn lực, xây dựng hệ thống sản phẩm và doanh thu mới ứng dụng AI
+    [KR] Row  46: KR1: Hoàn tất phân tách cơ cấu tổ chức với mô hình 3 nhân sự, đạt hiệu suất 50-60 sản phẩm / quý (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row  47: KR2: Mở mới hệ thống 2 kênh BKT, tận dụng 1 kênh đang được BKT từ dòng sản phẩm AI cũ để thúc đẩy doanh thu sớm (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+    [KR] Row  48: KR3: Mở hệ thống kênh Spotify khai thác dòng sản phẩm mới, mang lại doanh thu >= $500 sau khi BKT (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: TBP)
+
+--- UNIT: OKR - BP NDTH (Row 52) ---
+  [Obj] Row  53: O1: Tăng trưởng doanh thu bền vững từ hệ thống YouTube hiện hữu
+    [KR] Row  55: KR1:Tăng 50% doanh thu toàn hệ thống so với Quý II (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  56: KR2:Phát triển Sticker-Kids song- TOCA  thành nhóm sản phẩm doanh thu chủ lực ( 15k/tháng) (Start: None, End: None, PIC: None)
+  [Obj] Row  58: O2:Mở rộng quy mô Spotify
+    [KR] Row  60: KR1:Doanh thu Spotify tăng tối thiểu 200% so với Quý II (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  61: KR2: Hoàn thiện tối thiểu 3 nhóm chủ đề nhạc có thể khai thác dài hạn doanh thu tối thiểu 500$/ tháng từ tháng 8 (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+  [Obj] Row  63: O3: Tăng trưởng nhóm Khai thác và mở rộng sản phẩm hiệu quả
+    [KR] Row  65: KR1: Xây dựng tối thiểu 2 hướng khai thác mới từ các SP như TOCA- Unbox. (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  66: KR2: Ít nhất 1 hướng khai thác mới đạt doanh thu trên 1.000 USD/tháng (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+  [Obj] Row  67: O4:  Tối ưu hiệu quả kinh doanh và đạt lợi nhuận dương
+    [KR] Row  69: KR1: Đạt lợi nhuận dương từ tháng 8 (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  70: KR2: Giảm tối thiểu 15% chi phí sản xuất (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+  [Obj] Row  72: O5: Thiết kế lại mô hình tổ chức
+    [KR] Row  74: KR1: Sáp nhập nhóm để tối ưu mô hình- Tinh gọn tổ chức- giảm chi phí (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+
+--- UNIT: OKR - DA LEGO (Row 76) ---
+  [Obj] Row  77: Objective 1: Tối ưu hóa cấu trúc chi phí và đưa ROI đạt trạng thái dương (Trọng số: 30%)
+    [KR] Row  79: KR1: Đạt chỉ số ROI dương toàn dự án ngay từ tháng 7/2026 và duy trì tăng trưởng dương ổn định trong suốt Quý III (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  83: KR2: Tăng trưởng doanh thu từ nguồn Doanh thu đối tác thêm tối thiểu 25% so với Quý II nhằm bù đắp phần sụt giảm của doanh thu nội bộ (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  84: KR3: Kiểm soát và cắt giảm thêm 15% tổng chi phí vận hành đơn vị thông qua việc thay đổi nhân sự đầu Quý III (Start: None, End: None, PIC: None)
+  [Obj] Row  90: Objective 2: Tái định vị tệp khách hàng và khai thác tối đa giá trị thương mại kho nội dung Lego (Trọng số: 25%)
+    [KR] Row  92: KR1: Đạt mốc tối đa 20,000,000 views Traffic Lego toàn hệ thống trong Quý III (Đặt mục tiêu thực tế dựa trên đặc thù ngách Lego non-KID) (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  96: KR2: Hợp tác với ít nhất 2 đối tác  (MCN/Publisher/Brand) để trực tiếp khai thác, phân phối lại kho nội dung Lego sẵn có (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row  99: KR3: Đảm bảo 100% các kênh cũ và mới mở đạt tỷ lệ an toàn chính sách (0 vi phạm, không chết kênh) để bảo toàn lượng traffic nền tảng (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+  [Obj] Row 104: Objective 3: Chuẩn hóa mô hình và quy trình sản xuất AIVA-AI
+    [KR] Row 106: KR1: Áp dụng quy trình SC & KD theo mô hình AIVA AI xuyên suốt các khâu đối với team AI (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+  [Obj] Row 108: Objective 4: Tái cấu trúc mô hình sản xuất và chuyển dịch định dạng nội dung mới (Trọng số: 25%)
+    [KR] Row 110: KR1: Hoàn thành việc tách biệt 100% bộ máy thành 2 nhóm độc lập: Team Sản xuất Thường và Team Sản xuất Nội dung AI. (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row 112: KR2: Áp dụng cơ chế khoán mới: 100% nhân sự Team AI tự chịu trách nhiệm tối ưu kinh doanh, tối ưu SEO và tự đăng tải sản phẩm lên hệ thống kênh được giao (Start: None, End: None, PIC: None)
+    [KR] Row 115: KR3: Đóng gói quy trình và sản xuất thành công định dạng nội dung mới: ⁠Lego Công và Thủ Thành (Chia 2 phe chiến tuyến)⁠ thay thế hoàn toàn cho định dạng ⁠Lego Automation⁠ cũ từ ngày 15/07. (Start: None, End: None, PIC: None)
+  [Obj] Row 120: Objective 5: Phát triển năng lực nhân sự & Ổn định tổ chức và tái hòa nhập nhân sự hậu thai sản (Trọng số: 20%)
+    [KR] Row 122: KR1: 100% nhân sự Quản trị kênh (QTK) quay trở lại làm việc ổn định và tiếp nhận lại hệ thống kênh cốt lõi vào tháng 8. (Start: 2026-04-01 00:00:00, End: 2026-06-30 00:00:00, PIC: TBP)
+    [KR] Row 124: KR2: Hoàn thành việc đào tạo chuyển đổi 100% kỹ năng sản xuất bằng AI cho nhân sự Tổ trưởng sản xuất (TTSX) tái hòa nhập vào giữa quý. (Start: None, End: None, PIC: TBP)
+
+--- UNIT: OKR - SC Studio (Row 129) ---
+  [Obj] Row 130: O1: Nâng cao hiệu quả hệ thống kinh doanh
+    [KR] Row 132: KR1: Phát triển hệ thống kênh kinh doanh mới : 5 kênh. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 133: KR2: Số lượng kênh vượt ngưỡng >3k  : 5 kênh. 
+Số lượng kênh vượt ngưỡng >5k : 2 Kênh. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 134: KR3: Tối ưu chi phí vận hành : 15% tổng chi phí. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+  [Obj] Row 135: O2: Hoàn thiện quy hoạch tổ chức dự án sản xuất.
+    [KR] Row 137: KR1: Hoàn chỉnh tổ chức triển khai 3 dự án sản xuất : Kids song (2), Trạng Quỳnh. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 138: KR2: Triển khai đào tạo thực thi sản xuất với pipeline sản xuất mới : 100% đồng nhất quy trình triển khai trên core aiva. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+  [Obj] Row 139: O3: Ứng vận dụng nền tảng công nghệ vào vận hành, sản xuất.
+    [KR] Row 141: KR1: 100% nhận sự sản xuất triển khai sản xuất trên coworking aiva. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+
+--- UNIT: OKR - DA01 (Row 147) ---
+  [Obj] Row 148: O1: Tăng trưởng doanh thu đột phá từ nội dung SCVN và NDAI
+    [KR] Row 149: Key Result 1: Xây dựng và phát triển hệ thống 14 kênh Youtube chiếm 56% DT (Start: 2026-07-01 00:00:00, End: 2026-09-30 00:00:00, PIC: LinhDT, LyTTD)
+    [KR] Row 150: Key Result 2: Xây dựng và phát triển hệ thống kênh Spotify chiếm 44% doanh thu (Start: 2026-01-07 00:00:00, End: 30/09, PIC: HongTT)
+  [Obj] Row 152: O2: Phát triển sản phẩm mới
+    [KR] Row 153: Key Result 1: Phát triển 01 sản phẩm key có ROI >0% sau quý 3 (Start: 2026-01-07 00:00:00, End: 30/09, PIC: LinhDT)
+  [Obj] Row 155: O3: Ứng dụng AI (AIVA) để nâng cao hiệu suất sản xuất và vận hành
+    [KR] Row 156: Key Result 1: 100% nhân sự sử dụng các mô hình AIVA trong sản xuất nội dung AI (Start: 2026-01-04 00:00:00, End: 30/06, PIC: LinhDT)
+  [Obj] Row 161: O1: Tăng trưởng doanh thu đột phá từ nội dung SCVN và ND AI
+    [KR] Row 162: Key Result 1: Xây dựng và phát triển hệ thống 14 kênh Youtube chiếm 56% DT (Start: 2026-07-01 00:00:00, End: 2026-07-31 00:00:00, PIC: LinhDT, LyTTD)
+    [KR] Row 163: Key Result 2: Xây dựng và phát triển hệ thống kênh Spotify chiếm 44% doanh thu (Start: 2026-01-07 00:00:00, End: 31/07, PIC: HongTT)
+  [Obj] Row 165: O2: Phát triển sản phẩm mới
+    [KR] Row 166: Key Result 1: Phát triển 01 sản phẩm key có ROI >0% sau quý 3 (Start: 2026-01-07 00:00:00, End: 2026-07-31 00:00:00, PIC: LinhDT)
+  [Obj] Row 168: O3: Ứng dụng AI (AIVA) để nâng cao hiệu suất sản xuất và vận hành
+    [KR] Row 169: Key Result 1: 100% nhân sự sử dụng các mô hình AIVA trong sản xuất nội dung AI (Start: 2026-01-04 00:00:00, End: 31/07, PIC: LinhDT)
+
+--- UNIT: OKR - SCCH (Row 175) ---
+  [Obj] Row 176: O1: Tái cấu trúc mô hình tinh gọn, mở rộng hệ thống kênh và bứt phá doanh thu theo lộ trình
+    [KR] Row 178: KR1: Xây dựng, lựa chọn và triển khai đồng loạt tối thiểu 07 đề án kinh doanh mới dựa trên tiêu chí: Top views – Top tương tác – Tiềm năng RPM. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 179: KR2:  Phát triển hệ thống kênh đạt quy mô 12–14 kênh trong Quý 3, trong đó có tối thiểu 07 kênh bật kiếm tiền thành công (làm tiền đề để tiến tới mốc 8 => 10 kênh lớn trong Q4). (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 180: KR3: Hoàn thành tái cấu trúc 100% bộ máy AIVA team theo mô hình nhóm dự án tinh gọn 3–5 người (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 181: KR4: Xây dựng hoàn thiện cơ chế đầu tư và hệ thống kiểm soát tài chính hiệu quả, đưa vào áp dụng trong Quý III. (Start: 2026-02-07 00:00:00, End: 2026-01-10 00:00:00, PIC: TBP)
+  [Obj] Row 184: O2: Bứt tốc hiệu suất sáng tạo nội dung, ứng dụng AI toàn quy trình vào quy trình sản xuất
+    [KR] Row 186: KR1: Đạt năng suất sản xuất ổn định từ 170 – 175 nội dung (Short + Story)/tháng toàn SCCH thông qua việc áp dụng quy trình phối hợp AIVA + AI. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 187: KR2: Nghiệm thu và đưa vào ứng dụng quy trình hoàn chỉnh tích hợp AI vào 100% các khâu trong chuỗi sản xuất: Biên kịch – Art – Anim (Hoạt họa) – Phát hành. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 188: KR3: Hoàn thành đóng gói 01 bộ tài liệu quy trình chuẩn về sản xuất và tối ưu nội dung bằng AI để chuyển giao nội bộ. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+  [Obj] Row 191: O3: Chuyển đổi năng lực sản xuất mới và tối ưu hóa hiệu quả khai thác trên mỗi nhân sự
+    [KR] Row 193: KR1:  100% nhân sự sản xuất (hoặc nhóm dự án tinh gọn) chịu trách nhiệm vận hành và tối ưu $/ 1 kênh kinh doanh. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 194: KR2: Thiết lập và áp dụng thử nghiệm cơ chế hoạt động khai thác kết hợp chia sẻ doanh thu (Revenue Sharing) để tạo động lực tăng trưởng cho nhân sự. (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+  [Obj] Row 198: O1: Cấu trúc các team dự án và triển khai đề án kinh doanh AIVA nhằm tối ưu chi phí và mở rộng hiệu quả kinh doanh mới
+    [KR] Row 200: KR1: Sắp xếp và phân bổ nhân sự vào 2 team dự án (DA01 và DA02) thuộc SCCH (Start: 2026-01-07 00:00:00, End: 31/07, PIC: TBP)
+    [KR] Row 201: KR2: Hoàn thiện bộ 5 đề án trọng điểm và hệ thống kênh kinh doanh được triển khai trong tháng (Start: 2026-01-07 00:00:00, End: 31/07, PIC: TBP)
+
+--- UNIT: OKR - SCMU (Row 205) ---
+  [Obj] Row 206: O1: Tập trung phát triển dự án kinh doanh nội bộ để thúc đẩy doanh thu
+    [KR] Row 207: KR 1: Triển khai xây dựng và đưa vào vận hành 03 dự án kinh doanh nội bộ mới đạt doanh thu 1,5k$ ( Dự án khai thác, dự án mới) (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 208: KR 2: Doanh thu kênh nội bộ tự khai thác trung bình đạt 3,5k$/tháng (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 209: KR3: Chốt thành công tối thiểu 2 hợp đồng gia công giá trị cao >50M, có tối thiểu 16KH cấp kho nhạc (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+  [Obj] Row 212: O2: Phát triển năng lực đội ngũ, làm chủ nền tảng công nghệ phục vụ vận hành tự chủ
+    [KR] Row 214: KR1: Hoàn thiện các mô hình sản xuất phù hợp với từng dự án của đơn vị (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 215: KR2: Tiếp nhận và xây dựng hoàn thiện AIVA Publishing cho quản lý hệ thống kênh và kho (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+    [KR] Row 216: KR3: Tiếp nhận hệ thống AIVA Entity từ công ty, bước đầu xây dựng được các nhân sự ảo phục vụ cho các công việc của đơn vị (Marketing, QTK ..) (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TBP)
+
+--- UNIT: OKR - CNGP (Row 220) ---
+  [Obj] Row 221: O1:  Bứt phá năng lực kinh doanh và tối ưu nền tảng hệ thống Game
+    [KR] Row 223: KR1: Hoàn thiện toàn vẹn Hệ thống Marketing AI-Native giúp giảm thiểu 70% chi phí MKT (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TP)
+    [KR] Row 224: KR2: Hoàn thiện web game với tổng 100 game trên nền tảng và nâng cấp hệ thống server đảm bảo lượng truy cập lớn (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TP)
+    [KR] Row 225: KR3: Kinh doanh Game với doanh thu đạt 650,000,000 VNĐ (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TP)
+  [Obj] Row 228: O2: Tối ưu hóa hiệu suất khai thác kinh doanh trên nền tảng YouTube
+    [KR] Row 230: KR1: Kinh doanh Youtube với doanh thu đạt 390,000,000 VNĐ (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TP)
+    [KR] Row 231: KR2: Hoàn thiện hệ thống kênh Kinh doanh 16 kênh bật kiếm tiền , 20  kênh kinh doanh (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TP)
+  [Obj] Row 234: O3: Chuyển giao hệ thống vận hành nội bộ, đảm bảo an toàn và không gián đoạn hoạt động công ty.
+    [KR] Row 235: KR1: Hoàn thành chuyển giao 100% các hệ thống vận hành (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TP)
+
