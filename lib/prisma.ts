@@ -5,7 +5,23 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-export const prisma = global.prisma || new PrismaClient();
+const databaseUrl = process.env.DATABASE_URL;
+let url = databaseUrl;
+if (url && !url.includes("pgbouncer=true")) {
+  if (url.includes("?")) {
+    url += "&pgbouncer=true";
+  } else {
+    url += "?pgbouncer=true";
+  }
+}
+
+export const prisma = global.prisma || new PrismaClient({
+  datasources: {
+    db: {
+      url: url
+    }
+  }
+});
 
 if (process.env.NODE_ENV !== "production") {
   global.prisma = prisma;
