@@ -133,11 +133,15 @@ ${sconnectContext}
 4. Câu trả lời của bạn phải rõ ràng, ngắn gọn, có cấu trúc tốt (sử dụng gạch đầu dòng, chữ in đậm), viết bằng tiếng Việt và mang văn phong chuyên nghiệp, tin cậy.`
     });
 
-    // Định dạng lịch sử trò chuyện cho Gemini Chat
-    const chatHistory = messages.slice(0, -1).map((m: any) => ({
-      role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.content }]
-    }));
+    // Định dạng lịch sử trò chuyện cho Gemini Chat. Lịch sử bắt buộc phải bắt đầu bằng tin nhắn từ "user".
+    const firstUserIdx = messages.findIndex((m: any) => m.role === "user");
+    let chatHistory: any[] = [];
+    if (firstUserIdx !== -1) {
+      chatHistory = messages.slice(firstUserIdx, -1).map((m: any) => ({
+        role: m.role === "user" ? "user" : "model",
+        parts: [{ text: m.content }]
+      }));
+    }
 
     const chat = model.startChat({
       history: chatHistory
