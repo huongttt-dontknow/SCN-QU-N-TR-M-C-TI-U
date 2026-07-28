@@ -204,6 +204,9 @@ export async function POST(request: Request) {
           }
         }
       }
+    }, {
+      maxWait: 20000,
+      timeout: 60000
     });
 
     // Lấy lại danh sách Objectives đã cập nhật đầy đủ kèm KRs và Actions để trả về cho Client
