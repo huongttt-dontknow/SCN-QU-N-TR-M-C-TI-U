@@ -639,12 +639,18 @@ export default function OkrStrategyPage() {
     
     setIsAiAssessing(prev => ({ ...prev, [objId]: true }));
     try {
+      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
+        ? "M" + filters.month 
+        : filters.quarter;
+      const period = `${periodKey}_${filters.year}`;
+
       const res = await fetch("/api/ai/okr-strategy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "assess",
           unitCode: filters.unitCode,
+          period: period,
           objectiveTitle: objTitle,
           objectiveProgress: targetObj.progress,
           keyResults: targetObj.keyResults,
@@ -670,12 +676,18 @@ export default function OkrStrategyPage() {
     setAiSuggestions([]);
     setShowAiSuggestModal(true);
     try {
+      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
+        ? "M" + filters.month 
+        : filters.quarter;
+      const period = `${periodKey}_${filters.year}`;
+
       const res = await fetch("/api/ai/okr-strategy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "suggest",
           unitCode: filters.unitCode,
+          period: period,
         })
       });
       const data = await res.json();
