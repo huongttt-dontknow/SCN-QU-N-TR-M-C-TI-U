@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "@/context/AppContext";
 import SidebarLayout from "@/components/SidebarLayout";
+import OmAgentWidget from "@/components/OmAgentWidget";
 
 export const metadata: Metadata = {
   title: "Sconnect Objectives Management System (OMS)",
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body>
         <AppProvider>
           <SidebarLayout>{children}</SidebarLayout>
+          <OmAgentWidget />
         </AppProvider>
       </body>
     </html>
