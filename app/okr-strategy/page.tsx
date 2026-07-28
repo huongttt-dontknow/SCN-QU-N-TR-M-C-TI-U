@@ -1035,6 +1035,16 @@ export default function OkrStrategyPage() {
       {/* FREEZE PANEL FILTER HEADER */}
       <FiltersHeader hideFrequency={effectiveSubTab === "pillars"} />
 
+      {loading && (
+        <div className="w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-4 py-2.5 rounded-lg flex items-center justify-between gap-3 animate-pulse shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-3.5 h-3.5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+            <span className="font-extrabold">Đang đồng bộ và lưu trữ dữ liệu OKRs thực tế lên máy chủ...</span>
+          </div>
+          <span className="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded font-black tracking-wider uppercase">Vui lòng chờ giây lát</span>
+        </div>
+      )}
+
       {/* ========================================================================= */}
       {/* MODULE 5.2: CẬP NHẬT VÀ THEO DÕI TIẾN ĐỘ (KHỚP 100% ẢNH MẪU CỦA NGƯỜI DÙNG) */}
       {/* ========================================================================= */}
@@ -1103,9 +1113,19 @@ export default function OkrStrategyPage() {
             {isEditable && (
               <button
                 onClick={() => saveOkrDataToServer(objectives, "✓ Đã lưu thành công toàn bộ kết quả cập nhật tiến độ OKR của phiên làm việc!")}
-                className="bg-emerald-600 text-white text-xs font-extrabold px-4 py-2 rounded-lg hover:bg-emerald-500 shadow-md hover:shadow-[0_0_12px_rgba(16,185,129,0.3)] transition-all flex items-center gap-1.5 self-stretch sm:self-auto justify-center"
+                disabled={loading}
+                className="bg-emerald-600 text-white text-xs font-extrabold px-4 py-2 rounded-lg hover:bg-emerald-500 shadow-md hover:shadow-[0_0_12px_rgba(16,185,129,0.3)] transition-all flex items-center gap-1.5 self-stretch sm:self-auto justify-center disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <Save size={14} /> Lưu phiên cập nhật
+                {loading ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Đang lưu...
+                  </>
+                ) : (
+                  <>
+                    <Save size={14} /> Lưu phiên cập nhật
+                  </>
+                )}
               </button>
             )}
           </div>
@@ -1246,9 +1266,10 @@ export default function OkrStrategyPage() {
                           <td className="p-3 text-center">
                             <button
                               onClick={() => handleSaveRow(kr.title)}
-                              className="bg-slate-800 hover:bg-slate-700 border border-white/10 text-white text-[10px] font-bold px-2.5 py-1 rounded transition-all"
+                              disabled={loading}
+                              className="bg-slate-800 hover:bg-slate-700 border border-white/10 text-white text-[10px] font-bold px-2.5 py-1 rounded transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                             >
-                              Lưu
+                              {loading ? "..." : "Lưu"}
                             </button>
                           </td>
                         </tr>
@@ -1319,9 +1340,10 @@ export default function OkrStrategyPage() {
                             <td className="p-3 text-center">
                               <button
                                 onClick={() => handleSaveRow(act.title)}
-                                className="bg-slate-800 hover:bg-slate-700 border border-white/10 text-white text-[10px] font-bold px-2.5 py-1 rounded transition-all"
+                                disabled={loading}
+                                className="bg-slate-800 hover:bg-slate-700 border border-white/10 text-white text-[10px] font-bold px-2.5 py-1 rounded transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                               >
-                                Lưu
+                                {loading ? "..." : "Lưu"}
                               </button>
                             </td>
                           </tr>
@@ -1602,9 +1624,19 @@ export default function OkrStrategyPage() {
                   {isEditable && (
                     <button
                       onClick={handleSaveOkrSetupSession}
-                      className="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded hover:bg-emerald-500 shadow-md hover:shadow-[0_0_12px_rgba(16,185,129,0.3)] transition-all flex items-center gap-1"
+                      disabled={loading}
+                      className="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded hover:bg-emerald-500 shadow-md hover:shadow-[0_0_12px_rgba(16,185,129,0.3)] transition-all flex items-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      <Save size={14} /> Lưu phiên thiết lập
+                      {loading ? (
+                        <>
+                          <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          Đang lưu...
+                        </>
+                      ) : (
+                        <>
+                          <Save size={14} /> Lưu phiên thiết lập
+                        </>
+                      )}
                     </button>
                   )}
                 </div>
