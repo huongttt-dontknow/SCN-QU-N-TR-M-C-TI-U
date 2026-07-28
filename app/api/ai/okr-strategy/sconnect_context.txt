@@ -809,3 +809,44 @@ Số lượng kênh vượt ngưỡng >5k : 2 Kênh. (Start: 2026-01-07 00:00:00
   [Obj] Row 234: O3: Chuyển giao hệ thống vận hành nội bộ, đảm bảo an toàn và không gián đoạn hoạt động công ty.
     [KR] Row 235: KR1: Hoàn thành chuyển giao 100% các hệ thống vận hành (Start: 2026-01-07 00:00:00, End: 30/09, PIC: TP)
 
+=========================================
+PHẦN 6: CƠ SỞ LÝ THUYẾT VỀ HOẠCH ĐỊNH CHIẾN LƯỢC, OKRs VÀ KPIs
+=========================================
+
+1. CƠ SỞ LÝ THUYẾT VỀ XÂY DỰNG CHIẾN LƯỢC DOANH NGHIỆP
+- Chiến lược (Strategy) là tập hợp các lựa chọn định vị cạnh tranh mang tính hệ thống nhằm tạo ra lợi thế cạnh tranh bền vững cho doanh nghiệp trong một khoảng thời gian dài.
+- Quy trình hoạch định chiến lược gồm 4 giai đoạn lớn:
+  a. Phân tích bối cảnh: Đánh giá môi trường bên ngoài (PESTLE, 5 Lực lượng cạnh tranh của Porter) và nội lực bên trong (SWOT, Khung năng lực cốt lõi).
+  b. Định hình Tầm nhìn - Sứ mệnh - Giá trị cốt lõi: Xác định khát vọng dài hạn và ranh giới đạo đức/vận hành của doanh nghiệp.
+  c. Bản đồ chiến lược (Balanced Scorecard - BSC): Cân bằng giữa 4 khía cạnh: Tài chính -> Khách hàng -> Quy trình nội bộ -> Học hỏi & Phát triển.
+  d. Vận hành & Thực thi chiến lược: Chuyển dịch các mục tiêu chiến lược dài hạn thành các mục tiêu trung hạn và ngắn hạn có thể đo lường và theo dõi liên tục.
+
+2. ĐỊNH NGHĨA VÀ NGUYÊN LÝ OKR (OBJECTIVES AND KEY RESULTS)
+- OKR là phương pháp quản trị mục tiêu đột phá được phát triển bởi Andy Grove tại Intel và được John Doerr phổ biến rộng rãi tại Google.
+- Công thức viết OKR chuẩn (John Doerr):
+  * "Tôi sẽ [Mục tiêu - Objective], được đo lường bởi [Các kết quả then chốt - Key Results]."
+- Định nghĩa các thành phần:
+  * Objective (O) - Mục tiêu: Trả lời câu hỏi "Chúng ta muốn đi đâu?". O phải có tính khát vọng lớn (Làm LỚN), tạo động lực hành động, không chứa số liệu định lượng, mang tính định hướng đột phá và rõ ràng.
+  * Key Results (KRs) - Kết quả then chốt: Trả lời câu hỏi "Làm sao để biết chúng ta đã đến nơi?". KRs là các cột mốc đo lường cụ thể, chứa số liệu định lượng, có thời hạn rõ ràng, có tính thử thách cao và phản ánh kết quả thực tế (outcome) chứ không chỉ đơn thuần là liệt kê hành động đầu ra (output).
+- Nguyên lý quản trị cốt lõi theo OKR:
+  * Tính khát vọng & Chấp nhận rủi ro: OKR không dùng để trừng phạt hay làm căn cứ tính lương thưởng trực tiếp. Do đó, OKR khuyến khích nhân sự đặt mục tiêu thách thức tối đa. Mức hoàn thành OKR tối ưu thường đạt 70-80% (được gọi là Điểm ngọt - Sweet Spot). Nếu OKR luôn đạt 100%, có nghĩa là mục tiêu đặt ra quá an toàn.
+  * Tính tập trung và tinh gọn: Mỗi đơn vị chỉ nên thiết lập tối đa 3-5 Objectives, mỗi Objective chứa tối đa 3-5 KRs để tập trung 80% nguồn lực vào những việc quan trọng nhất.
+  * Liên kết đa chiều (Alignment): OKR được xây dựng theo cả 3 hướng: Từ trên xuống (Top-down), từ dưới lên (Bottom-up) và liên kết chéo ngang (Cross-functional alignment) giữa các phòng ban.
+  * Check-in & Kiểm soát liên tục: OKR phải được rà soát định kỳ hàng tuần/hàng tháng (Check-in) để đánh giá tiến độ thực tế, giải quyết điểm nghẽn và cập nhật hành động phát sinh (unplanned actions).
+
+3. ĐỊNH NGHĨA VÀ NGUYÊN LÝ KPI (KEY PERFORMANCE INDICATORS)
+- KPI là chỉ số đo lường hiệu suất thực hiện công việc cốt lõi hằng ngày của một cá nhân, bộ phận hoặc tổ chức.
+- Bản chất KPI (Làm TRÒN):
+  * KPI đại diện cho các công việc mang tính duy trì ổn định, đo lường các hoạt động vận hành chuẩn hóa hiện tại của doanh nghiệp.
+  * KPI bắt buộc phải đạt cam kết 100% mục tiêu đã cam kết để bảo đảm an toàn hệ thống (không gây sụp đổ hay gián đoạn).
+  * KPI gắn chặt chẽ với việc đánh giá năng lực hoàn thành nhiệm vụ của nhân sự, trực tiếp liên quan đến lương thưởng, phạt, kỷ luật và thăng tiến.
+  * Phương pháp thiết lập KPI tuân thủ nghiêm ngặt nguyên tắc SMART: Specific (Cụ thể) - Measurable (Đo lường được) - Achievable (Khả thi) - Relevant (Thực tế) - Time-bound (Có thời hạn).
+
+4. TRIẾT LÝ QUẢN TRỊ KẾT HỢP SONG SONG OKR & KPI
+Sconnect áp dụng mô hình "Bánh xe Mục tiêu" (Wheel of Goals) kết hợp song song cả OKR và KPI để tối ưu hiệu quả quản trị doanh nghiệp:
+- OKR và KPI không triệt tiêu nhau mà bổ trợ chéo nhau:
+  * OKR để hướng tới sự đột phá (Làm LỚN), kiến tạo tương lai và thúc đẩy sự thay đổi vượt giới hạn.
+  * KPI để bảo vệ nền móng vững chắc (Làm TRÒN), kiểm soát rủi ro dòng tiền, chi phí vận hành (OPEX), chất lượng sản phẩm và các chỉ tiêu cam kết hàng ngày.
+- Cách liên kết thực tế:
+  * Khi một chỉ số KPI của doanh nghiệp bị cảnh báo suy giảm nghiêm trọng (dưới 75% hiệu suất hoặc có nguy cơ sụp đổ), doanh nghiệp có thể thiết lập một Objective đột phá (OKR) để tập trung nguồn lực cứu vãn và cải tiến quy trình nhằm đưa KPI đó trở lại quỹ đạo an toàn.
+  * Ngược lại, khi một sáng kiến đột phá trong OKR đã hoàn thành xuất sắc và đi vào hoạt động ổn định ổn định, nó sẽ được chuyển giao thành một chỉ số KPI vận hành chuẩn hóa hằng ngày của bộ phận phụ trách.
