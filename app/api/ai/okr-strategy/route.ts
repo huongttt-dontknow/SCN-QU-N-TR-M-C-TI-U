@@ -12,38 +12,54 @@ function getMockSuggestions(unitCode: string) {
   if (code === "SCVN") {
     return [
       {
-        title: "O1: Tối ưu hóa chi phí vận hành hệ thống sản xuất và nâng tỷ lệ tái sử dụng assets Wolfoo 3D",
-        weight: 35,
+        title: "O1: Thúc đẩy tăng trưởng doanh thu đa nền tảng phim hoạt hình Wolfoo 2D/3D và Animated Story",
+        weight: 50,
         keyResults: [
           {
-            title: "KR1: Tái sử dụng trên 60% assets (background, nhân vật, đạo cụ) trong sản xuất phim mới",
+            title: "KR1: Đẩy mạnh tần suất xuất bản Wolfoo 2D/3D và đạt tỷ lệ tái sử dụng assets tối thiểu 60% để giảm OPEX",
             priority: "High",
             pic: "Nguyễn Văn A",
             actions: [
-              { title: "Chuẩn hóa và gắn tag siêu dữ liệu cho 500 assets dùng chung", pic: "Trần Thị B" },
-              { title: "Tổ chức kiểm định chất lượng asset hàng tuần trước khi up lên kho dùng chung", pic: "Phạm Văn C" }
+              { title: "Chuẩn hóa và phân loại kho assets Wolfoo 2D và 3D dùng chung để tái sử dụng trong dựng thô", pic: "Trần Thị B" },
+              { title: "Ứng dụng AIVA-C tự động hóa 70% các tác vụ lặp lại trong quy trình thiết kế và render phim", pic: "Lê Văn D" }
             ]
           },
           {
-            title: "KR2: Giảm hao phí render lỗi xuống dưới 5% tổng thời gian kết xuất sản phẩm",
+            title: "KR2: Phát hành 24 tập Animated Story (chủ đề teen story, drama học đường) đa kênh trên YouTube và Spotify",
             priority: "High",
-            pic: "Lê Văn D",
+            pic: "Nguyễn Thị Hồng",
             actions: [
-              { title: "Cài đặt plugin tự động check lỗi mesh và vật liệu cho render farm", pic: "Lê Văn D" }
+              { title: "Sản xuất nội dung truyện/phim hoạt hình tĩnh cuộc sống teen và tối ưu định dạng audio podcast lên Spotify", pic: "Phạm Văn C" }
             ]
           }
         ]
       },
       {
-        title: "O2: Tăng cường sản xuất nhạc số Wolfoo và thương mại hóa phái sinh thương hiệu",
-        weight: 35,
+        title: "O2: Phát triển các dự án Game App mới, khai thác kho gốc phái sinh và cung cấp giải pháp quản trị YouTube",
+        weight: 50,
         keyResults: [
           {
-            title: "KR1: Tăng trưởng doanh thu nhạc số Wolfoo thêm 20% trên YouTube Music và Spotify",
-            priority: "Medium",
-            pic: "Nguyễn Văn A",
+            title: "KR1: Hoàn thiện xuất bản 15 game mới (P CNGP nhận bàn giao từ SCCH) và đạt mốc doanh thu mục tiêu",
+            priority: "High",
+            pic: "Vương Tuấn Anh",
             actions: [
-              { title: "Phát hành album nhạc Wolfoo Remix trên 5 nền tảng quốc tế lớn", pic: "Trần Thị B" }
+              { title: "Phòng CNGP hoàn thiện phát triển game Wolfoo và tích hợp mô hình kinh doanh in-app purchase", pic: "Nguyễn Minh H" }
+            ]
+          },
+          {
+            title: "KR2: Triển khai 10 giải pháp/công cụ AI (P CNGP phát triển) tự động hóa quản trị hệ thống kênh YouTube",
+            priority: "High",
+            pic: "Trần Minh Hoàng",
+            actions: [
+              { title: "Phát triển tool tự động check bản quyền và phân tích insight thời gian thực hỗ trợ xuất bản YouTube", pic: "Nguyễn Văn Nam" }
+            ]
+          },
+          {
+            title: "KR3: Doanh thu phái sinh và kinh doanh từ kho nội dung gốc của Sconnect đạt mức tăng trưởng +100% (DA 01)",
+            priority: "Medium",
+            pic: "Lê Thị Mai",
+            actions: [
+              { title: "Dự án 01 thực hiện đóng gói, biên tập và phân phối lại kho phim cũ lên các nền tảng OTT mới", pic: "Lê Thị Mai" }
             ]
           }
         ]
@@ -52,11 +68,19 @@ function getMockSuggestions(unitCode: string) {
   } else {
     return [
       {
-        title: "O1: Quản trị dòng tiền tối ưu và số hóa quy trình vận hành toàn tổng công ty",
-        weight: 40,
+        title: "O1: Quản trị dòng tiền tối ưu, tiết giảm chi phí vận hành và nâng cao năng lực ứng dụng AI toàn tập đoàn",
+        weight: 50,
         keyResults: [
           {
-            title: "KR1: Tiết giảm 15% chi phí hành chính và quản lý thông qua ứng dụng hệ điều hành e-office",
+            title: "KR1: Nhóm AI nghiên cứu triển khai thành công 5 giải pháp trợ lý ảo tự động hóa Shared Services và vận hành",
+            priority: "High",
+            pic: "Phan Anh Tuấn",
+            actions: [
+              { title: "Nhóm AI thiết lập và huấn luyện AI Co-Pilot tích hợp e-office để kiểm duyệt tờ trình tự động <12h", pic: "Đỗ Thị G" }
+            ]
+          },
+          {
+            title: "KR2: Tiết giảm 15% chi phí hành chính OPEX thông qua tự động hóa các thủ tục nội bộ",
             priority: "High",
             pic: "Trần Văn E",
             actions: [
@@ -76,6 +100,19 @@ function getMockAssessment(unitCode: string, objectiveTitle: string, objectivePr
     ? `**Cảnh báo**: Hiện có **${delayedKrs.length}** kết quả then chốt (KRs) đạt tiến độ dưới 75% (${delayedKrs.map(k => `"${k.title}"`).join(", ")}). Cần tập trung tháo gỡ điểm nghẽn tại đây.`
     : `**Ghi nhận**: Tất cả các kết quả then chốt (KRs) đều đang bám sát tiến độ đề ra.`;
 
+  let specificRecommendations = "";
+  if (unitCode === "SCVN") {
+    specificRecommendations = `
+    * **BP AS (Animated Story)**: Cần bám sát kế hoạch sản xuất teen story / drama học đường và tối ưu hóa phân phối âm thanh truyện đọc lên Spotify để đa dạng nguồn thu.
+    * **Dự án 01 (DA 01)**: Đẩy mạnh đóng gói và khai thác kho gốc phái sinh, tăng tốc nghiên cứu và thử nghiệm phân phối nội dung trên các nền tảng OTT mới để khai phá thị trường ngách.
+    * **Phòng CNGP**: Tập trung hoàn thiện các tự động hóa quản trị kênh YouTube và tăng tốc sản xuất dự án game app nhận bàn giao từ SCCH.
+    * **Wolfoo 2D/3D**: Tăng tỷ lệ tái sử dụng tài nguyên (assets) Wolfoo 2D và 3D tối thiểu đạt 60% để giảm OPEX sản xuất.`;
+  } else {
+    specificRecommendations = `
+    * **Nhóm AI**: Quyết liệt nghiên cứu và triển khai thử nghiệm các trợ lý AI Co-Pilot để tối ưu hóa quy trình phê duyệt tờ trình và Shared Services của tổng công ty.
+    * **Quản trị dòng tiền**: Tắt các cổng chi phí OPEX lãng phí, đồng bộ dữ liệu Realtime lên Dashboard để phục vụ họp strategic review hàng tuần.`;
+  }
+
   return `**AI Agent nhận định:**
 
 1. **Đánh giá tổng quan**:
@@ -87,7 +124,7 @@ function getMockAssessment(unitCode: string, objectiveTitle: string, objectivePr
    * Rủi ro về nguồn lực triển khai có thể bị phân tán nếu không xác định rõ mức độ ưu tiên giữa các đầu việc.
 
 3. **Đề xuất hành động thực tế**:
-   * **Số hóa & Tự động hóa**: Đẩy mạnh ứng dụng hệ điều hành AIVA trong khâu gắn thẻ metadata assets và kiểm tra mesh/vật liệu tự động để tối ưu công suất render farm.
+   * **Đề xuất trọng tâm**: ${specificRecommendations}
    * **Quản trị mục tiêu**: Tổ chức rà soát chéo (cross-check) định kỳ hàng tuần giữa các PIC để phát hiện và hỗ trợ kịp thời các Action có tỷ lệ hoàn thành thấp.`;
 }
 

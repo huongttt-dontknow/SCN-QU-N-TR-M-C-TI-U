@@ -269,53 +269,31 @@ KR3 (AIVA): Hoàn thiện và vận hành ổn định Hệ thống AIVA trên c
 KR4 (Văn hóa): Giữ vững bản sắc và kiến tạo thành công văn hóa AI-First.
 PHƯƠNG ÁN CHIẾN LƯỢC
 II. CÁC ĐƠN VỊ KINH DOANH
-SCCH
-TẦM NHÌN
-Đột phá về công nghệ để gia tăng khả năng sáng tạo và khai thác IP trên đa nền tảng.
-KỲ VỌNG KẾT QUẢ
-Tăng trưởng doanh thu tối thiểu 300%
-Toàn bộ ngân hàng IP (70 IPs) được chuẩn hoá DNA
-17 bộ IP được triển khai trên đa nền tảng và đạt mốc kinh doanh trên $2,000/tháng
-70 kênh kinh doanh/thương hiệu/cộng đồng được triển khai trên đa nền tảng, đa dạng tệp khách hàng
-Hoàn thiện và vận hành 15 game mới đa dạng về thể loại và lứa tuổi.
-Tối thiểu 20 đối tác/khách hàng tham gia hợp tác sản xuất và kinh doanh IP (Sáng tạo ND số, Game App)
-PHƯƠNG ÁN CHIẾN LƯỢC
-Phương án 1: Mở rộng quy mô hệ sinh thái IP trên đa nền tảng để đạt chuẩn hóa 40 IP và doanh thu tăng trưởng 150%
-Phương án 2: Tạo lợi thế cạnh tranh bằng quy trình chuẩn hóa sáng tạo–sản xuất–vận hành dựa trên AIVA
-Phương án 3: Thúc đẩy hợp tác với cộng đồng sáng tạo nhằm gia tăng cơ hội kinh doanh và chuỗi giá trị doanh nghiệp
-Chi tiết với 3 HOẠT ĐỘNG:
-SCVN
-TẦM NHÌN
-Đột phá về năng suất sản xuất các sản phẩm hoạt hình chất lượng cao dựa trên nền tảng ứng dụng công nghệ AIVA
-KỲ VỌNG KẾT QUẢ
-Doanh thu nội dung số tăng tối thiểu +80% so với 2025
-Năng suất sản xuất tăng +250% nhờ áp dụng AI toàn diện
-Giảm thời gian sản xuất xuống 5 lần, đảm bảo tốc độ và giảm chi phí
-Tự động hóa >70% quy trình sản xuất nội dung số
-Triển khai hệ thống AIVA-C xuyên suốt từ tiền kỳ đến phân phối và phân tích chất lượng
-PHƯƠNG ÁN CHIẾN LƯỢC
-SCS
-TẦM NHÌN
-Đột phá hiệu quả kinh doanh từ làm chủ nền tảng công nghệ AIVA, tăng tốc sản xuất tạo các sản phẩm hoạt hình chất lượng cao, hướng tới sản xuất các tác phẩm điện ảnh
-KỲ VỌNG KẾT QUẢ
-Lợi nhuận dương tối thiểu 15%
-10 dự án hợp tác sản xuất, 5 dự án Series
-Hoàn thành Movie "Chiến Binh Gốm"
-Số hóa DNA Movie "WF - Vương Quốc Cờ Bàn"
-10 đối tác B2B khai thác nội dung, 10 đối tác hợp tác sản xuất
-PHƯƠNG ÁN CHIẾN LƯỢC
-SCMU
-TẦM NHÌN
-Trở thành nhà sản xuất âm nhạc tiên phong ứng dụng AIVA để tạo ra tác phẩm âm nhạc chất lượng cao, hiệu suất vượt trội và lan tỏa toàn cầu.
-KỲ VỌNG KẾT QUẢ
-KR 1: Tăng trưởng 70% tổng doanh thu đơn vị so với doanh thu thực tế 2025. Lợi nhuận 25%
-KR 2: Năng suất sáng tạo tăng 200% so với chưa áp dụng AI. Giảm 20% thời gian sản xuất khi áp dụng AIVA. Số lượng kho nhạc đạt tối thiểu 13000 bài
-KR 3: Hệ thống AIVA đảm bảo vận hành, kinh doanh
-AIVA - C:  Hoàn thiện mô hình sáng tạo ý tưởng kịch bản âm nhạc, mô hình sáng tạo video, mô hình phân tích bài hát với audio có sẵn, Mô hình  sáng tác bài hát và chuyển đổi prompt phù hợp với các AI sáng tác giai điệu như Suno, Udio.
-AIVA - O: Hoàn thiện mô hình quản trị dữ liệu kho nhạc, quản trị dữ liệu khách hàng
-AIVA - P: Hoàn thiện mô hình trợ lý cho toàn bộ nhân sự đơn vị
-KR 4: Nổi bật văn hóa AI First: 100% nhân sự được tham gia training đào tạo về AIVA. Tối thiểu có 4 cải tiến sáng tạo khi sử dụng AI trong năm
-PHƯƠNG ÁN CHIẾN LƯỢC
+SCVN (SCONNECT VIỆT NAM)
+TẦM NHÌN 2026:
+Đột phá về năng suất sản xuất các sản phẩm hoạt hình, giải trí, âm nhạc và giải pháp công nghệ dựa trên nền tảng ứng dụng công nghệ AIVA. SCVN vận hành mô hình tập trung gồm 8-9 bộ phận/dự án con trực thuộc sau:
+1. BP Wolfoo: Sản xuất chuỗi phim hoạt hình Wolfoo (bao gồm Wolfoo 3D và Wolfoo 2D là IP nổi bật nhất cần thúc đẩy mạnh mẽ).
+2. BP AS (Animated Story): Sản xuất các kênh truyện/phim hoạt hình tĩnh dạng Animated Story, tập trung vào các câu chuyện về cuộc sống teen story / drama / học đường... phân phối đa kênh (YouTube, Spotify...).
+3. BP NDTH (Nội dung tổng hợp): Sản xuất các dạng nội dung giải trí và giáo dục tổng hợp đa kênh.
+4. BP Studio (SCS): Tập trung sản xuất nội dung và kinh doanh trên nền tảng YouTube, đặc biệt là các dự án phái sinh tài nguyên từ kho có sẵn của Sconnect. SCS không còn quá tập trung cho mục tiêu phát triển sản phẩm điện ảnh trong năm 2026.
+5. BP Creative (SCCH): Tập trung nghiên cứu phát triển các dự án mới, sáng tạo ươm tạo dự án mới. Chức năng chuẩn hóa IP không còn tập trung.
+6. DA 01 (Dự án 01): Tập trung kinh doanh và khai thác sản phẩm trong kho gốc, phái sinh tài nguyên cũ, đồng thời nghiên cứu phát triển sản phẩm trên các nền tảng phân phối mới.
+7. P CNGP (Phòng Công nghệ & Giải pháp): Chuyển dịch từ khối hỗ trợ SUs sang bộ phận kinh doanh trực thuộc SCVN. Tập trung phát triển các dự án game app (nhận bàn giao từ SCCH) và cung cấp giải pháp phần mềm tự động hóa quản trị hệ thống kênh YouTube.
+8. BP Music (SCMU): Sản xuất và kinh doanh nhạc số đa kênh (Spotify, YouTube Music...), tích hợp công cụ AI tạo nhạc (Suno, Udio) và quản trị kho nhạc số.
+9. DA Lego: Sản xuất nội dung đồ chơi xếp hình theo định dạng Lego.
+
+KỲ VỌNG KẾT QUẢ:
+- Doanh thu nội dung số và dịch vụ tăng tối thiểu +80% so với 2025.
+- Năng suất sản xuất và sáng tạo tăng tối thiểu +200% đến +250% nhờ áp dụng AI toàn diện.
+- Rút ngắn thời gian chu kỳ sản xuất xuống 5 lần, tự động hóa >70% quy trình sản xuất nội dung số.
+- Doanh thu âm nhạc số tăng trưởng tối thiểu +70% so với 2025.
+- Tỷ lệ tái sử dụng tài nguyên (assets) Wolfoo 3D/2D đạt tối thiểu 60%.
+- Hoàn thiện các giải pháp phần mềm quản trị kênh và xuất bản tối thiểu 15 game mới bởi phòng CNGP.
+
+PHƯƠNG ÁN CHIẾN LƯỢC:
+- Phương án 1: Tối đa hóa hiệu suất doanh thu đa nền tảng (YouTube, Spotify...).
+- Phương án 2: Tận dụng, phái sinh hệ thống tài nguyên sẵn có (IP, kho lưu trữ gốc, kho cũ phái sinh) để phát sinh doanh thu nhanh và tiết kiệm chi phí.
+- Phương án 3: Ứng dụng sâu nền tảng AIVA-C và công cụ AI (Suno/Udio cho Music, AIVA cho YouTube của CNGP, AIVA cho Creative) vào sản xuất kinh doanh.
 SCME
 TẦM NHÌN
 Là MCN tiên phong thiết kế mô hình ứng dụng AI bàn bản có hệ thống và đạt hiệu quả cao
@@ -382,7 +360,17 @@ MỤC TIÊU - KỲ VỌNG
 Đầu tư tăng trưởng có kiểm soát: 6 dự án đầu tư mới trong năm. Ngân sách đầu tư không vượt quá 15% tổng ngân sách năm. Phân bổ nguồn vốn dựa trên hiệu quả chiến lược, xây dựng khung đo lường ROI cho từng đơn vị.
 Tạo nền móng tài sản vững chắc: Xây dựng và chuẩn hóa hệ thống tài sản (100% tài sản hữu hình được ghi nhận và quản lý đầy đủ, đúng mục đích sử dụng, >60% tài sản vô hình được định giá và có giá trị trong chính sách bán hàng, trong xác định giá trị của doanh nghiệp.)
 Xây dựng hệ thống quản trị tài chính với nhân sự dữ liệu hóa & hiệu suất cao: Chuyển đổi mô hình quản trị tài chính truyền thống sang AI- driven FA quản trị tài chính dựa trên dữ liệu; AIVA - O: Tự động hóa >90% quy trình kế toán, báo cáo thời gian thực, triển khai FP&A dựa trên AI
+CHIẾN LƯỢC NHÓM AI (SU MỚI)
+TẦM NHÌN
+Kiến tạo năng lực vận hành AI-native toàn diện cho Sconnect, đưa AI làm động cơ thúc đẩy tăng trưởng năng suất và tự động hóa trong quản trị tổng công ty.
+MỤC TIÊU - KỲ VỌNG
+- Vận hành và giám sát ổn định toàn bộ Hệ điều hành AIVA của tổng công ty.
+- Nghiên cứu, thử nghiệm và triển khai thành công tối thiểu 5 giải pháp AI/AI Agent tự chủ hỗ trợ trực tiếp cho hoạt động vận hành và hoạt động sản xuất kinh doanh của các đơn vị (BUs/SUs).
+- Nâng cao năng lực cộng hưởng con người-AI của nhân sự toàn tổng công ty.
 PHƯƠNG ÁN CHIẾN LƯỢC
+- Phương án 1: Triển khai các AI Co-Pilot tích hợp sâu vào quy trình nghiệp vụ Shared Services và sản xuất.
+- Phương án 2: Tự động hóa hệ thống dữ liệu doanh nghiệp và quản trị SSoT.
+
 IV. MAPPING CHIẾN LƯỢC
 MAPPING THEO PHƯƠNG ÁN CHIẾN LƯỢC
 PA1 – TẬP TRUNG 3 LĨNH VỰC CỐT LÕI

@@ -248,10 +248,10 @@ const renderFormattedAiText = (text: string, theme: string) => {
   const lines = text.split("\n");
   
   return (
-    <div className={`space-y-3.5 text-xs ${theme === "light" ? "text-slate-700 font-medium" : "text-slate-200"}`}>
+    <div className={`space-y-1.5 text-xs ${theme === "light" ? "text-slate-700 font-medium" : "text-slate-200"}`}>
       {lines.map((line, idx) => {
         const trimmed = line.trim();
-        if (!trimmed) return <div key={idx} className="h-1.5" />;
+        if (!trimmed) return <div key={idx} className="h-0.5" />;
 
         // Header cấp 1 hoặc 2 hoặc 3 (ví dụ ### )
         if (trimmed.startsWith("### ")) {
