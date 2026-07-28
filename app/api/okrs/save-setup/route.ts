@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+function isTempId(id: string | null | undefined): boolean {
+  if (!id) return true;
+  return id.startsWith("obj-") || 
+         id.startsWith("kr-") || 
+         id.startsWith("act-") || 
+         id.startsWith("obj-mock") || 
+         id.startsWith("kr-mock") || 
+         id.startsWith("act-mock") || 
+         id.startsWith("fallback-obj") || 
+         id.startsWith("fallback-kr") || 
+         id.startsWith("fallback-act");
+}
+
 export async function POST(request: Request) {
   try {
     const { unitCode, period, objectives } = await request.json();
@@ -21,7 +34,7 @@ export async function POST(request: Request) {
       // Nhận diện danh sách ID cần giữ lại
       const keepObjIds = objectives
         .map(o => o.id)
-        .filter(id => id && !id.startsWith("obj-mock") && !id.startsWith("obj-"));
+        .filter(id => !isTempId(id));
 
       // Xóa các Objective không nằm trong danh sách giữ lại (quan hệ Cascade sẽ tự động xóa KRs và Actions con)
       const deleteObjIds = existingObjIds.filter(id => !keepObjIds.includes(id));
@@ -33,7 +46,7 @@ export async function POST(request: Request) {
 
       // 2. Đồng bộ từng Objective
       for (const obj of objectives) {
-        const isNewObj = !obj.id || obj.id.startsWith("obj-mock") || obj.id.startsWith("obj-");
+        const isNewObj = isTempId(obj.id);
 
         if (isNewObj) {
           // Tạo mới hoàn toàn Objective cùng các KRs và Actions trực thuộc
@@ -92,7 +105,7 @@ export async function POST(request: Request) {
 
           const keepKrIds = (obj.keyResults || [])
             .map((k: any) => k.id)
-            .filter((id: string) => id && !id.startsWith("kr-mock") && !id.startsWith("kr-"));
+            .filter((id: string) => !isTempId(id));
 
           // Xóa các KR không giữ lại
           const deleteKrIds = existingKrIds.filter(id => !keepKrIds.includes(id));
@@ -104,7 +117,7 @@ export async function POST(request: Request) {
 
           // Đồng bộ từng KR
           for (const kr of (obj.keyResults || [])) {
-            const isNewKr = !kr.id || kr.id.startsWith("kr-mock") || kr.id.startsWith("kr-");
+            const isNewKr = isTempId(kr.id);
 
             if (isNewKr) {
               await tx.keyResult.create({
@@ -155,7 +168,7 @@ export async function POST(request: Request) {
 
               const keepActIds = (kr.actions || [])
                 .map((a: any) => a.id)
-                .filter((id: string) => id && !id.startsWith("act-mock") && !id.startsWith("act-"));
+                .filter((id: string) => !isTempId(id));
 
               // Xóa Actions không giữ lại
               const deleteActIds = existingActIds.filter(id => !keepActIds.includes(id));
@@ -167,7 +180,7 @@ export async function POST(request: Request) {
 
               // Đồng bộ Actions
               for (const act of (kr.actions || [])) {
-                const isNewAct = !act.id || act.id.startsWith("act-mock") || act.id.startsWith("act-");
+                const isNewAct = isTempId(act.id);
 
                 if (isNewAct) {
                   await tx.action.create({

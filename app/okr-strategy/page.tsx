@@ -1090,6 +1090,26 @@ export default function OkrStrategyPage() {
             </div>
           </div>
 
+          {/* THANH ĐIỀU KHIỂN & LƯU TỔNG TIẾN ĐỘ */}
+          <div className="glass-panel p-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div>
+              <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
+                📋 DANH SÁCH THEO DÕI & CẬP NHẬT TIẾN ĐỘ OKR ĐƠN VỊ
+              </h3>
+              <p className="text-[11px] text-[var(--text-muted)] mt-1">
+                Thay đổi trực tiếp tiến độ (%) và ghi chú thực tế của Key Results/Actions dưới đây.
+              </p>
+            </div>
+            {isEditable && (
+              <button
+                onClick={() => saveOkrDataToServer(objectives, "✓ Đã lưu thành công toàn bộ kết quả cập nhật tiến độ OKR của phiên làm việc!")}
+                className="bg-emerald-600 text-white text-xs font-extrabold px-4 py-2 rounded-lg hover:bg-emerald-500 shadow-md hover:shadow-[0_0_12px_rgba(16,185,129,0.3)] transition-all flex items-center gap-1.5 self-stretch sm:self-auto justify-center"
+              >
+                <Save size={14} /> Lưu phiên cập nhật
+              </button>
+            )}
+          </div>
+
           {/* BẢNG THEO DÕI & CẬP NHẬT SỐ LIỆU OKR (TỪNG OBJECTIVE LÀ 1 BẢNG NỔI CHUẨN NGUYÊN MẪU) */}
           {objectives.map(obj => (
             <div 
