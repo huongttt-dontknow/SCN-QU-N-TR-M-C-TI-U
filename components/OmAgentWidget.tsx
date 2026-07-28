@@ -219,23 +219,27 @@ export default function OmAgentWidget() {
   };
 
   // Simple formatter helper to replace Markdown-like markers (** and \n)
-  const formatMessageContent = (text: string) => {
+  const formatMessageContent = (text: string, role: "user" | "model") => {
     // Split by double newlines for paragraphs
     const paragraphs = text.split("\n\n");
     return paragraphs.map((p, pIdx) => {
       // Split by newline for lines
       const lines = p.split("\n");
       return (
-        <p key={pIdx} className="mb-2 leading-relaxed text-sm text-slate-800">
+        <p key={pIdx} className={`mb-2 leading-relaxed text-sm ${role === "user" ? "text-slate-100" : "text-white/95"}`}>
           {lines.map((line, lIdx) => {
             // Simple markdown bold converter
             const parts = line.split("**");
             const renderedLine = parts.map((part, partIdx) => {
               if (partIdx % 2 === 1) {
-                // Highlight words containing specific terms in purple, others in green
-                const isPurple = /okr|kpi|chiến lược|làm lớn|làm tròn/i.test(part);
-                const colorClass = isPurple ? "text-purple-700 font-extrabold" : "text-emerald-700 font-bold";
-                return <strong key={partIdx} className={colorClass}>{part}</strong>;
+                if (role === "model") {
+                  // On green gradient background, use yellow/gold for highlights to maximize readability
+                  const isPurple = /okr|kpi|chiến lược|làm lớn|làm tròn/i.test(part);
+                  const colorClass = isPurple ? "text-yellow-300 font-extrabold" : "text-lime-200 font-bold";
+                  return <strong key={partIdx} className={colorClass}>{part}</strong>;
+                } else {
+                  return <strong key={partIdx} className="font-extrabold text-white">{part}</strong>;
+                }
               }
               return part;
             });
@@ -287,9 +291,9 @@ export default function OmAgentWidget() {
           className="fixed w-[390px] h-[540px] bg-white border border-slate-200 shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200"
         >
           {/* Header */}
-          <div className="bg-slate-50 px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+          <div className="bg-gradient-to-r from-emerald-600 to-green-600 px-4 py-3 border-b border-emerald-500/20 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full overflow-hidden border border-emerald-500/30 shadow-inner flex-shrink-0">
+              <div className="w-9 h-9 rounded-full overflow-hidden border border-white/20 shadow-inner flex-shrink-0">
                 <img
                   src="/cute_ai_avatar.jpg"
                   alt="OM Avatar"
@@ -297,25 +301,25 @@ export default function OmAgentWidget() {
                 />
               </div>
               <div>
-                <h3 className="text-sm font-black text-slate-800 flex items-center gap-1">
-                  OM Agent <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <h3 className="text-sm font-black text-white flex items-center gap-1">
+                  OM Agent <span className="w-2 h-2 rounded-full bg-emerald-200 animate-pulse"></span>
                 </h3>
-                <p className="text-xs text-slate-500 font-medium">Trợ lý Chiến lược Sconnect</p>
+                <p className="text-xs text-emerald-100 font-medium">Trợ lý Chiến lược Sconnect</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={handleClearHistory}
-                className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg transition-colors hover:bg-slate-100"
+                className="p-1.5 text-emerald-100 hover:text-red-200 rounded-lg transition-colors hover:bg-white/10"
                 title="Làm sạch hội thoại"
               >
-                <RotateCcw size={16} />
+                <RotateCcw size={16} style={{ color: "#e2f8f0" }} />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg transition-colors hover:bg-slate-100"
+                className="p-1.5 text-emerald-100 hover:text-white rounded-lg transition-colors hover:bg-white/10"
               >
-                <X size={16} />
+                <X size={16} style={{ color: "#ffffff" }} />
               </button>
             </div>
           </div>
@@ -371,13 +375,13 @@ export default function OmAgentWidget() {
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm ${
+                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm shadow-md ${
                     msg.role === "user"
-                      ? "bg-emerald-600 text-white rounded-tr-none font-medium"
-                      : "bg-white border border-slate-200/80 text-slate-800 rounded-tl-none"
+                      ? "bg-gradient-to-br from-slate-700 to-slate-800 text-white rounded-tr-none font-medium"
+                      : "bg-gradient-to-br from-emerald-600/90 to-green-600/90 text-white rounded-tl-none border-0"
                   }`}
                 >
-                  {formatMessageContent(msg.content)}
+                  {formatMessageContent(msg.content, msg.role)}
                 </div>
               </div>
             ))}
