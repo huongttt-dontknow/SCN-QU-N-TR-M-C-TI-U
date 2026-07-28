@@ -226,7 +226,7 @@ export default function OmAgentWidget() {
       // Split by newline for lines
       const lines = p.split("\n");
       return (
-        <p key={pIdx} className="mb-2 leading-relaxed text-sm !text-white">
+        <p key={pIdx} className="mb-2 leading-relaxed text-[13px] !text-white">
           {lines.map((line, lIdx) => {
             // Simple markdown bold converter
             const parts = line.split("**");
@@ -376,7 +376,7 @@ export default function OmAgentWidget() {
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm shadow-md ${
+                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-[13px] shadow-md ${
                     msg.role === "user"
                       ? "bg-gradient-to-br from-slate-700 to-slate-800 text-white rounded-tr-none font-medium"
                       : "bg-gradient-to-br from-emerald-600/90 to-green-600/90 text-white rounded-tl-none border-0"
@@ -395,7 +395,7 @@ export default function OmAgentWidget() {
                     className="w-full h-full object-cover scale-[1.4] origin-[50%_35%]"
                   />
                 </div>
-                <div className="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm">
+                <div className="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm text-[13px]">
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
                     <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
@@ -408,21 +408,23 @@ export default function OmAgentWidget() {
           </div>
 
           {/* Quick suggestions panel */}
-          <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-100 space-y-1.5">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gợi ý câu hỏi nhanh:</p>
-            <div className="flex flex-wrap gap-1.5">
-              {quickQuestions[activeTab].map((q, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSendMessage(q.query)}
-                  disabled={isLoading}
-                  className="text-xs bg-white hover:bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm transition-all text-left max-w-full truncate disabled:opacity-50"
-                >
-                  {q.text}
-                </button>
-              ))}
+          {messages.length <= 1 && (
+            <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-100 space-y-1.5">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gợi ý câu hỏi nhanh:</p>
+              <div className="flex flex-wrap gap-1.5">
+                {quickQuestions[activeTab].map((q, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSendMessage(q.query)}
+                    disabled={isLoading}
+                    className="text-xs bg-white hover:bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm transition-all text-left max-w-full truncate disabled:opacity-50"
+                  >
+                    {q.text}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Footer Input Bar */}
           <form
