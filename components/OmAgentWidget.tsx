@@ -226,7 +226,7 @@ export default function OmAgentWidget() {
       // Split by newline for lines
       const lines = p.split("\n");
       return (
-        <p key={pIdx} className={`mb-2 leading-relaxed text-sm ${role === "user" ? "text-slate-100" : "text-white/95"}`}>
+        <p key={pIdx} className="mb-2 leading-relaxed text-sm !text-white">
           {lines.map((line, lIdx) => {
             // Simple markdown bold converter
             const parts = line.split("**");
@@ -238,7 +238,8 @@ export default function OmAgentWidget() {
                   const colorClass = isPurple ? "text-yellow-300 font-extrabold" : "text-lime-200 font-bold";
                   return <strong key={partIdx} className={colorClass}>{part}</strong>;
                 } else {
-                  return <strong key={partIdx} className="font-extrabold text-white">{part}</strong>;
+                  // On user dark slate background, use teal-200 for highlights
+                  return <strong key={partIdx} className="font-black text-teal-200">{part}</strong>;
                 }
               }
               return part;

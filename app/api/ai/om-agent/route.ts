@@ -94,13 +94,14 @@ Hãy nhập câu hỏi của bạn hoặc chọn các chủ đề gợi ý nhanh
 }
 
 export async function POST(request: Request) {
+  let latestMessage = "";
   try {
     const { messages } = await request.json();
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: "Thiếu dữ liệu lịch sử chat" }, { status: 400 });
     }
 
-    const latestMessage = messages[messages.length - 1]?.content || "";
+    latestMessage = messages[messages.length - 1]?.content || "";
 
     // 1. Tải tài liệu ngữ cảnh sconnect_context.txt
     const contextPath = path.join(process.cwd(), "app", "api", "ai", "okr-strategy", "sconnect_context.txt");
@@ -152,7 +153,8 @@ ${sconnectContext}
     return NextResponse.json({ reply: replyText });
 
   } catch (error: any) {
-    console.error("Lỗi khi xử lý hội thoại OM Agent:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Lỗi khi xử lý hội thoại OM Agent (Chuyển sang chế độ dự phòng):", error);
+    const reply = getMockOmResponse(latestMessage);
+    return NextResponse.json({ reply });
   }
 }
