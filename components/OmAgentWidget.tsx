@@ -226,13 +226,16 @@ export default function OmAgentWidget() {
       // Split by newline for lines
       const lines = p.split("\n");
       return (
-        <p key={pIdx} className="mb-2 leading-relaxed text-xs">
+        <p key={pIdx} className="mb-2 leading-relaxed text-sm text-slate-800">
           {lines.map((line, lIdx) => {
             // Simple markdown bold converter
             const parts = line.split("**");
             const renderedLine = parts.map((part, partIdx) => {
               if (partIdx % 2 === 1) {
-                return <strong key={partIdx} className="font-extrabold text-white">{part}</strong>;
+                // Highlight words containing specific terms in purple, others in green
+                const isPurple = /okr|kpi|chiến lược|làm lớn|làm tròn/i.test(part);
+                const colorClass = isPurple ? "text-purple-700 font-extrabold" : "text-emerald-700 font-bold";
+                return <strong key={partIdx} className={colorClass}>{part}</strong>;
               }
               return part;
             });
@@ -261,7 +264,7 @@ export default function OmAgentWidget() {
           bottom: `${position.y}px`,
           zIndex: 9999
         }}
-        className={`fixed w-11 h-11 rounded-full bg-gradient-to-r from-emerald-600 to-green-600 flex items-center justify-center shadow-lg cursor-grab active:cursor-grabbing border-2 border-emerald-400 hover:scale-105 active:scale-95 transition-transform duration-100 ${
+        className={`fixed w-[52px] h-[52px] rounded-full bg-gradient-to-r from-emerald-600 to-green-600 flex items-center justify-center shadow-xl cursor-grab active:cursor-grabbing border-2 border-emerald-400 hover:scale-105 active:scale-95 transition-transform duration-100 overflow-hidden ${
           isOpen ? "ring-4 ring-emerald-500/30" : ""
         }`}
         title="OM Agent - Trợ lý Chiến lược"
@@ -269,7 +272,7 @@ export default function OmAgentWidget() {
         <img
           src="/cute_ai_avatar.jpg"
           alt="OM Agent"
-          className="w-full h-full rounded-full object-cover select-none pointer-events-none"
+          className="w-full h-full object-cover select-none pointer-events-none scale-[1.4] origin-[50%_35%]"
         />
       </button>
 
@@ -278,71 +281,73 @@ export default function OmAgentWidget() {
         <div
           style={{
             right: `${position.x}px`,
-            bottom: `${position.y + 60}px`,
+            bottom: `${position.y + 65}px`,
             zIndex: 9998
           }}
-          className="fixed w-[360px] h-[480px] bg-slate-950/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200"
+          className="fixed w-[390px] h-[540px] bg-white border border-slate-200 shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200"
         >
           {/* Header */}
-          <div className="bg-slate-900/80 px-4 py-3 border-b border-white/5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <img
-                src="/cute_ai_avatar.jpg"
-                alt="OM Avatar"
-                className="w-7 h-7 rounded-full object-cover border border-emerald-500/50"
-              />
+          <div className="bg-slate-50 px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full overflow-hidden border border-emerald-500/30 shadow-inner flex-shrink-0">
+                <img
+                  src="/cute_ai_avatar.jpg"
+                  alt="OM Avatar"
+                  className="w-full h-full object-cover scale-[1.4] origin-[50%_35%]"
+                />
+              </div>
               <div>
-                <h3 className="text-xs font-black text-white flex items-center gap-1">
-                  OM Agent <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <h3 className="text-sm font-black text-slate-800 flex items-center gap-1">
+                  OM Agent <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 </h3>
-                <p className="text-[10px] text-slate-400">Trợ lý Chiến lược Sconnect</p>
+                <p className="text-xs text-slate-500 font-medium">Trợ lý Chiến lược Sconnect</p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleClearHistory}
-                className="p-1.5 text-slate-400 hover:text-red-400 rounded-lg transition-colors hover:bg-white/5"
+                className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg transition-colors hover:bg-slate-100"
                 title="Làm sạch hội thoại"
               >
-                <RotateCcw size={14} />
+                <RotateCcw size={16} />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors hover:bg-white/5"
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg transition-colors hover:bg-slate-100"
               >
-                <Minimize2 size={14} />
+                <X size={16} />
               </button>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="bg-slate-950 px-3 py-1.5 border-b border-white/5 flex gap-1">
+          <div className="bg-slate-50/50 px-3 py-1.5 border-b border-slate-100 flex gap-1">
             <button
               onClick={() => setActiveTab("general")}
-              className={`flex-1 text-[10px] font-bold py-1 rounded-md transition-all ${
+              className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-all ${
                 activeTab === "general"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                  ? "bg-emerald-600 text-white shadow"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-100"
               }`}
             >
               Chung
             </button>
             <button
               onClick={() => setActiveTab("okr")}
-              className={`flex-1 text-[10px] font-bold py-1 rounded-md transition-all ${
+              className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-all ${
                 activeTab === "okr"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                  ? "bg-emerald-600 text-white shadow"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-100"
               }`}
             >
               OKR
             </button>
             <button
               onClick={() => setActiveTab("kpi")}
-              className={`flex-1 text-[10px] font-bold py-1 rounded-md transition-all ${
+              className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-all ${
                 activeTab === "kpi"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                  ? "bg-emerald-600 text-white shadow"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-100"
               }`}
             >
               KPI
@@ -350,24 +355,26 @@ export default function OmAgentWidget() {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30 custom-scrollbar">
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.role === "model" && (
-                  <img
-                    src="/cute_ai_avatar.jpg"
-                    alt="Bot Avatar"
-                    className="w-5.5 h-5.5 rounded-full object-cover mt-0.5 border border-emerald-500/30 flex-shrink-0"
-                  />
+                  <div className="w-7 h-7 rounded-full overflow-hidden border border-emerald-500/20 shadow-inner flex-shrink-0 mt-0.5">
+                    <img
+                      src="/cute_ai_avatar.jpg"
+                      alt="Bot Avatar"
+                      className="w-full h-full object-cover scale-[1.4] origin-[50%_35%]"
+                    />
+                  </div>
                 )}
                 <div
-                  className={`max-w-[85%] rounded-xl px-3 py-2 text-slate-100 ${
+                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm ${
                     msg.role === "user"
-                      ? "bg-emerald-600/90 text-white rounded-tr-none font-medium"
-                      : "bg-slate-900/95 border border-white/5 rounded-tl-none"
+                      ? "bg-emerald-600 text-white rounded-tr-none font-medium"
+                      : "bg-white border border-slate-200/80 text-slate-800 rounded-tl-none"
                   }`}
                 >
                   {formatMessageContent(msg.content)}
@@ -375,13 +382,15 @@ export default function OmAgentWidget() {
               </div>
             ))}
             {isLoading && (
-              <div className="flex justify-start gap-2">
-                <img
-                  src="/cute_ai_avatar.jpg"
-                  alt="Bot Avatar"
-                  className="w-5.5 h-5.5 rounded-full object-cover mt-0.5 border border-emerald-500/30 flex-shrink-0"
-                />
-                <div className="bg-slate-900/95 border border-white/5 rounded-xl rounded-tl-none px-3.5 py-2">
+              <div className="flex justify-start gap-2.5">
+                <div className="w-7 h-7 rounded-full overflow-hidden border border-emerald-500/20 shadow-inner flex-shrink-0 mt-0.5">
+                  <img
+                    src="/cute_ai_avatar.jpg"
+                    alt="Bot Avatar"
+                    className="w-full h-full object-cover scale-[1.4] origin-[50%_35%]"
+                  />
+                </div>
+                <div className="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm">
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
                     <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
@@ -394,15 +403,15 @@ export default function OmAgentWidget() {
           </div>
 
           {/* Quick suggestions panel */}
-          <div className="px-4 py-2 bg-slate-950/40 border-t border-white/5 space-y-1.5">
-            <p className="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">Gợi ý câu hỏi nhanh:</p>
+          <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-100 space-y-1.5">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gợi ý câu hỏi nhanh:</p>
             <div className="flex flex-wrap gap-1.5">
               {quickQuestions[activeTab].map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSendMessage(q.query)}
                   disabled={isLoading}
-                  className="text-[10px] bg-slate-900 hover:bg-slate-800 text-slate-300 font-medium px-2.5 py-1 rounded-lg border border-white/5 transition-all text-left max-w-full truncate disabled:opacity-50"
+                  className="text-xs bg-white hover:bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm transition-all text-left max-w-full truncate disabled:opacity-50"
                 >
                   {q.text}
                 </button>
@@ -416,7 +425,7 @@ export default function OmAgentWidget() {
               e.preventDefault();
               handleSendMessage(inputValue);
             }}
-            className="p-3 bg-slate-900/60 border-t border-white/5 flex gap-2 items-center"
+            className="p-3 bg-slate-50 border-t border-slate-100 flex gap-2 items-center"
           >
             <input
               type="text"
@@ -424,14 +433,14 @@ export default function OmAgentWidget() {
               onChange={(e) => setInputValue(e.target.value)}
               disabled={isLoading}
               placeholder="Nhập tin nhắn..."
-              className="flex-1 bg-slate-950/90 text-white text-xs px-3.5 py-2 rounded-xl border border-white/10 focus:outline-none focus:border-emerald-500/80 transition-colors disabled:opacity-50"
+              className="flex-1 bg-white text-slate-800 text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-500 transition-colors disabled:opacity-50 shadow-inner"
             />
             <button
               type="submit"
               disabled={!inputValue.trim() || isLoading}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white p-2 rounded-xl shadow transition-all disabled:opacity-50"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white p-2.5 rounded-xl shadow transition-all disabled:opacity-50"
             >
-              <Send size={14} style={{ color: "#ffffff" }} />
+              <Send size={16} style={{ color: "#ffffff" }} />
             </button>
           </form>
         </div>
