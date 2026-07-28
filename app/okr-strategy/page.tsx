@@ -396,6 +396,7 @@ export default function OkrStrategyPage() {
   const [unplanPic, setUnplanPic] = useState("");
   const [unplanStart, setUnplanStart] = useState("");
   const [unplanDeadline, setUnplanDeadline] = useState("");
+  const [systemUsers, setSystemUsers] = useState<{ fullname: string; email: string; employeeCode: string }[]>([]);
 
   // Module 5.3 Reflection States
   const [reflectionStep, setReflectionStep] = useState(1);
@@ -505,6 +506,21 @@ export default function OkrStrategyPage() {
   useEffect(() => {
     fetchOkrs();
   }, [filters]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("/api/users");
+        if (res.ok) {
+          const data = await res.json();
+          setSystemUsers(data || []);
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải danh sách nhân sự:", err);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const toggleKr = (krId: string) => {
     setExpandedKr(prev => ({ ...prev, [krId]: !prev[krId] }));
@@ -1917,7 +1933,7 @@ export default function OkrStrategyPage() {
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-[var(--text-muted)] uppercase mb-1">Phụ trách (PIC):</label>
-                <input type="text" required value={krPic} onChange={(e) => setKrPic(e.target.value)} className="w-full bg-slate-950 border border-white/10 rounded p-2 text-xs text-white" />
+                <input type="text" list="system-users-list" required value={krPic} onChange={(e) => setKrPic(e.target.value)} className="w-full bg-slate-950 border border-white/10 rounded p-2 text-xs text-white" />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setIsKrModalOpen(false)} className="bg-slate-800 text-xs px-4 py-2 rounded font-bold">Hủy</button>
@@ -1944,7 +1960,7 @@ export default function OkrStrategyPage() {
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-[var(--text-muted)] uppercase mb-1">Người thực hiện:</label>
-                <input type="text" required value={actionPic} onChange={(e) => setActionPic(e.target.value)} className="w-full bg-slate-950 border border-white/10 rounded p-2 text-xs text-white" />
+                <input type="text" list="system-users-list" required value={actionPic} onChange={(e) => setActionPic(e.target.value)} className="w-full bg-slate-950 border border-white/10 rounded p-2 text-xs text-white" />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setIsActionModalOpen(false)} className="bg-slate-800 text-xs px-4 py-2 rounded font-bold">Hủy</button>
@@ -1978,7 +1994,7 @@ export default function OkrStrategyPage() {
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-[var(--text-muted)] uppercase mb-1">Người thực hiện (PIC):</label>
-                  <input type="text" required value={unplanPic} onChange={(e) => setUnplanPic(e.target.value)} placeholder="Tên PIC..." className="w-full bg-slate-950 border border-white/10 rounded p-2 text-xs text-white" />
+                  <input type="text" list="system-users-list" required value={unplanPic} onChange={(e) => setUnplanPic(e.target.value)} placeholder="Tên PIC..." className="w-full bg-slate-950 border border-white/10 rounded p-2 text-xs text-white" />
                 </div>
               </div>
               <div className="flex justify-end gap-2 pt-2">
@@ -2107,6 +2123,13 @@ export default function OkrStrategyPage() {
           </div>
         </div>
       )}
+
+      {/* Datalist for PIC suggestions */}
+      <datalist id="system-users-list">
+        {systemUsers.map((user, idx) => (
+          <option key={idx} value={user.fullname} label={`${user.fullname} (${user.email})`} />
+        ))}
+      </datalist>
 
     </div>
   );
