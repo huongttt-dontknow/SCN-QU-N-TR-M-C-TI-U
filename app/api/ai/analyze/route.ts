@@ -5,11 +5,44 @@ import { createAuditLog } from "@/lib/audit";
 const apiKey = process.env.GEMINI_API_KEY || "";
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
+// Mock KPI Analysis helper
+function getMockKpiAnalysis(unitCode: string, periodKey: string, kpis: any[]) {
+  return {
+    summary: `[MOCK AI] Đánh giá tổng hợp cho đơn vị ${unitCode} trong kỳ ${periodKey}: Doanh thu đạt tiến độ tốt, tuy nhiên sản lượng đang có dấu hiệu chậm trễ do ảnh hưởng từ nhân sự. Khuyến nghị tập trung tối ưu hóa quy trình.`,
+    forecasts: kpis.map(k => {
+      const completionRate = k.targetValue > 0 ? (k.actualValue / k.targetValue) * 100 : 100;
+      let risk = "Thấp";
+      if (completionRate < 75) risk = "Rất cao";
+      else if (completionRate < 90) risk = "Cao";
+      
+      return {
+        indicatorCode: k.indicatorCode,
+        progress: Math.round(completionRate),
+        forecastProgress: Math.min(100, Math.round(completionRate * 1.1)),
+        riskLevel: risk,
+      };
+    }),
+    suggestedActions: [
+      { title: "Đẩy mạnh ứng dụng AIVA để tăng tốc độ dựng thô video", targetIndicator: "VM2-I01.01", impact: "Rút ngắn thời gian sản xuất xuống 20%" },
+      { title: "Tổ chức thêm 1 buổi đào tạo về tối ưu prompt âm nhạc cho đội ngũ", targetIndicator: "MM2-I01.01", impact: "Nâng cao chất lượng nhạc phái sinh" },
+    ]
+  };
+}
+
 // POST /api/ai/analyze - Phân tích hiệu suất KPI và tạo dự báo qua Gemini AI
 export async function POST(request: Request) {
+  let unitCode = "";
+  let periodKey = "";
+  let periodType = "";
+  let kpis: any[] = [];
+
   try {
     const operator = request.headers.get("x-operator-email") || "system@s-connect.net";
-    const { unitCode, periodKey, periodType, kpis } = await request.json();
+    const body = await request.json();
+    unitCode = body.unitCode;
+    periodKey = body.periodKey;
+    periodType = body.periodType;
+    kpis = body.kpis;
 
     if (!kpis || !Array.isArray(kpis)) {
       return NextResponse.json({ error: "Thiếu dữ liệu KPIs để phân tích" }, { status: 400 });
@@ -24,27 +57,8 @@ export async function POST(request: Request) {
     );
 
     if (!genAI) {
-      // Mock AI response if API Key is not set yet (helpful for initial deployment setup)
-      return NextResponse.json({
-        summary: `[MOCK AI] Đánh giá tổng hợp cho đơn vị ${unitCode} trong kỳ ${periodKey}: Doanh thu đạt tiến độ tốt, tuy nhiên sản lượng đang có dấu hiệu chậm trễ do ảnh hưởng từ nhân sự. Khuyến nghị tập trung tối ưu hóa quy trình.`,
-        forecasts: kpis.map(k => {
-          const completionRate = k.targetValue > 0 ? (k.actualValue / k.targetValue) * 100 : 100;
-          let risk = "Thấp";
-          if (completionRate < 75) risk = "Rất cao";
-          else if (completionRate < 90) risk = "Cao";
-          
-          return {
-            indicatorCode: k.indicatorCode,
-            progress: Math.round(completionRate),
-            forecastProgress: Math.min(100, Math.round(completionRate * 1.1)),
-            riskLevel: risk,
-          };
-        }),
-        suggestedActions: [
-          { title: "Đẩy mạnh ứng dụng AIVA để tăng tốc độ dựng thô video", targetIndicator: "VM2-I01.01", impact: "Rút ngắn thời gian sản xuất xuống 20%" },
-          { title: "Tổ chức thêm 1 buổi đào tạo về tối ưu prompt âm nhạc cho đội ngũ", targetIndicator: "MM2-I01.01", impact: "Nâng cao chất lượng nhạc phái sinh" },
-        ]
-      });
+      console.warn("GEMINI_API_KEY chưa được cấu hình, kích hoạt chế độ dự phòng cho KPI Analysis.");
+      return NextResponse.json(getMockKpiAnalysis(unitCode || "SCVN", periodKey || "", kpis));
     }
 
     // Nếu có API key, gọi Gemini API thực tế
@@ -92,6 +106,10 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
 
     return NextResponse.json(data);
   } catch (error: any) {
+    console.warn("Lỗi gọi Gemini API (KPI Analysis) (API Key sai/hết hạn), kích hoạt chế độ dự phòng:", error);
+    if (kpis && kpis.length > 0) {
+      return NextResponse.json(getMockKpiAnalysis(unitCode || "SCVN", periodKey || "", kpis));
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
