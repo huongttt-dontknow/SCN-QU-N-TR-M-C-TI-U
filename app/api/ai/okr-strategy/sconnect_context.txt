@@ -184,44 +184,33 @@ Phương án AIVA: Tích hợp Kỹ năng AI và Vận hành nền tảng AIVA t
 PHẦN 4: ĐẶT HÀNG CHIẾN LƯỢC CÁC ĐƠN VỊ CHỨC NĂNG (SUs)
 1. NGUYÊN TẮC ĐẶT HÀNG SUs ("LÀM TRÒN")
 Các SUs vận hành theo mô hình Trung tâm Dịch vụ Chia sẻ (Shared Services) xuất sắc. Đảm bảo nền tảng vận hành tinh gọn, kỷ luật và tự động hóa cao (AIVA-O/P). Mọi SUs phải đo lường hiệu quả dịch vụ nội bộ bằng các chỉ số cứng (CES - Customer Effort Score; FCR - First Contact Resolution).
-2. CHIẾN LƯỢC TÀI CHÍNH (Phòng Tài chính Kế toán - FnI)
-Vai trò: Người bảo vệ Scaling, Nhà đầu tư Chiến lược.
-Mục tiêu Làm TRÒN (Cam kết 100%):
-Đảm bảo tỷ lệ Chi phí Vận hành/Doanh thu (OPEX Ratio) giảm theo kế hoạch.
-Thiết lập hệ thống chính sách kinh doanh minh bạch an toàn và thúc đầy động lực.
-Quản trị vốn lưu động hiệu quả, đảm bảo dòng tiền dương ổn định.
-Sáng kiến Trọng điểm:
-Vận hành Tài chính AI-Native (AIVA-O): Tự động hóa >90% quy trình kế toán, báo cáo thời gian thực, triển khai FP&A dựa trên AI.
-Quản trị Danh mục Đầu tư: Phân bổ nguồn vốn dựa trên hiệu quả chiến lược, xây dựng khung đo lường ROI cho dự án AIVA.
-3. CHIẾN LƯỢC PHÁT TRIỂN CÔNG NGHỆ AIVA (Phòng Công nghệ & Giải pháp)
-Vai trò: Người xây dựng Động cơ Scaling, Quản trị Hệ điều hành.
-Đặt hàng Hiệu suất :
-Hoàn thành 100% Lộ trình triển khai dự án AIVA 2026 (C/O/P).
-Tỷ lệ chấp nhận và sử dụng AIVA (Adoption Rate) > 90%.
-Chỉ số Chất lượng Dữ liệu (Data Quality Score) tại SSoT >95%.
-Sáng kiến Trọng điểm:
-Kiến tạo Nền tảng Dữ liệu (SSoT): Hoàn thiện Data Lakehouse và triển khai Quản trị Dữ liệu (Data Governance).
-Triển khai và Tối ưu hóa AIVA OS: Phối hợp BUs/SUs đảm bảo đạt mục tiêu tăng năng suất 100%.
-Nghiên cứu AI (R&D): Thử nghiệm công nghệ mới (VD: AI Agents tự chủ) cho 2027+.
-4. CHIẾN LƯỢC PHÁT TRIỂN NGUỒN NHÂN LỰC (Phòng Quản trị Nguồn nhân lực - PnC)
-Vai trò: Kiến trúc sư Văn hóa AI-First, Đối tác Chiến lược Nhân tài.
-Đặt hàng Hiệu suất :
-Triển khai thành công Khung Năng lực mới (100% vị trí).
-Tỷ lệ hoàn thành chương trình Tái đào tạo AI >90%.
-Đảm bảo 100% nhân sự đánh giá thành tích, xếp hạng năng lực minh bạch rõ ràng, gắn với lộ trình phát triển cá nhân.
-Sáng kiến Trọng điểm:
-Chương trình Tái đào tạo Toàn diện (The Great Reskilling): Thực thi đào tạo chuyên sâu về AI, Data Literacy và Human-AI Synergy.
-Quản trị Thay đổi Văn hóa (AI-First): Dẫn dắt chuyển đổi văn hóa, áp dụng ADKAR và 10 Nguyên tắc Lãnh đạo.
-AIVA-O/P trong Nhân sự: Tự động hóa 90% quy trình nhân sự vận hành, thử nghiệm AI Coaching.
-5. CHIẾN LƯỢC THƯƠNG HIỆU VÀ TRUYỀN THÔNG (Phòng Thương hiệu & Đối ngoại - CBC)
-Vai trò: Người kể chuyện Chiến lược, Người bảo vệ Uy tín doanh nghiệp.
-Đặt hàng Hiệu suất :
-Định vị thành công Sconnect là tổ chức tiên phong AI-Native trong ngành sáng tạo.
-Tạo sự kết nối chặt chẽ nhân sự nội bộ, các đơn vị trong hệ sinh thái sáng tạo và đối tác khách hàng.
-Hiệu quả truyền thông nội bộ về chiến lược AIVA đạt >90%.
-Sáng kiến Trọng điểm:
-Truyền thông Chiến lược AIVA: Xây dựng và triển khai kế hoạch truyền thông đa kênh về tầm nhìn AIVA OS.
-Xây dựng Thương hiệu Tuyển dụng (Employer Branding) AI-First.
+
+Cơ cấu tổ chức Khối hỗ trợ & Dịch vụ chia sẻ (SUs) năm 2026 định nghĩa rõ các đơn vị bên trong bao gồm:
+
+2. CHIẾN LƯỢC TÀI CHÍNH (Phòng Tài chính Kế toán - TCKT)
+- Vai trò: Người bảo vệ dòng tiền, Nhà đầu tư Chiến lược của hệ sinh thái.
+- Đặt hàng Hiệu suất: Đảm bảo tỷ lệ Chi phí Vận hành/Doanh thu (OPEX Ratio) giảm theo kế hoạch. Quản trị vốn lưu động hiệu quả, đảm bảo dòng tiền dương ổn định.
+- Sáng kiến Trọng điểm: Vận hành Tài chính AI-Native (AIVA-O): Tự động hóa >90% quy trình kế toán, báo cáo thời gian thực, FP&A dựa trên AI.
+
+3. CHIẾN LƯỢC QUẢN TRỊ NGUỒN NHÂN LỰC (Phòng Quản trị Nguồn nhân lực - QTNNL)
+- Vai trò: Kiến trúc sư Văn hóa AI-First, Đối tác Chiến lược Nhân tài.
+- Đặt hàng Hiệu suất: Triển khai thành công Khung Năng lực mới (100% vị trí). Đảm bảo 100% nhân sự đánh giá thành tích, xếp hạng năng lực minh bạch rõ ràng.
+- Sáng kiến Trọng điểm: Chương trình Tái đào tạo Toàn diện (The Great Reskilling) về kỹ năng AI. Tự động hóa 90% quy trình nhân sự vận hành bằng AI.
+
+4. PHÁP CHẾ VÀ KIỂM SOÁT NỘI BỘ (Phòng Pháp chế & Kiểm soát nội bộ - PC&KSNB)
+- Vai trò: Lá chắn pháp lý, Người giám sát tuân thủ kỷ luật và kiểm soát rủi ro của hệ thống.
+- Đặt hàng Hiệu suất: Bảo vệ bản quyền IP nội dung, kiểm soát và giảm thiểu tối đa các rủi ro pháp lý vận hành trong nước và quốc tế.
+- Sáng kiến Trọng điểm: Số hóa lưu kho văn bản pháp chế, chuẩn hóa bộ quy tắc tuân thủ chính sách các nền tảng phân phối lớn.
+
+5. CHIẾN LƯỢC NHÓM AI (SU MỚI - Nhóm AI)
+- Vai trò: Động cơ công nghệ AI-native, Siêu trợ lý vận hành doanh nghiệp.
+- Đặt hàng Hiệu suất: Nghiên cứu, vận hành và làm chủ toàn bộ Hệ điều hành AIVA. Nghiên cứu và triển khai thành công tối thiểu 5 giải pháp AI/AI Agent tự chủ hỗ trợ vận hành Shared Services.
+- Sáng kiến Trọng điểm: Triển khai AI Co-Pilot tích hợp sâu vào quy trình nghiệp vụ hành chính duyệt tờ trình tự động <12h, nâng cao năng lực cộng hưởng con người-AI.
+
+6. CHIẾN LƯỢC THƯƠNG HIỆU VÀ TRUYỀN THÔNG (Phòng Thương hiệu & Đối ngoại - CBC)
+- Vai trò: Người kể chuyện Chiến lược, Người bảo vệ Uy tín doanh nghiệp.
+- Đặt hàng Hiệu suất: Định vị thành công Sconnect là tổ chức tiên phong AI-Native trong ngành sáng tạo. Hiệu quả truyền thông nội bộ về chiến lược AIVA đạt >90%.
+- Sáng kiến Trọng điểm: Truyền thông đa kênh về tầm nhìn AIVA OS, xây dựng Thương hiệu Tuyển dụng (Employer Branding) AI-First.
 PHẦN 5: TỔNG KẾT VÀ THẢO LUẬN
 1. Hành trình Chiến lược: Từ Định hướng đến Scaling
 Chiến lược 2026 là một bước tiến logic và tất yếu trong hành trình phát triển của Sconnect:
