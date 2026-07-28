@@ -14,6 +14,13 @@ if (url && !url.includes("pgbouncer=true")) {
     url += "?pgbouncer=true";
   }
 }
+if (url && !url.includes("statement_cache_size=")) {
+  if (url.includes("?")) {
+    url += "&statement_cache_size=0";
+  } else {
+    url += "?statement_cache_size=0";
+  }
+}
 
 export const prisma = global.prisma || new PrismaClient({
   datasources: {
