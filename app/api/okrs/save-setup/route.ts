@@ -206,9 +206,22 @@ export async function POST(request: Request) {
       }
     });
 
-    return NextResponse.json({ message: "Lưu thiết lập OKRs phiên làm việc thành công" });
+    // Lấy lại danh sách Objectives đã cập nhật đầy đủ kèm KRs và Actions để trả về cho Client
+    const updatedObjs = await prisma.objective.findMany({
+      where: { unitCode, period },
+      include: {
+        keyResults: {
+          include: {
+            actions: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
+    return NextResponse.json(updatedObjs);
   } catch (error: any) {
-    console.error("Save OKR error (hạn mức DB), giả lập lưu thành công:", error);
-    return NextResponse.json({ message: "Lưu thiết lập OKRs phiên làm việc thành công (Chế độ dự phòng)" });
+    console.error("Lưu thiết lập OKRs thất bại:", error);
+    return NextResponse.json({ error: error.message || "Lỗi lưu trữ cơ sở dữ liệu" }, { status: 500 });
   }
 }

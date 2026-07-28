@@ -124,7 +124,7 @@ export async function GET(request: Request) {
       }));
       return NextResponse.json(formattedObjs);
     }
-    return NextResponse.json([]);
+    return NextResponse.json({ error: "Lỗi truy vấn cơ sở dữ liệu và không có dữ liệu dự phòng" }, { status: 500 });
   }
 }
 

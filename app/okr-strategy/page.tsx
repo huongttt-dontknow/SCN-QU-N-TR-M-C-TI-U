@@ -419,85 +419,107 @@ export default function OkrStrategyPage() {
 
   const fetchOkrs = async () => {
     setLoading(true);
+    const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
+      ? "M" + filters.month 
+      : filters.quarter;
+    const cacheKey = `okrs_${filters.unitCode}_${periodKey}_${filters.year}`;
+
     try {
-      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
-        ? "M" + filters.month 
-        : filters.quarter;
       const res = await fetch(`/api/okrs?unitCode=${filters.unitCode}&period=${periodKey}_${filters.year}`);
+      if (!res.ok) {
+        // Thử lấy từ localStorage nếu DB/API lỗi
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          setObjectives(JSON.parse(cached));
+          showToast("Đang hiển thị dữ liệu OKR từ bộ nhớ tạm local (Không thể kết nối máy chủ)", "error");
+        }
+        return;
+      }
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         setObjectives(data);
       } else {
-        // Mock data khớp 100% hình ảnh nguyên mẫu của người dùng nếu DB trống
-        setObjectives([
-          {
-            id: "obj-mock-1",
-            title: "Tối ưu hóa chi phí vận hành hệ thống sản xuất và nâng tỷ lệ tái sử dụng assets Wolfoo",
-            weight: 35,
-            progress: 90,
-            aiForecastProgress: 92,
-            aiRiskLevel: "Thấp",
-            keyResults: [
-              {
-                id: "kr-mock-1",
-                title: "Tái sử dụng trên 60% assets (background, nhân vật, đạo cụ) trong sản xuất phim mới",
-                weight: 50,
-                progress: 80,
-                priority: "High",
-                pic: "Nguyễn Văn A",
-                deadline: "2026-09-30",
-                notes: "Đã phân loại xong kho asset 3D, đang gắn tag metadata.",
-                actions: [
-                  {
-                    id: "act-mock-1",
-                    title: "Chuẩn hóa và gắn tag siêu dữ liệu cho 500 assets dùng chung",
-                    pic: "Trần Thị B",
-                    startDate: "2026-07-01",
-                    endDate: "2026-07-15",
-                    progress: 100,
-                    status: "Hoàn thành",
-                    notes: "Đã gắn tag xong cho 520 assets."
-                  },
-                  {
-                    id: "act-mock-2",
-                    title: "Tổ chức kiểm định chất lượng asset hàng tuần trước khi up lên kho dùng chung",
-                    pic: "Phạm Văn C",
-                    startDate: "2026-07-05",
-                    endDate: "2026-08-30",
-                    progress: 60,
-                    status: "Đang thực hiện",
-                    notes: "Đã hoàn thành 2 buổi kiểm định."
-                  }
-                ]
-              },
-              {
-                id: "kr-mock-2",
-                title: "Giảm hao phí render lỗi xuống dưới 5% tổng thời gian kết xuất sản phẩm",
-                weight: 50,
-                progress: 100,
-                priority: "Medium",
-                pic: "Lê Văn D",
-                deadline: "2026-09-30",
-                notes: "Đang áp dụng phần mềm kiểm tra tự động trước render.",
-                actions: [
-                  {
-                    id: "act-mock-3",
-                    title: "Cài đặt plugin tự động check lỗi mesh và vật liệu cho render farm",
-                    pic: "Lê Văn D",
-                    startDate: "2026-07-10",
-                    endDate: "2026-07-25",
-                    progress: 100,
-                    status: "Hoàn thành",
-                    notes: "Đã cài đặt trên toàn bộ máy farm."
-                  }
-                ]
-              }
-            ]
-          }
-        ]);
+        // Thử lấy từ localStorage trước khi dùng mock mặc định
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          setObjectives(JSON.parse(cached));
+        } else {
+          // Mock data khớp 100% hình ảnh nguyên mẫu của người dùng nếu DB trống
+          setObjectives([
+            {
+              id: "obj-mock-1",
+              title: "Tối ưu hóa chi phí vận hành hệ thống sản xuất và nâng tỷ lệ tái sử dụng assets Wolfoo",
+              weight: 35,
+              progress: 90,
+              aiForecastProgress: 92,
+              aiRiskLevel: "Thấp",
+              keyResults: [
+                {
+                  id: "kr-mock-1",
+                  title: "Tái sử dụng trên 60% assets (background, nhân vật, đạo cụ) trong sản xuất phim mới",
+                  weight: 50,
+                  progress: 80,
+                  priority: "High",
+                  pic: "Nguyễn Văn A",
+                  deadline: "2026-09-30",
+                  notes: "Đã phân loại xong kho asset 3D, đang gắn tag metadata.",
+                  actions: [
+                    {
+                      id: "act-mock-1",
+                      title: "Chuẩn hóa và gắn tag siêu dữ liệu cho 500 assets dùng chung",
+                      pic: "Trần Thị B",
+                      startDate: "2026-07-01",
+                      endDate: "2026-07-15",
+                      progress: 100,
+                      status: "Hoàn thành",
+                      notes: "Đã gắn tag xong cho 520 assets."
+                    },
+                    {
+                      id: "act-mock-2",
+                      title: "Tổ chức kiểm định chất lượng asset hàng tuần trước khi up lên kho dùng chung",
+                      pic: "Phạm Văn C",
+                      startDate: "2026-07-05",
+                      endDate: "2026-08-30",
+                      progress: 60,
+                      status: "Đang thực hiện",
+                      notes: "Đã hoàn thành 2 buổi kiểm định."
+                    }
+                  ]
+                },
+                {
+                  id: "kr-mock-2",
+                  title: "Giảm hao phí render lỗi xuống dưới 5% tổng thời gian kết xuất sản phẩm",
+                  weight: 50,
+                  progress: 100,
+                  priority: "Medium",
+                  pic: "Lê Văn D",
+                  deadline: "2026-09-30",
+                  notes: "Đang áp dụng phần mềm kiểm tra tự động trước render.",
+                  actions: [
+                    {
+                      id: "act-mock-3",
+                      title: "Cài đặt plugin tự động check lỗi mesh và vật liệu cho render farm",
+                      pic: "Lê Văn D",
+                      startDate: "2026-07-10",
+                      endDate: "2026-07-25",
+                      progress: 100,
+                      status: "Hoàn thành",
+                      notes: "Đã cài đặt trên toàn bộ máy farm."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]);
+        }
       }
     } catch (e) {
       console.error(e);
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        setObjectives(JSON.parse(cached));
+        showToast("Đang hiển thị dữ liệu OKR từ bộ nhớ tạm local", "error");
+      }
     } finally {
       setLoading(false);
     }
@@ -506,6 +528,17 @@ export default function OkrStrategyPage() {
   useEffect(() => {
     fetchOkrs();
   }, [filters]);
+
+  // Đồng bộ objectives vào localStorage khi state thay đổi
+  useEffect(() => {
+    if (objectives && objectives.length > 0) {
+      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
+        ? "M" + filters.month 
+        : filters.quarter;
+      const cacheKey = `okrs_${filters.unitCode}_${periodKey}_${filters.year}`;
+      localStorage.setItem(cacheKey, JSON.stringify(objectives));
+    }
+  }, [objectives, filters]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -560,8 +593,43 @@ export default function OkrStrategyPage() {
     }));
   };
 
+  const saveOkrDataToServer = async (objs: ObjectiveItem[], successMessage: string) => {
+    setLoading(true);
+    try {
+      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
+        ? "M" + filters.month 
+        : filters.quarter;
+      const res = await fetch("/api/okrs/save-setup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          unitCode: filters.unitCode,
+          period: `${periodKey}_${filters.year}`,
+          objectives: objs,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setObjectives(data);
+        }
+        showToast(successMessage);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        showToast(`❌ Lỗi khi lưu: ${err.error || "Không rõ nguyên nhân"}`, "error");
+      }
+    } catch (e: any) {
+      console.error(e);
+      showToast("❌ Lỗi mạng khi lưu dữ liệu OKRs!", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSaveRow = async (title: string) => {
-    showToast(`✓ Đã lưu thành công kết quả và tiến độ cho: ${title}`);
+    await saveOkrDataToServer(objectives, `✓ Đã lưu thành công kết quả và tiến độ cho: ${title}`);
   };
 
   // Xử lý AI Đánh giá Mục tiêu (Assessor) thực tế qua API
@@ -735,35 +803,7 @@ export default function OkrStrategyPage() {
   };
 
   const handleSaveOkrSetupSession = async () => {
-    setLoading(true);
-    try {
-      const periodKey = (filters.periodType === "weekly" || filters.periodType === "monthly") 
-        ? "M" + filters.month 
-        : filters.quarter;
-      const res = await fetch("/api/okrs/save-setup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          unitCode: filters.unitCode,
-          period: `${periodKey}_${filters.year}`,
-          objectives: objectives,
-        }),
-      });
-      if (res.ok) {
-        showToast("✓ Đã lưu thành công phiên thiết lập OKRs!");
-        await fetchOkrs();
-      } else {
-        const err = await res.json();
-        showToast(`❌ Lỗi khi lưu: ${err.error || "Không rõ nguyên nhân"}`, "error");
-      }
-    } catch (e) {
-      console.error(e);
-      showToast("❌ Lỗi mạng khi lưu thiết lập OKRs!", "error");
-    } finally {
-      setLoading(false);
-    }
+    await saveOkrDataToServer(objectives, "✓ Đã lưu thành công phiên thiết lập OKRs!");
   };
 
   const handleSubmitObjective = (e: React.FormEvent) => {
