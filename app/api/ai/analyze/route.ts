@@ -89,11 +89,47 @@ function getMockKpiAnalysis(unitCode: string, periodKey: string, kpis: any[]) {
       { title: "Nhóm AI: Thử nghiệm và triển khai AI Co-Pilot kiểm duyệt tờ trình tự động trong e-office", targetIndicator: "TCT-I01.01", impact: "Giảm thời gian phê duyệt tờ trình xuống <12h" },
       { title: "Nhóm AI: Tổ chức huấn luyện synergy con người-AI cho nhân sự toàn tổng công ty", targetIndicator: "TCT-I02.01", impact: "Nâng cao năng suất lao động thêm 200%" }
     ];
+  } else if (unitCode === "Wofloo") {
+    summary += `Tiến độ sản xuất và sản lượng video Wolfoo đạt kế hoạch. Cần tập trung tối ưu hóa chi phí sản xuất và đẩy nhanh tốc độ dựng thô.${notesSection}`;
+    suggestedActions = [
+      { title: "Chuẩn hóa thư viện asset dùng chung để đẩy nhanh tốc độ diễn hoạt Wolfoo 3D", targetIndicator: "VM2-I01.01", impact: "Tăng sản lượng thêm 2 tập/tuần" },
+      { title: "Đẩy mạnh ứng dụng AIVA để tăng tốc độ dựng thô video Wolfoo", targetIndicator: "VM2-I01.01", impact: "Rút ngắn thời gian sản xuất xuống 20%" }
+    ];
+  } else if (unitCode === "Music") {
+    summary += `Doanh thu nhạc số tăng trưởng tốt. Cần tập trung mở rộng bản quyền và nâng cao hiệu suất sáng tác.${notesSection}`;
+    suggestedActions = [
+      { title: "Tổ chức buổi đào tạo về tối ưu prompt âm nhạc AI cho đội ngũ sáng tác SCMU", targetIndicator: "MM2-I01.01", impact: "Nâng cao chất lượng nhạc phái sinh" },
+      { title: "Tăng tốc kiểm duyệt và phân phối bản quyền nhạc số đa nền tảng", targetIndicator: "MM1-I01.01", impact: "Tối ưu hóa doanh thu nhạc số" }
+    ];
+  } else if (unitCode === "Lego") {
+    summary += `Dự án Lego non-KID đạt traffic ban đầu khá tốt. Cần tối ưu hóa nội dung stop-motion chia phe để kích thích tương tác.${notesSection}`;
+    suggestedActions = [
+      { title: "Tập trung sản xuất stop-motion đồ chơi ngách cho tệp khán giả non-KID", targetIndicator: "LM2-I01.01", impact: "Tăng tỷ lệ giữ chân người xem lên 50%" },
+      { title: "Thử nghiệm cốt truyện chia phe chiến tuyến để kích thích tương tác", targetIndicator: "LM2-I01.02", impact: "Tăng 30% tỷ lệ bình luận và tương tác" }
+    ];
+  } else if (unitCode === "AS") {
+    summary += `Animated Story (AS) cần cải thiện tốc độ viết kịch bản và tối ưu phân phối audio drama.${notesSection}`;
+    suggestedActions = [
+      { title: "Chuẩn hóa kịch bản teen story / drama học đường đa kênh", targetIndicator: "AM2-I01.01", impact: "Rút ngắn thời gian duyệt kịch bản xuống <24h" },
+      { title: "Tối ưu hóa định dạng audio drama để phân phối chéo lên Spotify", targetIndicator: "AM1-I01.01", impact: "Tăng trưởng lượng người nghe podcast hàng tháng" }
+    ];
+  } else if (unitCode === "DA01") {
+    summary += `Dự án 01 cần đẩy nhanh biên tập kho nội dung gốc của Sconnect để tạo dòng tiền phái sinh nhanh.${notesSection}`;
+    suggestedActions = [
+      { title: "Đóng gói và tái biên tập kho phim hoạt hình cũ để khai thác thương mại", targetIndicator: "DM2-I01.01", impact: "Khai thác tối đa giá trị kho nội dung gốc" },
+      { title: "Đẩy mạnh đàm phán phân phối bản quyền kho phim lên các nền tảng OTT mới", targetIndicator: "DM1-I01.01", impact: "Tạo dòng tiền phái sinh ổn định" }
+    ];
+  } else if (unitCode === "CN") {
+    summary += `CNGP cần đẩy nhanh kiểm duyệt game app và tối ưu các chỉ số in-app purchase (IAP).${notesSection}`;
+    suggestedActions = [
+      { title: "Hoàn thiện tích hợp in-app purchase (IAP) cho các dự án game Wolfoo mới", targetIndicator: "GM2-I01.01", impact: "Tối ưu hóa tỷ lệ chuyển đổi doanh thu người chơi" },
+      { title: "Tự động hóa hệ thống kênh phân phối video game trên các nền tảng mạng xã hội", targetIndicator: "GM1-I01.01", impact: "Tăng 40% traffic tự nhiên tải game" }
+    ];
   } else {
     summary += `Doanh thu và hiệu suất chung đạt tiến độ. Cần tiếp tục tối ưu hóa quy trình nghiệp vụ và ứng dụng nền tảng công nghệ AIVA để tự động hóa.${notesSection}`;
     suggestedActions = [
       { title: "Đẩy mạnh ứng dụng AIVA để tăng tốc độ dựng thô video", targetIndicator: "VM2-I01.01", impact: "Rút ngắn thời gian sản xuất xuống 20%" },
-      { title: "Tổ chức thêm 1 buổi đào tạo về tối ưu prompt âm nhạc cho đội ngũ", targetIndicator: "MM2-I01.01", impact: "Nâng cao chất lượng nhạc phái sinh" }
+      { title: "Thực hiện đồng bộ hóa thư viện và tối ưu quy trình phối hợp", targetIndicator: "VM1-I01.01", impact: "Tăng hiệu suất làm việc đội ngũ lên 15%" }
     ];
   }
 
