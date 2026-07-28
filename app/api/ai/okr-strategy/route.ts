@@ -289,6 +289,11 @@ export async function POST(request: Request) {
 Bạn là Trợ lý AI Hoạch định Chiến lược & OKR cao cấp tại Sconnect.
 Nhiệm vụ của bạn là tư vấn đề xuất từ 1 đến 2 Objectives cùng các Key Results tương ứng cho đơn vị "${unitCode}" dựa trên định hướng chiến lược của Sconnect năm 2026.
 
+YÊU CẦU THIẾT LẬP OKR ĐÚNG LÝ THUYẾT:
+- Objective (Mục tiêu): Phải là mục tiêu lớn, truyền cảm hứng, định hướng hành động và mang tính chất lượng (định tính), KHÔNG được chứa các số liệu định lượng hay chỉ tiêu đo lường. Đại diện cho sự bứt phá đột phá (Làm LỚN).
+- Key Result (Kết quả then chốt): Phải chứa chỉ số đo lường định lượng cụ thể, có thời hạn và phản ánh kết quả (outcome) chứ không chỉ đơn thuần là liệt kê công việc (output).
+- Khác biệt với KPI: Tránh đề xuất các công việc duy trì vận hành hằng ngày, lặp đi lặp lại hoặc công việc thường nhật của phòng ban dưới dạng OKR (các việc đó thuộc về KPI - Làm TRÒN).
+
 Dưới đây là tài liệu ngữ cảnh chiến lược cốt lõi của Sconnect (bao gồm định hướng sản phẩm như Wolfoo, Lego, Music, các mục tiêu 2026, triết lý vận hành):
 === BẮT ĐẦU TÀI LIỆU NGỮ CẢNH SCONNECT ===
 ${sconnectContext}
@@ -343,24 +348,31 @@ Bạn là Trợ lý AI Đánh giá Mục tiêu (Assessor) tại Sconnect.
 Nhiệm vụ của bạn là phân tích tiến độ thực tế và đề xuất hành động thực tiễn tháo gỡ rủi ro cho Mục tiêu "${objectiveTitle}" của đơn vị "${unitCode}".
 
 ĐỂ ĐƯA RA NHẬN ĐỊNH SÁT THỰC TẾ, BẠN CẦN:
-1. So sánh đối chiếu với TOÀN BỘ CÁC MỤC TIÊU KHÁC trong hệ thống của đơn vị:
+1. ĐÁNH GIÁ TÍNH ĐÚNG ĐẮN CỦA VIỆC THIẾT LẬP OKR (OKR VALIDATION):
+   - Đánh giá xem tên Objective và các Key Results đã tuân thủ đúng lý thuyết hay chưa:
+     * O phải mang tính định tính, truyền cảm hứng, định hướng hành động, KHÔNG chứa chỉ số định lượng.
+     * KRs phải mang tính định lượng, đo lường được kết quả cụ thể.
+     * Phân biệt rõ OKR (Làm LỚN - bứt phá, thay đổi) với KPI (Làm TRÒN - công việc duy trì vận hành hằng ngày, lặp đi lặp lại). Nếu Objective/KR thực chất chỉ là KPI vận hành lặp lại, hãy chỉ rõ lỗi này và đưa ra nhận xét cảnh báo ở phần đầu nhận định.
+   - Kiểm tra xem OKR thiết lập đã phù hợp và bám sát định hướng chiến lược Sconnect năm 2026 và mục tiêu Quý 3/2026 chưa. Nếu lệch hướng, đưa ra cảnh báo điều chỉnh.
+
+2. So sánh đối chiếu với TOÀN BỘ CÁC MỤC TIÊU KHÁC trong hệ thống của đơn vị:
 === BẮT ĐẦU TOÀN BỘ OKRS ĐƠN VỊ TRONG HỆ THỐNG ===
 ${allObjectivesText || "Không có thông tin bổ sung"}
 === KẾT THÚC TOÀN BỘ OKRS ĐƠN VỊ TRONG HỆ THỐNG ===
 
-2. Đọc kỹ GHI CHÚ THỰC TẾ (Notes) và TIẾN ĐỘ (%) của từng KR/Action để hiểu khó khăn thực tế mà nhân sự ghi nhận:
+3. Đọc kỹ GHI CHÚ THỰC TẾ (Notes) và TIẾN ĐỘ (%) của từng KR/Action để hiểu khó khăn thực tế mà nhân sự ghi nhận:
 CHI TIẾT MỤC TIÊU CẦN ĐÁNH GIÁ:
 - Tên Objective: "${objectiveTitle}"
 - Tiến độ chung: ${objectiveProgress}%
 Các KRs & Actions kèm ghi chú thực tế:
 ${krText}
 
-3. Phân tích bối cảnh chiến lược năm 2026 của Sconnect/SCVN:
+4. Phân tích bối cảnh chiến lược năm 2026 của Sconnect/SCVN:
 === BẮT ĐẦU CHIẾN LƯỢC SCONNECT 2026 ===
 ${sconnectContext}
 === KẾT THÚC CHIẾN LƯỢC SCONNECT 2026 ===
 
-4. SỬ DỤNG TOOL 'searchMarketTrends' để chủ động tìm kiếm thông tin thị trường/đối thủ trên Google/YouTube/Spotify liên quan đến đơn vị "${unitCode}" để đưa ra đề xuất mang tính chiến đấu và chuẩn xác nhất.
+5. SỬ DỤNG TOOL 'searchMarketTrends' để chủ động tìm kiếm thông tin thị trường/đối thủ trên Google/YouTube/Spotify liên quan đến đơn vị "${unitCode}" để đưa ra đề xuất mang tính chiến đấu và chuẩn xác nhất.
 
 ĐỊNH DẠNG ĐẦU RA:
 Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sách *). Bắt đầu bằng dòng "**AI Agent nhận định:**" và phân tích rõ ràng, trực diện, không rườm rà.
