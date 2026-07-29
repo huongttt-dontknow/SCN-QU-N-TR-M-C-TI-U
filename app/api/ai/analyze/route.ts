@@ -65,6 +65,35 @@ function getMockKpiAnalysis(unitCode: string, periodKey: string, kpis: any[]) {
   let summary = `[DỰ BÁO AI DỰ PHÒNG] Đánh giá tổng hợp cho đơn vị ${parsedUnit} trong kỳ ${periodKey}: `;
   let suggestedActions: any[] = [];
 
+  // Load local context to enrich mock summary
+  let strategicContext = "";
+  try {
+    const contextPath = path.join(process.cwd(), "app", "api", "ai", "okr-strategy", "sconnect_context.txt");
+    if (fs.existsSync(contextPath)) {
+      const fullContext = fs.readFileSync(contextPath, "utf8");
+      const paragraphs = fullContext.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+      
+      // Map unit codes to matching keywords in doc
+      let matchTerm = parsedUnit.toLowerCase();
+      if (parsedUnit === "Wolfoo" || parsedUnit === "Wofloo") matchTerm = "wolfoo";
+      else if (parsedUnit === "Music") matchTerm = "music";
+      else if (parsedUnit === "Lego") matchTerm = "lego";
+      else if (parsedUnit === "AS") matchTerm = "animated story";
+      else if (parsedUnit === "CN" || parsedUnit === "CNGP") matchTerm = "cngp";
+
+      const match = paragraphs.find(p => p.toLowerCase().includes(matchTerm));
+      if (match) {
+        const sentences = match.replace(/\|/g, "").replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").split(/[.:]/);
+        const filteredSentences = sentences.map(s => s.trim()).filter(s => s.length > 10 && !s.includes("=== ") && !s.includes("SHEET"));
+        if (filteredSentences.length > 0) {
+          strategicContext = ` (Định hướng đơn vị: ${filteredSentences.slice(0, 2).join(". ").trim()})`;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Lỗi load tri thức dự phòng cho KPI:", e);
+  }
+
   // Parse custom explanations/notes from KPIs
   const explanationsList: string[] = [];
   (kpis || []).forEach(k => {
@@ -86,7 +115,7 @@ function getMockKpiAnalysis(unitCode: string, periodKey: string, kpis: any[]) {
   });
 
   if (underperformingKpis.length > 0) {
-    summary += `Hệ thống ghi nhận ${underperformingKpis.length} chỉ tiêu có hiệu suất dưới 90% (gồm: ${underperformingKpis.map(k => k.indicatorCode).join(", ")}). Cần tập trung tháo gỡ rủi ro cho các chỉ số này.${notesSection}`;
+    summary += `Hệ thống ghi nhận ${underperformingKpis.length} chỉ tiêu có hiệu suất dưới 90% (gồm: ${underperformingKpis.map(k => k.indicatorCode).join(", ")}). Cần tập trung tháo gỡ rủi ro cho các chỉ số này.${strategicContext}.${notesSection}`;
     
     // Sinh các action động khắc phục
     underperformingKpis.forEach(k => {

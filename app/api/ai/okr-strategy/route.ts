@@ -58,6 +58,241 @@ function searchMarketTrends(query: string): string {
   return results.join("\n");
 }
 
+// Clean up spreadsheet and raw table formatting from search results
+function cleanSearchResult(text: string): string {
+  if (!text.includes("|")) {
+    return text.replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  const lines = text.split("\n");
+  const cleaned: string[] = [];
+  let currentObjective = "";
+
+  for (const line of lines) {
+    if (!line.includes("|")) {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith("===") && !trimmed.startsWith("---") && !trimmed.startsWith("=================")) {
+        cleaned.push(trimmed);
+      }
+      continue;
+    }
+
+    const cells = line.split("|").map(c => c.trim());
+    if (cells.length < 3 || cells.every(c => c === "" || c.startsWith("-"))) {
+      continue;
+    }
+
+    const titleVal = cells[1] || "";
+    if (!titleVal) continue;
+
+    if (/Ưu tiên|Time Start|Time End|Tiến độ thực hiện|Chi tiết hành động|Trạng thái|PIC|Kết quả/i.test(titleVal)) {
+      continue;
+    }
+
+    const objectiveMatch = titleVal.match(/Objective\s*(\d+)[:.]?\s*(.*)/i);
+    if (objectiveMatch) {
+      const objNum = objectiveMatch[1];
+      const objText = objectiveMatch[2].replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").trim();
+      currentObjective = `🎯 **Objective ${objNum}: ${objText}**`;
+      cleaned.push("\n" + currentObjective);
+      continue;
+    }
+
+    const krMatch = titleVal.match(/Key\s*Result\s*(\d+)[:.]?\s*(.*)/i);
+    if (krMatch) {
+      const krNum = krMatch[1];
+      const krText = krMatch[2].replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").trim();
+
+      let progress = "";
+      const rawProgress = cells[9] || cells[10] || "";
+      if (/^\d+(\.\d+)?%?$/.test(rawProgress)) {
+        progress = ` (Tiến độ: ${rawProgress}%)`;
+      }
+
+      let pic = "";
+      const rawPic = cells[11] || cells[12] || "";
+      if (rawPic && !/^\d+(\.\d+)?$/.test(rawPic)) {
+        pic = ` [PIC: ${rawPic}]`;
+      }
+
+      let notes = "";
+      const rawNotes = cells[14] || cells[15] || "";
+      if (rawNotes && rawNotes.length > 5) {
+        notes = `\n    * Ghi chú hành động: ${rawNotes.replace(/\s+/g, " ").trim()}`;
+      }
+
+      let status = "";
+      const rawStatus = cells[16] || cells[17] || "";
+      if (rawStatus && /triển khai|hoàn thành|chưa/i.test(rawStatus)) {
+        status = ` [Trạng thái: ${rawStatus}]`;
+      }
+
+      cleaned.push(`  - 🔑 **KR ${krNum}**: ${krText}${progress}${pic}${status}${notes}`);
+      continue;
+    }
+
+    if (titleVal.includes("OKR - BP") || titleVal.includes("OKR - ĐV") || titleVal.includes("OKR - SCVN") || titleVal.includes("OKR - SCONNECT")) {
+      cleaned.push(`\n### ${titleVal.replace(/\s+/g, " ").trim()}`);
+      continue;
+    }
+
+    const nonActionCells = cells.map(c => c.trim()).filter(c => c !== "" && !c.startsWith("-") && !c.includes("DIV/0"));
+    if (nonActionCells.length > 0) {
+      const cleanVal = nonActionCells.join(" - ").replace(/\s+/g, " ").trim();
+      if (cleanVal.length > 5 && !cleanVal.includes("---")) {
+        cleaned.push(`  - ${cleanVal}`);
+      }
+    }
+  }
+
+  return cleaned
+    .join("\n")
+    .replace(/\n\s*\n+/g, "\n\n")
+    .trim();
+}
+
+// Perform local RAG search for specific unit Code
+function performLocalOkrSearch(unitCode: string, context: string): string {
+  if (!context) return "";
+  
+  let queryTerms = [unitCode.toLowerCase()];
+  if (unitCode === "SCVN") {
+    queryTerms.push("wolfoo", "music", "lego", "animated story", "cngp");
+  } else if (unitCode === "TCT") {
+    queryTerms.push("tổng công ty", "quản trị", "aiva", "shared services");
+  }
+
+  const paragraphs = context.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+  const scored = paragraphs.map((p, idx) => {
+    const pLower = p.toLowerCase();
+    let score = 0;
+    
+    for (const term of queryTerms) {
+      if (pLower.includes(term)) {
+        score += 5;
+      }
+    }
+    
+    if (pLower.includes("okr") || pLower.includes("objective") || pLower.includes("key result")) {
+      score += 3;
+    }
+    
+    return { text: p, score };
+  });
+
+  const matches = scored.filter(p => p.score > 2).sort((a, b) => b.score - a.score);
+  return matches.length > 0 ? matches[0].text : "";
+}
+
+// Parse search text back to structured Next.js OKR Strategy Page JSON format
+function parseTextToSuggestions(text: string, unitCode: string): any[] {
+  if (!text.includes("Objective") && !text.includes("Mục tiêu")) {
+    return getMockSuggestions(unitCode);
+  }
+
+  const lines = text.split("\n");
+  const suggestions: any[] = [];
+  let currentObj: any = null;
+  let currentKR: any = null;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    const cleanLine = trimmed.replace(/\*\*/g, "");
+
+    const objMatch = cleanLine.match(/(?:🎯\s*)?Objective\s*(\d+)[:.]?\s*(.*)/i) || cleanLine.match(/Mục tiêu\s*(\d+)[:.]?\s*(.*)/i);
+    if (objMatch) {
+      if (currentObj) {
+        suggestions.push(currentObj);
+      }
+      currentObj = {
+        title: `O${objMatch[1]}: ${objMatch[2]}`,
+        weight: 50,
+        keyResults: []
+      };
+      currentKR = null;
+      continue;
+    }
+
+    const krMatch = cleanLine.match(/(?:-\s*🔑\s*)?KR\s*(\d+)[:.]?\s*(.*)/i) || cleanLine.match(/Key\s*Result\s*(\d+)[:.]?\s*(.*)/i);
+    if (krMatch && currentObj) {
+      let rawText = krMatch[2];
+      let pic = "Trưởng phòng/PIC";
+      
+      const picMatch = rawText.match(/\[PIC:\s*([^\]]+)\]/i);
+      if (picMatch) {
+        pic = picMatch[1];
+        rawText = rawText.replace(picMatch[0], "");
+      }
+      
+      const progressMatch = rawText.match(/\(Tiến độ:\s*([^\)]+)\)/i);
+      if (progressMatch) {
+        rawText = rawText.replace(progressMatch[0], "");
+      }
+
+      currentKR = {
+        title: `KR${krMatch[1]}: ${rawText.trim()}`,
+        priority: "High",
+        pic: pic,
+        actions: []
+      };
+      currentObj.keyResults.push(currentKR);
+      continue;
+    }
+
+    const actMatch = cleanLine.match(/(?:\*\s*)?Hành động:\s*(.*)/i) || cleanLine.match(/(?:\*\s*)?Action:\s*(.*)/i) || cleanLine.match(/(?:\*\s*)?Ghi chú hành động:\s*(.*)/i);
+    if (actMatch && currentKR) {
+      currentKR.actions.push({
+        title: actMatch[1].trim(),
+        pic: currentKR.pic
+      });
+      continue;
+    }
+    
+    if (cleanLine.startsWith("*") && currentKR) {
+      currentKR.actions.push({
+        title: cleanLine.replace(/^\*\s*/, ""),
+        pic: currentKR.pic
+      });
+    }
+  }
+
+  if (currentObj) {
+    suggestions.push(currentObj);
+  }
+
+  return suggestions.length > 0 ? suggestions : getMockSuggestions(unitCode);
+}
+
+// Generate dynamic offline assessment comparing current progress to target RAG text
+function getDynamicOfflineAssessment(unitCode: string, objectiveTitle: string, progress: number, keyResults: any[], ragText: string): string {
+  const cleanedOkr = cleanSearchResult(ragText);
+  const delayedKrs = (keyResults || []).filter(kr => (kr.progress || 0) < 75);
+  
+  let assessment = `**AI Agent nhận định (Chế độ Dự phòng):**\n\n`;
+  assessment += `Đang phân tích Mục tiêu: "${objectiveTitle}" của đơn vị **${unitCode}** (Tiến độ chung đạt **${progress}%**).\n\n`;
+  
+  if (delayedKrs.length > 0) {
+    assessment += `⚠️ **Cảnh báo tiến độ**: Hệ thống phát hiện **${delayedKrs.length}** kết quả then chốt đạt dưới 75%:\n`;
+    delayedKrs.forEach(kr => {
+      assessment += `- KR: "${kr.title}" (Đạt ${kr.progress || 0}%)\n`;
+    });
+    assessment += `Khuyến nghị tập trung tháo gỡ khó khăn cho các KRs này.\n\n`;
+  } else {
+    assessment += `✅ **Ghi nhận**: Các kết quả then chốt đều đạt tiến độ cam kết (>75%).\n\n`;
+  }
+
+  if (cleanedOkr) {
+    assessment += `📋 **Đối chiếu định hướng chiến lược Sconnect cho ${unitCode}**:\n${cleanedOkr}\n\n`;
+    assessment += `👉 **Khuyến nghị hành động**: Đảm bảo các chỉ số đo lường (KRs) của bạn bám sát định hướng chiến lược nêu trên. Ưu tiên tối ưu hóa hiệu suất bằng AI và phối hợp chéo giữa các đơn vị.`;
+  } else {
+    assessment += `👉 **Khuyến nghị hành động**: Tập trung rà soát nguồn lực, chuẩn hóa quy trình và ứng dụng AIVA để tăng tốc tiến độ.`;
+  }
+
+  return assessment;
+}
+
 // Mock AI Suggestions
 function getMockSuggestions(unitCode: string) {
   const code = unitCode === "TCT" ? "TCT" : "SCVN";
@@ -212,28 +447,31 @@ export async function POST(request: Request) {
 
   const { action, unitCode, objectiveTitle, objectiveProgress, keyResults, period } = requestData;
 
-  // Nếu API Key chưa được cấu hình, dùng ngay chế độ dự phòng
+  // 1. Đọc tệp ngữ cảnh sconnect_context.txt trước để phục vụ cả online/offline
+  const contextPath = path.join(process.cwd(), "app", "api", "ai", "okr-strategy", "sconnect_context.txt");
+  let sconnectContext = "";
+  if (fs.existsSync(contextPath)) {
+    sconnectContext = fs.readFileSync(contextPath, "utf8");
+  }
+
+  // Nếu API Key chưa được cấu hình, dùng ngay chế độ dự phòng thông minh
   if (!genAI) {
-    console.warn("GEMINI_API_KEY chưa được cấu hình, kích hoạt chế độ dự phòng.");
+    console.warn("GEMINI_API_KEY chưa được cấu hình, kích hoạt chế độ dự phòng RAG.");
     if (action === "suggest") {
-      return NextResponse.json({ suggestions: getMockSuggestions(unitCode || "SCVN") });
+      const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
+      const suggestions = parseTextToSuggestions(matchedText, unitCode || "SCVN");
+      return NextResponse.json({ suggestions });
     }
     if (action === "assess") {
-      return NextResponse.json({
-        assessment: getMockAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [])
-      });
+      const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
+      const assessment = getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
+      return NextResponse.json({ assessment });
     }
     return NextResponse.json({ error: "Hành động không hợp lệ" }, { status: 400 });
   }
 
   try {
-    const contextPath = path.join(process.cwd(), "app", "api", "ai", "okr-strategy", "sconnect_context.txt");
-    let sconnectContext = "";
-    if (fs.existsSync(contextPath)) {
-      sconnectContext = fs.readFileSync(contextPath, "utf8");
-    }
-
-    // 1. Truy vấn chéo toàn bộ objectives của đơn vị đó từ DB qua Prisma để có cơ sở đối chiếu chéo
+    // 2. Truy vấn chéo toàn bộ objectives của đơn vị đó từ DB qua Prisma để có cơ sở đối chiếu chéo
     let allObjectivesText = "";
     try {
       const filterPeriod = period || "Q3_2026";
@@ -401,16 +639,18 @@ Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sá
 
     return NextResponse.json({ error: "Hành động không hợp lệ" }, { status: 400 });
   } catch (error: any) {
-    console.warn("Lỗi gọi Gemini API (API Key sai/hết hạn), kích hoạt chế độ dự phòng:", error);
+    console.warn("Lỗi gọi Gemini API (API Key sai/hết hạn), kích hoạt chế độ dự phòng RAG:", error);
     
-    // Khối dự phòng tự phục hồi (Self-healing fallbacks)
+    // Khối dự phòng tự phục hồi (Self-healing fallbacks) thông minh hơn
     if (action === "suggest") {
-      return NextResponse.json({ suggestions: getMockSuggestions(unitCode || "SCVN") });
+      const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
+      const suggestions = parseTextToSuggestions(matchedText, unitCode || "SCVN");
+      return NextResponse.json({ suggestions });
     }
     if (action === "assess") {
-      return NextResponse.json({
-        assessment: getMockAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [])
-      });
+      const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
+      const assessment = getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
+      return NextResponse.json({ assessment });
     }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
