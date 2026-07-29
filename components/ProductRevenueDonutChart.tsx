@@ -8,6 +8,7 @@ import { PRODUCTS_CATALOG } from "@/lib/products_catalog";
 interface Props {
   periodKey?: string;
   periodType?: string;
+  unitCode?: string;
 }
 
 interface ChartItem {
@@ -16,7 +17,7 @@ interface ChartItem {
   sharePct: number;
 }
 
-export default function ProductRevenueDonutChart({ periodKey = "monthly_7", periodType = "weekly" }: Props) {
+export default function ProductRevenueDonutChart({ periodKey = "monthly_7", periodType = "weekly", unitCode = "SCVN" }: Props) {
   const { theme } = useApp();
   const isLight = theme === "light";
   const [data, setData] = useState<ChartItem[]>([]);
@@ -26,7 +27,7 @@ export default function ProductRevenueDonutChart({ periodKey = "monthly_7", peri
     let isMounted = true;
     setLoading(true);
 
-    fetch(`/api/kpi?productCode=all&unitCode=SCVN&periodKey=${periodKey}&periodType=${periodType}&aggregate=false`)
+    fetch(`/api/kpi?productCode=all&unitCode=${unitCode}&periodKey=${periodKey}&periodType=${periodType}&aggregate=false`)
       .then((res) => res.json())
       .then((resData) => {
         if (!isMounted) return;
@@ -93,7 +94,7 @@ export default function ProductRevenueDonutChart({ periodKey = "monthly_7", peri
     return () => {
       isMounted = false;
     };
-  }, [periodKey, periodType]);
+  }, [periodKey, periodType, unitCode]);
 
   const COLORS = isLight
     ? ["#0284c7", "#0ea5e9", "#06b6d4", "#14b8a6", "#10b981", "#22c55e", "#84cc16", "#eab308", "#f59e0b", "#ef4444", "#64748b"]

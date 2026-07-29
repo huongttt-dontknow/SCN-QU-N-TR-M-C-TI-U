@@ -26,6 +26,7 @@ import {
 
 export default function DashboardPage() {
   const { filters, theme } = useApp();
+  const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
   // Helper tính periodKey dựa trên bộ lọc
   const getPeriodKey = () => {
     if (filters.periodType === "weekly") {
@@ -57,6 +58,9 @@ export default function DashboardPage() {
   }
   const [productHealthRankings, setProductHealthRankings] = useState<ProductHealthRanking[]>([]);
   const [isLoadingHealth, setIsLoadingHealth] = useState(false);
+
+  const [productKpis, setProductKpis] = useState<any[]>([]);
+  const [isLoadingProductKpis, setIsLoadingProductKpis] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -174,6 +178,39 @@ export default function DashboardPage() {
       console.error(err);
       setIsLoadingHealth(false);
     });
+  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
+
+  useEffect(() => {
+    if (isParentUnit) {
+      setProductKpis([]);
+      return;
+    }
+
+    const fetchProductKpis = async () => {
+      setIsLoadingProductKpis(true);
+      const pType = filters.periodType || "weekly";
+      const pKey = getPeriodKey();
+      try {
+        const res = await fetch(`/api/kpi?productCode=all&unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}&aggregate=false`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            setProductKpis(data);
+          } else {
+            setProductKpis([]);
+          }
+        } else {
+          setProductKpis([]);
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải dữ liệu KPI sản phẩm cho đơn vị con:", err);
+        setProductKpis([]);
+      } finally {
+        setIsLoadingProductKpis(false);
+      }
+    };
+
+    fetchProductKpis();
   }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
 
   const handleSaveComment = () => {
@@ -401,8 +438,6 @@ export default function DashboardPage() {
   const scvnVolRec = getKpiRecord(filters.unitCode, "VM2-I01.01", periodKey);
   const scvnDisciplineRec = getKpiRecord(filters.unitCode, "TM7-I01.01", periodKey);
   const scvnRoiRec = getKpiRecord(filters.unitCode, "VM1-I01.01", periodKey);
-
-  const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
 
   // Calculations for Card 3 & 4 when isParentUnit is false:
   let monthlyCompletionPct = 0;
@@ -680,99 +715,158 @@ export default function DashboardPage() {
     ];
   }
 
-  // Dữ liệu M3 Traffic (Số lượt view youtube) cho 9 đơn vị theo kỳ
-  const trafficData = unitList.map(u => {
-    let target = 0;
-    let actual = 0;
-    
-    let dbMatch = null;
-    let mappedCode = "";
-    if (u.code === "Wofloo") mappedCode = "VM3-I01.02-WF";
-    else if (u.code === "AS") mappedCode = "VM3-I01.02-AS";
-    else if (u.code === "NDTH") mappedCode = "VM3-I01.02-NDTH";
-    else if (u.code === "Lego") mappedCode = "VM3-I01.02-Lego";
-    else if (u.code === "DA01") mappedCode = "DM3-I01.03";
-    else if (u.code === "SCS") mappedCode = "SM3-I01.04";
-    else if (u.code === "Music") mappedCode = "MM3-I01.01";
-    else if (u.code === "CN") mappedCode = "NM3-I01.05";
-    else if (u.code === "CR") mappedCode = "CM3-I01.01";
+  const unitToProductUnitMap: Record<string, string> = {
+    "Wofloo": "Wofloo",
+    "Lego": "Lego",
+    "AS": "Animated Story",
+    "DA01": "DA01",
+    "Music": "Music",
+    "NDTH": "NDTH",
+    "CR": "Creative Hub",
+    "CN": "CNGP",
+    "SCS": "SCS"
+  };
 
-    if (scvnKpis && scvnKpis.length > 0) {
-      dbMatch = scvnKpis.find(k => k.code === mappedCode);
-    }
+  // Dữ liệu M3 Traffic (Số lượt view youtube) theo kỳ:
+  // - Nếu là cấp SCVN / TCT: Hiển thị 9 đơn vị lớn đối sánh chéo.
+  // - Nếu là đơn vị con: Hiển thị các sản phẩm thuộc đơn vị con đó.
+  const trafficData = isParentUnit
+    ? unitList.map(u => {
+        let target = 0;
+        let actual = 0;
+        
+        let dbMatch = null;
+        let mappedCode = "";
+        if (u.code === "Wofloo") mappedCode = "VM3-I01.02-WF";
+        else if (u.code === "AS") mappedCode = "VM3-I01.02-AS";
+        else if (u.code === "NDTH") mappedCode = "VM3-I01.02-NDTH";
+        else if (u.code === "Lego") mappedCode = "VM3-I01.02-Lego";
+        else if (u.code === "DA01") mappedCode = "DM3-I01.03";
+        else if (u.code === "SCS") mappedCode = "SM3-I01.04";
+        else if (u.code === "Music") mappedCode = "MM3-I01.01";
+        else if (u.code === "CN") mappedCode = "NM3-I01.05";
+        else if (u.code === "CR") mappedCode = "CM3-I01.01";
 
-    if (dbMatch) {
-      if (periodKey.startsWith("weekly_")) {
-        target = dbMatch.targetWeek || 0;
-        actual = dbMatch.actualWeek || 0;
-      } else if (periodKey.startsWith("monthly_")) {
-        target = dbMatch.targetMonth || 0;
-        actual = dbMatch.actualMonth || 0;
-      } else if (periodKey.startsWith("quarterly_")) {
-        target = dbMatch.targetQuarter || 0;
-        actual = dbMatch.actualQuarter || 0;
-      } else if (periodKey.startsWith("yearly_")) {
-        target = dbMatch.targetYear || 0;
-        actual = dbMatch.actualYear || 0;
-      }
-    } else {
-      const uDict = MASTER_KPI_DATA[u.code] || {};
-      const candidates: { item: any; rec: any }[] = [];
-
-      for (const k in uDict) {
-        const v = uDict[k];
-        const t = (v.title || "").toUpperCase();
-        const uStr = (v.unit || "").toUpperCase();
-        const kStr = k.toUpperCase();
-
-        if (
-          (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
-          !uStr.includes("CTR") &&
-          !uStr.includes("TB/1")
-        ) {
-          const pData = v.periods?.[periodKey];
-          if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
-            candidates.push({ item: v, rec: pData });
-          }
+        if (scvnKpis && scvnKpis.length > 0) {
+          dbMatch = scvnKpis.find(k => k.code === mappedCode);
         }
-      }
 
-      let rec: any = null;
-      if (candidates.length > 0) {
-        candidates.sort((a, b) => Math.max(b.rec.actual || 0, b.rec.target || 0) - Math.max(a.rec.actual || 0, a.rec.target || 0));
-        rec = candidates[0].rec;
-      } else {
-        for (const k in uDict) {
-          const v = uDict[k];
-          const t = (v.title || "").toUpperCase();
-          const uStr = (v.unit || "").toUpperCase();
-          if (t.includes("SỐ LƯỢT VIEW YOUTUBE") || t.includes("VIEW YOUTUBE") || t.includes("TRAFFIC") || uStr.includes("VIEWS")) {
-            rec = v.periods?.[periodKey];
-            if (rec) break;
+        if (dbMatch) {
+          if (periodKey.startsWith("weekly_")) {
+            target = dbMatch.targetWeek || 0;
+            actual = dbMatch.actualWeek || 0;
+          } else if (periodKey.startsWith("monthly_")) {
+            target = dbMatch.targetMonth || 0;
+            actual = dbMatch.actualMonth || 0;
+          } else if (periodKey.startsWith("quarterly_")) {
+            target = dbMatch.targetQuarter || 0;
+            actual = dbMatch.actualQuarter || 0;
+          } else if (periodKey.startsWith("yearly_")) {
+            target = dbMatch.targetYear || 0;
+            actual = dbMatch.actualYear || 0;
           }
+        } else {
+          const uDict = MASTER_KPI_DATA[u.code] || {};
+          const candidates: { item: any; rec: any }[] = [];
+
+          for (const k in uDict) {
+            const v = uDict[k];
+            const t = (v.title || "").toUpperCase();
+            const uStr = (v.unit || "").toUpperCase();
+            const kStr = k.toUpperCase();
+
+            if (
+              (t.includes("VIEW YOUTUBE") || t.includes("SỐ LƯỢT VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+              !uStr.includes("CTR") &&
+              !uStr.includes("TB/1")
+            ) {
+              const pData = v.periods?.[periodKey];
+              if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
+                candidates.push({ item: v, rec: pData });
+              }
+            }
+          }
+
+          let rec: any = null;
+          if (candidates.length > 0) {
+            candidates.sort((a, b) => Math.max(b.rec.actual || 0, b.rec.target || 0) - Math.max(a.rec.actual || 0, a.rec.target || 0));
+            rec = candidates[0].rec;
+          } else {
+            for (const k in uDict) {
+              const v = uDict[k];
+              const t = (v.title || "").toUpperCase();
+              const uStr = (v.unit || "").toUpperCase();
+              if (t.includes("SỐ LƯỢT VIEW YOUTUBE") || t.includes("VIEW YOUTUBE") || t.includes("TRAFFIC") || uStr.includes("VIEWS")) {
+                rec = v.periods?.[periodKey];
+                if (rec) break;
+              }
+            }
+          }
+          target = rec?.target ?? 0;
+          actual = rec?.actual ?? 0;
         }
-      }
-      target = rec?.target ?? 0;
-      actual = rec?.actual ?? 0;
-    }
 
-    const tgtM = target >= 1000 ? Number((target / 1e6).toFixed(1)) : target;
-    const actM = actual >= 1000 ? Number((actual / 1e6).toFixed(1)) : actual;
-    const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
+        const tgtM = target >= 1000 ? Number((target / 1e6).toFixed(1)) : target;
+        const actM = actual >= 1000 ? Number((actual / 1e6).toFixed(1)) : actual;
+        const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
 
-    let color = "bg-emerald-500 font-extrabold";
-    if (tgtM === 0) color = "bg-slate-600 font-medium";
-    else if (pct < 75) color = "bg-rose-500 font-extrabold";
-    else if (pct < 100) color = "bg-lime-500 font-extrabold";
+        let color = "bg-emerald-500 font-extrabold";
+        if (tgtM === 0) color = "bg-slate-600 font-medium";
+        else if (pct < 75) color = "bg-rose-500 font-extrabold";
+        else if (pct < 100) color = "bg-lime-500 font-extrabold";
 
-    return {
-      name: u.label,
-      actual: actM,
-      target: tgtM,
-      pct,
-      color
-    };
-  });
+        return {
+          name: u.label,
+          actual: actM,
+          target: tgtM,
+          pct,
+          color
+        };
+      })
+    : (() => {
+        const prodUnitName = unitToProductUnitMap[filters.unitCode] || filters.unitCode;
+        const unitProducts = PRODUCTS_CATALOG.filter(p => p.unit === prodUnitName);
+        return unitProducts.map(p => {
+          const matches = productKpis.filter(r => r.productCode === p.id);
+          let target = 0;
+          let actual = 0;
+
+          const trafficRecord = matches.find(r => {
+            const code = (r.indicatorCode || "").toUpperCase();
+            const title = (r.title || "").toUpperCase();
+            const unit = (r.unit || "").toUpperCase();
+            return (
+              code.endsWith("VM3-I01.02") || 
+              code.endsWith("TM3-I01.02") ||
+              title.includes("TRAFFIC") || 
+              title.includes("VIEW") ||
+              unit.includes("VIEWS")
+            ) && !unit.includes("CTR") && !unit.includes("TB/1");
+          });
+
+          if (trafficRecord) {
+            target = trafficRecord.targetValue || 0;
+            actual = trafficRecord.actualValue || 0;
+          }
+
+          const tgtM = target >= 1000 ? Number((target / 1e6).toFixed(1)) : target;
+          const actM = actual >= 1000 ? Number((actual / 1e6).toFixed(1)) : actual;
+          const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
+
+          let color = "bg-emerald-500 font-extrabold";
+          if (tgtM === 0) color = "bg-slate-600 font-medium";
+          else if (pct < 75) color = "bg-rose-500 font-extrabold";
+          else if (pct < 100) color = "bg-lime-500 font-extrabold";
+
+          return {
+            name: p.name,
+            actual: actM,
+            target: tgtM,
+            pct,
+            color
+          };
+        });
+      })();
 
   // 1. Hàm tính khóa thời gian của kỳ trước
   const getPrevPeriodKey = (type: string, mStr: string, wStr: string, qStr: string, yStr: string) => {
@@ -1544,9 +1638,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         {/* Mức độ Hoàn thành Mục tiêu Traffic (M3) */}
-        <div className={`glass-panel p-5 flex flex-col justify-between ${
-          filters.unitCode === "SCVN" ? "lg:col-span-4" : "lg:col-span-6"
-        }`}>
+        <div className="glass-panel p-5 flex flex-col justify-between lg:col-span-4">
           <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
             📈 Mức độ Hoàn thành Mục tiêu Traffic (M3)
           </h3>
@@ -1571,15 +1663,15 @@ export default function DashboardPage() {
         </div>
 
         {/* Tỷ trọng Cơ cấu Doanh thu (M1) */}
-        <div className={`glass-panel p-5 ${filters.unitCode === "SCVN" ? "lg:col-span-8" : "lg:col-span-6"}`}>
+        <div className="glass-panel p-5 lg:col-span-8">
           <h3 className="text-sm font-black text-white tracking-wider uppercase mb-1">
             📊 Tỷ trọng Cơ cấu Doanh thu (M1)
           </h3>
           <p className="text-xs text-[var(--text-muted)] mb-4 font-semibold">
-            {isParentUnit ? "Cơ cấu đóng góp doanh thu theo Đơn vị và theo Nguồn phát sinh doanh thu" : "Cơ cấu đóng góp doanh thu theo Nguồn phát sinh doanh thu"}
+            {isParentUnit ? "Cơ cấu đóng góp doanh thu theo Đơn vị và theo Nguồn phát sinh doanh thu" : "Cơ cấu đóng góp doanh thu theo Nguồn phát sinh doanh thu và theo Sản phẩm"}
           </p>
           <div className={`grid grid-cols-1 ${
-            filters.unitCode === "SCVN" ? "sm:grid-cols-3" : isParentUnit ? "sm:grid-cols-2" : "grid-cols-1"
+            filters.unitCode === "SCVN" ? "sm:grid-cols-3" : "sm:grid-cols-2"
           } gap-4 border-t border-white/5 pt-4`}>
             {isParentUnit ? (
               <>
@@ -1599,12 +1691,16 @@ export default function DashboardPage() {
                 )}
               </>
             ) : (
-              <div className="col-span-2">
-                <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
-                <div className="max-w-[320px] mx-auto">
+              <>
+                <div>
+                  <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
                   <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
                 </div>
-              </div>
+                <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
+                  <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Sản phẩm</h4>
+                  <ProductRevenueDonutChart periodKey={periodKey} periodType={filters.periodType || "weekly"} unitCode={filters.unitCode} />
+                </div>
+              </>
             )}
           </div>
         </div>
