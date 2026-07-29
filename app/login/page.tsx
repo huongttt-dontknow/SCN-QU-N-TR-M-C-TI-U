@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, LogIn, Mail, AlertCircle } from "lucide-react";
+import { ShieldCheck, LogIn, Mail, AlertCircle, KeyRound } from "lucide-react";
 
 export default function LoginPage() {
   const { currentLoggedUser, setCurrentLoggedUser, usersList, refreshUsers } = useApp();
@@ -12,6 +12,11 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleClientId, setGoogleClientId] = useState("");
+
+  const [step, setStep] = useState(1); // 1: Email check, 2: Password setup/input
+  const [passwordMode, setPasswordMode] = useState<"login" | "register">("login");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     // Nếu đã đăng nhập, chuyển về Dashboard
@@ -63,8 +68,8 @@ export default function LoginPage() {
     }
   }, [refreshUsers, router, setCurrentLoggedUser]);
 
-  // Đăng nhập nhanh bằng Email (phương án hỗ trợ chạy thử)
-  const handleEmailLogin = async (e: React.FormEvent) => {
+  // Bước 1: Kiểm tra Email và Trạng thái mật khẩu
+  const handleCheckEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailInput.trim()) {
       setErrorMsg("Vui lòng nhập Email Sconnect!");
@@ -81,10 +86,62 @@ export default function LoginPage() {
     setErrorMsg("");
 
     try {
+      const res = await fetch(`/api/auth/check-email?email=${encodeURIComponent(email)}`);
+      const data = await res.json();
+      
+      if (!res.ok || data.error) {
+        setErrorMsg(data.error || "Lỗi kiểm tra tài khoản.");
+        return;
+      }
+
+      if (!data.registered) {
+        setErrorMsg("Email chưa được phân quyền truy cập hệ thống.");
+        return;
+      }
+
+      if (data.hasPassword) {
+        setPasswordMode("login");
+      } else {
+        setPasswordMode("register");
+      }
+      setStep(2);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg("Có lỗi xảy ra khi xác thực email.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Bước 2: Xác nhận hoặc thiết lập mật khẩu và đăng nhập
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password) {
+      setErrorMsg("Vui lòng nhập mật khẩu!");
+      return;
+    }
+
+    if (passwordMode === "register") {
+      if (password.length < 6) {
+        setErrorMsg("Mật khẩu bảo vệ phải từ 6 ký tự trở lên!");
+        return;
+      }
+      if (password !== confirmPassword) {
+        setErrorMsg("Mật khẩu xác nhận không trùng khớp!");
+        return;
+      }
+    }
+
+    setLoading(true);
+    setErrorMsg("");
+
+    const email = emailInput.trim().toLowerCase();
+
+    try {
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
@@ -92,11 +149,11 @@ export default function LoginPage() {
         setCurrentLoggedUser(data.user);
         router.push("/");
       } else {
-        setErrorMsg(data.error || "Email chưa được cấp quyền truy cập hệ thống.");
+        setErrorMsg(data.error || "Mật khẩu không chính xác.");
       }
     } catch (err) {
       console.error(err);
-      setErrorMsg("Có lỗi xảy ra khi xác thực email.");
+      setErrorMsg("Có lỗi xảy ra khi đăng nhập.");
     } finally {
       setLoading(false);
     }
@@ -128,14 +185,14 @@ export default function LoginPage() {
 
         {/* ERROR WARNING CONTAINER */}
         {errorMsg && (
-          <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 p-3.5 rounded-xl text-xs flex gap-2 items-start animate-bounce">
+          <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 p-3.5 rounded-xl text-xs flex gap-2 items-start">
             <AlertCircle className="shrink-0 mt-0.5" size={16} />
             <span className="font-semibold leading-relaxed">{errorMsg}</span>
           </div>
         )}
 
         {/* GOOGLE SIGN IN (PRIMARY OPTION) */}
-        {googleClientId && (
+        {googleClientId && step === 1 && (
           <div className="space-y-4">
             <div className="text-center">
               <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase">
@@ -169,7 +226,7 @@ export default function LoginPage() {
         )}
 
         {/* OR DIVIDER */}
-        {googleClientId && (
+        {googleClientId && step === 1 && (
           <div className="relative flex py-2 items-center">
             <div className="flex-grow border-t border-white/5" />
             <span className="flex-shrink mx-4 text-[9px] font-bold text-slate-500 uppercase tracking-widest">Hoặc</span>
@@ -177,36 +234,114 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* DIRECT EMAIL LOGIN (FALLBACK/DEMO FLOW) */}
-        <form onSubmit={handleEmailLogin} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
-              Đăng nhập nhanh bằng Email
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-              <input
-                type="email"
-                disabled={loading}
-                placeholder="tennhanvien@s-connect.net"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 transition-all font-semibold"
-              />
+        {/* STEP 1: ENTER EMAIL */}
+        {step === 1 && (
+          <form onSubmit={handleCheckEmail} className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
+                Đăng nhập bằng Email & Mật khẩu
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <input
+                  type="email"
+                  disabled={loading}
+                  placeholder="tennhanvien@s-connect.net"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 transition-all font-semibold"
+                />
+              </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full h-10 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-emerald-500/15 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
-          >
-            <LogIn size={15} />
-            {loading ? "ĐANG XÁC THỰC..." : "ĐĂNG NHẬP HỆ THỐNG"}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-10 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-emerald-500/15 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
+            >
+              <LogIn size={15} />
+              {loading ? "ĐANG KIỂM TRA..." : "TIẾP TỤC"}
+            </button>
+          </form>
+        )}
 
+        {/* STEP 2: PASSWORD CHECK / SETUP */}
+        {step === 2 && (
+          <form onSubmit={handlePasswordSubmit} className="space-y-4 animate-fade-in">
+            <div className="flex items-center gap-2 border-b border-white/5 pb-2 mb-2">
+              <span className="text-xs font-mono bg-emerald-950/60 text-emerald-400 px-3 py-1 rounded-lg border border-emerald-500/20 max-w-[70%] truncate" title={emailInput}>
+                {emailInput}
+              </span>
+              <button 
+                type="button" 
+                onClick={() => { setStep(1); setPassword(""); setConfirmPassword(""); setErrorMsg(""); }} 
+                className="text-[10px] text-slate-400 hover:text-white font-extrabold uppercase tracking-wider underline cursor-pointer ml-auto shrink-0"
+              >
+                Thay đổi
+              </button>
+            </div>
 
+            {passwordMode === "register" ? (
+              <div className="space-y-3">
+                <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-3 rounded-xl text-[11px] leading-relaxed font-bold">
+                  🔒 Tài khoản của bạn chưa được thiết lập mật khẩu bảo vệ. Vui lòng thiết lập mật khẩu mới (tối thiểu 6 ký tự).
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
+                    Mật khẩu mới
+                  </label>
+                  <input
+                    type="password"
+                    disabled={loading}
+                    placeholder="Nhập mật khẩu mới"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 transition-all font-semibold"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
+                    Xác nhận mật khẩu
+                  </label>
+                  <input
+                    type="password"
+                    disabled={loading}
+                    placeholder="Nhập lại mật khẩu để xác nhận"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 transition-all font-semibold"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
+                  Mật khẩu tài khoản
+                </label>
+                <div className="relative">
+                  <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                  <input
+                    type="password"
+                    disabled={loading}
+                    placeholder="Nhập mật khẩu để đăng nhập"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 transition-all font-semibold"
+                  />
+                </div>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-10 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-emerald-500/15 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
+            >
+              <ShieldCheck size={15} />
+              {loading ? "ĐANG XÁC THỰC..." : passwordMode === "register" ? "KÍCH HOẠT & ĐĂNG NHẬP" : "ĐĂNG NHẬP HỆ THỐNG"}
+            </button>
+          </form>
+        )}
 
       </div>
     </div>

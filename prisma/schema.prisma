@@ -15,6 +15,7 @@ model User {
   email        String   @unique
   role         String   // Admin, QuanTriVien, TruongDonVi, NguoiDung
   unitCode     String   // WO, LEGO, AS, SCMU, NDTH, CR, CN, SCS, DA01
+  password     String?  // Mật khẩu bảo vệ tài khoản
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

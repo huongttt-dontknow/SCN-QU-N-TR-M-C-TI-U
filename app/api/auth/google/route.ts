@@ -4,7 +4,7 @@ import { createAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   try {
-    const { idToken, email: mockEmail } = await request.json();
+    const { idToken, email: mockEmail, password } = await request.json();
 
     let email = "";
     let fullname = "";
@@ -42,12 +42,32 @@ export async function POST(request: Request) {
       }, { status: 403 });
     }
 
+    // 4. Nếu đăng nhập bằng email (không qua Google OAuth), xác thực mật khẩu
+    if (!idToken) {
+      if (!password) {
+        return NextResponse.json({ error: "Vui lòng nhập mật khẩu" }, { status: 400 });
+      }
+
+      if (!user.password) {
+        // Tài khoản chưa đặt mật khẩu -> Thiết lập mật khẩu lần đầu
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { password }
+        });
+      } else {
+        // So khớp mật khẩu
+        if (user.password !== password) {
+          return NextResponse.json({ error: "Mật khẩu không chính xác" }, { status: 401 });
+        }
+      }
+    }
+
     // Ghi nhận lịch sử đăng nhập vào Access Logs
     await createAuditLog(
       email,
       "LOGIN",
       "system",
-      `${user.fullname} (Đăng nhập hệ thống)`
+      `${user.fullname} (Đăng nhập hệ thống bằng ${idToken ? "Google" : "Email/Password"})`
     );
 
     // Trả về thông tin người dùng và quyền truy cập
@@ -64,7 +84,7 @@ export async function POST(request: Request) {
     });
 
   } catch (error: any) {
-    console.error("Lỗi đăng nhập Google:", error);
+    console.error("Lỗi đăng nhập:", error);
     return NextResponse.json({ error: "Có lỗi xảy ra trong quá trình xác thực" }, { status: 500 });
   }
 }

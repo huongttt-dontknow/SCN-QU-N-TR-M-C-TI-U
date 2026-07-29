@@ -9,7 +9,8 @@ import {
   FolderGit2, 
   TrendingUp, 
   TrendingDown, 
-  Layers 
+  Layers,
+  AlertOctagon
 } from "lucide-react";
 
 const PRODUCTS_CATALOG = [
@@ -363,14 +364,44 @@ const calculateCompletionPct = (target: number, actual: number, code?: string, t
 };
 
 export default function ProductDataPage() {
-  const { filters, theme } = useApp();
-  const [productsList, setProductsList] = useState<Product[]>(PRODUCTS_CATALOG);
+  const { filters, theme, currentLoggedUser, setFilters } = useApp();
   const [selectedProductId, setSelectedProductId] = useState<string>("WO-1899-001");
   const [kpiRows, setKpiRows] = useState<KpiRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hideCodes, setHideCodes] = useState(false);
 
-  // Products catalog is statically loaded from PRODUCTS_CATALOG
+  // Phân quyền Báo cáo Sản phẩm: Trưởng đơn vị / Người dùng chỉ được xem sản phẩm thuộc đơn vị của họ.
+  const isRestrictedUser = currentLoggedUser?.role === "Trưởng đơn vị" || currentLoggedUser?.role === "Người dùng";
+  
+  const mapUnitCodeToProductUnit = (code: string): string => {
+    const mapping: Record<string, string> = {
+      "CR": "Creative Hub",
+      "AS": "Animated Story",
+      "CN": "CNGP",
+    };
+    return mapping[code] || code;
+  };
+
+  const allowedUnit = isRestrictedUser && currentLoggedUser?.unitCode 
+    ? mapUnitCodeToProductUnit(currentLoggedUser.unitCode) 
+    : null;
+
+  const filteredProductsList = allowedUnit
+    ? PRODUCTS_CATALOG.filter(p => p.unit === allowedUnit)
+    : PRODUCTS_CATALOG;
+
+  // Cảnh báo từ chối truy cập nếu bộ lọc đơn vị không khớp với đơn vị của người dùng bị hạn chế
+  const isAccessDenied = isRestrictedUser && filters.unitCode !== currentLoggedUser?.unitCode;
+
+  // Đồng bộ selectedProductId khi danh sách sản phẩm thay đổi hoặc khi khởi động
+  useEffect(() => {
+    if (filteredProductsList.length > 0) {
+      const isAllowed = filteredProductsList.some(p => p.id === selectedProductId);
+      if (!isAllowed) {
+        setSelectedProductId(filteredProductsList[0].id);
+      }
+    }
+  }, [filteredProductsList, selectedProductId]);
 
   // Fetch KPI data for the selected product and period filters
   useEffect(() => {
@@ -398,7 +429,7 @@ export default function ProductDataPage() {
   }, [selectedProductId, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   // Find currently selected product profile
-  const currentProduct = productsList.find(p => p.id === selectedProductId) || null;
+  const currentProduct = filteredProductsList.find(p => p.id === selectedProductId) || null;
 
   // Helper values to extract metrics dynamically
   const getTargetValue = (row: KpiRow) => {
@@ -446,11 +477,42 @@ export default function ProductDataPage() {
 
   // Group products dynamically by unit
   const groupedProducts: Record<string, Product[]> = {};
-  productsList.forEach(p => {
+  filteredProductsList.forEach(p => {
     const u = p.unit || "Khác";
     if (!groupedProducts[u]) groupedProducts[u] = [];
     groupedProducts[u].push(p);
   });
+
+  if (isAccessDenied) {
+    return (
+      <div className="flex flex-col gap-6 text-slate-800 dark:text-white text-sm">
+        {/* 1. FREEZE FILTERS PANEL */}
+        <FiltersHeader />
+        
+        <div className="flex flex-col items-center justify-center min-h-[400px] glass-panel p-8 text-center max-w-xl mx-auto my-12 animate-fade-in font-sans">
+          <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/30 rounded-full flex items-center justify-center mb-6 text-rose-400">
+            <AlertOctagon size={32} className="animate-pulse" />
+          </div>
+          <h3 className="text-lg font-black text-white uppercase tracking-wider mb-2">
+            Truy Cập Bị Từ Chối
+          </h3>
+          <p className="text-sm text-slate-300 mb-6 leading-relaxed font-semibold">
+            Tài khoản của bạn chỉ được cấp quyền xem dữ liệu của đơn vị <strong>{currentLoggedUser?.unitCode}</strong>. Bạn không có quyền truy cập dữ liệu của đơn vị <strong>{filters.unitCode}</strong>.
+          </p>
+          <button
+            onClick={() => {
+              if (currentLoggedUser?.unitCode) {
+                setFilters(prev => ({ ...prev, unitCode: currentLoggedUser.unitCode }));
+              }
+            }}
+            className="px-5 py-2.5 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all"
+          >
+            Quay lại Đơn vị của tôi ({currentLoggedUser?.unitCode})
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">

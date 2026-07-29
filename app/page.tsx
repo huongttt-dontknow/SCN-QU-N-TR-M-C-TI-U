@@ -11,7 +11,7 @@ import ProductRevenueDonutChart from "@/components/ProductRevenueDonutChart";
 import { getMasterKpiRecord, MASTER_KPI_DATA } from "@/lib/kpiMasterData";
 import { getRadarScores } from "@/lib/radarMasterData";
 import { PRODUCTS_CATALOG } from "@/lib/products_catalog";
-import { BarChart3, AlertTriangle, Award } from "lucide-react";
+import { BarChart3, AlertTriangle, Award, AlertOctagon } from "lucide-react";
 import { 
   ComposedChart, 
   Bar, 
@@ -25,7 +25,7 @@ import {
 } from "recharts";
 
 export default function DashboardPage() {
-  const { filters, theme } = useApp();
+  const { filters, theme, currentLoggedUser, setFilters } = useApp();
   const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
   // Helper tính periodKey dựa trên bộ lọc
   const getPeriodKey = () => {
@@ -1237,6 +1237,41 @@ export default function DashboardPage() {
     filters.quarter,
     filters.year
   );
+
+  // Phân quyền Dashboard: Trưởng đơn vị / Người dùng chỉ được xem đơn vị của mình
+  const isRestrictedUser = currentLoggedUser?.role === "Trưởng đơn vị" || currentLoggedUser?.role === "Người dùng";
+  const isAccessDenied = isRestrictedUser && filters.unitCode !== currentLoggedUser?.unitCode;
+
+  if (isAccessDenied) {
+    return (
+      <div className="flex flex-col gap-6 text-white text-sm">
+        {/* 1. FREEZE FILTERS PANEL */}
+        <FiltersHeader />
+        
+        <div className="flex flex-col items-center justify-center min-h-[400px] glass-panel p-8 text-center max-w-xl mx-auto my-12 animate-fade-in font-sans">
+          <div className="w-16 h-16 bg-rose-500/10 border border-rose-500/30 rounded-full flex items-center justify-center mb-6 text-rose-400">
+            <AlertOctagon size={32} className="animate-pulse" />
+          </div>
+          <h3 className="text-lg font-black text-white uppercase tracking-wider mb-2">
+            Truy Cập Bị Từ Chối
+          </h3>
+          <p className="text-sm text-slate-300 mb-6 leading-relaxed font-semibold">
+            Tài khoản của bạn chỉ được cấp quyền xem dữ liệu của đơn vị <strong>{currentLoggedUser?.unitCode}</strong>. Bạn không có quyền truy cập dữ liệu của đơn vị <strong>{filters.unitCode}</strong>.
+          </p>
+          <button
+            onClick={() => {
+              if (currentLoggedUser?.unitCode) {
+                setFilters(prev => ({ ...prev, unitCode: currentLoggedUser.unitCode }));
+              }
+            }}
+            className="px-5 py-2.5 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all"
+          >
+            Quay lại Đơn vị của tôi ({currentLoggedUser?.unitCode})
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 text-white text-sm">
