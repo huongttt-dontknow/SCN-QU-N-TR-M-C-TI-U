@@ -245,7 +245,19 @@ export default function UnitDataPage() {
   };
 
   // Tìm chỉ tiêu doanh thu thực tế (Tổng doanh thu hoặc doanh thu kênh)
-  const revRow = kpiRows.find(r => r.code === "VM1-I02.01" || (r.code.startsWith("VM1-") && r.code.includes("I02.01"))) || kpiRows.find(r => 
+  const revRow = kpiRows.find(r => 
+    r.code === "VM1-I02.01" || 
+    r.code === "TM1-I02.01" ||
+    r.code === "DM1-I02.01" ||
+    r.code === "SM1-I02.01" ||
+    r.code === "MM1-I02.01" ||
+    r.code === "NM1-I02.01" ||
+    r.code === "CM1-I02.01"
+  ) || kpiRows.find(r => {
+    if (!r.code) return false;
+    const isMain = r.code.split("-").length <= 2;
+    return isMain && (r.code.includes("M1-I02.01") || r.code.includes("M1-I02.02"));
+  }) || kpiRows.find(r => 
     r.code.includes("M1-I02.01") || 
     r.title.toLowerCase().includes("tổng doanh thu") || 
     r.title.toLowerCase() === "doanh thu" ||
@@ -257,6 +269,22 @@ export default function UnitDataPage() {
 
   // Tìm chỉ tiêu traffic thực tế (Tổng traffic hoặc view)
   const trafficRow = kpiRows.find(r => 
+    r.code === "VM3-I01.02" || 
+    r.code === "TM3-I01.02" || 
+    r.code === "DM3-I01.03" ||
+    r.code === "SM3-I01.04" ||
+    r.code === "MM3-I01.01" ||
+    r.code === "NM3-I01.05" ||
+    r.code === "CM3-I01.01"
+  ) || kpiRows.find(r => {
+    if (!r.code) return false;
+    const isMain = r.code.split("-").length <= 2;
+    return isMain && (
+      r.code.includes("M3-I01.02") || 
+      r.code.includes("M3-I01.03") || 
+      r.code.includes("M3-I01.01")
+    );
+  }) || kpiRows.find(r => 
     r.code.includes("M3-I01.02") || 
     r.code.includes("M3-I01.03") || 
     r.code.includes("M3-I01.01") || 
