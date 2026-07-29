@@ -6,10 +6,94 @@ import path from "path";
 const apiKey = process.env.GEMINI_API_KEY || "";
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
-// Fallback rule-based answering engine for OM Agent when Gemini is not configured
+// Fallback rule-based and local RAG search engine for OM Agent when Gemini connection is offline
 function getMockOmResponse(question: string): string {
   const q = question.toLowerCase();
-  
+
+  // 1. Tải tài liệu ngữ cảnh sconnect_context.txt
+  const contextPath = path.join(process.cwd(), "app", "api", "ai", "okr-strategy", "sconnect_context.txt");
+  let sconnectContext = "";
+  try {
+    if (fs.existsSync(contextPath)) {
+      sconnectContext = fs.readFileSync(contextPath, "utf8");
+    }
+  } catch (err) {
+    console.error("Lỗi khi đọc file ngữ cảnh sconnect_context.txt cho bộ phản hồi dự phòng:", err);
+  }
+
+  // 2. Tìm kiếm từ khóa cục bộ trên toàn bộ tài liệu đã trích xuất
+  if (sconnectContext) {
+    const stopWords = ["là", "gì", "của", "cho", "các", "những", "nào", "được", "trong", "trên", "dưới", "về", "và", "được", "có", "mã", "bộ", "phần", "khu", "tại", "để", "như", "thế", "đâu"];
+    const keywords = q
+      .replace(/[?,.:;!\(\)\[\]"']/g, " ")
+      .split(/\s+/)
+      .filter(word => word.length >= 2 && !stopWords.includes(word));
+
+    if (keywords.length > 0) {
+      // Tách văn bản ngữ cảnh thành các đoạn văn riêng biệt
+      const paragraphs = sconnectContext
+        .split(/\n\s*\n/)
+        .map(p => p.trim())
+        .filter(Boolean);
+
+      // Tính điểm độ trùng khớp cho từng đoạn văn
+      const scoredParagraphs = paragraphs.map((p, idx) => {
+        const pLower = p.toLowerCase();
+        let score = 0;
+        let matchedCount = 0;
+
+        for (const kw of keywords) {
+          if (pLower.includes(kw)) {
+            matchedCount++;
+            // Trọng số cao hơn cho các từ khóa cốt lõi (tên đơn vị, năm, cụm từ chuyên môn)
+            const isStrategic = /wolfoo|music|lego|scvn|scme|sama|woa|su|pc&ksnb|tckt|qtnnl|ai|2026|2030|quý 3|q3|okr|kpi|tầm nhìn|mục tiêu|chiến lược/i.test(kw);
+            score += isStrategic ? 6 : 2;
+          }
+        }
+
+        // Ưu tiên đoạn chứa tiêu đề chính hoặc phân mục
+        if (p.startsWith("TÀI LIỆU CHÍNH THỨC") || p.startsWith("I.") || p.startsWith("II.") || p.startsWith("III.")) {
+          score += 2;
+        }
+
+        // Cộng điểm theo tỷ lệ từ khóa khớp được trên tổng số từ khóa câu hỏi
+        const ratio = matchedCount / keywords.length;
+        score += ratio * 12;
+
+        return { text: p, score, index: idx };
+      });
+
+      // Lọc các đoạn văn có mức độ liên quan tốt (score > 3) và sắp xếp giảm dần theo điểm số
+      const matches = scoredParagraphs
+        .filter(p => p.score > 3)
+        .sort((a, b) => b.score - a.score);
+
+      if (matches.length > 0) {
+        const best = matches[0];
+        let replyText = best.text;
+
+        // Tự động gộp thêm đoạn văn tiếp theo trong tài liệu nếu nó ngắn hoặc cũng liên quan
+        const nextIdx = best.index + 1;
+        if (nextIdx < paragraphs.length) {
+          const nextPara = paragraphs[nextIdx];
+          const nextParaLower = nextPara.toLowerCase();
+          const isNextRelated = keywords.some(kw => nextParaLower.includes(kw)) || nextPara.length < 350;
+          if (isNextRelated && !nextPara.startsWith("TÀI LIỆU CHÍNH THỨC")) {
+            replyText += "\n\n" + nextPara;
+          }
+        }
+
+        // Định dạng tiêu đề hiển thị và giới hạn độ dài hiển thị trên Widget
+        if (replyText.length > 2000) {
+          replyText = replyText.slice(0, 2000) + "... *(Xem chi tiết trong các file báo cáo chiến lược)*";
+        }
+
+        return `**OM Agent (Offline Search):** ${replyText}`;
+      }
+    }
+  }
+
+  // 3. Fallback ngược về các bộ quy tắc tĩnh nếu không tìm thấy đoạn văn phù hợp
   if (q.includes("scvn") && (q.includes("okr") || q.includes("objective") || q.includes("mục tiêu") || q.includes("quý 3") || q.includes("q3"))) {
     return `**OM Agent:** Trong quý 3 (mã kỳ M7_2026) của **SCVN (Sconnect Việt Nam)**, hệ thống ghi nhận **04 Objectives (Mục tiêu)** cốt lõi sau:
 
@@ -91,7 +175,7 @@ function getMockOmResponse(question: string): string {
   }
 
   if (q.includes("chiến lược") || q.includes("sconnect 2026") || q.includes("định hướng")) {
-    return `**OM Agent:** **Chiến lược năm 2026 của Sconnect** tập trung vào các điểm cốt lõi:
+    return `**OM Agent:** **Chiến lược năm 2026 của Sconnect** tập cung vào các điểm cốt lõi:
 1. **Triết lý vận hành:** Phân biệt rõ ràng giữa "Làm LỚN" (OKR hướng đột phá) và "Làm TRÒN" (KPI bảo vệ nền móng ổn định).
 2. **Tái cấu trúc tinh gọn:** SCVN quản lý tập trung 8-9 đơn vị thành viên, cắt giảm OPEX lãng phí, ra quyết định dựa trên dữ liệu realtime (SSoT).
 3. **Đột phá công nghệ AIVA:** Triển khai AIVA-C (sản xuất nội dung), AIVA-O (tự động hóa Shared Services) và AIVA-P (đào tạo phát triển cá nhân) để nâng hiệu suất lao động toàn tập đoàn lên 200%.`;
