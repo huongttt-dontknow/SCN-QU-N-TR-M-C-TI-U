@@ -162,11 +162,14 @@ export default function OmAgentWidget() {
     ],
     okr: [
       { text: "Làm sao để viết mục tiêu OKR chuẩn?", query: "Phương pháp thiết lập và viết OKR chuẩn?" },
-      { text: "Điểm khác biệt chính giữa OKR và KPI?", query: "Phân biệt OKR và KPI theo quy chế của Sconnect?" }
+      { text: "Điểm khác biệt chính giữa OKR và KPI?", query: "Phân biệt OKR và KPI theo quy chế của Sconnect?" },
+      { text: "Gợi ý OKR quý 4", query: "Hãy gợi ý hoạch định OKR quý 4 cho các đơn vị dựa trên tài liệu bối cảnh chiến lược và xu hướng thị trường" },
+      { text: "Đề xuất mục tiêu năm 2027", query: "Đề xuất định hướng mục tiêu năm 2027 cho các đơn vị của Sconnect" }
     ],
     kpi: [
       { text: "Chiến lược Q3/2026 của BP Wolfoo?", query: "Định hướng mục tiêu Quý 3/2026 của BP Wolfoo?" },
-      { text: "Nhiệm vụ của Nhóm AI năm nay?", query: "Vai trò và nhiệm vụ chiến lược của Nhóm AI trong 2026?" }
+      { text: "Nhiệm vụ của Nhóm AI năm nay?", query: "Vai trò và nhiệm vụ chiến lược của Nhóm AI trong 2026?" },
+      { text: "Gợi ý chỉ số doanh thu mục tiêu", query: "Gợi ý thiết lập chỉ số doanh thu mục tiêu và KPIs tương ứng cho kỳ tới" }
     ]
   };
 
