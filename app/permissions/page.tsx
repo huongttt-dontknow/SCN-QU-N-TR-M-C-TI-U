@@ -355,9 +355,9 @@ export default function PermissionsPage() {
                 <option value="Music">BP Music (SCMU)</option>
                 <option value="NDTH">BP Nội dung tổng hợp</option>
                 <option value="AI">Nhóm AI (AI)</option>
-                <option value="QTNNL">Bộ phận QTNNL (QTNNL)</option>
-                <option value="PC&KSNB">Bộ phận PC&KSNB (PC&KSNB)</option>
-                <option value="TCKT">Bộ phận TCKT (TCKT)</option>
+                <option value="QTNNL">Phòng QTNNL (QTNNL)</option>
+                <option value="PC&KSNB">Phòng PC&KSNB (PC&KSNB)</option>
+                <option value="TCKT">Phòng TCKT (TCKT)</option>
               </select>
             </div>
 

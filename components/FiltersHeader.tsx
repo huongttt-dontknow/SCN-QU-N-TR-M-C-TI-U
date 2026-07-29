@@ -28,9 +28,9 @@ export default function FiltersHeader({ hideFrequency = false, children }: Filte
     { code: "CN", name: "CNGP (CN)" },
     { code: "SCS", name: "BP Studio (SCS)" },
     { code: "AI", name: "🤖 Nhóm AI" },
-    { code: "QTNNL", name: "👥 Bộ phận QTNNL" },
-    { code: "PC&KSNB", name: "⚖️ Bộ phận PC&KSNB" },
-    { code: "TCKT", name: "💵 Bộ phận TCKT" },
+    { code: "QTNNL", name: "👥 Phòng QTNNL" },
+    { code: "PC&KSNB", name: "⚖️ Phòng PC&KSNB" },
+    { code: "TCKT", name: "💵 Phòng TCKT" },
   ];
 
   const handleFilterChange = (key: string, value: string) => {
