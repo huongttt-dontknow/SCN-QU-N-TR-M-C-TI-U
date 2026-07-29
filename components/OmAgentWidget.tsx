@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { MessageSquare, X, Send, RotateCcw, Bot, Minimize2 } from "lucide-react";
+import { MessageSquare, X, Send, RotateCcw, Bot, Minimize2, Maximize2 } from "lucide-react";
 
 interface Message {
   role: "user" | "model";
@@ -10,6 +10,7 @@ interface Message {
 
 export default function OmAgentWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"general" | "okr" | "kpi">("general");
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -292,7 +293,9 @@ export default function OmAgentWidget() {
             bottom: `${position.y + 65}px`,
             zIndex: 9998
           }}
-          className="fixed w-[390px] h-[540px] bg-white border border-slate-200 shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200"
+          className={`fixed bg-white border border-slate-200 shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200 transition-all ${
+            isExpanded ? "w-[560px] h-[720px]" : "w-[390px] h-[540px]"
+          }`}
         >
           {/* Header */}
           <div className="bg-gradient-to-r from-emerald-600 to-green-600 px-4 py-3 border-b border-emerald-500/20 flex items-center justify-between">
@@ -311,7 +314,18 @@ export default function OmAgentWidget() {
                 <p className="text-xs text-emerald-100 font-medium">Trợ lý Chiến lược Sconnect</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="p-1.5 text-emerald-100 hover:text-white rounded-lg transition-colors hover:bg-white/10"
+                title={isExpanded ? "Thu nhỏ khung chat" : "Mở rộng khung chat"}
+              >
+                {isExpanded ? (
+                  <Minimize2 size={16} style={{ color: "#ffffff" }} />
+                ) : (
+                  <Maximize2 size={16} style={{ color: "#ffffff" }} />
+                )}
+              </button>
               <button
                 onClick={handleClearHistory}
                 className="p-1.5 text-emerald-100 hover:text-red-200 rounded-lg transition-colors hover:bg-white/10"
