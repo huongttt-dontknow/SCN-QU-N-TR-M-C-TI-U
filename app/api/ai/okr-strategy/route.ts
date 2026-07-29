@@ -658,8 +658,16 @@ ${sconnectContext}
 ĐỊNH DẠNG ĐẦU RA:
 Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sách *). Bắt đầu bằng dòng "**AI Agent nhận định:**" và phân tích rõ ràng, trực diện, không rườm rà.
 `;
-      let chat = model.startChat();
-      let result = await chat.sendMessage(prompt);
+      let chatHistory: any[] = [
+        {
+          role: "user",
+          parts: [{ text: prompt }]
+        }
+      ];
+
+      let result = await model.generateContent({
+        contents: chatHistory
+      });
       
       const functionCalls = result.response.functionCalls();
       if (functionCalls && functionCalls.length > 0) {
@@ -668,12 +676,29 @@ Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sá
           const queryArg = (call.args as any).query || "";
           const searchResultText = searchMarketTrends(queryArg);
           
-          const toolResponse = await chat.sendMessage([{
-            functionResponse: {
-              name: "searchMarketTrends",
-              response: { result: searchResultText }
-            }
-          }]);
+          chatHistory.push({
+            role: "model",
+            parts: [{
+              functionCall: {
+                name: "searchMarketTrends",
+                args: call.args
+              }
+            }] as any
+          });
+          
+          chatHistory.push({
+            role: "user",
+            parts: [{
+              functionResponse: {
+                name: "searchMarketTrends",
+                response: { result: searchResultText }
+              }
+            }] as any
+          });
+          
+          const toolResponse = await model.generateContent({
+            contents: chatHistory
+          });
           return NextResponse.json({ assessment: toolResponse.response.text() });
         }
       }

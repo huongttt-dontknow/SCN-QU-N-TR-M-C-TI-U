@@ -387,7 +387,7 @@ ${sconnectContext}
       }]
     });
 
-    // Định dạng lịch sử trò chuyện cho Gemini Chat
+    // Định dạng lịch sử trò chuyện cho Gemini generateContent (tránh lỗi role 'function' của SDK)
     const firstUserIdx = messages.findIndex((m: any) => m.role === "user");
     let chatHistory: any[] = [];
     if (firstUserIdx !== -1) {
@@ -397,11 +397,14 @@ ${sconnectContext}
       }));
     }
 
-    const chat = model.startChat({
-      history: chatHistory
+    chatHistory.push({
+      role: "user",
+      parts: [{ text: latestMessage }]
     });
 
-    const result = await chat.sendMessage(latestMessage);
+    const result = await model.generateContent({
+      contents: chatHistory
+    });
 
     // Xử lý gọi hàm (Function Calling) nếu Gemini muốn tra cứu thông tin thị trường
     const functionCalls = result.response.functionCalls();
@@ -411,13 +414,32 @@ ${sconnectContext}
         const queryArg = (call.args as any).query || "";
         const searchResultText = searchMarketTrends(queryArg);
         
-        const toolResponse = await chat.sendMessage([{
-          functionResponse: {
-            name: "searchMarketTrends",
-            response: { result: searchResultText }
-          }
-        }]);
-        return NextResponse.json({ reply: toolResponse.response.text() });
+        // Nạp cuộc gọi hàm của Model vào lịch sử
+        chatHistory.push({
+          role: "model",
+          parts: [{
+            functionCall: {
+              name: "searchMarketTrends",
+              args: call.args
+            }
+          }] as any
+        });
+        
+        // Nạp kết quả trả về của hàm dưới role 'user' (để tránh lỗi role 'function' bị Google deprecate)
+        chatHistory.push({
+          role: "user",
+          parts: [{
+            functionResponse: {
+              name: "searchMarketTrends",
+              response: { result: searchResultText }
+            }
+          }] as any
+        });
+        
+        const finalResponse = await model.generateContent({
+          contents: chatHistory
+        });
+        return NextResponse.json({ reply: finalResponse.response.text() });
       }
     }
 
@@ -426,7 +448,8 @@ ${sconnectContext}
 
   } catch (error: any) {
     console.error("Lỗi khi xử lý hội thoại OM Agent (Chuyển sang chế độ dự phòng):", error);
-    const reply = getMockOmResponse(latestMessage);
+    const errMsg = error?.message || String(error);
+    const reply = `⚠️ **[Lỗi Gemini API: ${errMsg}]**\n\n` + getMockOmResponse(latestMessage);
     return NextResponse.json({ reply });
   }
 }

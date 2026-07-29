@@ -337,8 +337,16 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
 }
 `;
 
-    let chat = model.startChat();
-    let result = await chat.sendMessage(prompt);
+    let chatHistory: any[] = [
+      {
+        role: "user",
+        parts: [{ text: prompt }]
+      }
+    ];
+
+    let result = await model.generateContent({
+      contents: chatHistory
+    });
     
     const functionCalls = result.response.functionCalls();
     if (functionCalls && functionCalls.length > 0) {
@@ -347,12 +355,29 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
         const queryArg = (call.args as any).query || "";
         const searchResultText = searchMarketTrends(queryArg);
         
-        const toolResponse = await chat.sendMessage([{
-          functionResponse: {
-            name: "searchMarketTrends",
-            response: { result: searchResultText }
-          }
-        }]);
+        chatHistory.push({
+          role: "model",
+          parts: [{
+            functionCall: {
+              name: "searchMarketTrends",
+              args: call.args
+            }
+          }] as any
+        });
+        
+        chatHistory.push({
+          role: "user",
+          parts: [{
+            functionResponse: {
+              name: "searchMarketTrends",
+              response: { result: searchResultText }
+            }
+          }] as any
+        });
+        
+        const toolResponse = await model.generateContent({
+          contents: chatHistory
+        });
         
         const cleanJson = toolResponse.response.text().replace(/```json/g, "").replace(/```/g, "").trim();
         const data = JSON.parse(cleanJson);
