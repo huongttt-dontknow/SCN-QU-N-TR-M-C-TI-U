@@ -37,7 +37,7 @@ export default function OmAgentWidget() {
       setMessages([
         {
           role: "model",
-          content: "**OM Agent:** Xin chào! Tôi là **OM Agent** - Trợ lý Chiến lược và Quản trị Mục tiêu. Tôi ở đây để đồng hành (cowork) cùng bạn trong việc quản lý và xây dựng kế hoạch OKR/KPI theo định hướng Sconnect. Hãy chọn một chủ đề gợi ý hoặc hỏi tôi bất cứ điều gì nhé!"
+          content: "**OM AI Agent:** Xin chào! Tôi là **OM AI Agent** - Trợ lý Chiến lược và Quản trị Mục tiêu. Tôi ở đây để đồng hành (cowork) cùng bạn trong việc quản lý và xây dựng kế hoạch OKR/KPI theo định hướng Sconnect. Hãy chọn một chủ đề gợi ý hoặc hỏi tôi bất cứ điều gì nhé!"
         }
       ]);
     }
@@ -196,14 +196,14 @@ export default function OmAgentWidget() {
       } else {
         setMessages((prev) => [
           ...prev,
-          { role: "model", content: "**OM Agent:** Tôi gặp sự cố khi xử lý dữ liệu. Vui lòng thử lại sau giây lát!" }
+          { role: "model", content: "**OM AI Agent:** Tôi gặp sự cố khi xử lý dữ liệu. Vui lòng thử lại sau giây lát!" }
         ]);
       }
     } catch (e) {
       console.error(e);
       setMessages((prev) => [
         ...prev,
-        { role: "model", content: "**OM Agent:** Kết nối máy chủ thất bại. Vui lòng kiểm tra lại mạng hoặc API Key." }
+        { role: "model", content: "**OM AI Agent:** Kết nối máy chủ thất bại. Vui lòng kiểm tra lại mạng hoặc API Key." }
       ]);
     } finally {
       setIsLoading(false);
@@ -212,10 +212,10 @@ export default function OmAgentWidget() {
 
   // Clear chat conversation history
   const handleClearHistory = () => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa lịch sử trò chuyện với OM Agent?")) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa lịch sử trò chuyện với OM AI Agent?")) {
       const initMsg: Message = {
         role: "model",
-        content: "**OM Agent:** Lịch sử trò chuyện đã được làm sạch. Tôi có thể hỗ trợ gì cho bạn trong quản lý mục tiêu hôm nay?"
+        content: "**OM AI Agent:** Lịch sử trò chuyện đã được làm sạch. Tôi có thể hỗ trợ gì cho bạn trong quản lý mục tiêu hôm nay?"
       };
       setMessages([initMsg]);
       sessionStorage.removeItem("om_agent_chat_history");
@@ -276,11 +276,11 @@ export default function OmAgentWidget() {
         className={`fixed w-[52px] h-[52px] rounded-full bg-gradient-to-r from-emerald-600 to-green-600 flex items-center justify-center shadow-xl cursor-grab active:cursor-grabbing border-2 border-emerald-400 hover:scale-105 active:scale-95 transition-transform duration-100 overflow-hidden ${
           isOpen ? "ring-4 ring-emerald-500/30" : ""
         }`}
-        title="OM Agent - Trợ lý Chiến lược"
+        title="OM AI Agent - Trợ lý Chiến lược"
       >
         <img
           src="/cute_ai_avatar.png"
-          alt="OM Agent"
+          alt="OM AI Agent"
           className="w-full h-full object-cover select-none pointer-events-none"
         />
       </button>
@@ -308,8 +308,8 @@ export default function OmAgentWidget() {
                 />
               </div>
               <div>
-                <h3 className="text-sm font-black text-white flex items-center gap-1">
-                  OM Agent <span className="w-2 h-2 rounded-full bg-emerald-200 animate-pulse"></span>
+                <h3 className="text-sm font-black flex items-center gap-1" style={{ color: "#ffffff" }}>
+                  OM AI Agent <span className="w-2 h-2 rounded-full bg-emerald-200 animate-pulse"></span>
                 </h3>
                 <p className="text-xs text-emerald-100 font-medium">Trợ lý Chiến lược Sconnect</p>
               </div>

@@ -244,7 +244,7 @@ function getMockOmResponse(question: string): string {
     else if (q.includes("quý 3") || q.includes("q3")) timeContext = "Quý 3/2026";
     else if (q.includes("quý 4") || q.includes("q4")) timeContext = "Quý 4/2026";
 
-    const responseIntro = `**OM Agent (Offline Planning):** Nhận được yêu cầu gợi ý hoạch định cho **${targetUnit}** ${timeContext ? `vào ${timeContext}` : ""}.`;
+    const responseIntro = `**OM AI Agent (Offline Planning):** Nhận được yêu cầu gợi ý hoạch định cho **${targetUnit}** ${timeContext ? `vào ${timeContext}` : ""}.`;
 
     if (ragMatch) {
       const cleanedOkr = cleanSearchResult(ragMatch);
@@ -278,12 +278,12 @@ ${cleanedOkr}
 
   // 4. Nếu là câu hỏi bình thường và có kết quả RAG
   if (ragMatch) {
-    return `**OM Agent (Offline Search):**\n\n${cleanSearchResult(ragMatch)}`;
+    return `**OM AI Agent (Offline Search):**\n\n${cleanSearchResult(ragMatch)}`;
   }
 
   // 4. Fallback tĩnh cho SCVN
   if (q.includes("scvn") && (q.includes("okr") || q.includes("objective") || q.includes("mục tiêu") || q.includes("quý 3") || q.includes("q3"))) {
-    return `**OM Agent:** Trong quý 3 (mã kỳ M7_2026) của **SCVN (Sconnect Việt Nam)**, hệ thống ghi nhận **04 Objectives (Mục tiêu)** cốt lõi sau:
+    return `**OM AI Agent:** Trong quý 3 (mã kỳ M7_2026) của **SCVN (Sconnect Việt Nam)**, hệ thống ghi nhận **04 Objectives (Mục tiêu)** cốt lõi sau:
 
 1. **O1: Minh bạch hóa hiệu quả kinh doanh theo từng sản phẩm** (Trọng số 30%)
    - *Chi tiết:* Rà soát chuẩn hóa danh mục sản phẩm, gán Product Owner và hoàn thành Dashboard P&L chuẩn.
@@ -296,7 +296,7 @@ ${cleanedOkr}
   }
 
   if (q.includes("wolfoo")) {
-    return `**OM Agent:** Đối với **BP Wolfoo** trong chiến lược 2026:
+    return `**OM AI Agent:** Đối với **BP Wolfoo** trong chiến lược 2026:
 - **Định hướng cốt lõi:** Tập trung vào tối ưu hóa chi phí sản xuất Wolfoo 2D/3D. Mục tiêu then chốt là nâng tỷ lệ tái sử dụng tài nguyên dựng hình thô (assets) lên tối thiểu **60%** để tối ưu hóa lợi nhuận.
 - **Kênh phân phối:** Phát triển mạnh mẽ định dạng Shorts và Reels (Facebook/TikTok) song song với video dài.
 - **OKR gợi ý:** O1: Tăng tốc độ sản xuất và tối ưu hóa thư viện asset Wolfoo 3D dùng chung.
@@ -304,19 +304,19 @@ ${cleanedOkr}
   }
   
   if (q.includes("music") || q.includes("âm nhạc") || q.includes("scmu")) {
-    return `**OM Agent:** Đối với **BP Music (SCMU)** trong chiến lược 2026:
+    return `**OM AI Agent:** Đối với **BP Music (SCMU)** trong chiến lược 2026:
 - **Định hướng cốt lõi:** Phát triển nhạc số, phân phối bản quyền đa nền tảng trên phạm vi toàn cầu (Spotify, Apple Music, YouTube Music).
 - **Ứng dụng AI:** Đào tạo đội ngũ tối ưu prompt nhạc nền AI (Suno/Udio) giúp giảm chi phí sản xuất nhạc nền xuống 85% và sản xuất hàng loạt kho nhạc chất lượng cao.
 - **KPI cốt lõi:** Đạt chỉ tiêu doanh thu nhạc số phái sinh và sản lượng nhạc nền AI chất lượng cao hàng tháng.`;
   }
 
   if (q.includes("lego")) {
-    return `**OM Agent:** Đối với **DA Lego** trong chiến lược 2026:
+    return `**OM AI Agent:** Đối với **DA Lego** trong chiến lược 2026:
 - **Định hướng cốt lõi:** Sản xuất nội dung stop-motion đồ chơi ngách dành riêng cho tệp khán giả trưởng thành và học đường (non-KID).
 - **Nội dung:** Xây dựng cốt truyện phân chia phe chiến tuyến (Công và Thủ thành) để gia tăng lượng bình luận, tương tác lên 150% và nâng cao tỷ lệ giữ chân người xem.`;
   }
 
-  return `**OM Agent:** Xin chào! Tôi là **OM Agent** - Trợ lý Chiến lược và Quản trị Mục tiêu tại Sconnect. 
+  return `**OM AI Agent:** Xin chào! Tôi là **OM AI Agent** - Trợ lý Chiến lược và Quản trị Mục tiêu tại Sconnect. 
 Tôi có thể hỗ trợ bạn trả lời các câu hỏi về:
 - Định hướng chiến lược Sconnect 2026 hoặc mục tiêu Q3/2026 của các đơn vị (Wolfoo, Lego, Music, AS...).
 - Cơ cấu tổ chức và chỉ tiêu của các phòng ban SUs hỗ trợ (TCKT, QTNNL, PC&KSNB, Nhóm AI).
@@ -344,7 +344,7 @@ export async function POST(request: Request) {
 
     // 2. Nếu chưa cấu hình API Key, sử dụng công cụ Mock trả lời động
     if (!genAI) {
-      console.warn("GEMINI_API_KEY chưa được cấu hình cho OM Agent. Kích hoạt chế độ trả lời dự phòng.");
+      console.warn("GEMINI_API_KEY chưa được cấu hình cho OM AI Agent. Kích hoạt chế độ trả lời dự phòng.");
       const reply = getMockOmResponse(latestMessage);
       return NextResponse.json({ reply });
     }
@@ -352,7 +352,7 @@ export async function POST(request: Request) {
     // 3. Gọi Gemini API thực tế với systemInstruction và Google Search Tool để hỗ trợ hoạch định
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
-      systemInstruction: `Bạn là OM Agent - Siêu Cộng sự Chiến lược và Quản trị Mục tiêu thông minh (Strategy Coworker) tại Sconnect.
+      systemInstruction: `Bạn là OM AI Agent - Siêu Cộng sự Chiến lược và Quản trị Mục tiêu thông minh (Strategy Coworker) tại Sconnect.
 Nhiệm vụ của bạn là đồng hành, phản biện và hỗ trợ người dùng thảo luận chiến lược, viết OKR/KPI, và đặc biệt là động não (brainstorming), hoạch định kế hoạch hành động kỳ tiếp theo.
 
 HÃY VẬN HÀNH THEO PHONG CÁCH COWORKING & TƯƠNG TÁC CAO CẤP:
