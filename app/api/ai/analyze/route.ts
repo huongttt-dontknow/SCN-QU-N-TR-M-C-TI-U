@@ -240,7 +240,9 @@ export async function POST(request: Request) {
 
     if (!genAI) {
       console.warn("GEMINI_API_KEY chưa được cấu hình, kích hoạt chế độ dự phòng cho KPI Analysis.");
-      return NextResponse.json(getMockKpiAnalysis(unitCode || "SCVN", periodKey || "", kpis));
+      const fallbackData = getMockKpiAnalysis(unitCode || "SCVN", periodKey || "", kpis);
+      fallbackData.summary = `⚠️ [Chưa cấu hình GEMINI_API_KEY trên máy chủ] ` + fallbackData.summary;
+      return NextResponse.json(fallbackData);
     }
 
     // Nạp tài liệu chiến lược
@@ -365,8 +367,11 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
     return NextResponse.json(data);
   } catch (error: any) {
     console.warn("Lỗi gọi Gemini API (KPI Analysis) (API Key sai/hết hạn), kích hoạt chế độ dự phòng:", error);
+    const errMsg = error?.message || String(error);
     if (kpis && kpis.length > 0) {
-      return NextResponse.json(getMockKpiAnalysis(unitCode || "SCVN", periodKey || "", kpis));
+      const fallbackData = getMockKpiAnalysis(unitCode || "SCVN", periodKey || "", kpis);
+      fallbackData.summary = `⚠️ [Lỗi Gemini API: ${errMsg}] ` + fallbackData.summary;
+      return NextResponse.json(fallbackData);
     }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

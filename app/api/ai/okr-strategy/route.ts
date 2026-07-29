@@ -500,11 +500,14 @@ export async function POST(request: Request) {
     if (action === "suggest") {
       const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
       const suggestions = parseTextToSuggestions(matchedText, unitCode || "SCVN");
+      if (suggestions.length > 0) {
+        suggestions[0].title = `⚠️ [Chưa cấu hình GEMINI_API_KEY trên Vercel] ` + suggestions[0].title;
+      }
       return NextResponse.json({ suggestions });
     }
     if (action === "assess") {
       const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
-      const assessment = getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
+      const assessment = `⚠️ **[Lỗi Gemini API: Chưa cấu hình GEMINI_API_KEY trên máy chủ Vercel Settings]**\n\n` + getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
       return NextResponse.json({ assessment });
     }
     return NextResponse.json({ error: "Hành động không hợp lệ" }, { status: 400 });
@@ -680,16 +683,20 @@ Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sá
     return NextResponse.json({ error: "Hành động không hợp lệ" }, { status: 400 });
   } catch (error: any) {
     console.warn("Lỗi gọi Gemini API (API Key sai/hết hạn), kích hoạt chế độ dự phòng RAG:", error);
+    const errMsg = error?.message || String(error);
     
     // Khối dự phòng tự phục hồi (Self-healing fallbacks) thông minh hơn
     if (action === "suggest") {
       const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
       const suggestions = parseTextToSuggestions(matchedText, unitCode || "SCVN");
+      if (suggestions.length > 0) {
+        suggestions[0].title = `⚠️ [Lỗi Gemini API: ${errMsg}] ` + suggestions[0].title;
+      }
       return NextResponse.json({ suggestions });
     }
     if (action === "assess") {
       const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
-      const assessment = getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
+      const assessment = `⚠️ **[Lỗi Gemini API: ${errMsg}]**\n\n` + getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
       return NextResponse.json({ assessment });
     }
     return NextResponse.json({ error: error.message }, { status: 500 });
