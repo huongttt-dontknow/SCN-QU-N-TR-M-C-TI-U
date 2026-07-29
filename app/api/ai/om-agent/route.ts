@@ -57,6 +57,99 @@ function searchMarketTrends(query: string): string {
   return results.join("\n");
 }
 
+// Clean up spreadsheet and raw table formatting from search results
+function cleanSearchResult(text: string): string {
+  if (!text.includes("|")) {
+    return text.replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  const lines = text.split("\n");
+  const cleaned: string[] = [];
+  let currentObjective = "";
+
+  for (const line of lines) {
+    if (!line.includes("|")) {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith("===") && !trimmed.startsWith("---") && !trimmed.startsWith("=================")) {
+        cleaned.push(trimmed);
+      }
+      continue;
+    }
+
+    const cells = line.split("|").map(c => c.trim());
+    if (cells.length < 3 || cells.every(c => c === "" || c.startsWith("-"))) {
+      continue;
+    }
+
+    const titleVal = cells[1] || "";
+    if (!titleVal) continue;
+
+    if (/Ưu tiên|Time Start|Time End|Tiến độ thực hiện|Chi tiết hành động|Trạng thái|PIC|Kết quả/i.test(titleVal)) {
+      continue;
+    }
+
+    const objectiveMatch = titleVal.match(/Objective\s*(\d+)[:.]?\s*(.*)/i);
+    if (objectiveMatch) {
+      const objNum = objectiveMatch[1];
+      const objText = objectiveMatch[2].replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").trim();
+      currentObjective = `🎯 **Objective ${objNum}: ${objText}**`;
+      cleaned.push("\n" + currentObjective);
+      continue;
+    }
+
+    const krMatch = titleVal.match(/Key\s*Result\s*(\d+)[:.]?\s*(.*)/i);
+    if (krMatch) {
+      const krNum = krMatch[1];
+      const krText = krMatch[2].replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").trim();
+
+      let progress = "";
+      const rawProgress = cells[9] || cells[10] || "";
+      if (/^\d+(\.\d+)?%?$/.test(rawProgress)) {
+        progress = ` (Tiến độ: ${rawProgress}%)`;
+      }
+
+      let pic = "";
+      const rawPic = cells[11] || cells[12] || "";
+      if (rawPic && !/^\d+(\.\d+)?$/.test(rawPic)) {
+        pic = ` [PIC: ${rawPic}]`;
+      }
+
+      let notes = "";
+      const rawNotes = cells[14] || cells[15] || "";
+      if (rawNotes && rawNotes.length > 5) {
+        notes = `\n    * Ghi chú hành động: ${rawNotes.replace(/\s+/g, " ").trim()}`;
+      }
+
+      let status = "";
+      const rawStatus = cells[16] || cells[17] || "";
+      if (rawStatus && /triển khai|hoàn thành|chưa/i.test(rawStatus)) {
+        status = ` [Trạng thái: ${rawStatus}]`;
+      }
+
+      cleaned.push(`  - 🔑 **KR ${krNum}**: ${krText}${progress}${pic}${status}${notes}`);
+      continue;
+    }
+
+    if (titleVal.includes("OKR - BP") || titleVal.includes("OKR - ĐV") || titleVal.includes("OKR - SCVN") || titleVal.includes("OKR - SCONNECT")) {
+      cleaned.push(`\n### ${titleVal.replace(/\s+/g, " ").trim()}`);
+      continue;
+    }
+
+    const nonActionCells = cells.map(c => c.trim()).filter(c => c !== "" && !c.startsWith("-") && !c.includes("DIV/0"));
+    if (nonActionCells.length > 0) {
+      const cleanVal = nonActionCells.join(" - ").replace(/\s+/g, " ").trim();
+      if (cleanVal.length > 5 && !cleanVal.includes("---")) {
+        cleaned.push(`  - ${cleanVal}`);
+      }
+    }
+  }
+
+  return cleaned
+    .join("\n")
+    .replace(/\n\s*\n+/g, "\n\n")
+    .trim();
+}
+
 // Fallback rule-based and local RAG search engine for OM Agent when Gemini connection is offline
 function getMockOmResponse(question: string): string {
   const q = question.toLowerCase();
@@ -162,7 +255,7 @@ function getMockOmResponse(question: string): string {
           replyText = replyText.slice(0, 2000) + "... *(Xem chi tiết trong các file báo cáo chiến lược)*";
         }
 
-        return `**OM Agent (Offline Search):** ${replyText}`;
+        return `**OM Agent (Offline Search):**\n\n${cleanSearchResult(replyText)}`;
       }
     }
   }
