@@ -213,6 +213,37 @@ export default function UnitDataPage() {
     return row.actualYear;
   };
 
+  const calculateCompletionPct = (target: number, actual: number, code?: string, title?: string): number => {
+    const tCode = (code || "").toUpperCase();
+    const tTitle = (title || "").toUpperCase();
+
+    const isErrorOrPolicy = 
+      tCode.includes("TM7") || 
+      tCode.includes("VM7") ||
+      tTitle.includes("LỖI") || 
+      tTitle.includes("VI PHẠM") || 
+      tTitle.includes("CHÍNH SÁCH") || 
+      tTitle.includes("PHẠT") || 
+      tTitle.includes("KỶ LUẬT") || 
+      tTitle.includes("KHIẾU NẠI") ||
+      tTitle.includes("STRIKE") || 
+      tTitle.includes("CLAIM");
+
+    if (target === 0) {
+      if (actual === 0) {
+        return isErrorOrPolicy ? 100 : 0;
+      } else {
+        return isErrorOrPolicy ? 0 : 100;
+      }
+    }
+
+    if (isErrorOrPolicy) {
+      return actual <= target ? 100 : 0;
+    }
+
+    return Math.round((actual / target) * 100);
+  };
+
   // Tìm chỉ tiêu doanh thu thực tế (Tổng doanh thu hoặc doanh thu kênh)
   const revRow = kpiRows.find(r => r.code === "VM1-I02.01" || (r.code.startsWith("VM1-") && r.code.includes("I02.01"))) || kpiRows.find(r => 
     r.code.includes("M1-I02.01") || 
@@ -222,7 +253,7 @@ export default function UnitDataPage() {
   );
   const actualRev = revRow ? getActualValue(revRow) : 0;
   const targetRev = revRow ? getTargetValue(revRow) : 0;
-  const revCompletion = targetRev > 0 ? Math.round((actualRev / targetRev) * 100) : 0;
+  const revCompletion = calculateCompletionPct(targetRev, actualRev, revRow?.code, revRow?.title);
 
   // Tìm chỉ tiêu traffic thực tế (Tổng traffic hoặc view)
   const trafficRow = kpiRows.find(r => 
@@ -235,7 +266,7 @@ export default function UnitDataPage() {
   );
   const actualTraffic = trafficRow ? getActualValue(trafficRow) : 0;
   const targetTraffic = trafficRow ? getTargetValue(trafficRow) : 0;
-  const trafficCompletion = targetTraffic > 0 ? Math.round((actualTraffic / targetTraffic) * 100) : 0;
+  const trafficCompletion = calculateCompletionPct(targetTraffic, actualTraffic, trafficRow?.code, trafficRow?.title);
 
   const visibleRows = kpiRows.filter(row => {
     if (row.isParent) {
@@ -261,7 +292,7 @@ export default function UnitDataPage() {
     .map(r => {
       const act = getActualValue(r);
       const tgt = getTargetValue(r);
-      const pct = tgt > 0 ? Math.round((act / tgt) * 100) : 100;
+      const pct = calculateCompletionPct(tgt, act, r.code, r.title);
       return { ...r, pct };
     })
     .filter(r => r.pct < 80);
@@ -297,11 +328,11 @@ export default function UnitDataPage() {
     orderedRows.forEach(row => {
       const targetPri = getTargetValue(row);
       const actualPri = getActualValue(row);
-      const pctPri = targetPri > 0 ? Math.round((actualPri / targetPri) * 100) : 100;
+      const pctPri = calculateCompletionPct(targetPri, actualPri, row.code, row.title);
 
       const targetCum = getCumulativeTarget(row);
       const actualCum = getCumulativeActual(row);
-      const pctCum = targetCum > 0 ? Math.round((actualCum / targetCum) * 100) : 100;
+      const pctCum = calculateCompletionPct(targetCum, actualCum, row.code, row.title);
 
       const indent = getRowDepth(row, orderedRows);
       const titleText = "&nbsp;".repeat(indent * 4) + row.title;
@@ -520,11 +551,11 @@ export default function UnitDataPage() {
               {orderedRows.map(row => {
                 const targetPri = getTargetValue(row);
                 const actualPri = getActualValue(row);
-                const pctPri = targetPri > 0 ? Math.round((actualPri / targetPri) * 100) : 100;
+                const pctPri = calculateCompletionPct(targetPri, actualPri, row.code, row.title);
 
                 const targetCum = getCumulativeTarget(row);
                 const actualCum = getCumulativeActual(row);
-                const pctCum = targetCum > 0 ? Math.round((actualCum / targetCum) * 100) : 100;
+                const pctCum = calculateCompletionPct(targetCum, actualCum, row.code, row.title);
 
                 if (row.isParent) {
                   const isExpanded = expandedRows[row.code];

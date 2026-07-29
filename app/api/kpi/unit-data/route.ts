@@ -246,8 +246,14 @@ export async function GET(request: Request) {
       if (!compiledRows[code]) {
         // Lấy metadata làm fallback nếu các trường trong DB bị null
         const meta = metadataMap[code] || {};
-        const title = r.title || meta.title || code;
-        const unit = r.unit || meta.unit || "";
+        let title = r.title;
+        if (!title || title === code || (meta.title && meta.title !== code)) {
+          title = meta.title || title || code;
+        }
+        let unit = r.unit;
+        if (!unit || (meta.unit && unit === "")) {
+          unit = meta.unit || unit || "";
+        }
         const freq = r.frequency || meta.frequency || undefined;
         const aggMethod = r.aggregationMethod || meta.aggregationMethod || "SUM";
 

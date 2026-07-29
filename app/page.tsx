@@ -254,6 +254,37 @@ export default function DashboardPage() {
 
   const periodKey = getPeriodKey();
 
+  const calculateCompletionRate = (target: number, actual: number, code?: string, title?: string): number => {
+    const tCode = (code || "").toUpperCase();
+    const tTitle = (title || "").toUpperCase();
+
+    const isErrorOrPolicy = 
+      tCode.includes("TM7") || 
+      tCode.includes("VM7") ||
+      tTitle.includes("LỖI") || 
+      tTitle.includes("VI PHẠM") || 
+      tTitle.includes("CHÍNH SÁCH") || 
+      tTitle.includes("PHẠT") || 
+      tTitle.includes("KỶ LUẬT") || 
+      tTitle.includes("KHIẾU NẠI") ||
+      tTitle.includes("STRIKE") || 
+      tTitle.includes("CLAIM");
+
+    if (target === 0) {
+      if (actual === 0) {
+        return isErrorOrPolicy ? 1.0 : 0.0;
+      } else {
+        return isErrorOrPolicy ? 0.0 : 1.0;
+      }
+    }
+
+    if (isErrorOrPolicy) {
+      return actual <= target ? 1.0 : 0.0;
+    }
+
+    return actual / target;
+  };
+
   // Helper to fetch KPI record from DB if available, fallback to MASTER_KPI_DATA
   const getKpiRecord = (unitCode: string, code: string, pKey: string) => {
     let searchCode = code;
@@ -288,7 +319,7 @@ export default function DashboardPage() {
         return {
           target,
           actual,
-          pct: target > 0 ? actual / target : 0
+          pct: calculateCompletionRate(target, actual, searchCode)
         };
       }
     }
@@ -315,7 +346,7 @@ export default function DashboardPage() {
         return {
           target,
           actual,
-          pct: target > 0 ? actual / target : 0
+          pct: calculateCompletionRate(target, actual, searchCode)
         };
       }
     }
@@ -370,14 +401,24 @@ export default function DashboardPage() {
           return {
             target,
             actual,
-            pct: target > 0 ? actual / target : 0
+            pct: calculateCompletionRate(target, actual, searchCode)
           };
         }
       }
     }
 
     // Fallback to getMasterKpiRecord
-    return getMasterKpiRecord(unitCode, searchCode, pKey);
+    const mRec = getMasterKpiRecord(unitCode, searchCode, pKey);
+    if (mRec) {
+      const target = mRec.target || 0;
+      const actual = mRec.actual || 0;
+      return {
+        target,
+        actual,
+        pct: calculateCompletionRate(target, actual, searchCode)
+      };
+    }
+    return null;
   };
 
   // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị THỰC TẾ từ lib/kpiMasterData.ts
@@ -419,10 +460,10 @@ export default function DashboardPage() {
     }
 
     let completion = 0;
-    if (rec?.pct !== undefined && rec.pct !== null && rec.pct < 10) {
+    if (rec) {
       completion = Math.round(rec.pct * 100);
-    } else if (target > 0) {
-      completion = Math.round((revenue / target) * 100);
+    } else {
+      completion = Math.round(calculateCompletionRate(target, revenue, "VM1-I02.01") * 100);
     }
 
     return {
@@ -461,10 +502,10 @@ export default function DashboardPage() {
       accumulatedActual += uPeriods[wKey]?.actual || 0;
     }
 
-    if (mTargetRec?.pct !== undefined && mTargetRec.pct !== null && mTargetRec.pct > 0) {
+    if (mTargetRec) {
       monthlyCompletionPct = Math.round(mTargetRec.pct * 100);
-    } else if (monthlyTarget > 0) {
-      monthlyCompletionPct = Math.round((accumulatedActual / monthlyTarget) * 100);
+    } else {
+      monthlyCompletionPct = Math.round(calculateCompletionRate(monthlyTarget, accumulatedActual, "VM1-I02.01") * 100);
     }
 
     // Forecast Calculation
@@ -474,7 +515,7 @@ export default function DashboardPage() {
       weeksInMonth = 5;
     }
     const forecastActual = currentW > 0 ? (accumulatedActual / currentW) * weeksInMonth : 0;
-    forecastPct = monthlyTarget > 0 ? Math.round((forecastActual / monthlyTarget) * 100) : 0;
+    forecastPct = Math.round(calculateCompletionRate(monthlyTarget, forecastActual, "VM1-I02.01") * 100);
 
     // Quarterly completion calculation (for monthly report)
     currentQuarterNum = Math.ceil(currentM / 3);
@@ -494,13 +535,13 @@ export default function DashboardPage() {
       sumMonthAct += mAct;
     }
     const qActualReal = qActual > 0 ? qActual : sumMonthAct;
-    quarterCompletionPct = qTarget > 0 ? Math.round((qActualReal / qTarget) * 100) : (qRec?.pct ? Math.round(qRec.pct * 100) : 0);
+    quarterCompletionPct = qRec ? Math.round(qRec.pct * 100) : Math.round(calculateCompletionRate(qTarget, qActualReal, "VM1-I02.01") * 100);
 
     // Yearly completion calculation
     const yRec = getKpiRecord(filters.unitCode, "VM1-I02.01", "yearly_2026");
     const yTarget = yRec?.target || 0;
     const yActual = yRec?.actual || 0;
-    yearCompletionPct = yTarget > 0 ? Math.round((yActual / yTarget) * 100) : (yRec?.pct ? Math.round(yRec.pct * 100) : 0);
+    yearCompletionPct = yRec ? Math.round(yRec.pct * 100) : Math.round(calculateCompletionRate(yTarget, yActual, "VM1-I02.01") * 100);
   }
 
   // Card 1: Doanh thu & Tiến độ hoàn thành SCVN
@@ -511,7 +552,7 @@ export default function DashboardPage() {
   // Card 2: Sản lượng Video hoàn thành SCVN
   const volTargetVal = scvnVolRec?.target ?? 112;
   const volActualVal = scvnVolRec?.actual ?? 108;
-  const volPct = scvnVolRec?.pct ? Math.round(scvnVolRec.pct * 100) : (volTargetVal > 0 ? Math.round((volActualVal / volTargetVal) * 100) : 96);
+  const volPct = scvnVolRec ? Math.round(scvnVolRec.pct * 100) : Math.round(calculateCompletionRate(Number(volTargetVal), Number(volActualVal), "VM2-I01.01") * 100);
 
   // Card 3: Đơn vị xuất sắc nhất
   const topUnit = [...barComparisonData].sort((a, b) => b.completion - a.completion)[0] || { name: "Dự án 01", completion: 88 };
@@ -808,7 +849,7 @@ export default function DashboardPage() {
 
         const tgtM = target >= 1000 ? Number((target / 1e6).toFixed(1)) : target;
         const actM = actual >= 1000 ? Number((actual / 1e6).toFixed(1)) : actual;
-        const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
+        const pct = Math.round(calculateCompletionRate(target, actual, "VM3-I01.02", "Traffic") * 100);
 
         let color = "bg-emerald-500 font-extrabold";
         if (tgtM === 0) color = "bg-slate-600 font-medium";
@@ -851,7 +892,7 @@ export default function DashboardPage() {
 
           const tgtM = target >= 1000 ? Number((target / 1e6).toFixed(1)) : target;
           const actM = actual >= 1000 ? Number((actual / 1e6).toFixed(1)) : actual;
-          const pct = target > 0 ? Math.round((actual / target) * 100) : 0;
+          const pct = Math.round(calculateCompletionRate(target, actual, "VM3-I01.02", "Traffic") * 100);
 
           let color = "bg-emerald-500 font-extrabold";
           if (tgtM === 0) color = "bg-slate-600 font-medium";

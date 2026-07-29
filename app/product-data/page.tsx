@@ -331,6 +331,37 @@ interface KpiRow {
   pic?: string;
 }
 
+const calculateCompletionPct = (target: number, actual: number, code?: string, title?: string): number => {
+  const tCode = (code || "").toUpperCase();
+  const tTitle = (title || "").toUpperCase();
+
+  const isErrorOrPolicy = 
+    tCode.includes("TM7") || 
+    tCode.includes("VM7") ||
+    tTitle.includes("LỖI") || 
+    tTitle.includes("VI PHẠM") || 
+    tTitle.includes("CHÍNH SÁCH") || 
+    tTitle.includes("PHẠT") || 
+    tTitle.includes("KỶ LUẬT") || 
+    tTitle.includes("KHIẾU NẠI") ||
+    tTitle.includes("STRIKE") || 
+    tTitle.includes("CLAIM");
+
+  if (target === 0) {
+    if (actual === 0) {
+      return isErrorOrPolicy ? 100 : 0;
+    } else {
+      return isErrorOrPolicy ? 0 : 100;
+    }
+  }
+
+  if (isErrorOrPolicy) {
+    return actual <= target ? 100 : 0;
+  }
+
+  return Math.round((actual / target) * 100);
+};
+
 export default function ProductDataPage() {
   const { filters, theme } = useApp();
   const [productsList, setProductsList] = useState<Product[]>(PRODUCTS_CATALOG);
@@ -522,7 +553,7 @@ export default function ProductDataPage() {
               <div className="my-2">
                 <div className="flex items-baseline gap-2">
                   <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
-                    {revenueMetrics.target > 0 ? Math.round((revenueMetrics.actual / revenueMetrics.target) * 100) : 100}%
+                    {calculateCompletionPct(revenueMetrics.target, revenueMetrics.actual, "M1", "Doanh thu")}%
                   </span>
                   <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-blue-100/90"}`}>
                     {revenueMetrics.actual.toLocaleString()} / {revenueMetrics.target.toLocaleString()} {revenueMetrics.unit || "VNĐ"}
@@ -531,7 +562,7 @@ export default function ProductDataPage() {
                 <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
                   <div 
                     className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
-                    style={{ width: `${revenueMetrics.target > 0 ? Math.min(100, Math.round((revenueMetrics.actual / revenueMetrics.target) * 100)) : 100}%` }}
+                    style={{ width: `${Math.min(100, calculateCompletionPct(revenueMetrics.target, revenueMetrics.actual, "M1", "Doanh thu"))}%` }}
                   />
                 </div>
               </div>
@@ -560,7 +591,7 @@ export default function ProductDataPage() {
               <div className="my-2">
                 <div className="flex items-baseline gap-2">
                   <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
-                    {productionMetrics.target > 0 ? Math.round((productionMetrics.actual / productionMetrics.target) * 100) : 100}%
+                    {calculateCompletionPct(productionMetrics.target, productionMetrics.actual, "M2", "Sản lượng")}%
                   </span>
                   <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-purple-100/90"}`}>
                     {productionMetrics.actual.toLocaleString()} / {productionMetrics.target.toLocaleString()} {productionMetrics.unit || "ND"}
@@ -569,7 +600,7 @@ export default function ProductDataPage() {
                 <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
                   <div 
                     className={`h-full rounded-full ${theme === "light" ? "bg-lime-500" : "bg-white"}`}
-                    style={{ width: `${productionMetrics.target > 0 ? Math.min(100, Math.round((productionMetrics.actual / productionMetrics.target) * 100)) : 100}%` }}
+                    style={{ width: `${Math.min(100, calculateCompletionPct(productionMetrics.target, productionMetrics.actual, "M2", "Sản lượng"))}%` }}
                   />
                 </div>
               </div>
@@ -598,7 +629,7 @@ export default function ProductDataPage() {
               <div className="my-2">
                 <div className="flex items-baseline gap-2">
                   <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
-                    {trafficMetrics.target > 0 ? Math.round((trafficMetrics.actual / trafficMetrics.target) * 100) : 100}%
+                    {calculateCompletionPct(trafficMetrics.target, trafficMetrics.actual, "M3", "Lượt xem")}%
                   </span>
                   <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-teal-100/90"}`}>
                     {trafficMetrics.actual.toLocaleString()} / {trafficMetrics.target.toLocaleString()} {trafficMetrics.unit || "Views"}
@@ -607,7 +638,7 @@ export default function ProductDataPage() {
                 <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
                   <div 
                     className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
-                    style={{ width: `${trafficMetrics.target > 0 ? Math.min(100, Math.round((trafficMetrics.actual / trafficMetrics.target) * 100)) : 100}%` }}
+                    style={{ width: `${Math.min(100, calculateCompletionPct(trafficMetrics.target, trafficMetrics.actual, "M3", "Lượt xem"))}%` }}
                   />
                 </div>
               </div>
@@ -674,7 +705,7 @@ export default function ProductDataPage() {
                   .map(row => {
                     const target = getTargetValue(row);
                     const actual = getActualValue(row);
-                    const pct = target > 0 ? Math.round((actual / target) * 100) : 100;
+                    const pct = calculateCompletionPct(target, actual, row.displayCode || row.code, row.title);
                     return (
                       <tr key={row.code} className={`border-b ${
                         theme === "light" 

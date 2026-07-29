@@ -15,6 +15,75 @@ const unitToProductUnitMap: Record<string, string> = {
   "SCS": "SCS"
 };
 
+let cachedProductMetadataMap: Record<string, any> | null = null;
+let cachedUnitMetadataMap: Record<string, any> | null = null;
+
+function getMetadataMap(productCode: string | undefined): Record<string, any> {
+  if (productCode) {
+    if (cachedProductMetadataMap) return cachedProductMetadataMap;
+    const map: Record<string, any> = {};
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const jsonPath = path.join(process.cwd(), "lib", "product_kpi_records.json");
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        const jsonRecords = JSON.parse(raw);
+        for (const jr of jsonRecords) {
+          const code = jr.indicatorCode;
+          if (code && jr.title) {
+            if (!map[code] || jr.title.length > (map[code].title || "").length) {
+              map[code] = {
+                title: jr.title,
+                unit: jr.unit || "",
+                parentCode: jr.parentCode || undefined,
+                frequency: jr.frequency || undefined,
+                aggregationMethod: jr.aggregationMethod || undefined,
+                group: jr.group || undefined
+              };
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Lỗi load product metadata:", e);
+    }
+    cachedProductMetadataMap = map;
+    return map;
+  } else {
+    if (cachedUnitMetadataMap) return cachedUnitMetadataMap;
+    const map: Record<string, any> = {};
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const jsonPath = path.join(process.cwd(), "lib", "all_kpi_records.json");
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        const jsonRecords = JSON.parse(raw);
+        for (const jr of jsonRecords) {
+          const code = jr.indicatorCode;
+          if (code && jr.title) {
+            if (!map[code] || jr.title.length > (map[code].title || "").length) {
+              map[code] = {
+                title: jr.title,
+                unit: jr.unit || "",
+                parentCode: jr.parentCode || undefined,
+                frequency: jr.frequency || undefined,
+                aggregationMethod: jr.aggregationMethod || undefined,
+                group: jr.group || undefined
+              };
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Lỗi load unit metadata:", e);
+    }
+    cachedUnitMetadataMap = map;
+    return map;
+  }
+}
+
 // GET /api/kpi - Lấy dữ liệu KPI mục tiêu/thực tế theo Đơn vị và Kỳ
 export async function GET(request: Request) {
   let unitCode = "";
@@ -161,6 +230,7 @@ export async function GET(request: Request) {
           status = "Đang thực hiện";
         }
 
+        const meta = getMetadataMap(productCode)[indicatorCode] || {};
         return {
           id: "all-" + indicatorCode,
           indicatorCode,
@@ -172,13 +242,13 @@ export async function GET(request: Request) {
           actualValue,
           status,
           explanation: items.map(i => i.explanation).filter(Boolean).join("; "),
-          title: first.title,
-          unit: first.unit,
+          title: meta.title || first.title || indicatorCode,
+          unit: meta.unit || first.unit || "",
           formula: first.formula,
-          group: first.group,
-          parentCode: first.parentCode,
-          frequency: first.frequency,
-          aggregationMethod: first.aggregationMethod
+          group: first.group || meta.group,
+          parentCode: first.parentCode || meta.parentCode,
+          frequency: first.frequency || meta.frequency,
+          aggregationMethod: first.aggregationMethod || meta.aggregationMethod
         };
       });
 
@@ -310,7 +380,41 @@ export async function GET(request: Request) {
       });
     }
 
-    return NextResponse.json(kpiRecords);
+    const metaMap = getMetadataMap(productCode);
+    const enrichedRecords = kpiRecords.map((r: any) => {
+      const code = r.indicatorCode;
+      const meta = metaMap[code] || {};
+      
+      let title = r.title;
+      if (!title || title === code || (meta.title && meta.title !== code)) {
+        title = meta.title || title || code;
+      }
+      
+      let unit = r.unit;
+      if (!unit || (meta.unit && unit === "")) {
+        unit = meta.unit || unit || "";
+      }
+
+      let group = r.group;
+      if (!group || group === "") {
+        group = meta.group || group || "";
+      }
+
+      let parentCode = r.parentCode;
+      if (!parentCode || parentCode === "") {
+        parentCode = meta.parentCode || parentCode || "";
+      }
+
+      return {
+        ...r,
+        title,
+        unit,
+        group,
+        parentCode
+      };
+    });
+
+    return NextResponse.json(enrichedRecords);
   } catch (error: any) {
     console.warn("Lấy KPI thất bại (hạn mức DB), sử dụng dữ liệu JSON dự phòng:", error);
     try {

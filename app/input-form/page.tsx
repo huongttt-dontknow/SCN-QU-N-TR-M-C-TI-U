@@ -763,6 +763,37 @@ export default function InputFormPage() {
     return val.toString();
   };
 
+  const calculateCompletionPct = (target: number, actual: number, code?: string, title?: string): number => {
+    const tCode = (code || "").toUpperCase();
+    const tTitle = (title || "").toUpperCase();
+
+    const isErrorOrPolicy = 
+      tCode.includes("TM7") || 
+      tCode.includes("VM7") ||
+      tTitle.includes("LỖI") || 
+      tTitle.includes("VI PHẠM") || 
+      tTitle.includes("CHÍNH SÁCH") || 
+      tTitle.includes("PHẠT") || 
+      tTitle.includes("KỶ LUẬT") || 
+      tTitle.includes("KHIẾU NẠI") ||
+      tTitle.includes("STRIKE") || 
+      tTitle.includes("CLAIM");
+
+    if (target === 0) {
+      if (actual === 0) {
+        return isErrorOrPolicy ? 100 : 0;
+      } else {
+        return isErrorOrPolicy ? 0 : 100;
+      }
+    }
+
+    if (isErrorOrPolicy) {
+      return actual <= target ? 100 : 0;
+    }
+
+    return Math.round((actual / target) * 100);
+  };
+
   const getStatusStyle = (status: string) => {
     const s = status ? status.trim() : "";
     if (s === "Đã duyệt" || s === "Hoàn thành" || s === "Đạt") {
@@ -1190,7 +1221,7 @@ export default function InputFormPage() {
                           </td>
                         </tr>
                         {items.map(kpi => {
-                          const pct = kpi.target > 0 ? Math.round((kpi.actual / kpi.target) * 100) : 0;
+                          const pct = calculateCompletionPct(kpi.target, kpi.actual, kpi.code, kpi.title);
                           return (
                             <tr key={kpi.id} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
                               {showCodeColumn && (
@@ -1599,7 +1630,7 @@ export default function InputFormPage() {
                           </td>
                         </tr>
                         {items.map(pk => {
-                          const pct = pk.target > 0 ? Math.round((pk.actual / pk.target) * 100) : 100;
+                          const pct = calculateCompletionPct(pk.target, pk.actual, pk.code, pk.title);
                           const displayCode = selectedProdId ? pk.code.replace(selectedProdId + "-", "") : pk.code;
                           return (
                             <tr key={pk.id} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
