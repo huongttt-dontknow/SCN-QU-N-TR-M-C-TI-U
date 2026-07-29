@@ -271,7 +271,7 @@ function getDynamicOfflineAssessment(unitCode: string, objectiveTitle: string, p
   const delayedKrs = (keyResults || []).filter(kr => (kr.progress || 0) < 75);
   
   let assessment = `**AI Agent nhận định (Chế độ Dự phòng):**\n\n`;
-  assessment += `Đang phân tích Mục tiêu: "${objectiveTitle}" của đơn vị **${unitCode}** (Tiến độ chung đạt **${progress}%**).\n\n`;
+  assessment += `Đang phân tích Mục tiêu: **"${objectiveTitle}"** của đơn vị **${unitCode}** (Tiến độ chung đạt **${progress}%**).\n\n`;
   
   if (delayedKrs.length > 0) {
     assessment += `⚠️ **Cảnh báo tiến độ**: Hệ thống phát hiện **${delayedKrs.length}** kết quả then chốt đạt dưới 75%:\n`;
@@ -284,8 +284,48 @@ function getDynamicOfflineAssessment(unitCode: string, objectiveTitle: string, p
   }
 
   if (cleanedOkr) {
-    assessment += `📋 **Đối chiếu định hướng chiến lược Sconnect cho ${unitCode}**:\n${cleanedOkr}\n\n`;
-    assessment += `👉 **Khuyến nghị hành động**: Đảm bảo các chỉ số đo lường (KRs) của bạn bám sát định hướng chiến lược nêu trên. Ưu tiên tối ưu hóa hiệu suất bằng AI và phối hợp chéo giữa các đơn vị.`;
+    // Lọc cleanedOkr để chỉ trích xuất phần mục tiêu tương ứng với objectiveTitle đang đánh giá
+    const lines = cleanedOkr.split("\n");
+    const relevantLines: string[] = [];
+    let isCapture = false;
+    
+    // Tách từ khóa quan trọng trong tiêu đề mục tiêu để đối chiếu
+    const objKeywords = objectiveTitle
+      .toLowerCase()
+      .replace(/[?,.:;!\(\)\[\]"']/g, " ")
+      .split(/\s+/)
+      .filter(w => w.length >= 3 && !["mục", "tiêu", "hiệu", "quả", "cho", "của", "từng", "theo", "đơn", "vị"].includes(w));
+
+    for (const line of lines) {
+      const lineLower = line.toLowerCase();
+      
+      if (lineLower.includes("objective") || lineLower.includes("mục tiêu")) {
+        const matchesKeywords = objKeywords.some(kw => lineLower.includes(kw)) ||
+                                (objectiveTitle.toLowerCase().includes("minh bạch") && lineLower.includes("minh bạch")) ||
+                                (objectiveTitle.toLowerCase().includes("tái cấu trúc") && lineLower.includes("tái cấu trúc")) ||
+                                (objectiveTitle.toLowerCase().includes("sáng tạo") && lineLower.includes("sáng tạo")) ||
+                                (objectiveTitle.toLowerCase().includes("nhân sự") && lineLower.includes("nhân sự")) ||
+                                (objectiveTitle.toLowerCase().includes("tài chính") && lineLower.includes("tài chính"));
+        if (matchesKeywords) {
+          isCapture = true;
+          relevantLines.push(line);
+        } else {
+          isCapture = false;
+        }
+        continue;
+      }
+      
+      if (isCapture) {
+        relevantLines.push(line);
+      }
+    }
+
+    if (relevantLines.length > 0) {
+      assessment += `📋 **Đối chiếu mục tiêu tương ứng trong Chiến lược Sconnect**:\n${relevantLines.join("\n")}\n\n`;
+      assessment += `👉 **Khuyến nghị hành động**: Đảm bảo các chỉ số đo lường (KRs) của bạn bám sát định hướng chiến lược nêu trên. Ưu tiên tối ưu hóa hiệu suất bằng AI và phối hợp chéo giữa các đơn vị.`;
+    } else {
+      assessment += `👉 **Khuyến nghị hành động**: Tập trung rà soát các nguồn lực và chuẩn hóa quy trình để nâng cao tiến độ của các chỉ tiêu chưa đạt mục tiêu.`;
+    }
   } else {
     assessment += `👉 **Khuyến nghị hành động**: Tập trung rà soát nguồn lực, chuẩn hóa quy trình và ứng dụng AIVA để tăng tốc tiến độ.`;
   }
