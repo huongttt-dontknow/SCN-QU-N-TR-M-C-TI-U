@@ -192,6 +192,37 @@ export async function GET(request: Request) {
       };
     }
 
+    // Tải trước metadata từ file JSON gốc để sửa lỗi các bản ghi CSDL bị mất title/unit khi người dùng chỉnh sửa
+    const metadataMap: Record<string, any> = {};
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
+      const jsonPath = path.join(process.cwd(), "lib", filename);
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        const jsonRecords = JSON.parse(raw);
+        for (const jr of jsonRecords) {
+          const code = jr.indicatorCode;
+          if (code && jr.title) {
+            // Giữ tiêu đề dài và chi tiết nhất nếu có nhiều bản ghi trùng mã
+            if (!metadataMap[code] || jr.title.length > (metadataMap[code].title || "").length) {
+              metadataMap[code] = {
+                title: jr.title,
+                unit: jr.unit || "",
+                parentCode: jr.parentCode || undefined,
+                frequency: jr.frequency || undefined,
+                aggregationMethod: jr.aggregationMethod || undefined,
+                group: jr.group || undefined
+              };
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Lỗi load metadata từ JSON:", e);
+    }
+
     // Tập hợp dữ liệu thời gian cho từng chỉ tiêu
     for (const r of records) {
       const code = r.indicatorCode;
@@ -213,9 +244,16 @@ export async function GET(request: Request) {
       }
 
       if (!compiledRows[code]) {
-        let parentCode = r.parentCode;
+        // Lấy metadata làm fallback nếu các trường trong DB bị null
+        const meta = metadataMap[code] || {};
+        const title = r.title || meta.title || code;
+        const unit = r.unit || meta.unit || "";
+        const freq = r.frequency || meta.frequency || undefined;
+        const aggMethod = r.aggregationMethod || meta.aggregationMethod || "SUM";
+
+        let parentCode = r.parentCode || meta.parentCode;
         if (!parentCode || parentCode === "") {
-          const groupPrefix = r.group ? r.group.split(".")[0].trim() : "M1";
+          const groupPrefix = r.group ? r.group.split(".")[0].trim() : (meta.group ? meta.group.split(".")[0].trim() : "M1");
           parentCode = productCode ? `${productCode}-${groupPrefix}` : groupPrefix;
         }
 
@@ -245,16 +283,16 @@ export async function GET(request: Request) {
         compiledRows[code] = {
           code: code,
           displayCode: displayCode,
-          title: r.title || code,
-          unit: r.unit || "",
+          title: title,
+          unit: unit,
           targetWeek: 0, actualWeek: 0,
           targetMonth: 0, actualMonth: 0,
           targetQuarter: 0, actualQuarter: 0,
           targetYear: 0, actualYear: 0,
           isParent: false,
           parentCode: parentCode,
-          frequency: detectFrequency(r.frequency, r.title || "", r.indicatorCode),
-          aggregationMethod: r.aggregationMethod || "SUM",
+          frequency: detectFrequency(freq, title, code),
+          aggregationMethod: aggMethod,
           isOverriddenWeek: false,
           isOverriddenMonth: false,
           isOverriddenQuarter: false,

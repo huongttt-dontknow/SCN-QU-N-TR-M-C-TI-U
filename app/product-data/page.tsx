@@ -337,6 +337,7 @@ export default function ProductDataPage() {
   const [selectedProductId, setSelectedProductId] = useState<string>("WO-1899-001");
   const [kpiRows, setKpiRows] = useState<KpiRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hideCodes, setHideCodes] = useState(false);
 
   // Products catalog is statically loaded from PRODUCTS_CATALOG
 
@@ -628,11 +629,24 @@ export default function ProductDataPage() {
           ? "bg-white border border-slate-200 shadow-sm" 
           : "bg-[#151226]/90 border border-purple-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
       } p-6 rounded-2xl overflow-hidden`}>
-        <h3 className={`text-sm font-black tracking-wider mb-4 uppercase flex items-center gap-2 ${
-          theme === "light" ? "text-slate-800" : "text-indigo-400"
-        }`}>
-          📋 BẢNG CHỈ TIÊU PHẲNG SẢN PHẨM (FLAT GRID)
-        </h3>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h3 className={`text-sm font-black tracking-wider uppercase flex items-center gap-2 ${
+            theme === "light" ? "text-slate-800" : "text-indigo-400"
+          }`}>
+            📋 BẢNG CHỈ TIÊU PHẲNG SẢN PHẨM (FLAT GRID)
+          </h3>
+          <button
+            onClick={() => setHideCodes(!hideCodes)}
+            className={`text-xs font-black px-3.5 py-1.5 rounded-lg border transition-all shadow-sm active:scale-[0.98] ${
+              theme === "light"
+                ? "bg-white hover:bg-slate-50 text-slate-700 border-slate-200"
+                : "bg-purple-950/20 hover:bg-purple-900/30 text-indigo-300 border-indigo-500/20"
+            }`}
+          >
+            {hideCodes ? "👁️ Hiện mã chỉ tiêu" : "🙈 Ẩn mã chỉ tiêu"}
+          </button>
+        </div>
+        
         <div className="overflow-x-auto">
           {isLoading ? (
             <div className={`font-bold p-3 text-center ${theme === "light" ? "text-slate-400" : "text-slate-500"}`}>Đang tải dữ liệu sản phẩm...</div>
@@ -646,7 +660,7 @@ export default function ProductDataPage() {
                     ? "border-slate-200 text-slate-600 bg-slate-50" 
                     : "border-white/10 text-slate-300 bg-[#1c1836]/60"
                 }`}>
-                  <th className="p-3 w-32 text-center">Mã chỉ tiêu</th>
+                  {!hideCodes && <th className="p-3 w-32 text-center">Mã chỉ tiêu</th>}
                   <th className="p-3">Tên Chỉ tiêu</th>
                   <th className="p-3 w-32 text-center">Kế hoạch</th>
                   <th className="p-3 w-32 text-center">Thực tế</th>
@@ -667,15 +681,17 @@ export default function ProductDataPage() {
                           ? "border-slate-100 hover:bg-slate-50/50 text-slate-700" 
                           : "border-white/5 hover:bg-[#1a1635]/50 text-slate-200"
                       } text-sm transition-all`}>
-                        <td className="p-3 text-center">
-                          <code className={`px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border ${
-                            theme === "light" 
-                              ? "bg-slate-100 text-sky-600 border-slate-300" 
-                              : "bg-slate-800 text-sky-400 border-sky-500/20"
-                          }`}>
-                            {row.displayCode}
-                          </code>
-                        </td>
+                        {!hideCodes && (
+                          <td className="p-3 text-center">
+                            <code className={`px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border ${
+                              theme === "light" 
+                                ? "bg-slate-100 text-sky-600 border-slate-300" 
+                                : "bg-slate-800 text-sky-400 border-sky-500/20"
+                            }`}>
+                              {row.displayCode}
+                            </code>
+                          </td>
+                        )}
                         <td className={`p-3 font-semibold ${theme === "light" ? "text-slate-800" : "text-white"}`}>{row.title}</td>
                         <td className={`p-3 text-center font-bold ${theme === "light" ? "text-slate-600" : "text-slate-300"}`}>
                           {row.unit === "%" ? `${target}%` : target.toLocaleString()}
