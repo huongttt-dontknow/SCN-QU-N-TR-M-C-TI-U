@@ -293,9 +293,51 @@ export default function UnitDataPage() {
       const act = getActualValue(r);
       const tgt = getTargetValue(r);
       const pct = calculateCompletionPct(tgt, act, r.code, r.title);
-      return { ...r, pct };
+      return { ...r, act, tgt, pct };
     })
-    .filter(r => r.pct < 80);
+    .filter(r => {
+      // 1. Chỉ cảnh báo khi tỷ lệ hoàn thành < 80%
+      if (r.pct >= 80) return false;
+
+      const tTitle = (r.title || "").toLowerCase();
+      const tCode = (r.code || "").toUpperCase();
+
+      // Kiểm tra chỉ tiêu lỗi hoặc vi phạm kỷ luật
+      const isErrorOrPolicy = 
+        tCode.includes("TM7") || 
+        tCode.includes("VM7") ||
+        tTitle.includes("lỗi") || 
+        tTitle.includes("vi phạm") || 
+        tTitle.includes("chính sách") || 
+        tTitle.includes("phạt") || 
+        tTitle.includes("kỷ luật") || 
+        tTitle.includes("khiếu nại") ||
+        tTitle.includes("strike") || 
+        tTitle.includes("claim");
+
+      // 2. Loại trừ các chỉ tiêu không có kế hoạch (target = 0) và không phát sinh lỗi thực tế
+      if (r.tgt === 0 && (!isErrorOrPolicy || r.act === 0)) {
+        return false;
+      }
+
+      // Phân loại nhóm chỉ tiêu cốt lõi
+      const isRevenue = tCode.includes("M1") || tTitle.includes("doanh thu") || tTitle.includes("kinh doanh") || tTitle.includes("thu");
+      const isTraffic = tCode.includes("M3") || tTitle.includes("traffic") || tTitle.includes("view") || tTitle.includes("subscribers") || tTitle.includes("lượt xem") || tTitle.includes("lượt view");
+      const isProduct = tCode.includes("M2") || tTitle.includes("sản lượng") || tTitle.includes("video") || tTitle.includes("nội dung sản xuất") || tTitle.includes("phát hành") || tTitle.includes("tập") || tTitle.includes("sản phẩm");
+      const isPerformance = tCode.includes("M4") || tCode.includes("M5") || tCode.includes("M6") || tTitle.includes("hiệu suất") || tTitle.includes("năng suất") || tTitle.includes("tốc độ") || tTitle.includes("hiệu quả") || tTitle.includes("năng lực");
+      const isDiscipline = isErrorOrPolicy;
+
+      // 3. Nếu lọc theo tuần: Chỉ cảnh báo Doanh thu, Traffic, Sản phẩm / Video sản xuất
+      if (filters.periodType === "weekly") {
+        return isRevenue || isTraffic || isProduct;
+      }
+
+      // 4. Nếu lọc theo tháng/quý/năm: Hỗ trợ cảnh báo đầy đủ Doanh thu, Traffic, Sản phẩm, Hiệu suất, Kỷ luật
+      return isRevenue || isTraffic || isProduct || isPerformance || isDiscipline;
+    })
+    // 5. Sắp xếp thứ tự hoàn thành thấp nhất lên đầu và lấy tối đa 5 chỉ tiêu báo động
+    .sort((a, b) => a.pct - b.pct)
+    .slice(0, 5);
 
   const primaryTitle = filters.periodType === "weekly" ? "Tuần" : filters.periodType === "monthly" ? "Tháng" : filters.periodType === "quarterly" ? "Quý" : "Năm";
   const cumulativeTitle = filters.periodType === "weekly" ? "Tháng" : "Quý";
