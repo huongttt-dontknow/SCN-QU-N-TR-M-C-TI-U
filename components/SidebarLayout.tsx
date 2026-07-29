@@ -40,8 +40,11 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
     { name: "Báo Cáo Sản Phẩm", path: "/product-data", icon: <Layers size={18} /> },
     { name: "Nhập Liệu Báo Cáo", path: "/input-form", icon: <FileEdit size={18} /> },
     { name: "Chiến Lược & OKRs", path: "/okr-strategy", icon: <TrendingUp size={18} /> },
-    { name: "Phân Quyền", path: "/permissions", icon: <KeyRound size={18} /> },
   ];
+
+  if (currentLoggedUser?.role === "Admin" || currentLoggedUser?.role === "Quản trị viên") {
+    menuItems.push({ name: "Phân Quyền", path: "/permissions", icon: <KeyRound size={18} /> });
+  }
 
   if (currentLoggedUser?.role === "Admin") {
     menuItems.push({

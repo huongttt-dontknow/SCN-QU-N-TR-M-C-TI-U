@@ -348,6 +348,15 @@ interface ProductKpiItem {
   frequency?: string;
 }
 
+const isTitleOnlyRow = (title: string): boolean => {
+  const t = title.trim();
+  return (
+    t === "Tăng trưởng doanh thu" ||
+    t === "Đảm bảo số lượng nội dung số sản xuất" ||
+    t === "Gia tăng số lượng khách hàng nền tảng"
+  );
+};
+
 export default function InputFormPage() {
   const { filters, currentLoggedUser, setCurrentLoggedUser, theme } = useApp();
 
@@ -745,14 +754,16 @@ export default function InputFormPage() {
     kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, target: numVal } : k);
   };
 
-  const handleProdInputChange = (id: string, val: number) => {
-    setProductKpis(prev => prev.map(k => k.id === id ? { ...k, actual: val } : k));
-    productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, actual: val } : k);
+  const handleProdInputChange = (id: string, val: number | string) => {
+    const numVal = typeof val === "number" ? val : (parseFloat(val) || 0);
+    setProductKpis(prev => prev.map(k => k.id === id ? { ...k, actual: numVal } : k));
+    productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, actual: numVal } : k);
   };
 
-  const handleProdTargetChange = (id: string, val: number) => {
-    setProductKpis(prev => prev.map(k => k.id === id ? { ...k, target: val } : k));
-    productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, target: val } : k);
+  const handleProdTargetChange = (id: string, val: number | string) => {
+    const numVal = typeof val === "number" ? val : (parseFloat(val) || 0);
+    setProductKpis(prev => prev.map(k => k.id === id ? { ...k, target: numVal } : k));
+    productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, target: numVal } : k);
   };
 
   const formatValue = (val: number, unit: string) => {
@@ -1656,7 +1667,7 @@ export default function InputFormPage() {
                                   onBlur={() => {
                                     if (editingCell) {
                                       const val = parseFloat(editingCell.value) || 0;
-                                      handleProdTargetChange(pk.id, val);
+                                      handleProdTargetChange(pk.id, val.toString());
                                       setEditingCell(null);
                                     }
                                   }}
@@ -1673,7 +1684,7 @@ export default function InputFormPage() {
                                   onBlur={() => {
                                     if (editingCell) {
                                       const val = parseFloat(editingCell.value) || 0;
-                                      handleProdInputChange(pk.id, val);
+                                      handleProdInputChange(pk.id, val.toString());
                                       setEditingCell(null);
                                     }
                                   }}

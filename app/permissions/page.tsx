@@ -224,6 +224,26 @@ export default function PermissionsPage() {
     }
   };
 
+  // Security Check: Only Admin and Quản trị viên can access
+  const isAuthorized = currentLoggedUser?.role === "Admin" || currentLoggedUser?.role === "Quản trị viên";
+
+  if (!isAuthorized) {
+    return (
+      <div className={`${
+        theme === "light" 
+          ? "bg-white border border-slate-200 text-slate-800" 
+          : "bg-[#151226]/90 border border-purple-500/10 text-white"
+      } p-10 rounded-2xl flex flex-col items-center justify-center min-h-[400px] gap-4 shadow-lg`}>
+        <div className="text-rose-500 font-black text-lg uppercase tracking-wider flex items-center gap-2">
+          🚫 TỪ CHỐI TRUY CẬP (ACCESS DENIED)
+        </div>
+        <p className={`font-bold text-sm text-center max-w-md ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>
+          Chỉ có tài khoản **Admin** hoặc **Quản trị viên** mới được phép truy cập và điều chỉnh phân quyền hệ thống.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       
