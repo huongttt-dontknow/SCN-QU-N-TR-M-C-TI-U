@@ -150,7 +150,6 @@ function cleanSearchResult(text: string): string {
     .trim();
 }
 
-// Fallback rule-based and local RAG search engine for OM Agent when Gemini connection is offline
 function getMockOmResponse(question: string): string {
   const q = question.toLowerCase();
 
@@ -165,38 +164,8 @@ function getMockOmResponse(question: string): string {
     console.error("Lỗi khi đọc file ngữ cảnh sconnect_context.txt cho bộ phản hồi dự phòng:", err);
   }
 
-  // 2. Xử lý các câu hỏi Hoạch định/Gợi ý Q4 hoặc 2027 ở chế độ Offline
-  if (q.includes("gợi ý") || q.includes("hoạch định") || q.includes("đề xuất") || q.includes("quý 4") || q.includes("q4") || q.includes("2027")) {
-    if (q.includes("wolfoo")) {
-      return `**OM Agent (Offline Planning):** Đề xuất hoạch định OKR Q4/2026 cho **BP Wolfoo**:
-- **Objective:** Tối ưu hóa chuỗi sản xuất Wolfoo 2D/3D và nâng cao tỷ lệ tái sử dụng tài nguyên dựng hình thô.
-- **Key Results:**
-  1. Đạt tỷ lệ tái sử dụng assets Wolfoo 3D/2D tối thiểu **60%** trong dựng thô để giảm chi phí sản xuất.
-  2. Ứng dụng AIVA-C tự động hóa **>70%** quy trình render và xuất bản phim hoạt hình.`;
-    }
-    if (q.includes("music") || q.includes("âm nhạc") || q.includes("scmu")) {
-      return `**OM Agent (Offline Planning):** Đề xuất hoạch định OKR Q4/2026 cho **BP Music (SCMU)**:
-- **Objective:** Bứt phá doanh thu nhạc số đa kênh trên các nền tảng quốc tế (Spotify, Apple Music).
-- **Key Results:**
-  1. Đạt sản lượng phát hành **>1,000 bài nhạc nền AI** chất lượng cao hằng tháng bằng các công cụ Suno/Udio.
-  2. Doanh thu nhạc số phái sinh tăng trưởng tối thiểu **+75%** so với kỳ trước.`;
-    }
-    if (q.includes("pháp chế") || q.includes("pc&ksnb")) {
-      return `**OM Agent (Offline Planning):** Đề xuất hoạch định OKR Q4/2026 cho **Phòng Pháp chế & KS nội bộ**:
-- **Objective:** Thiết lập hệ thống bảo vệ bản quyền IP nội dung toàn diện và nâng cao tỷ lệ tuân thủ chính sách toàn cầu.
-- **Key Results:**
-  1. Số hóa lưu trữ **100%** văn bản pháp lý và rút ngắn thời gian xử lý tranh chấp bản quyền xuống dưới **24h**.
-  2. Tổ chức đào tạo và đo lường tỷ lệ nhận thức tuân thủ đạt **98%** cho toàn bộ nhân sự sản xuất.`;
-    }
-    
-    // Mặc định cho đề xuất chung
-    return `**OM Agent (Offline Planning):** Đề xuất hoạch định chiến lược chung cho kỳ tiếp theo (Q4/2026):
-- **Objective 1 (Tài chính & Hiệu suất):** Tăng trưởng hiệu quả doanh thu nội dung số và dịch vụ, tối ưu hóa OPEX bằng AI.
-- **Objective 2 (AIVA OS):** Hoàn thiện và tích hợp sâu phân hệ AIVA-O, AIVA-C và AIVA-P vào quy trình làm việc hằng ngày của toàn bộ nhân sự.
-- *Để xem đề xuất chi tiết cho từng đơn vị (Wolfoo, Music, Lego,...), vui lòng thêm tên đơn vị vào câu hỏi của bạn nhé!*`;
-  }
-
-  // 3. Tìm kiếm từ khóa cục bộ trên toàn bộ tài liệu đã trích xuất
+  // 2. Tìm kiếm từ khóa cục bộ trên toàn bộ tài liệu đã trích xuất trước để làm ngữ cảnh
+  let ragMatch = "";
   if (sconnectContext) {
     const stopWords = ["là", "gì", "của", "cho", "các", "những", "nào", "được", "trong", "trên", "dưới", "về", "và", "được", "có", "mã", "bộ", "phần", "khu", "tại", "để", "như", "thế", "đâu"];
     const keywords = q
@@ -218,7 +187,7 @@ function getMockOmResponse(question: string): string {
         for (const kw of keywords) {
           if (pLower.includes(kw)) {
             matchedCount++;
-            const isStrategic = /wolfoo|music|lego|scvn|scme|sama|woa|su|pc&ksnb|tckt|qtnnl|ai|2026|2030|quý 3|q3|okr|kpi|tầm nhìn|mục tiêu|chiến lược/i.test(kw);
+            const isStrategic = /wolfoo|music|lego|scvn|scme|sama|woa|su|pc&ksnb|tckt|qtnnl|ai|2026|2030|quý 3|q3|okr|kpi|tầm nhìn|mục tiêu|chiến lược|tháng/i.test(kw);
             score += isStrategic ? 6 : 2;
           }
         }
@@ -254,10 +223,62 @@ function getMockOmResponse(question: string): string {
         if (replyText.length > 2000) {
           replyText = replyText.slice(0, 2000) + "... *(Xem chi tiết trong các file báo cáo chiến lược)*";
         }
-
-        return `**OM Agent (Offline Search):**\n\n${cleanSearchResult(replyText)}`;
+        ragMatch = replyText;
       }
     }
+  }
+
+  // 3. Xử lý các câu hỏi Hoạch định/Gợi ý/Đề xuất OKR hoặc KPI
+  if (q.includes("gợi ý") || q.includes("hoạch định") || q.includes("đề xuất") || q.includes("quý 4") || q.includes("q4") || q.includes("2027") || q.includes("tháng")) {
+    let targetUnit = "Đơn vị";
+    if (q.includes("wolfoo")) targetUnit = "BP Wolfoo";
+    else if (q.includes("music") || q.includes("scmu")) targetUnit = "BP Music (SCMU)";
+    else if (q.includes("lego")) targetUnit = "DA Lego";
+    else if (q.includes("pháp chế") || q.includes("pc&ksnb")) targetUnit = "Phòng Pháp chế & KSNB";
+    else if (q.includes("tài chính") || q.includes("tckt")) targetUnit = "Phòng TCKT";
+
+    let timeContext = "";
+    if (q.includes("tháng 8")) timeContext = "Tháng 8 (thuộc Quý 3/2026)";
+    else if (q.includes("tháng 7")) timeContext = "Tháng 7 (thuộc Quý 3/2026)";
+    else if (q.includes("tháng 9")) timeContext = "Tháng 9 (thuộc Quý 3/2026)";
+    else if (q.includes("quý 3") || q.includes("q3")) timeContext = "Quý 3/2026";
+    else if (q.includes("quý 4") || q.includes("q4")) timeContext = "Quý 4/2026";
+
+    const responseIntro = `**OM Agent (Offline Planning):** Nhận được yêu cầu gợi ý hoạch định cho **${targetUnit}** ${timeContext ? `vào ${timeContext}` : ""}.`;
+
+    if (ragMatch) {
+      const cleanedOkr = cleanSearchResult(ragMatch);
+      return `${responseIntro} Dựa trên tài liệu chiến lược của Sconnect, dưới đây là định hướng mục tiêu liên quan được tìm thấy:
+
+${cleanedOkr}
+
+*Lưu ý: Để nhận được các đề xuất mục tiêu sáng tạo mới tự động mở rộng theo thời gian thực (giống ChatGPT/Gemini), vui lòng đảm bảo khóa GEMINI_API_KEY trên Vercel của bạn hoạt động bình thường.*`;
+    }
+
+    // Static fallback if no RAG match is found
+    if (q.includes("wolfoo")) {
+      return `${responseIntro} Đề xuất hoạch định OKR Q4/2026 cho **BP Wolfoo**:
+- **Objective:** Tối ưu hóa chuỗi sản xuất Wolfoo 2D/3D và nâng cao tỷ lệ tái sử dụng tài nguyên dựng hình thô.
+- **Key Results:**
+  1. Đạt tỷ lệ tái sử dụng assets Wolfoo 3D/2D tối thiểu **60%** trong dựng thô để giảm chi phí sản xuất.
+  2. Ứng dụng AIVA-C tự động hóa **>70%** quy trình render và xuất bản phim hoạt hình.`;
+    }
+    if (q.includes("music") || q.includes("âm nhạc") || q.includes("scmu")) {
+      return `${responseIntro} Đề xuất hoạch định OKR Q4/2026 cho **BP Music (SCMU)**:
+- **Objective:** Bứt phá doanh thu nhạc số đa kênh trên các nền tảng quốc tế (Spotify, Apple Music).
+- **Key Results:**
+  1. Đạt sản lượng phát hành **>1,000 bài nhạc nền AI** chất lượng cao hằng tháng bằng các công cụ Suno/Udio.
+  2. Doanh thu nhạc số phái sinh tăng trưởng tối thiểu **+75%** so với kỳ trước.`;
+    }
+
+    return `${responseIntro} Đề xuất hoạch định chiến lược chung cho kỳ tiếp theo (Q4/2026):
+- **Objective 1 (Tài chính & Hiệu suất):** Tăng trưởng hiệu quả doanh thu nội dung số và dịch vụ, tối ưu hóa OPEX bằng AI.
+- **Objective 2 (AIVA OS):** Hoàn thiện và tích hợp sâu phân hệ AIVA-O, AIVA-C và AIVA-P vào quy trình làm việc hằng ngày của toàn bộ nhân sự.`;
+  }
+
+  // 4. Nếu là câu hỏi bình thường và có kết quả RAG
+  if (ragMatch) {
+    return `**OM Agent (Offline Search):**\n\n${cleanSearchResult(ragMatch)}`;
   }
 
   // 4. Fallback tĩnh cho SCVN
