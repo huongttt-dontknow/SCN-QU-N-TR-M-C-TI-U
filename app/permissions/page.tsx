@@ -347,12 +347,17 @@ export default function PermissionsPage() {
                 className="bg-slate-900 border border-[var(--glass-border)] text-white text-xs rounded p-2 focus:outline-none focus:border-[var(--accent-cyan)] cursor-pointer"
               >
                 <option value="SCVN">BU Sconnect VN (SCVN)</option>
+                <option value="TCT">Tổng Công Ty (TCT)</option>
                 <option value="Wofloo">BP Wolfoo (WO)</option>
                 <option value="Lego">DA Lego (LEGO)</option>
                 <option value="AS">BP Animated Story (AS)</option>
                 <option value="DA01">Dự án 01 (DA01)</option>
                 <option value="Music">BP Music (SCMU)</option>
                 <option value="NDTH">BP Nội dung tổng hợp</option>
+                <option value="AI">Nhóm AI (AI)</option>
+                <option value="QTNNL">Bộ phận QTNNL (QTNNL)</option>
+                <option value="PC&KSNB">Bộ phận PC&KSNB (PC&KSNB)</option>
+                <option value="TCKT">Bộ phận TCKT (TCKT)</option>
               </select>
             </div>
 

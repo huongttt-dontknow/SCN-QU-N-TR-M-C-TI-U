@@ -27,6 +27,10 @@ export default function FiltersHeader({ hideFrequency = false, children }: Filte
     { code: "CR", name: "BP Creative Hub (CR)" },
     { code: "CN", name: "CNGP (CN)" },
     { code: "SCS", name: "BP Studio (SCS)" },
+    { code: "AI", name: "🤖 Nhóm AI" },
+    { code: "QTNNL", name: "👥 Bộ phận QTNNL" },
+    { code: "PC&KSNB", name: "⚖️ Bộ phận PC&KSNB" },
+    { code: "TCKT", name: "💵 Bộ phận TCKT" },
   ];
 
   const handleFilterChange = (key: string, value: string) => {
