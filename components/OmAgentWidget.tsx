@@ -275,9 +275,9 @@ export default function OmAgentWidget() {
         title="OM Agent - Trợ lý Chiến lược"
       >
         <img
-          src="/cute_ai_avatar.jpg"
+          src="/cute_ai_avatar.png"
           alt="OM Agent"
-          className="w-full h-full object-cover select-none pointer-events-none scale-[1.4] origin-[50%_35%]"
+          className="w-full h-full object-cover select-none pointer-events-none"
         />
       </button>
 
@@ -296,9 +296,9 @@ export default function OmAgentWidget() {
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-full overflow-hidden border border-white/20 shadow-inner flex-shrink-0">
                 <img
-                  src="/cute_ai_avatar.jpg"
+                  src="/cute_ai_avatar.png"
                   alt="OM Avatar"
-                  className="w-full h-full object-cover scale-[1.4] origin-[50%_35%]"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div>
@@ -369,9 +369,9 @@ export default function OmAgentWidget() {
                 {msg.role === "model" && (
                   <div className="w-7 h-7 rounded-full overflow-hidden border border-emerald-500/20 shadow-inner flex-shrink-0 mt-0.5">
                     <img
-                      src="/cute_ai_avatar.jpg"
+                      src="/cute_ai_avatar.png"
                       alt="Bot Avatar"
-                      className="w-full h-full object-cover scale-[1.4] origin-[50%_35%]"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 )}
@@ -390,9 +390,9 @@ export default function OmAgentWidget() {
               <div className="flex justify-start gap-2.5">
                 <div className="w-7 h-7 rounded-full overflow-hidden border border-emerald-500/20 shadow-inner flex-shrink-0 mt-0.5">
                   <img
-                    src="/cute_ai_avatar.jpg"
+                    src="/cute_ai_avatar.png"
                     alt="Bot Avatar"
-                    className="w-full h-full object-cover scale-[1.4] origin-[50%_35%]"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="bg-white border border-slate-200/80 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm text-[13px]">
