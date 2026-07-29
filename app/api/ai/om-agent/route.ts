@@ -216,7 +216,7 @@ export async function POST(request: Request) {
 
     // 3. Gọi Gemini API thực tế với systemInstruction chứa toàn bộ tri thức chiến lược
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-flash-latest",
       systemInstruction: `Bạn là OM Agent - Trợ lý Chiến lược và Quản trị Mục tiêu cao cấp, thông minh tại Sconnect.
 Nhiệm vụ của bạn là hỗ trợ, đồng hành (cowork) cùng người dùng trong việc quản lý, xây dựng chiến lược và thiết lập mục tiêu OKR/KPI.
 
