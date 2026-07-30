@@ -298,15 +298,22 @@ export default function UnitDataPage() {
   const orderedRows = getOrderedRows(visibleRows);
 
   const warningList = visibleRows
-    .filter(r => !r.isParent)
     .filter(r => {
+      // 1. Loại trừ các group header lớn M1 - M7
+      const isGroupHeader = r.code === "M1" || r.code === "M2" || r.code === "M3" || r.code === "M4" || r.code === "M5" || r.code === "M6" || r.code === "M7" || r.code.endsWith("-M1") || r.code.endsWith("-M2") || r.code.endsWith("-M3") || r.code.endsWith("-M4") || r.code.endsWith("-M5") || r.code.endsWith("-M6") || r.code.endsWith("-M7");
+      if (isGroupHeader) return false;
+
+      // 2. Lọc cụ thể cho SCVN / TCT (cho phép cảnh báo dòng cha có giá trị gộp thực tế như VM1-I02.01)
       if (filters.unitCode === "SCVN" || filters.unitCode === "TCT") {
         if (!r.code) return false;
-        // Chỉ cảnh báo theo các chỉ tiêu lớn (bắt đầu bằng V hoặc T, không phải mã con chứa hậu tố như -WF, -AS...)
         const isMainIndicator = r.code.startsWith("V") || r.code.startsWith("T");
         const hasNoSubUnitSuffix = r.code.split("-").length <= 2;
         return isMainIndicator && hasNoSubUnitSuffix;
       }
+
+      // 3. Với các đơn vị thành viên khác: không cảnh báo dòng cha (isParent)
+      if (r.isParent) return false;
+
       return true;
     })
     .map(r => {
