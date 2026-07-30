@@ -78,8 +78,14 @@ export default function DashboardPage() {
       setIsLoadingDb(true);
       const pType = filters.periodType;
       const pKey = getPeriodKey();
+      
+      const m = filters.month || "7";
+      const w = filters.week || "1";
+      const q = filters.quarter || "Q3";
+      const y = filters.year || "2026";
+
       try {
-        const res = await fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}`);
+        const res = await fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`);
         if (res.ok) {
           const data = await res.json();
           if (data && Array.isArray(data)) {
@@ -100,7 +106,7 @@ export default function DashboardPage() {
 
       if (filters.unitCode !== "SCVN") {
         try {
-          const resSCVN = await fetch(`/api/kpi/unit-data?unitCode=SCVN&periodKey=${pKey}&periodType=${pType}`);
+          const resSCVN = await fetch(`/api/kpi/unit-data?unitCode=SCVN&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`);
           if (resSCVN.ok) {
             const dataSCVN = await resSCVN.json();
             if (dataSCVN && Array.isArray(dataSCVN)) {
@@ -117,7 +123,7 @@ export default function DashboardPage() {
     };
 
     fetchDbKpis();
-  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
+  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   useEffect(() => {
     const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
