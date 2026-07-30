@@ -244,54 +244,46 @@ export default function UnitDataPage() {
     return Math.round((actual / target) * 100);
   };
 
+  const getTargetRevenueCode = (unit: string) => {
+    if (unit === "SCVN") return "VM1-I02.01";
+    if (unit === "TCT") return "TM1-I02.01";
+    if (unit === "SCS") return "SM1-I02.01";
+    if (unit === "Music") return "MM1-I02.01";
+    if (unit === "CN") return "NM1-I02.01";
+    if (unit === "CR") return "CM1-I02.01";
+    if (unit === "DA01") return "DM1-I02.01";
+    return "VM1-I02.01";
+  };
+
+  const getTargetTrafficCode = (unit: string) => {
+    if (unit === "SCVN") return "TM3-I01.02";
+    if (unit === "TCT") return "TM3-I01.02";
+    if (unit === "SCS") return "SM3-I01.04";
+    if (unit === "Music") return "MM3-I01.01";
+    if (unit === "CN") return "NM3-I01.05";
+    if (unit === "CR") return "CM3-I01.01";
+    if (unit === "DA01") return "DM3-I01.03";
+    return "VM3-I01.02";
+  };
+
   // Tìm chỉ tiêu doanh thu thực tế (Tổng doanh thu hoặc doanh thu kênh)
-  const revRow = kpiRows.find(r => 
-    r.code === "VM1-I02.01" || 
-    r.code === "TM1-I02.01" ||
-    r.code === "DM1-I02.01" ||
-    r.code === "SM1-I02.01" ||
-    r.code === "MM1-I02.01" ||
-    r.code === "NM1-I02.01" ||
-    r.code === "CM1-I02.01"
-  ) || kpiRows.find(r => {
-    if (!r.code) return false;
-    const isMain = r.code.split("-").length <= 2;
-    return isMain && (r.code.includes("M1-I02.01") || r.code.includes("M1-I02.02"));
-  }) || kpiRows.find(r => 
-    r.code.includes("M1-I02.01") || 
-    r.title.toLowerCase().includes("tổng doanh thu") || 
-    r.title.toLowerCase() === "doanh thu" ||
-    r.title.toLowerCase().includes("doanh thu kênh")
-  );
+  const targetRevCode = getTargetRevenueCode(filters.unitCode);
+  const revRow = kpiRows.find(r => r.code === targetRevCode)
+    || kpiRows.find(r => r.code === "VM1-I02.01")
+    || kpiRows.find(r => r.title.toLowerCase().includes("tổng doanh thu"))
+    || kpiRows.find(r => r.title.toLowerCase() === "doanh thu");
+  
   const actualRev = revRow ? getActualValue(revRow) : 0;
   const targetRev = revRow ? getTargetValue(revRow) : 0;
   const revCompletion = calculateCompletionPct(targetRev, actualRev, revRow?.code, revRow?.title);
 
   // Tìm chỉ tiêu traffic thực tế (Tổng traffic hoặc view)
-  const trafficRow = kpiRows.find(r => 
-    r.code === "VM3-I01.02" || 
-    r.code === "TM3-I01.02" || 
-    r.code === "DM3-I01.03" ||
-    r.code === "SM3-I01.04" ||
-    r.code === "MM3-I01.01" ||
-    r.code === "NM3-I01.05" ||
-    r.code === "CM3-I01.01"
-  ) || kpiRows.find(r => {
-    if (!r.code) return false;
-    const isMain = r.code.split("-").length <= 2;
-    return isMain && (
-      r.code.includes("M3-I01.02") || 
-      r.code.includes("M3-I01.03") || 
-      r.code.includes("M3-I01.01")
-    );
-  }) || kpiRows.find(r => 
-    r.code.includes("M3-I01.02") || 
-    r.code.includes("M3-I01.03") || 
-    r.code.includes("M3-I01.01") || 
-    r.title.toLowerCase().includes("traffic") || 
-    r.title.toLowerCase().includes("lượt view") || 
-    r.title.toLowerCase().includes("view youtube")
-  );
+  const targetTrafficCode = getTargetTrafficCode(filters.unitCode);
+  const trafficRow = kpiRows.find(r => r.code === targetTrafficCode)
+    || kpiRows.find(r => r.code === "TM3-I01.02")
+    || kpiRows.find(r => r.title.toLowerCase().includes("traffic"))
+    || kpiRows.find(r => r.title.toLowerCase().includes("lượt view"));
+    
   const actualTraffic = trafficRow ? getActualValue(trafficRow) : 0;
   const targetTraffic = trafficRow ? getTargetValue(trafficRow) : 0;
   const trafficCompletion = calculateCompletionPct(targetTraffic, actualTraffic, trafficRow?.code, trafficRow?.title);
