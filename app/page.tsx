@@ -82,10 +82,10 @@ export default function DashboardPage() {
         const res = await fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}`);
         if (res.ok) {
           const data = await res.json();
-          if (data && Array.isArray(data.rows)) {
-            setDbKpis(data.rows);
+          if (data && Array.isArray(data)) {
+            setDbKpis(data);
             if (filters.unitCode === "SCVN") {
-              setScvnKpis(data.rows);
+              setScvnKpis(data);
             }
           } else {
             setDbKpis([]);
@@ -103,8 +103,8 @@ export default function DashboardPage() {
           const resSCVN = await fetch(`/api/kpi/unit-data?unitCode=SCVN&periodKey=${pKey}&periodType=${pType}`);
           if (resSCVN.ok) {
             const dataSCVN = await resSCVN.json();
-            if (dataSCVN && Array.isArray(dataSCVN.rows)) {
-              setScvnKpis(dataSCVN.rows);
+            if (dataSCVN && Array.isArray(dataSCVN)) {
+              setScvnKpis(dataSCVN);
             } else {
               setScvnKpis([]);
             }
