@@ -386,7 +386,7 @@ export async function GET(request: Request) {
       const meta = metaMap[code] || {};
       
       let title = r.title;
-      if (!title || title === code || (meta.title && meta.title !== code)) {
+      if (!title || title === code) {
         title = meta.title || title || code;
       }
       
