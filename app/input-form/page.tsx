@@ -842,7 +842,11 @@ export default function InputFormPage() {
   const handleSaveRow = async (id: string) => {
     if (isReadOnly) return;
     const item = kpisRef.current.find(k => k.id === id) || kpis.find(k => k.id === id);
-    if (!item) return;
+    if (!item) {
+      showToast(`⚠️ Không tìm thấy chỉ tiêu để lưu: ID ${id}`, "error");
+      return;
+    }
+    showToast(`💾 Đang lưu chỉ tiêu: ${item.title}...`, "success");
     const success = await saveKpisToDatabase([item]);
     if (success) {
       showToast(`✓ Đã lưu thành công dữ liệu chỉ tiêu: ${item.title}`);
@@ -868,7 +872,11 @@ export default function InputFormPage() {
   const handleSaveProdRow = async (id: string) => {
     if (isReadOnly) return;
     const item = productKpisRef.current.find(k => k.id === id) || productKpis.find(k => k.id === id);
-    if (!item) return;
+    if (!item) {
+      showToast(`⚠️ Không tìm thấy chỉ tiêu sản phẩm để lưu: ID ${id}`, "error");
+      return;
+    }
+    showToast(`💾 Đang lưu chỉ tiêu sản phẩm: ${item.title}...`, "success");
     const success = await saveProductKpisToDatabase([item]);
     if (success) {
       showToast(`✓ Đã lưu thành công dữ liệu sản phẩm cho chỉ tiêu: ${item.title}`);
