@@ -1094,6 +1094,18 @@ export default function InputFormPage() {
     return true;
   };
 
+  const isHeaderOnlyRow = (code: string) => {
+    const headers = [
+      "TM1-I01", "TM1-I02", "TM1-I03", "TM1-I05",
+      "TM2-I01", "TM2-I02",
+      "TM3-I01",
+      "TM4-I01", "TM4-I02",
+      "TM6-I01",
+      "TM7-I01", "TM7-I02", "TM7-I03"
+    ];
+    return headers.includes(code);
+  };
+
   const getDepth = (kpi: any) => {
     let depth = 0;
     let curr = kpi;
@@ -1382,67 +1394,91 @@ export default function InputFormPage() {
                                 {kpi.formula}
                               </td>
                               <td className="p-3 text-center">
-                                <input
-                                  type="text"
-                                  value={editingCell?.kpiId === kpi.id && editingCell?.field === "target" ? editingCell.value : formatValue(kpi.target, kpi.unit)}
-                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiId: kpi.id, field: "target", value: kpi.target.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "target", value: e.target.value })}
-                                  onBlur={() => {
-                                    if (editingCell) {
-                                      const val = parseFloat(editingCell.value) || 0;
-                                      handleTargetChange(kpi.id, val.toString());
-                                      setEditingCell(null);
-                                    }
-                                  }}
-                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
-                                />
+                                {isHeaderOnlyRow(kpi.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <input
+                                    type="text"
+                                    value={editingCell?.kpiId === kpi.id && editingCell?.field === "target" ? editingCell.value : formatValue(kpi.target, kpi.unit)}
+                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    onFocus={() => setEditingCell({ kpiId: kpi.id, field: "target", value: kpi.target.toString() })}
+                                    onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "target", value: e.target.value })}
+                                    onBlur={() => {
+                                      if (editingCell) {
+                                        const val = parseFloat(editingCell.value) || 0;
+                                        handleTargetChange(kpi.id, val.toString());
+                                        setEditingCell(null);
+                                      }
+                                    }}
+                                    className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                  />
+                                )}
                               </td>
                               <td className="p-3 text-center">
-                                <input
-                                  type="text"
-                                  value={editingCell?.kpiId === kpi.id && editingCell?.field === "actual" ? editingCell.value : formatValue(kpi.actual, kpi.unit)}
-                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiId: kpi.id, field: "actual", value: kpi.actual.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "actual", value: e.target.value })}
-                                  onBlur={() => {
-                                    if (editingCell) {
-                                      const val = parseFloat(editingCell.value) || 0;
-                                      handleInputChange(kpi.id, val.toString());
-                                      setEditingCell(null);
-                                    }
-                                  }}
-                                  className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
-                                />
+                                {isHeaderOnlyRow(kpi.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <input
+                                    type="text"
+                                    value={editingCell?.kpiId === kpi.id && editingCell?.field === "actual" ? editingCell.value : formatValue(kpi.actual, kpi.unit)}
+                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    onFocus={() => setEditingCell({ kpiId: kpi.id, field: "actual", value: kpi.actual.toString() })}
+                                    onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "actual", value: e.target.value })}
+                                    onBlur={() => {
+                                      if (editingCell) {
+                                        const val = parseFloat(editingCell.value) || 0;
+                                        handleInputChange(kpi.id, val.toString());
+                                        setEditingCell(null);
+                                      }
+                                    }}
+                                    className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                  />
+                                )}
                               </td>
                               <td className="p-3 text-center font-black text-sm">
-                                <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
-                                  {isNaN(pct) || !isFinite(pct) ? "0%" : `${pct}%`}
-                                </span>
+                                {isHeaderOnlyRow(kpi.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
+                                    {isNaN(pct) || !isFinite(pct) ? "0%" : `${pct}%`}
+                                  </span>
+                                )}
                               </td>
                               <td className="p-3 text-center w-[200px]">
-                                <input
-                                  type="text"
-                                  value={explanations[kpi.id] || ""}
-                                  placeholder="Ghi chú ngắn kết quả..."
-                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.id]: e.target.value }))}
-                                  className="w-full bg-slate-950 border border-[var(--glass-border)] text-white text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
-                                />
+                                {isHeaderOnlyRow(kpi.code) ? (
+                                  <span className="text-slate-500">-</span>
+                                ) : (
+                                  <input
+                                    type="text"
+                                    value={explanations[kpi.id] || ""}
+                                    placeholder="Ghi chú ngắn kết quả..."
+                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.id]: e.target.value }))}
+                                    className="w-full bg-slate-950 border border-[var(--glass-border)] text-white text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                  />
+                                )}
                               </td>
                               <td className="p-3 text-center w-[120px]">
-                                <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${getStatusStyle(kpi.status)}`}>
-                                  {kpi.status}
-                                </span>
+                                {isHeaderOnlyRow(kpi.code) ? (
+                                  <span className="text-slate-500">-</span>
+                                ) : (
+                                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${getStatusStyle(kpi.status)}`}>
+                                    {kpi.status}
+                                  </span>
+                                )}
                               </td>
                               <td className="p-3 text-center">
-                                <button
-                                  onClick={() => handleSaveRow(kpi.id)}
-                                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
-                                  className="bg-[#10b981] hover:bg-[#34d399] text-slate-950 text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
-                                >
-                                  Lưu dòng
-                                </button>
+                                {isHeaderOnlyRow(kpi.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <button
+                                    onClick={() => handleSaveRow(kpi.id)}
+                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    className="bg-[#10b981] hover:bg-[#34d399] text-slate-950 text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
+                                  >
+                                    Lưu dòng
+                                  </button>
+                                )}
                               </td>
                             </tr>
                           );
@@ -1822,52 +1858,68 @@ export default function InputFormPage() {
                                 {pk.formula}
                               </td>
                               <td className="p-3 text-center">
-                                <input
-                                  type="text"
-                                  value={editingCell?.kpiId === pk.id && editingCell?.field === "target" ? editingCell.value : formatValue(pk.target, pk.unit)}
-                                  disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiId: pk.id, field: "target", value: pk.target.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiId: pk.id, field: "target", value: e.target.value })}
-                                  onBlur={() => {
-                                    if (editingCell) {
-                                      const val = parseFloat(editingCell.value) || 0;
-                                      handleProdTargetChange(pk.id, val.toString());
-                                      setEditingCell(null);
-                                    }
-                                  }}
-                                  className="w-28 bg-slate-950 border border-purple-500/40 text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-purple-400 disabled:opacity-60"
-                                />
+                                {isHeaderOnlyRow(pk.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <input
+                                    type="text"
+                                    value={editingCell?.kpiId === pk.id && editingCell?.field === "target" ? editingCell.value : formatValue(pk.target, pk.unit)}
+                                    disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
+                                    onFocus={() => setEditingCell({ kpiId: pk.id, field: "target", value: pk.target.toString() })}
+                                    onChange={(e) => setEditingCell({ kpiId: pk.id, field: "target", value: e.target.value })}
+                                    onBlur={() => {
+                                      if (editingCell) {
+                                        const val = parseFloat(editingCell.value) || 0;
+                                        handleProdTargetChange(pk.id, val.toString());
+                                        setEditingCell(null);
+                                      }
+                                    }}
+                                    className="w-28 bg-slate-950 border border-purple-500/40 text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-purple-400 disabled:opacity-60"
+                                  />
+                                )}
                               </td>
                               <td className="p-3 text-center">
-                                <input
-                                  type="text"
-                                  value={editingCell?.kpiId === pk.id && editingCell?.field === "actual" ? editingCell.value : formatValue(pk.actual, pk.unit)}
-                                  disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
-                                  onFocus={() => setEditingCell({ kpiId: pk.id, field: "actual", value: pk.actual.toString() })}
-                                  onChange={(e) => setEditingCell({ kpiId: pk.id, field: "actual", value: e.target.value })}
-                                  onBlur={() => {
-                                    if (editingCell) {
-                                      const val = parseFloat(editingCell.value) || 0;
-                                      handleProdInputChange(pk.id, val.toString());
-                                      setEditingCell(null);
-                                    }
-                                  }}
-                                  className="w-28 bg-slate-950 border border-purple-500/40 text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-purple-400 disabled:opacity-60"
-                                />
+                                {isHeaderOnlyRow(pk.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <input
+                                    type="text"
+                                    value={editingCell?.kpiId === pk.id && editingCell?.field === "actual" ? editingCell.value : formatValue(pk.actual, pk.unit)}
+                                    disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
+                                    onFocus={() => setEditingCell({ kpiId: pk.id, field: "actual", value: pk.actual.toString() })}
+                                    onChange={(e) => setEditingCell({ kpiId: pk.id, field: "actual", value: e.target.value })}
+                                    onBlur={() => {
+                                      if (editingCell) {
+                                        const val = parseFloat(editingCell.value) || 0;
+                                        handleProdInputChange(pk.id, val.toString());
+                                        setEditingCell(null);
+                                      }
+                                    }}
+                                    className="w-28 bg-slate-950 border border-purple-500/40 text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-purple-400 disabled:opacity-60"
+                                  />
+                                )}
                               </td>
                               <td className="p-3 text-center font-black text-sm">
-                                <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
-                                  {isNaN(pct) || !isFinite(pct) ? "0%" : `${pct}%`}
-                                </span>
+                                {isHeaderOnlyRow(pk.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <span className={pct < 80 ? "text-rose-400" : pct < 100 ? "text-amber-400" : "text-emerald-400"}>
+                                    {isNaN(pct) || !isFinite(pct) ? "0%" : `${pct}%`}
+                                  </span>
+                                )}
                               </td>
                               <td className="p-3 text-center">
-                                <button
-                                  onClick={() => handleSaveProdRow(pk.id)}
-                                  disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
-                                  className="bg-purple-700 hover:bg-purple-600 text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
-                                >
-                                  Lưu dòng
-                                </button>
+                                {isHeaderOnlyRow(pk.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <button
+                                    onClick={() => handleSaveProdRow(pk.id)}
+                                    disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
+                                    className="bg-purple-700 hover:bg-purple-600 text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
+                                  >
+                                    Lưu dòng
+                                  </button>
+                                )}
                               </td>
                             </tr>
                           );
