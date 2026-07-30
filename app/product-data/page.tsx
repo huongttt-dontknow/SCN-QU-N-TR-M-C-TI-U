@@ -768,6 +768,7 @@ export default function ProductDataPage() {
                     const target = getTargetValue(row);
                     const actual = getActualValue(row);
                     const pct = calculateCompletionPct(target, actual, row.displayCode || row.code, row.title);
+                    const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
                     return (
                       <tr key={row.code} className={`border-b ${
                         theme === "light" 
@@ -777,15 +778,19 @@ export default function ProductDataPage() {
                         {!hideCodes && (
                           <td className="p-3 text-center">
                             <code className={`px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border ${
-                              theme === "light" 
-                                ? "bg-slate-100 text-sky-600 border-slate-300" 
-                                : "bg-slate-800 text-sky-400 border-sky-500/20"
+                              isMGoal
+                                ? (theme === "light" ? "bg-sky-50 text-sky-600 border-sky-300" : "bg-sky-950/20 text-sky-400 border-sky-500/20")
+                                : (theme === "light" ? "bg-slate-100 text-sky-600 border-slate-300" : "bg-slate-800 text-sky-400 border-sky-500/20")
                             }`}>
                               {row.displayCode}
                             </code>
                           </td>
                         )}
-                        <td className={`p-3 font-semibold ${theme === "light" ? "text-slate-800" : "text-white"}`}>{row.title}</td>
+                        <td className={`p-3 font-semibold ${
+                          isMGoal
+                            ? (theme === "light" ? "text-sky-600" : "text-sky-400")
+                            : (theme === "light" ? "text-slate-800" : "text-white")
+                        }`}>{row.title}</td>
                         <td className={`p-3 text-center font-bold ${theme === "light" ? "text-slate-600" : "text-slate-300"}`}>
                           {row.unit === "%" ? `${target}%` : target.toLocaleString()}
                         </td>

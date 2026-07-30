@@ -654,6 +654,8 @@ export default function UnitDataPage() {
                 const actualCum = getCumulativeActual(row);
                 const pctCum = calculateCompletionPct(targetCum, actualCum, row.code, row.title);
 
+                const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
+
                 if (row.isParent) {
                   const isExpanded = expandedRows[row.code];
                   const depth = getRowDepth(row, orderedRows);
@@ -670,7 +672,9 @@ export default function UnitDataPage() {
                       {showCodeColumn && (
                         <td className="p-3 text-center">
                           <span 
-                            className="inline-flex items-center justify-center gap-1 font-mono"
+                            className={`inline-flex items-center justify-center gap-1 font-mono ${
+                              isMGoal ? (theme === "light" ? "text-sky-600 font-bold" : "text-sky-400 font-bold") : ""
+                            }`}
                             style={{ paddingLeft: `${depth * 1.0}rem` }}
                           >
                             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -680,7 +684,9 @@ export default function UnitDataPage() {
                       )}
                       <td 
                         className={`p-3 uppercase tracking-wider font-black ${
-                          theme === "light" ? "text-slate-900" : "text-white"
+                          isMGoal 
+                            ? (theme === "light" ? "text-sky-600" : "text-sky-400")
+                            : (theme === "light" ? "text-slate-900" : "text-white")
                         }`} 
                         style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
                       >
