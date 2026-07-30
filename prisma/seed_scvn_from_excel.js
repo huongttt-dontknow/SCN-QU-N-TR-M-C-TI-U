@@ -27,6 +27,11 @@ async function main() {
   const rules = JSON.parse(fs.readFileSync(rulesPath, "utf-8"));
   console.log(`Đã tải ${rules.length} chỉ tiêu từ scvn_rules.json`);
 
+  // Xóa các bản ghi tự tham chiếu (parentCode === indicatorCode) gây vòng lặp vô hạn
+  console.log("\n0. Đang dọn dẹp các bản ghi tự tham chiếu lỗi...");
+  const deletedCycles = await prisma.$executeRaw`DELETE FROM "KpiData" WHERE "unitCode" = 'SCVN' AND "parentCode" = "indicatorCode"`;
+  console.log(`Đã xóa ${deletedCycles} bản ghi bị tự tham chiếu lỗi.`);
+
   // 1. Thực hiện di trú đổi mã chỉ tiêu để bảo toàn dữ liệu
   console.log("\n1. Đang chạy di trú đổi mã chỉ tiêu...");
   for (const [oldCode, newCode] of Object.entries(renameMap)) {

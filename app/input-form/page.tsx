@@ -1081,7 +1081,10 @@ export default function InputFormPage() {
 
     const isRowVisible = (kpi: any) => {
     let curr = kpi;
+    const visited = new Set<string>();
     while (curr.parentCode) {
+      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.parentCode);
       const parent = kpis.find(k => k.code === curr.parentCode);
       if (!parent) break;
       const isParentExpanded = expandedParents[parent.code] !== false;
@@ -1094,7 +1097,10 @@ export default function InputFormPage() {
   const getDepth = (kpi: any) => {
     let depth = 0;
     let curr = kpi;
+    const visited = new Set<string>();
     while (curr.parentCode) {
+      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.parentCode);
       const parent = kpis.find(k => k.code === curr.parentCode);
       if (!parent) break;
       depth++;
@@ -1105,7 +1111,10 @@ export default function InputFormPage() {
 
   const isProdRowVisible = (pk: any) => {
     let curr = pk;
+    const visited = new Set<string>();
     while (curr.parentCode) {
+      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.parentCode);
       const parent = productKpis.find(k => k.code === curr.parentCode);
       if (!parent) break;
       const isParentExpanded = expandedParents[parent.code] !== false;
@@ -1118,7 +1127,10 @@ export default function InputFormPage() {
   const getProdDepth = (pk: any) => {
     let depth = 0;
     let curr = pk;
+    const visited = new Set<string>();
     while (curr.parentCode) {
+      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.parentCode);
       const parent = productKpis.find(k => k.code === curr.parentCode);
       if (!parent) break;
       depth++;
