@@ -1149,13 +1149,49 @@ export default function InputFormPage() {
     return idxA - idxB;
   };
 
+  const directVisibleKpis = kpis.filter(k => shouldShowByFrequency(k.frequency, k.title, k.code));
+  const visibleKpisSet = new Set<string>();
+  directVisibleKpis.forEach(k => {
+    visibleKpisSet.add(k.code);
+    let curr = k;
+    const visited = new Set<string>();
+    while (curr.parentCode) {
+      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.parentCode);
+      const parent = kpis.find(p => p.code === curr.parentCode);
+      if (parent) {
+        visibleKpisSet.add(parent.code);
+        curr = parent;
+      } else {
+        break;
+      }
+    }
+  });
   const visibleKpis = kpis
-    .filter(k => shouldShowByFrequency(k.frequency, k.title, k.code))
+    .filter(k => visibleKpisSet.has(k.code))
     .sort(sortKpis);
   const groups = Array.from(new Set(visibleKpis.map(k => k.group).filter(Boolean)));
 
+  const directVisibleProductKpis = productKpis.filter(pk => shouldShowByFrequency(pk.frequency, pk.title, pk.code));
+  const visibleProductKpisSet = new Set<string>();
+  directVisibleProductKpis.forEach(pk => {
+    visibleProductKpisSet.add(pk.code);
+    let curr = pk;
+    const visited = new Set<string>();
+    while (curr.parentCode) {
+      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.parentCode);
+      const parent = productKpis.find(p => p.code === curr.parentCode);
+      if (parent) {
+        visibleProductKpisSet.add(parent.code);
+        curr = parent;
+      } else {
+        break;
+      }
+    }
+  });
   const visibleProductKpis = productKpis
-    .filter(pk => shouldShowByFrequency(pk.frequency, pk.title, pk.code))
+    .filter(pk => visibleProductKpisSet.has(pk.code))
     .sort(sortKpis);
   const prodGroups = Array.from(new Set(visibleProductKpis.map(pk => pk.group).filter(Boolean)));
 
@@ -1296,6 +1332,7 @@ export default function InputFormPage() {
                 <tbody>
                   {groups.map(groupName => {
                     const items = visibleKpis.filter(k => k.group === groupName);
+                    if (items.length === 0) return null;
                     return (
                       <React.Fragment key={groupName}>
                         <tr className="bg-slate-900/50 text-[#10b981] font-black border-b border-white/5 uppercase text-xs">
@@ -1732,6 +1769,7 @@ export default function InputFormPage() {
                 <tbody>
                   {prodGroups.map(groupName => {
                     const items = visibleProductKpis.filter(k => k.group === groupName);
+                    if (items.length === 0) return null;
                     return (
                       <React.Fragment key={groupName}>
                         <tr className="bg-slate-900/50 text-sky-400 font-black border-b border-white/5 uppercase text-xs">
