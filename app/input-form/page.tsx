@@ -319,6 +319,7 @@ interface KpiItem {
   pic: string;
   group: string;
   frequency?: string;
+  parentCode?: string;
 }
 
 interface ActionItem {
@@ -346,6 +347,7 @@ interface ProductKpiItem {
   actual: number;
   group: string;
   frequency?: string;
+  parentCode?: string;
 }
 
 const isTitleOnlyRow = (title: string): boolean => {
@@ -395,6 +397,7 @@ export default function InputFormPage() {
   const [productNote, setProductNote] = useState("");
   const [showCodeColumn, setShowCodeColumn] = useState(false);
   const [editingCell, setEditingCell] = useState<{ kpiId: string, field: "target" | "actual", value: string } | null>(null);
+  const [expandedParents, setExpandedParents] = useState<Record<string, boolean>>({});
 
   const [reportNotes, setReportNotes] = useState("");
   const [reportStatus, setReportStatus] = useState("Đang nhập");
@@ -563,7 +566,8 @@ export default function InputFormPage() {
             status: d.status || "Chờ duyệt",
             pic: d.pic || "",
             group: d.group || "Chỉ số bổ sung",
-            frequency: d.frequency || ""
+            frequency: d.frequency || "",
+            parentCode: d.parentCode || ""
           }));
           setKpis(mapped);
           kpisRef.current = mapped;
@@ -609,7 +613,8 @@ export default function InputFormPage() {
             target: d.targetValue,
             actual: d.actualValue,
             group: d.group || "Chỉ số bổ sung",
-            frequency: d.frequency || ""
+            frequency: d.frequency || "",
+            parentCode: d.parentCode || ""
           }));
           setProductKpis(mapped);
           productKpisRef.current = mapped;
@@ -1061,30 +1066,85 @@ export default function InputFormPage() {
   function shouldShowByFrequency(freq: string | undefined, title: string, code: string) {
     const periodType = filters.periodType || "weekly";
     const f = (freq || "").toLowerCase().trim();
-    const t = title.toLowerCase();
-    const c = code.toLowerCase();
-
-    // Detect quarterly indicators by frequency field or keywords in title/code
-    const isQuarterly = f === "quý" || f === "quarterly" || t.includes("roi") || t.includes("ros") || t.includes("tỷ suất lợi nhuận");
-    
-    // Detect monthly indicators by frequency field or keywords in title/code
-    const isMonthly = f === "tháng" || f === "monthly" || t.includes("chi phí mua công cụ") || t.includes("chi phí ctv") || t.includes("độ phủ thương hiệu") || t.includes("kỷ luật") || t.includes("nhân sự fulltime") || t.includes("đào tạo") || t.includes("ngân sách");
 
     if (periodType === "weekly") {
-      // Weekly reports: hide both monthly and quarterly indicators
-      if (isQuarterly || isMonthly) return false;
+      return f === "weekly";
     } else if (periodType === "monthly") {
-      // Monthly reports: hide quarterly indicators, show monthly & weekly indicators
-      if (isQuarterly) return false;
+      return f === "weekly" || f === "monthly";
+    } else if (periodType === "quarterly") {
+      return f === "weekly" || f === "monthly" || f === "quarterly";
+    } else if (periodType === "yearly") {
+      return true;
     }
-    
     return true;
   }
 
-  const visibleKpis = kpis.filter(k => shouldShowByFrequency(k.frequency, k.title, k.code));
+    const isRowVisible = (kpi: any) => {
+    let curr = kpi;
+    while (curr.parentCode) {
+      const parent = kpis.find(k => k.code === curr.parentCode);
+      if (!parent) break;
+      const isParentExpanded = expandedParents[parent.code] !== false;
+      if (!isParentExpanded) return false;
+      curr = parent;
+    }
+    return true;
+  };
+
+  const getDepth = (kpi: any) => {
+    let depth = 0;
+    let curr = kpi;
+    while (curr.parentCode) {
+      const parent = kpis.find(k => k.code === curr.parentCode);
+      if (!parent) break;
+      depth++;
+      curr = parent;
+    }
+    return depth;
+  };
+
+  const isProdRowVisible = (pk: any) => {
+    let curr = pk;
+    while (curr.parentCode) {
+      const parent = productKpis.find(k => k.code === curr.parentCode);
+      if (!parent) break;
+      const isParentExpanded = expandedParents[parent.code] !== false;
+      if (!isParentExpanded) return false;
+      curr = parent;
+    }
+    return true;
+  };
+
+  const getProdDepth = (pk: any) => {
+    let depth = 0;
+    let curr = pk;
+    while (curr.parentCode) {
+      const parent = productKpis.find(k => k.code === curr.parentCode);
+      if (!parent) break;
+      depth++;
+      curr = parent;
+    }
+    return depth;
+  };
+
+  const scvnOrder = ["TM1-I01", "VM1-I01.01", "VM1-I01.02", "TM1-I02", "VM1-I02.01", "VM1-I02.01-WF", "VM1-I02.01-AS", "VM1-I02.01-NDTH", "VM1-I02.01-Lego", "DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01", "VM1-I02.01-DA", "VM1-I02.01-IP", "VM1-I02.02", "VM1-I02.02-WF", "VM1-I02.02-AS", "VM1-I02.02-NDTH", "VM1-I02.02-Lego", "DM1-I02.01", "SM1-I02.01.01", "MM1-I02.01.01", "CM1-I02.01-CNGP", "CM1-I02.02", "VM1-I02.03", "VM1-I02.03-WF", "VM1-I02.03-AS", "VM1-I02.03-NDTH", "VM1-I02.03-Lego", "SM1-I02.01.03", "MM1-I02.01.02", "VM1-I02.04", "VM1-I02.04-WF", "VM1-I02.04-AS", "VM1-I02.04", "VM1-I02.04-Lego", "SM1-I02.01.04", "MM1-I02.01.03", "CM1-I02.03", "TM1-I03", "VM1-I03.01", "TM1-I05", "VM1-I05.01", "VM1-I05.02", "VM1-I05.03", "VM1-I05.04", "TM2-I01", "VM2-I01.01", "VM2-I01.01-WF", "VM2-I01.01-AS", "VM2-I01.01-Lego", "VM2-I01.02-NDTH", "VM2-I02.01", "DM2-I01.01", "SM2-I01.01", "VM2-I01.03-NDTH", "CM2-I01.01", "MM2-I01.01", "VM2-I01.3", "VWM2-I01.3", "VAM2-I01.3-AS", "VM2-I01.4", "VWM2-I01.4", "VAM2-I01.4-AS", "VM2-I01.5", "VWM2-I01.5", "VAM2-I01.5-AS", "VM2-I01.6", "VWM2-I01.6", "VAM2-I01.6-AS", "TM2-I02", "TM2-I02.01", "VM2-I02.01-WF", "VM2-I02.01-AS", "VM2-I02.01-Lego", "VM2-I02.01-NDTH", "TM4-I02.01", "SM2-I02.01", "VM2-I02.01-SCMU", "VM2-I02.01-WF", "TM3-I01", "TM3-I01.02", "VM3-I01.02-WF", "VM3-I01.02-AS", "VM3-I01.02-Lego", "VM3-I01.02-NDTH", "DM3-I01.03", "SM3-I01.04", "MM3-I01.01", "NM3-I01.05", "CM3-I01.01", "TM3-I01.03", "VM2-I03.01-WF", "VM2-I03.01-AS", "VM2-I03.01-Lego", "VM2-I03.01-NDTH", "VM3-I01.04", "VM3-I01.04-AS", "VM3-I01.05", "VM3-I01.05-AS", "VM3-I01.06", "TM4-I01.01", "VM4-I01.01-WF", "TM4-I02", "TM4-I02.01", "VM4-I02.01-WF", "VM4-I02.01-AS", "VM4-I02.01-Lego", "VM4-I02.01-NDTH", "DM4-I02.01", "SM4-I02.01", "NM4-I02.03", "TM4-I02.02", "VM4-I02.02-WF", "VM4-I02.02-AS", "VM4-I02.02-Lego", "VM4-I02.02-NDTH", "DM4-I02.02", "MM4-I02.02", "TM4-I02.03", "VM4-I02.04", "VM4-I02.04-WF", "VM4-I02.04-AS", "VM4-I02.04-Lego", "VM4-I02.04-NDTH", "DM4-I02.04", "SM4-I02.06", "NM4-I02.04", "VM4-I02.05", "VM4-I02.05-Lego", "VM4-I02.05-DA01", "VM4-I02.05-SCS", "VM4-I02.05-SCMU", "VM4-I02.05-CNGP", "VM4-I02.05-CR", "VM4-I02.06", "TM5-I01", "TM5-I01.03", "VM5-I02", "VM5-I02.01", "VM5-I02.01-WF", "VM5-I02.01-AS", "VM5-I02.01-Lego", "VM5-I02.01-NDTH", "VM5-I02.01-SCS", "VM5-I02.01-WF", "VM5-I02.02", "VM5-I02.02-WF", "VM5-I02.02-Lego", "VM5-I02.03", "VM5-I02.03-WF", "VM5-I02.03-AS", "VM5-I02.03-Lego", "VM5-I02.03-NDTH", "VM5-I02.03-DA01", "VM5-I02.03-SCS", "VM5-I02.03-SCMU", "VM5-I02.03-CNGP", "VM5-I02.03-CR", "VM5-I02.04", "VM5-I02.04-WF", "VM5-I02.04-AS", "VM5-I02.04-Lego", "VM5-I02.04-NDTH", "VM5-I02.04-DA01", "VM5-I02.04-SCMU", "VM5-I02.04-CNGP", "VM5-I02.05", "VM5-I02.05.01", "VM5-I02.05.02", "TM6-I01", "TM6-I01.01", "VM6-I01.01-WF", "VM6-I01.01-AS", "VM6-I01.01-Lego", "VM6-I01.01-NDTH", "DM6-I01.01", "SM6-I01.01", "MM6-I01.01", "NM6-I01.01", "CM6-I01.01", "TM6-I01.02", "VM6-I01.02-WF", "VM6-I01.02-AS", "VM6-I01.02-Lego", "VM6-I01.02-NDTH", "DM6-I01.02", "SM6-I01.02", "MM6-I01.02", "NM6-I01.02", "CM6-I01.02", "VM6-I02", "TM6-I03", "TM6-I03.01", "TM6-I03.02", "TM7-I01", "VM7-I01.01", "VM7-I01.01-WF", "VM7-I01.01-AS", "VM7-I01.01-Lego", "VM7-I01.01-NDTH", "DM7-I01.01", "SM7-I01.01", "NM7-I01.01", "TM7-I02", "VM7-I02.01", "VM7-I02.01-WF", "VM7-I02.01-AS", "VM7-I02.01-Lego", "VM7-I02.01-NDTH", "DM7-I02.01", "NM7-I02.01", "CM7-I02.01", "VM7-I02.02", "VM7-I02.02-WF", "VM7-I02.02-AS", "VM7-I02.02-Lego", "VM7-I02.02-NDTH", "DM7-I02.02", "SM7-I02.02", "MM7-I02.02", "NM7-I02.02", "CM7-I02.03", "TM7-I03", "VM7-I03.01", "VM7-I03.01-WF", "VM7-I03.01-AS", "VM7-I03.01-Lego", "VM7-I03.01-NDTH", "DM7-I03.01", "SM7-I03.01", "MM7-I03.01", "NM7-I03.01", "CM7-I03.01", "VM7-I03.02", "VM7-I03.02-WF", "VM7-I03.02-AS", "VM7-I03.02-Lego", "VM7-I03.02-NDTH", "DM7-I03.02", "SM7-I03.02", "MM7-I03.02", "NM7-I03.02", "CM7-I03.02"];
+  const sortKpis = (a: any, b: any) => {
+    const idxA = scvnOrder.indexOf(a.code);
+    const idxB = scvnOrder.indexOf(b.code);
+    if (idxA === -1 && idxB === -1) return 0;
+    if (idxA === -1) return 1;
+    if (idxB === -1) return -1;
+    return idxA - idxB;
+  };
+
+  const visibleKpis = kpis
+    .filter(k => shouldShowByFrequency(k.frequency, k.title, k.code))
+    .sort(sortKpis);
   const groups = Array.from(new Set(visibleKpis.map(k => k.group).filter(Boolean)));
 
-  const visibleProductKpis = productKpis.filter(pk => shouldShowByFrequency(pk.frequency, pk.title, pk.code));
+  const visibleProductKpis = productKpis
+    .filter(pk => shouldShowByFrequency(pk.frequency, pk.title, pk.code))
+    .sort(sortKpis);
   const prodGroups = Array.from(new Set(visibleProductKpis.map(pk => pk.group).filter(Boolean)));
 
   // Thuật toán PSH cho Tab 2
@@ -1231,16 +1291,43 @@ export default function InputFormPage() {
                             {groupName}
                           </td>
                         </tr>
-                        {items.map(kpi => {
+                        {items.filter(isRowVisible).map(kpi => {
                           const pct = calculateCompletionPct(kpi.target, kpi.actual, kpi.code, kpi.title);
+                          const depth = getDepth(kpi);
+                          const hasChildren = visibleKpis.some(k => k.parentCode === kpi.code);
+                          const isExpanded = expandedParents[kpi.code] !== false;
                           return (
-                            <tr key={kpi.id} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
+                            <tr key={kpi.id} className={`border-b border-white/5 hover:bg-white/5 text-sm text-slate-200 ${depth > 0 ? "bg-slate-900/10" : ""}`}>
                               {showCodeColumn && (
                                 <td className="p-3 w-24 text-center">
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
                                 </td>
                               )}
-                              <td className={`p-3 font-bold max-w-[250px] w-[250px] break-words ${isImportantIndicator(kpi.title) ? "text-[#10b981] dark:text-[#34d399]" : "text-white"}`}>{kpi.title}</td>
+                              <td 
+                                className={`p-3 font-bold max-w-[250px] w-[250px] break-words ${isImportantIndicator(kpi.title) ? "text-[#10b981] dark:text-[#34d399]" : "text-white"}`}
+                                style={{ paddingLeft: `${12 + depth * 16}px` }}
+                              >
+                                <div className="flex items-center gap-1">
+                                  {hasChildren && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setExpandedParents(prev => ({
+                                          ...prev,
+                                          [kpi.code]: prev[kpi.code] === false ? true : false
+                                        }));
+                                      }}
+                                      className="mr-1 text-slate-400 hover:text-white transition-all text-xs font-mono select-none focus:outline-none w-4 h-4 flex items-center justify-center bg-slate-800/55 rounded hover:bg-slate-700"
+                                    >
+                                      {isExpanded ? "▼" : "▶"}
+                                    </button>
+                                  )}
+                                  {!hasChildren && depth > 0 && (
+                                    <span className="text-slate-500 mr-1.5 font-normal select-none">↳</span>
+                                  )}
+                                  <span className="flex-1">{kpi.title}</span>
+                                </div>
+                              </td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>
                               <td className="p-3 italic text-slate-400 text-xs truncate max-w-[150px]" title={kpi.formula}>
                                 {kpi.formula}
@@ -1640,11 +1727,14 @@ export default function InputFormPage() {
                             {groupName}
                           </td>
                         </tr>
-                        {items.map(pk => {
+                        {items.filter(isProdRowVisible).map(pk => {
                           const pct = calculateCompletionPct(pk.target, pk.actual, pk.code, pk.title);
                           const displayCode = selectedProdId ? pk.code.replace(selectedProdId + "-", "") : pk.code;
+                          const depth = getProdDepth(pk);
+                          const hasChildren = visibleProductKpis.some(k => k.parentCode === pk.code);
+                          const isExpanded = expandedParents[pk.code] !== false;
                           return (
-                            <tr key={pk.id} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
+                            <tr key={pk.id} className={`border-b border-white/5 hover:bg-white/5 text-sm text-slate-200 ${depth > 0 ? "bg-slate-900/10" : ""}`}>
                               {showCodeColumn && (
                                 <td className="p-3 text-center">
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">
@@ -1652,7 +1742,31 @@ export default function InputFormPage() {
                                   </code>
                                 </td>
                               )}
-                              <td className={`p-3 font-bold ${isImportantIndicator(pk.title) ? "text-[#10b981] dark:text-[#34d399]" : "text-white"}`}>{pk.title}</td>
+                              <td 
+                                className={`p-3 font-bold ${isImportantIndicator(pk.title) ? "text-[#10b981] dark:text-[#34d399]" : "text-white"}`}
+                                style={{ paddingLeft: `${12 + depth * 16}px` }}
+                              >
+                                <div className="flex items-center gap-1">
+                                  {hasChildren && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setExpandedParents(prev => ({
+                                          ...prev,
+                                          [pk.code]: prev[pk.code] === false ? true : false
+                                        }));
+                                      }}
+                                      className="mr-1 text-slate-400 hover:text-white transition-all text-xs font-mono select-none focus:outline-none w-4 h-4 flex items-center justify-center bg-slate-800/55 rounded hover:bg-slate-700"
+                                    >
+                                      {isExpanded ? "▼" : "▶"}
+                                    </button>
+                                  )}
+                                  {!hasChildren && depth > 0 && (
+                                    <span className="text-slate-500 mr-1.5 font-normal select-none">↳</span>
+                                  )}
+                                  <span className="flex-1">{pk.title}</span>
+                                </div>
+                              </td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{pk.unit}</td>
                               <td className="p-3 italic text-slate-400 text-xs truncate max-w-[200px]" title={pk.formula}>
                                 {pk.formula}

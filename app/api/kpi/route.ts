@@ -615,60 +615,158 @@ export async function POST(request: Request) {
 }
 
 // Helper function to sync and aggregate KPIs between child and parent units
+// Helper function to sync and aggregate KPIs between child and parent units
 async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
   const syncMappings = [
-    // Wofloo
-    { fromUnit: "Wofloo", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-WF", title: "BP WF" },
-    { fromUnit: "Wofloo", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-WF", title: "BP WF" },
-    { fromUnit: "Wofloo", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-WF", title: "BP WF" },
+    { fromUnit: "Wofloo", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-WF", title: "Doanh thu BP WF" },
+    { fromUnit: "AS", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-AS", title: "Doanh thu BP AS" },
+    { fromUnit: "NDTH", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-NDTH", title: "Doanh thu BP NDTH" },
+    { fromUnit: "Lego", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-Lego", title: "Doanh thu DA Lego" },
+    { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01-DA01", title: "Doanh thu DA 01" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "SCVN", toCode: "SM1-I02.01-SCS", title: "Doanh thu SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "SCVN", toCode: "MM1-I02.01-SCMU", title: "Doanh thu SCMU" },
+    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "SCVN", toCode: "NM1-I02.01-CNGP", title: "Doanh thu CNGP" },
+    { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01-CR", title: "Doanh thu BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-WF", title: "Doanh thu NB BP WF" },
+    { fromUnit: "AS", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-AS", title: "Doanh thu NB BP AS" },
+    { fromUnit: "NDTH", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-NDTH", title: "Doanh thu NB BP NDTH" },
+    { fromUnit: "Lego", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-Lego", title: "Doanh thu NB DA Lego" },
+    { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01-DA01", title: "Doanh thu NB DA 01" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01.01", toUnit: "SCVN", toCode: "SM1-I02.01.01-SCS", title: "Doanh thu NB SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01.01", toUnit: "SCVN", toCode: "MM1-I02.01.01-SCMU", title: "Doanh thu NB SCMU" },
+    { fromUnit: "CN", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01-CNGP", title: "Doanh thu NB CNGP" },
+    { fromUnit: "CR", fromCode: "CM1-I02.02", toUnit: "SCVN", toCode: "CM1-I02.02-CR", title: "Doanh thu NB BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-WF", title: "Doanh thu chéo BP WF" },
+    { fromUnit: "AS", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-AS", title: "Doanh thu chéo BP AS" },
+    { fromUnit: "NDTH", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-NDTH", title: "Doanh thu chéo BP NDTH" },
+    { fromUnit: "Lego", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-Lego", title: "Doanh thu chéo DA Lego" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01.03", toUnit: "SCVN", toCode: "SM1-I02.01.03-SCS", title: "Doanh thu chéo SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01.02", toUnit: "SCVN", toCode: "MM1-I02.01.02-SCMU", title: "Doanh thu chéo SCMU" },
+    { fromUnit: "Wofloo", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-WF", title: "Doanh thu ĐT BP WF" },
+    { fromUnit: "AS", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-AS", title: "Doanh thu ĐT BP AS" },
+    { fromUnit: "NDTH", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-NDTH", title: "Doanh thu ĐT BP NDTH" },
+    { fromUnit: "Lego", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-Lego", title: "Doanh thu ĐT DA Lego" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01.04", toUnit: "SCVN", toCode: "SM1-I02.01.04-SCS", title: "Doanh thu ĐT SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01.03", toUnit: "SCVN", toCode: "MM1-I02.01.03-SCMU", title: "Doanh thu ĐT SCMU" },
+    { fromUnit: "CR", fromCode: "CM1-I02.03", toUnit: "SCVN", toCode: "CM1-I02.03-CR", title: "Doanh thu ĐT BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-WF", title: "SP BP WF" },
+    { fromUnit: "AS", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-AS", title: "SP BP AS" },
+    { fromUnit: "Lego", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-Lego", title: "SP DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM2-I01.02", toUnit: "SCVN", toCode: "VM2-I01.02-NDTH", title: "SP BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM2-I01.01", toUnit: "SCVN", toCode: "DM2-I01.01-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "SM2-I01.01", toUnit: "SCVN", toCode: "SM2-I01.01-SCS", title: "SCS" },
+    { fromUnit: "NDTH", fromCode: "VM2-I01.03", toUnit: "SCVN", toCode: "VM2-I01.03-NDTH", title: "BP NDTH" },
+    { fromUnit: "CR", fromCode: "CM2-I01.01", toUnit: "SCVN", toCode: "CM2-I01.01-CR", title: "BP Creative" },
+    { fromUnit: "Music", fromCode: "MM2-I01.01", toUnit: "SCVN", toCode: "MM2-I01.01-SCMU", title: "SP âm nhạc SCMU" },
+    { fromUnit: "Wofloo", fromCode: "VWM2-I01.3", toUnit: "SCVN", toCode: "VWM2-I01.3-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VAM2-I01.3", toUnit: "SCVN", toCode: "VAM2-I01.3-AS", title: "BP AS" },
+    { fromUnit: "Wofloo", fromCode: "VWM2-I01.4", toUnit: "SCVN", toCode: "VWM2-I01.4-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VAM2-I01.4", toUnit: "SCVN", toCode: "VAM2-I01.4-AS", title: "BP AS" },
+    { fromUnit: "Wofloo", fromCode: "VWM2-I01.5", toUnit: "SCVN", toCode: "VWM2-I01.5-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VAM2-I01.5", toUnit: "SCVN", toCode: "VAM2-I01.5-AS", title: "BP AS" },
+    { fromUnit: "Wofloo", fromCode: "VWM2-I01.6", toUnit: "SCVN", toCode: "VWM2-I01.6-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VAM2-I01.6", toUnit: "SCVN", toCode: "VAM2-I01.6-AS", title: "BP AS" },
+    { fromUnit: "Wofloo", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-WF", title: "Video >1M  BP WF" },
+    { fromUnit: "AS", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-AS", title: "Video >1M  BP AS" },
+    { fromUnit: "Lego", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-Lego", title: "Video >1M  DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-NDTH", title: "Video >1M  BP NDTH" },
+    { fromUnit: "DA01", fromCode: "TM4-I02.01", toUnit: "SCVN", toCode: "TM4-I02.01-DA01", title: "Video >1M  DA 01" },
+    { fromUnit: "SCS", fromCode: "SM2-I02.01", toUnit: "SCVN", toCode: "SM2-I02.01-SCS", title: "Video >1M  SCS" },
+    { fromUnit: "Music", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-SCMU", title: "Video >1M  SCMU" },
+    { fromUnit: "CR", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-CR", title: "Video >1M  BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-WF", title: "View BP WF" },
+    { fromUnit: "AS", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-AS", title: "View BP AS" },
+    { fromUnit: "Lego", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-Lego", title: "View DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-NDTH", title: "View BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM3-I01.03", toUnit: "SCVN", toCode: "DM3-I01.03-DA01", title: "View DA 01" },
+    { fromUnit: "SCS", fromCode: "SM3-I01.04", toUnit: "SCVN", toCode: "SM3-I01.04-SCS", title: "View SCS" },
+    { fromUnit: "Music", fromCode: "MM3-I01.01", toUnit: "SCVN", toCode: "MM3-I01.01-SCMU", title: "View SCMU" },
+    { fromUnit: "CN", fromCode: "NM3-I01.05", toUnit: "SCVN", toCode: "NM3-I01.05-CNGP", title: "View CNGP" },
+    { fromUnit: "CR", fromCode: "CM3-I01.01", toUnit: "SCVN", toCode: "CM3-I01.01-CR", title: "View BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-AS", title: "BP AS" },
+    { fromUnit: "Lego", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-Lego", title: "DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-NDTH", title: "BP NDTH" },
+    { fromUnit: "Wofloo", fromCode: "VM3-I01.04", toUnit: "SCVN", toCode: "VM3-I01.04-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM3-I01.04", toUnit: "SCVN", toCode: "VM3-I01.04-AS", title: "BP AS" },
+    { fromUnit: "Wofloo", fromCode: "VM3-I01.05", toUnit: "SCVN", toCode: "VM3-I01.05-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM3-I01.05", toUnit: "SCVN", toCode: "VM3-I01.05-AS", title: "BP AS" },
+    { fromUnit: "Wofloo", fromCode: "VM4-I01.01", toUnit: "SCVN", toCode: "VM4-I01.01-WF", title: "Độ phủ BP WF" },
     { fromUnit: "Wofloo", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-WF", title: "BP WF" },
-    { fromUnit: "Wofloo", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-WF", title: "BP WF" },
-    { fromUnit: "Wofloo", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-WF", title: "BP WF" },
-
-    // AS
-    { fromUnit: "AS", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-AS", title: "BP AS" },
-    { fromUnit: "AS", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-AS", title: "BP AS" },
-    { fromUnit: "AS", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-AS", title: "BP AS" },
     { fromUnit: "AS", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-AS", title: "BP AS" },
-    { fromUnit: "AS", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-AS", title: "BP AS" },
-    { fromUnit: "AS", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-AS", title: "BP AS" },
-
-    // NDTH
-    { fromUnit: "NDTH", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-NDTH", title: "BP NDTH" },
-    { fromUnit: "NDTH", fromCode: "VM2-I01.02", toUnit: "SCVN", toCode: "VM2-I01.02-NDTH", title: "BP NDTH" },
-    { fromUnit: "NDTH", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-NDTH", title: "BP NDTH" },
-    { fromUnit: "NDTH", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-NDTH", title: "BP NDTH" },
-    { fromUnit: "NDTH", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-NDTH", title: "BP NDTH" },
-    { fromUnit: "NDTH", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-NDTH", title: "BP NDTH" },
-
-    // Lego
-    { fromUnit: "Lego", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-Lego", title: "DA Lego" },
-    { fromUnit: "Lego", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-Lego", title: "DA Lego" },
-    { fromUnit: "Lego", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-Lego", title: "DA Lego" },
     { fromUnit: "Lego", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-Lego", title: "DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-NDTH", title: "BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM4-I02.01", toUnit: "SCVN", toCode: "DM4-I02.01-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "SM4-I02.01", toUnit: "SCVN", toCode: "SM4-I02.01-SCS", title: "SCS" },
+    { fromUnit: "CN", fromCode: "NM4-I02.03", toUnit: "SCVN", toCode: "NM4-I02.03-CNGP", title: "CNGP" },
+    { fromUnit: "Wofloo", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-AS", title: "BP AS" },
+    { fromUnit: "Lego", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-Lego", title: "DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-NDTH", title: "BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM4-I02.02", toUnit: "SCVN", toCode: "DM4-I02.02-DA01", title: "DA 01" },
+    { fromUnit: "Music", fromCode: "MM4-I02.02", toUnit: "SCVN", toCode: "MM4-I02.02-SCMU", title: "SCMU" },
+    { fromUnit: "Wofloo", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-AS", title: "BP AS" },
+    { fromUnit: "Lego", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-Lego", title: "DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-NDTH", title: "BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM4-I02.04", toUnit: "SCVN", toCode: "DM4-I02.04-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "SM4-I02.06", toUnit: "SCVN", toCode: "SM4-I02.06-SCS", title: "SCS" },
+    { fromUnit: "CN", fromCode: "NM4-I02.04", toUnit: "SCVN", toCode: "NM4-I02.04-CNGP", title: "CNGP" },
+    { fromUnit: "Wofloo", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-AS", title: "BP AS" },
+    { fromUnit: "Lego", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-Lego", title: "DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-NDTH", title: "BP NDTH" },
+    { fromUnit: "DA01", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-SCS", title: "SCS" },
+    { fromUnit: "Music", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-SCMU", title: "SCMU" },
+    { fromUnit: "CN", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-CNGP", title: "CNGP" },
+    { fromUnit: "CR", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-CR", title: "BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-Lego", title: "DA Lego" },
-    { fromUnit: "Lego", fromCode: "VM7-I02.01", toUnit: "SCVN", toCode: "VM7-I02.01-Lego", title: "DA Lego" },
-
-    // Direct units to SCVN and TCT
-    // DA01
-    { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01", title: "DA 01" },
-    { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "TCT", toCode: "DM1-I02.01", title: "DA01" },
-    // Music
-    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "SCVN", toCode: "MM1-I02.01", title: "SCMU" },
-    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "TCT", toCode: "MM1-I02.01", title: "SCMU" },
-    // SCS
-    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "SCVN", toCode: "SM1-I02.01", title: "SCS" },
-    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "TCT", toCode: "SM1-I02.01", title: "SCS" },
-    // CN
-    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "SCVN", toCode: "NM1-I02.01", title: "CNGP" },
-    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "TCT", toCode: "NM1-I02.01", title: "CNGP" },
-    // CR
-    { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01", title: "BP Creative" },
-    { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "TCT", toCode: "CM1-I02.01", title: "SCCH" },
-
-    // Wofloo doanh thu VM1-I02.01 -> TCT: WM1-I02.01
-    { fromUnit: "Wofloo", fromCode: "VM1-I02.01", toUnit: "TCT", toCode: "WM1-I02.01", title: "WOA UNI" }
-  ];
+    { fromUnit: "NDTH", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-NDTH", title: "BP NDTH" },
+    { fromUnit: "SCS", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-SCS", title: "SCS" },
+    { fromUnit: "CR", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-CR", title: "BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-WF", title: "Hiệu suất SX BP WF" },
+    { fromUnit: "AS", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-AS", title: "Hiệu suất SX BP AS" },
+    { fromUnit: "Lego", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-Lego", title: "Hiệu suất SX DA Lego" },
+    { fromUnit: "SCS", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-SCS", title: "Hiệu suất SX SCS" },
+    { fromUnit: "Wofloo", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-WF", title: "Hiệu suất DT kênh BP WF" },
+    { fromUnit: "AS", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-AS", title: "Hiệu suất DT kênh BP AS" },
+    { fromUnit: "Lego", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-Lego", title: "Hiệu suất DT kênh DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-NDTH", title: "Hiệu suất DT kênh BP NDTH" },
+    { fromUnit: "DA01", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-DA01", title: "Hiệu suất DT kênh DA 01" },
+    { fromUnit: "SCS", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-SCS", title: "Hiệu suất DT kênh SCS" },
+    { fromUnit: "Music", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-SCMU", title: "Hiệu suất DT kênh SCMU" },
+    { fromUnit: "CN", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-CNGP", title: "Hiệu suất DT kênh CNGP" },
+    { fromUnit: "CR", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-CR", title: "Hiệu suất DT kênh BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-WF", title: "Hiệu suất QTK BP WF" },
+    { fromUnit: "AS", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-AS", title: "Hiệu suất QTK BP AS" },
+    { fromUnit: "Lego", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-Lego", title: "Hiệu suất QTK DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-NDTH", title: "Hiệu suất QTK BP NDTH" },
+    { fromUnit: "DA01", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-DA01", title: "Hiệu suất QTK DA 01" },
+    { fromUnit: "SCS", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-SCS", title: "Hiệu suất QTK SCS" },
+    { fromUnit: "Music", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-SCMU", title: "Hiệu suất QTK SCMU" },
+    { fromUnit: "CN", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-CNGP", title: "Hiệu suất QTK CNGP" },
+    { fromUnit: "Wofloo", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-AS", title: "BP AS" },
+    { fromUnit: "Lego", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-Lego", title: "DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-NDTH", title: "BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM6-I01.01", toUnit: "SCVN", toCode: "DM6-I01.01-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "SM6-I01.01", toUnit: "SCVN", toCode: "SM6-I01.01-SCS", title: "SCS" },
+    { fromUnit: "Music", fromCode: "MM6-I01.01", toUnit: "SCVN", toCode: "MM6-I01.01-SCMU", title: "SCMU" },
+    { fromUnit: "CN", fromCode: "NM6-I01.01", toUnit: "SCVN", toCode: "NM6-I01.01-CNGP", title: "CNGP" },
+    { fromUnit: "CR", fromCode: "CM6-I01.01", toUnit: "SCVN", toCode: "CM6-I01.01-CR", title: "BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-WF", title: "BP WF" },
+    { fromUnit: "AS", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-AS", title: "BP AS" },
+    { fromUnit: "Lego", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-Lego", title: "DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-NDTH", title: "BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM6-I01.02", toUnit: "SCVN", toCode: "DM6-I01.02-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "SM6-I01.02", toUnit: "SCVN", toCode: "SM6-I01.02-SCS", title: "SCS" },
+    { fromUnit: "Music", fromCode: "MM6-I01.02", toUnit: "SCVN", toCode: "MM6-I01.02-SCMU", title: "SCMU" },
+    { fromUnit: "CN", fromCode: "NM6-I01.02", toUnit: "SCVN", toCode: "NM6-I01.02-CNGP", title: "CNGP" },
+    { fromUnit: "CR", fromCode: "CM6-I01.02", toUnit: "SCVN", toCode: "CM6-I01.02-CR", title: "BP Creative" }
+];
 
   // 1. Đồng bộ các giá trị ngang từ con sang các chỉ tiêu tương ứng của cha
   for (const map of syncMappings) {
@@ -724,80 +822,180 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     }
   }
 
-  // 2. Tính tổng doanh thu (VM1-I02.01) của SCVN
-  const scvnRevenueCodes = [
-    "VM1-I02.01-WF", "VM1-I02.01-AS", "VM1-I02.01-NDTH", "VM1-I02.01-Lego",
-    "DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01"
-  ];
-  const scvnRevenues = await prisma.kpiData.findMany({
-    where: {
-      unitCode: "SCVN",
-      indicatorCode: { in: scvnRevenueCodes },
-      periodKey,
-      periodType,
-      productCode: null
-    }
-  });
+  // 2. Tự động cộng dồn / tính trung bình (Rollup) cho SCVN dựa trên parentCode và aggregationMethod
+  // Chạy 3 vòng lặp để đảm bảo tính toán từ lá lên các cành cây trung gian rồi lên gốc
+  for (let pass = 0; pass < 3; pass++) {
+    const scvnKpis = await prisma.kpiData.findMany({
+      where: { unitCode: "SCVN", periodKey, periodType, productCode: null }
+    });
 
-  let scvnRevenueTarget = 0;
-  let scvnRevenueActual = 0;
-  for (const r of scvnRevenues) {
-    scvnRevenueTarget += r.targetValue || 0;
-    scvnRevenueActual += r.actualValue || 0;
+    const kpiByCode = new Map();
+    for (const k of scvnKpis) {
+      kpiByCode.set(k.indicatorCode, k);
+    }
+
+    const childrenByParent = new Map();
+    for (const k of scvnKpis) {
+      if (k.parentCode) {
+        if (!childrenByParent.has(k.parentCode)) {
+          childrenByParent.set(k.parentCode, []);
+        }
+        childrenByParent.get(k.parentCode).push(k);
+      }
+    }
+
+    for (const [parentCode, children] of Array.from(childrenByParent.entries())) {
+      const parentKpi = kpiByCode.get(parentCode);
+      if (!parentKpi) continue;
+
+      const method = parentKpi.aggregationMethod || "SUM";
+
+      let targetSum = 0;
+      let actualSum = 0;
+      let count = 0;
+
+      for (const child of children) {
+        targetSum += child.targetValue || 0;
+        actualSum += child.actualValue || 0;
+        count++;
+      }
+
+      let parentTarget = targetSum;
+      let parentActual = actualSum;
+
+      if (method === "AVERAGE" && count > 0) {
+        parentTarget = targetSum / count;
+        parentActual = actualSum / count;
+      }
+
+      // Chỉ cập nhật nếu giá trị thực sự thay đổi để tránh trigger update database liên tục
+      if (parentKpi.targetValue !== parentTarget || parentKpi.actualValue !== parentActual) {
+        await prisma.kpiData.update({
+          where: { id: parentKpi.id },
+          data: {
+            targetValue: parentTarget,
+            actualValue: parentActual,
+            isOverridden: true
+          }
+        });
+      }
+    }
   }
 
-  const scvnRevRecord = await prisma.kpiData.findFirst({
+  // 3. Tính toán đặc thù cho chỉ tiêu VM3-I01.06 (View TB/1 nội dung mới upload trong kỳ)
+  const vm3_i01_06 = await prisma.kpiData.findFirst({
+    where: { unitCode: "SCVN", indicatorCode: "VM3-I01.06", periodKey, periodType, productCode: null }
+  });
+  if (vm3_i01_06) {
+    const tm3_i01_02 = await prisma.kpiData.findFirst({
+      where: { unitCode: "SCVN", indicatorCode: "TM3-I01.02", periodKey, periodType, productCode: null }
+    });
+    const vm2_i01_01 = await prisma.kpiData.findFirst({
+      where: { unitCode: "SCVN", indicatorCode: "VM2-I01.01", periodKey, periodType, productCode: null }
+    });
+    const vm2_i02_01 = await prisma.kpiData.findFirst({
+      where: { unitCode: "SCVN", indicatorCode: "VM2-I02.01", periodKey, periodType, productCode: null }
+    });
+    const mm2_i01_01 = await prisma.kpiData.findFirst({
+      where: { unitCode: "SCVN", indicatorCode: "MM2-I01.01", periodKey, periodType, productCode: null }
+    });
+    const vm2_i01_02 = await prisma.kpiData.findFirst({
+      where: { unitCode: "SCVN", indicatorCode: "VM2-I01.02", periodKey, periodType, productCode: null }
+    });
+
+    const viewScvn = tm3_i01_02?.actualValue || 0;
+    const viewScvnTarget = tm3_i01_02?.targetValue || 0;
+
+    const totalVideo =
+      (vm2_i01_01?.actualValue || 0) +
+      (vm2_i02_01?.actualValue || 0) +
+      (mm2_i01_01?.actualValue || 0) +
+      (vm2_i01_02?.actualValue || 0);
+
+    const totalVideoTarget =
+      (vm2_i01_01?.targetValue || 0) +
+      (vm2_i02_01?.targetValue || 0) +
+      (mm2_i01_01?.targetValue || 0) +
+      (vm2_i01_02?.targetValue || 0);
+
+    const actual_vm3 = totalVideo > 0 ? (viewScvn / totalVideo) : 0;
+    const target_vm3 = totalVideoTarget > 0 ? (viewScvnTarget / totalVideoTarget) : 0;
+
+    if (vm3_i01_06.targetValue !== target_vm3 || vm3_i01_06.actualValue !== actual_vm3) {
+      await prisma.kpiData.update({
+        where: { id: vm3_i01_06.id },
+        data: {
+          targetValue: target_vm3,
+          actualValue: actual_vm3,
+          isOverridden: true
+        }
+      });
+    }
+  }
+
+  // 4. Đồng bộ tổng doanh thu SCVN sang TCT (VM1-I02.01)
+  const scvnRevKpi = await prisma.kpiData.findFirst({
     where: { unitCode: "SCVN", indicatorCode: "VM1-I02.01", periodKey, periodType, productCode: null }
   });
-  if (scvnRevRecord) {
-    await prisma.kpiData.update({
-      where: { id: scvnRevRecord.id },
-      data: { targetValue: scvnRevenueTarget, actualValue: scvnRevenueActual }
+  if (scvnRevKpi) {
+    const tctScvnRecord = await prisma.kpiData.findFirst({
+      where: { unitCode: "TCT", indicatorCode: "VM1-I02.01", periodKey, periodType, productCode: null }
     });
-  } else {
-    await prisma.kpiData.create({
-      data: {
-        unitCode: "SCVN",
-        indicatorCode: "VM1-I02.01",
-        periodKey,
-        periodType,
-        targetValue: scvnRevenueTarget,
-        actualValue: scvnRevenueActual,
-        title: "Tổng doanh thu",
-        unit: "VNĐ",
-        status: "Đang thực hiện",
-        isOverridden: true
-      }
-    });
+    if (tctScvnRecord) {
+      await prisma.kpiData.update({
+        where: { id: tctScvnRecord.id },
+        data: { targetValue: scvnRevKpi.targetValue, actualValue: scvnRevKpi.actualValue }
+      });
+    } else {
+      await prisma.kpiData.create({
+        data: {
+          unitCode: "TCT",
+          indicatorCode: "VM1-I02.01",
+          periodKey,
+          periodType,
+          targetValue: scvnRevKpi.targetValue,
+          actualValue: scvnRevKpi.actualValue,
+          title: "SCVN",
+          unit: "VNĐ",
+          status: "Đang thực hiện",
+          isOverridden: true
+        }
+      });
+    }
   }
 
-  // 3. Đồng bộ tổng doanh thu SCVN sang TCT (VM1-I02.01)
-  const tctScvnRecord = await prisma.kpiData.findFirst({
-    where: { unitCode: "TCT", indicatorCode: "VM1-I02.01", periodKey, periodType, productCode: null }
+  // 5. Đồng bộ tổng sản lượng sản xuất SCVN sang TCT (VM2-I01.01)
+  const scvnVolKpi = await prisma.kpiData.findFirst({
+    where: { unitCode: "SCVN", indicatorCode: "VM2-I01.01", periodKey, periodType, productCode: null }
   });
-  if (tctScvnRecord) {
-    await prisma.kpiData.update({
-      where: { id: tctScvnRecord.id },
-      data: { targetValue: scvnRevenueTarget, actualValue: scvnRevenueActual }
+  if (scvnVolKpi) {
+    const tctScvnVolRecord = await prisma.kpiData.findFirst({
+      where: { unitCode: "TCT", indicatorCode: "VM2-I01.01", periodKey, periodType, productCode: null }
     });
-  } else {
-    await prisma.kpiData.create({
-      data: {
-        unitCode: "TCT",
-        indicatorCode: "VM1-I02.01",
-        periodKey,
-        periodType,
-        targetValue: scvnRevenueTarget,
-        actualValue: scvnRevenueActual,
-        title: "SCVN",
-        unit: "VNĐ",
-        status: "Đang thực hiện",
-        isOverridden: true
-      }
-    });
+    if (tctScvnVolRecord) {
+      await prisma.kpiData.update({
+        where: { id: tctScvnVolRecord.id },
+        data: { targetValue: scvnVolKpi.targetValue, actualValue: scvnVolKpi.actualValue }
+      });
+    } else {
+      await prisma.kpiData.create({
+        data: {
+          unitCode: "TCT",
+          indicatorCode: "VM2-I01.01",
+          periodKey,
+          periodType,
+          targetValue: scvnVolKpi.targetValue,
+          actualValue: scvnVolKpi.actualValue,
+          title: "Số lượng sp SCVN",
+          unit: "Video",
+          status: "Đang thực hiện",
+          isOverridden: true
+        }
+      });
+    }
   }
 
-  // 4. Tính tổng doanh thu (TM1-I02.01) của TCT
+  // 6. Tính tổng doanh thu (TM1-I02.01) của TCT
   const tctRevenueCodes = [
     "VM1-I02.01", "DM1-I02.01", "SM1-I02.01", "CM1-I02.01", "MM1-I02.01",
     "NM1-I02.01", "EM1-I02.01", "HM1-I02.01", "WM1-I02.01", "AM1-I02.01"
@@ -838,76 +1036,6 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
         actualValue: tctRevenueActual,
         title: "Tổng doanh thu",
         unit: "VNĐ",
-        status: "Đang thực hiện",
-        isOverridden: true
-      }
-    });
-  }
-
-  // 5. Tính tổng sản lượng sản xuất (VM2-I01.01) của SCVN
-  const scvnVolCodes = ["VM2-I01.01-WF", "VM2-I01.01-AS", "VM2-I01.01-Lego"];
-  const scvnVols = await prisma.kpiData.findMany({
-    where: {
-      unitCode: "SCVN",
-      indicatorCode: { in: scvnVolCodes },
-      periodKey,
-      periodType,
-      productCode: null
-    }
-  });
-
-  let scvnVolTarget = 0;
-  let scvnVolActual = 0;
-  for (const r of scvnVols) {
-    scvnVolTarget += r.targetValue || 0;
-    scvnVolActual += r.actualValue || 0;
-  }
-
-  const scvnVolRecord = await prisma.kpiData.findFirst({
-    where: { unitCode: "SCVN", indicatorCode: "VM2-I01.01", periodKey, periodType, productCode: null }
-  });
-  if (scvnVolRecord) {
-    await prisma.kpiData.update({
-      where: { id: scvnVolRecord.id },
-      data: { targetValue: scvnVolTarget, actualValue: scvnVolActual }
-    });
-  } else {
-    await prisma.kpiData.create({
-      data: {
-        unitCode: "SCVN",
-        indicatorCode: "VM2-I01.01",
-        periodKey,
-        periodType,
-        targetValue: scvnVolTarget,
-        actualValue: scvnVolActual,
-        title: "Số lượng video hoàn thành sản xuất",
-        unit: "Video",
-        status: "Đang thực hiện",
-        isOverridden: true
-      }
-    });
-  }
-
-  // 6. Đồng bộ tổng sản lượng sản xuất SCVN sang TCT (VM2-I01.01)
-  const tctScvnVolRecord = await prisma.kpiData.findFirst({
-    where: { unitCode: "TCT", indicatorCode: "VM2-I01.01", periodKey, periodType, productCode: null }
-  });
-  if (tctScvnVolRecord) {
-    await prisma.kpiData.update({
-      where: { id: tctScvnVolRecord.id },
-      data: { targetValue: scvnVolTarget, actualValue: scvnVolActual }
-    });
-  } else {
-    await prisma.kpiData.create({
-      data: {
-        unitCode: "TCT",
-        indicatorCode: "VM2-I01.01",
-        periodKey,
-        periodType,
-        targetValue: scvnVolTarget,
-        actualValue: scvnVolActual,
-        title: "Số lượng sp SCVN",
-        unit: "Video",
         status: "Đang thực hiện",
         isOverridden: true
       }
