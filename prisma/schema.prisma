@@ -18,6 +18,7 @@ model User {
   password     String?  // Mật khẩu bảo vệ tài khoản
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  devices      UserDevice[]
 }
 
 // Ma trận Phân quyền
@@ -51,6 +52,7 @@ model KpiData {
   frequency         String?  // tuần, tháng, quý
   aggregationMethod String?  // SUM, AVERAGE, WEIGHTED_AVERAGE, SNAPSHOT, END_OF_PERIOD
   isOverridden      Boolean  @default(false)
+  weight            Float    @default(0) // Tỷ trọng (%) của chỉ tiêu con trong mục tiêu lớn M1-M7
   createdAt     DateTime @default(now())
 
   updatedAt     DateTime @updatedAt
@@ -115,3 +117,18 @@ model AuditLog {
   module    String   // system, youtube, kpi, okr, permissions
   details   String   @db.Text // Nội dung chi tiết
 }
+
+// Bảng Thiết bị của Người dùng
+model UserDevice {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId   String   // Mã định danh thiết bị lưu ở localStorage
+  userAgent  String?  // Trình duyệt / Hệ điều hành
+  ipAddress  String?  // Địa chỉ IP
+  lastActive DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, deviceId])
+}
+

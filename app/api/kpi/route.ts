@@ -497,6 +497,7 @@ export async function POST(request: Request) {
       const updateData = {
         targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : undefined,
         actualValue: parseFloat(u.actualValue) || 0,
+        weight: u.weight !== undefined ? parseFloat(u.weight) : undefined,
         explanation: u.explanation || "",
         status: u.status || "Đang thực hiện",
         isOverridden: true,
@@ -519,6 +520,7 @@ export async function POST(request: Request) {
             periodKey,
             targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : 0,
             actualValue: parseFloat(u.actualValue) || 0,
+            weight: u.weight !== undefined ? parseFloat(u.weight) : 0,
             explanation: u.explanation || "",
             status: u.status || "Đang thực hiện",
             isOverridden: true,
@@ -550,6 +552,12 @@ export async function POST(request: Request) {
       await syncKpisBetweenUnits(periodKey, periodType);
     } catch (syncErr) {
       console.error("Lỗi đồng bộ chéo KPI giữa các đơn vị:", syncErr);
+    }
+
+    try {
+      await calculateAndSaveRadarScores(unitCode, periodKey, periodType);
+    } catch (radarErr) {
+      console.error("Lỗi tự động tính toán điểm radar:", radarErr);
     }
 
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công", data: updatedRecords });
@@ -1040,5 +1048,119 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
         isOverridden: true
       }
     });
+  }
+}
+
+// Tự động tính toán điểm hoàn thành 7 mục tiêu dựa trên tỷ trọng của các chỉ tiêu con
+async function calculateAndSaveRadarScores(unitCode: string, periodKey: string, periodType: string) {
+  if (!["SCVN", "TCT", "SCME"].includes(unitCode)) return;
+
+  const kpis = await prisma.kpiData.findMany({
+    where: {
+      unitCode,
+      periodKey,
+      periodType,
+      productCode: null
+    }
+  });
+
+  function getObjectiveGroup(indicatorCode: string, groupName?: string | null): string | null {
+    if (groupName && /^[mM][1-7]/.test(groupName.trim())) {
+      return groupName.trim().substring(0, 2).toUpperCase();
+    }
+    const match = indicatorCode.match(/[tTvVmM]([1-7])-/);
+    if (match) {
+      return "M" + match[1];
+    }
+    const simpleMatch = indicatorCode.match(/^[tTvVmM]([1-7])/);
+    if (simpleMatch) {
+      return "M" + simpleMatch[1];
+    }
+    return null;
+  }
+
+  const grouped: Record<string, typeof kpis> = {};
+  for (const k of kpis) {
+    // Không gom chính các bản ghi điểm số mục tiêu lớn M1-M7
+    if (["M1", "M2", "M3", "M4", "M5", "M6", "M7"].includes(k.indicatorCode)) continue;
+    const grp = getObjectiveGroup(k.indicatorCode, k.group);
+    if (grp) {
+      grouped[grp] = grouped[grp] || [];
+      grouped[grp].push(k);
+    }
+  }
+
+  const objectiveNames: Record<string, string> = {
+    M1: "Tài chính",
+    M2: "Sản phẩm/ SX",
+    M3: "Khách hàng",
+    M4: "Thương hiệu và Kênh KD",
+    M5: "QT Vận hành",
+    M6: "Nhân sự",
+    M7: "Văn hóa"
+  };
+
+  for (const mCode of ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]) {
+    const children = grouped[mCode] || [];
+    const totalWeight = children.reduce((sum, c) => sum + (c.weight || 0), 0);
+
+    if (totalWeight > 0) {
+      let weightedSum = 0;
+      for (const c of children) {
+        const target = c.targetValue || 0;
+        const actual = c.actualValue || 0;
+        // Khống chế tối đa 120% theo quy chế công ty
+        const completion = target > 0 ? Math.min(1.2, actual / target) * 100 : 100;
+        weightedSum += completion * ((c.weight || 0) / 100);
+      }
+      const calculatedScore = Math.round(weightedSum);
+
+      const existing = await prisma.kpiData.findFirst({
+        where: {
+          unitCode,
+          indicatorCode: mCode,
+          periodKey,
+          periodType,
+          productCode: null
+        }
+      });
+
+      if (existing) {
+        // Chỉ tự động cập nhật đè điểm số thực tế nếu bản ghi radar đó CHƯA bị người dùng ghi đè thủ công (isOverridden === false)
+        if (!existing.isOverridden) {
+          await prisma.kpiData.update({
+            where: { id: existing.id },
+            data: {
+              actualValue: calculatedScore,
+              targetValue: calculatedScore, // Cột 2 (kết quả tạm tính) lưu vào targetValue để hiển thị
+              isOverridden: false
+            }
+          });
+        } else {
+          // Nếu đã bị ghi đè, ta vẫn cập nhật cột "Kết quả tạm tính" (targetValue) để giao diện hiển thị đúng
+          await prisma.kpiData.update({
+            where: { id: existing.id },
+            data: {
+              targetValue: calculatedScore
+            }
+          });
+        }
+      } else {
+        await prisma.kpiData.create({
+          data: {
+            unitCode,
+            indicatorCode: mCode,
+            periodKey,
+            periodType,
+            targetValue: calculatedScore, // Cột 2
+            actualValue: calculatedScore, // Cột 3
+            title: objectiveNames[mCode],
+            unit: "%",
+            status: "Đã duyệt",
+            isOverridden: false // Cột 3 được xem là tự động tính toán ban đầu
+          }
+        });
+      }
+    }
   }
 }

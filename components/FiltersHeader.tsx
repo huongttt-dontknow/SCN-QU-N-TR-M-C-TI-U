@@ -18,6 +18,7 @@ export default function FiltersHeader({ hideFrequency = false, children }: Filte
   const units = [
     { code: "SCVN", name: "BU Sconnect Việt Nam" },
     { code: "TCT", name: "🏢 Tổng Công Ty Sconnect (TCT)" },
+    { code: "SCME", name: "🎬 BU Sconnect Media (SCME)" },
     { code: "Wofloo", name: "BP Wolfoo (WO)" },
     { code: "Lego", name: "DA Lego (LEGO)" },
     { code: "AS", name: "BP Animated Story (AS)" },

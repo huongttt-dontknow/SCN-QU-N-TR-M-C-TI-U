@@ -4,7 +4,7 @@ import { createAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   try {
-    const { idToken, email: mockEmail, password } = await request.json();
+    const { idToken, email: mockEmail, password, deviceId, userAgent } = await request.json();
 
     let email = "";
     let fullname = "";
@@ -62,12 +62,69 @@ export async function POST(request: Request) {
       }
     }
 
+    // 3.5. Kiểm soát số lượng thiết bị đăng nhập (Tối đa 5 thiết bị)
+    const clientDeviceId = deviceId || "default-device";
+    const clientUserAgent = userAgent || "Không rõ trình duyệt";
+
+    const existingDevice = await prisma.userDevice.findUnique({
+      where: {
+        userId_deviceId: {
+          userId: user.id,
+          deviceId: clientDeviceId
+        }
+      }
+    });
+
+    if (!existingDevice) {
+      // Thiết bị mới. Kiểm tra số lượng thiết bị hiện có
+      const devices = await prisma.userDevice.findMany({
+        where: { userId: user.id },
+        orderBy: { lastActive: "asc" } // Thiết bị hoạt động cũ nhất lên đầu
+      });
+
+      if (devices.length >= 5) {
+        // Đã đạt/vượt ngưỡng 5 thiết bị -> Xóa thiết bị hoạt động cũ nhất để nhường chỗ
+        const toDeleteCount = devices.length - 5 + 1;
+        const devicesToDelete = devices.slice(0, toDeleteCount);
+        for (const d of devicesToDelete) {
+          await prisma.userDevice.delete({ where: { id: d.id } });
+          
+          await createAuditLog(
+            email,
+            "LOGOUT",
+            "system",
+            `Hệ thống tự động đăng xuất thiết bị cũ: ${d.userAgent || "Không rõ"} do đăng nhập thiết bị mới vượt giới hạn 5 thiết bị`
+          );
+        }
+      }
+
+      // Tạo thiết bị mới
+      await prisma.userDevice.create({
+        data: {
+          userId: user.id,
+          deviceId: clientDeviceId,
+          userAgent: clientUserAgent,
+          ipAddress: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "127.0.0.1"
+        }
+      });
+    } else {
+      // Thiết bị cũ quay lại -> Cập nhật thời gian hoạt động mới nhất
+      await prisma.userDevice.update({
+        where: { id: existingDevice.id },
+        data: {
+          lastActive: new Date(),
+          userAgent: clientUserAgent,
+          ipAddress: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || existingDevice.ipAddress
+        }
+      });
+    }
+
     // Ghi nhận lịch sử đăng nhập vào Access Logs
     await createAuditLog(
       email,
       "LOGIN",
       "system",
-      `${user.fullname} (Đăng nhập hệ thống bằng ${idToken ? "Google" : "Email/Password"})`
+      `${user.fullname} (Đăng nhập hệ thống bằng ${idToken ? "Google" : "Email/Password"} trên thiết bị ${clientUserAgent})`
     );
 
     // Trả về thông tin người dùng và quyền truy cập

@@ -13,7 +13,8 @@ import {
   Film,
   Building2,
   Award,
-  Crown
+  Crown,
+  Target
 } from "lucide-react";
 
 const PRODUCTS_CATALOG = [
@@ -315,6 +316,7 @@ interface KpiItem {
   formula: string;
   target: number;
   actual: number;
+  weight?: number;
   status: string;
   pic: string;
   group: string;
@@ -375,8 +377,8 @@ export default function InputFormPage() {
     }, 3000);
   };
 
-  // Tab State: "unit" vs "product"
-  const [activeTab, setActiveTab] = useState<"unit" | "product">("unit");
+  // Tab State: "unit" vs "product" vs "radar"
+  const [activeTab, setActiveTab] = useState<"unit" | "product" | "radar">("unit");
 
   // Dòng sản phẩm đang chọn trong Tab 2
   const [selectedProdId, setSelectedProdId] = useState<string>("");
@@ -396,7 +398,7 @@ export default function InputFormPage() {
 
   const [productNote, setProductNote] = useState("");
   const [showCodeColumn, setShowCodeColumn] = useState(false);
-  const [editingCell, setEditingCell] = useState<{ kpiId: string, field: "target" | "actual", value: string } | null>(null);
+  const [editingCell, setEditingCell] = useState<{ kpiId: string, field: "target" | "actual" | "weight", value: string } | null>(null);
   const [expandedParents, setExpandedParents] = useState<Record<string, boolean>>({});
 
   const [reportNotes, setReportNotes] = useState("");
@@ -470,6 +472,31 @@ export default function InputFormPage() {
   }, [filters.unitCode]);
 
   const [prevKpis, setPrevKpis] = useState<Record<string, number>>({});
+  const [radarPoints, setRadarPoints] = useState<any[]>([]);
+  const [radarLoading, setRadarLoading] = useState<boolean>(false);
+
+  // Fetch radar scores
+  useEffect(() => {
+    if (!["SCVN", "TCT", "SCME"].includes(filters.unitCode)) return;
+    
+    setRadarLoading(true);
+    const pType = filters.periodType || "weekly";
+    const m = filters.month || "7";
+    const q = (filters.quarter || "Q3").replace("Q", "");
+    const y = filters.year || "2026";
+    
+    fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&quarter=${q}&year=${y}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && Array.isArray(data.points)) {
+          setRadarPoints(data.points);
+        } else {
+          setRadarPoints([]);
+        }
+      })
+      .catch(err => console.error("Lỗi tải điểm radar:", err))
+      .finally(() => setRadarLoading(false));
+  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year, activeTab]);
 
   const getPrevPeriodKey = () => {
     const pType = filters.periodType || "weekly";
@@ -563,6 +590,7 @@ export default function InputFormPage() {
             formula: d.formula || "",
             target: d.targetValue,
             actual: d.actualValue,
+            weight: d.weight || 0,
             status: d.status || "Chờ duyệt",
             pic: d.pic || "",
             group: d.group || "Chỉ số bổ sung",
@@ -683,6 +711,7 @@ export default function InputFormPage() {
       indicatorCode: k.code,
       targetValue: k.target,
       actualValue: k.actual,
+      weight: k.weight,
       explanation: explanations[k.id] || "",
       status: statusOverride || k.status || "Đang thực hiện"
     })).filter(k => k.id);
@@ -757,6 +786,70 @@ export default function InputFormPage() {
     const numVal = parseFloat(val) || 0;
     setKpis(prev => prev.map(k => k.id === id ? { ...k, target: numVal } : k));
     kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, target: numVal } : k);
+  };
+
+  const handleWeightChange = (id: string, val: string) => {
+    const numVal = parseFloat(val) || 0;
+    setKpis(prev => prev.map(k => k.id === id ? { ...k, weight: numVal } : k));
+    kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, weight: numVal } : k);
+  };
+
+  const handleRadarPointChange = (code: string, field: "value" | "explanation", newVal: string) => {
+    setRadarPoints(prev => prev.map(p => {
+      if (p.code === code) {
+        return {
+          ...p,
+          [field === "value" ? "Kỳ này" : "explanation"]: field === "value" ? (parseFloat(newVal) || 0) : newVal
+        };
+      }
+      return p;
+    }));
+  };
+
+  const handleSaveRadarPoints = async () => {
+    const pKey = getPeriodKey();
+    const pType = filters.periodType || "weekly";
+    
+    const scores = radarPoints.map(p => ({
+      code: p.code,
+      value: p["Kỳ này"],
+      calculatedVal: p.calculatedVal,
+      explanation: p.explanation || ""
+    }));
+    
+    try {
+      const res = await fetch("/api/kpi/radar-scores", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-operator-email": currentLoggedUser?.email || ""
+        },
+        body: JSON.stringify({
+          unitCode: filters.unitCode,
+          periodKey: pKey,
+          periodType: pType,
+          scores
+        })
+      });
+      if (res.ok) {
+        showToast("✓ Đã lưu thành công điểm 7 mục tiêu!");
+        const m = filters.month || "7";
+        const q = (filters.quarter || "Q3").replace("Q", "");
+        const y = filters.year || "2026";
+        fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&quarter=${q}&year=${y}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data && Array.isArray(data.points)) {
+              setRadarPoints(data.points);
+            }
+          });
+      } else {
+        showToast("❌ Lưu thất bại, vui lòng thử lại!");
+      }
+    } catch (err) {
+      console.error("Lỗi khi lưu điểm radar:", err);
+      showToast("❌ Đã xảy ra lỗi kết nối!");
+    }
   };
 
   const handleProdInputChange = (id: string, val: number | string) => {
@@ -1304,6 +1397,18 @@ export default function InputFormPage() {
           >
             <Film size={13} /> 🎬 BÁO CÁO THEO SẢN PHẨM
           </button>
+          {["SCVN", "TCT", "SCME"].includes(filters.unitCode) && (
+            <button
+              onClick={() => setActiveTab("radar")}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-black transition-all ${
+                activeTab === "radar"
+                  ? "bg-gradient-to-r from-rose-600 to-orange-600 text-white shadow-sm"
+                  : "bg-white dark:bg-transparent text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-transparent font-bold"
+              }`}
+            >
+              <Target size={13} /> 🎯 NHẬP BỘ 7 MỤC TIÊU
+            </button>
+          )}
         </div>
       </FiltersHeader>
 
@@ -1340,6 +1445,7 @@ export default function InputFormPage() {
                     {showCodeColumn && <th className="p-3 w-24 text-center">Mã chỉ tiêu</th>}
                     <th className="p-3 max-w-[250px] w-[250px]">Mục tiêu / Chỉ tiêu cần báo cáo</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
+                    <th className="p-3 w-20 text-center">Tỷ trọng (%)</th>
                     <th className="p-3 w-48">Cách tính</th>
                     <th className="p-3 w-32 text-center bg-sky-950/30 text-sky-300">KH Định Kỳ</th>
                     <th className="p-3 w-36 text-center bg-purple-950/30 text-purple-300">Kết quả Thực tế</th>
@@ -1356,7 +1462,7 @@ export default function InputFormPage() {
                     return (
                       <React.Fragment key={groupName}>
                         <tr className="bg-slate-900/50 text-[#10b981] font-black border-b border-white/5 uppercase text-xs">
-                          <td colSpan={showCodeColumn ? 10 : 9} className="p-2.5 tracking-wider">
+                          <td colSpan={showCodeColumn ? 11 : 10} className="p-2.5 tracking-wider">
                             {groupName}
                           </td>
                         </tr>
@@ -1398,6 +1504,27 @@ export default function InputFormPage() {
                                 </div>
                               </td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>
+                              <td className="p-3 text-center">
+                                {isHeaderOnlyRow(kpi.code) ? (
+                                  <span className="text-slate-500 font-bold">-</span>
+                                ) : (
+                                  <input
+                                    type="text"
+                                    value={editingCell?.kpiId === kpi.id && editingCell?.field === "weight" ? editingCell.value : (kpi.weight || 0).toString()}
+                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    onFocus={() => setEditingCell({ kpiId: kpi.id, field: "weight", value: (kpi.weight || 0).toString() })}
+                                    onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "weight", value: e.target.value })}
+                                    onBlur={() => {
+                                      if (editingCell) {
+                                        const val = parseFloat(editingCell.value) || 0;
+                                        handleWeightChange(kpi.id, val.toString());
+                                        setEditingCell(null);
+                                      }
+                                    }}
+                                    className="w-16 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
+                                  />
+                                )}
+                              </td>
                               <td className="p-3 italic text-slate-400 text-xs truncate max-w-[150px]" title={kpi.formula}>
                                 {kpi.formula}
                               </td>
@@ -2181,6 +2308,138 @@ export default function InputFormPage() {
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* ==================== TAB 3: NHẬP LIỆU BỘ 7 MỤC TIÊU (DỰ PHÒNG & GHI ĐÈ RADAR) ==================== */}
+      {activeTab === "radar" && (
+        <div className="glass-panel p-5">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-sm font-black text-rose-400 tracking-wider uppercase flex items-center gap-2">
+              <Target size={16} /> 🎯 KHU VỰC: BẢNG NHẬP LIỆU & GHI ĐÈ KẾT QUẢ BỘ 7 MỤC TIÊU - ĐƠN VỊ: {filters.unitCode.toUpperCase()}
+            </h3>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSaveRadarPoints}
+                disabled={isReadOnly || reportStatus === "Chờ duyệt" || !(
+                  Number(filters.year) > 2026 ||
+                  (Number(filters.year) === 2026 && (
+                    filters.periodType === "yearly" ||
+                    (filters.periodType === "monthly" && Number(filters.month) >= 7) ||
+                    (filters.periodType === "quarterly" && Number(String(filters.quarter).replace("Q", "")) >= 3)
+                  ))
+                )}
+                className="text-xs bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-500 hover:to-orange-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
+              >
+                💾 Lưu số liệu bộ 7 mục tiêu
+              </button>
+            </div>
+          </div>
+
+          {!(
+            Number(filters.year) > 2026 ||
+            (Number(filters.year) === 2026 && (
+              filters.periodType === "yearly" ||
+              (filters.periodType === "monthly" && Number(filters.month) >= 7) ||
+              (filters.periodType === "quarterly" && Number(String(filters.quarter).replace("Q", "")) >= 3)
+            ))
+          ) && (
+            <div className="mb-4 bg-amber-500/10 border border-amber-500/20 text-amber-300 p-3 rounded-lg flex items-start gap-2 text-xs">
+              <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+              <span>
+                <strong>Lưu ý:</strong> Kỳ báo cáo được chọn (<strong>{filters.periodType === "monthly" ? `Tháng ${filters.month}/${filters.year}` : filters.periodType === "quarterly" ? `${filters.quarter}/${filters.year}` : `Năm ${filters.year}`}</strong>) là trước Tháng 7/2026. Số liệu lịch sử được giữ cố định từ hệ thống và <strong>không cho phép chỉnh sửa hay ghi đè</strong>.
+              </span>
+            </div>
+          )}
+
+          <div className="overflow-x-auto relative">
+            <table className="w-full text-left text-sm border-collapse">
+              <thead className="sticky top-0 z-10 bg-slate-950 shadow">
+                <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
+                  <th className="p-3 w-48">Mã Mục tiêu</th>
+                  <th className="p-3 w-72">Mục tiêu 7 mặt</th>
+                  <th className="p-3 w-48 text-center bg-sky-950/30 text-sky-300">Kết quả tạm tính (%)</th>
+                  <th className="p-3 w-48 text-center bg-purple-950/30 text-purple-300">Kết quả (%)</th>
+                  <th className="p-3 text-center">Ghi chú / Giải trình</th>
+                </tr>
+              </thead>
+              <tbody>
+                {radarLoading ? (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-slate-400">
+                      Đang tải số liệu bộ 7 mục tiêu...
+                    </td>
+                  </tr>
+                ) : radarPoints.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-slate-400">
+                      Không có dữ liệu cho kỳ báo cáo này.
+                    </td>
+                  </tr>
+                ) : (
+                  radarPoints.map((item: any) => {
+                    const isReadOnlyField = isReadOnly || reportStatus === "Chờ duyệt" || !(
+                      Number(filters.year) > 2026 ||
+                      (Number(filters.year) === 2026 && (
+                        filters.periodType === "yearly" ||
+                        (filters.periodType === "monthly" && Number(filters.month) >= 7) ||
+                        (filters.periodType === "quarterly" && Number(String(filters.quarter).replace("Q", "")) >= 3)
+                      ))
+                    );
+                    return (
+                      <tr key={item.code} className="border-b border-white/5 hover:bg-white/5 text-sm text-slate-200">
+                        <td className="p-3">
+                          <code className="bg-slate-800 text-rose-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-rose-500/20">
+                            {item.code}
+                          </code>
+                        </td>
+                        <td className="p-3 font-bold text-white">{item.subject}</td>
+                        <td className="p-3 text-center font-bold text-sky-400 bg-sky-950/10">
+                          {item.calculatedVal !== undefined ? `${item.calculatedVal}%` : "0%"}
+                        </td>
+                        <td className="p-3 text-center bg-purple-950/10">
+                          <input
+                            type="number"
+                            min={0}
+                            max={120}
+                            disabled={isReadOnlyField}
+                            value={item["Kỳ này"] !== undefined ? item["Kỳ này"] : ""}
+                            onChange={(e) => handleRadarPointChange(item.code, "value", e.target.value)}
+                            className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-rose-500 disabled:opacity-60"
+                          />
+                        </td>
+                        <td className="p-3">
+                          <input
+                            type="text"
+                            disabled={isReadOnlyField}
+                            value={item.explanation || ""}
+                            onChange={(e) => handleRadarPointChange(item.code, "explanation", e.target.value)}
+                            placeholder="Nhập ghi chú cho mục tiêu này..."
+                            className="w-full bg-slate-950 border border-[var(--glass-border)] text-white font-medium text-xs rounded-lg p-1.5 focus:outline-none focus:border-rose-500 disabled:opacity-60"
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-4 bg-slate-950/50 p-4 rounded-xl border border-white/5 text-xs text-slate-400 leading-relaxed">
+            <h4 className="font-bold text-white mb-1.5">💡 Quy định và Hướng dẫn sử dụng:</h4>
+            <ul className="list-disc pl-4 space-y-1">
+              <li>
+                <strong>Kết quả tạm tính (%)</strong>: Được hệ thống tính toán bằng tổng điểm hoàn thành của các chỉ tiêu con nhân tỷ trọng tương ứng đã lưu ở Tab <strong>Báo cáo theo đơn vị</strong>.
+              </li>
+              <li>
+                <strong>Kết quả (%)</strong>: Điểm số chính thức. Mặc định hệ thống tự động gán kết quả tạm tính sang ô này. Nếu bạn muốn điều chỉnh/ghi đè điểm số cho mục tiêu lớn, chỉ cần chỉnh sửa trực tiếp tại đây.
+              </li>
+              <li>
+                Dữ liệu ở cột <strong>Kết quả (%)</strong> và cột <strong>Ghi chú / Giải trình</strong> sau khi được lưu sẽ được cập nhật đồng bộ sang <strong>Biểu đồ Radar</strong> và bảng <strong>Chi tiết biến động 7 mặt mục tiêu</strong> ở trang Dashboard.
+              </li>
+            </ul>
+          </div>
         </div>
       )}
 

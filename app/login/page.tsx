@@ -17,6 +17,24 @@ export default function LoginPage() {
   const [passwordMode, setPasswordMode] = useState<"login" | "register">("login");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [deviceId, setDeviceId] = useState("");
+
+  // Kiểm tra lý do đăng xuất nếu bị đẩy phiên đăng nhập và tạo deviceId
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("reason") === "device_evicted") {
+        setErrorMsg("Phiên đăng nhập đã hết hạn hoặc tài khoản đã đăng nhập trên thiết bị mới khác.");
+      }
+
+      let id = localStorage.getItem("sconnect_device_id");
+      if (!id) {
+        id = "dev-" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem("sconnect_device_id", id);
+      }
+      setDeviceId(id);
+    }
+  }, []);
 
   useEffect(() => {
     // Nếu đã đăng nhập, chuyển về Dashboard
@@ -48,7 +66,11 @@ export default function LoginPage() {
           const res = await fetch("/api/auth/google", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ idToken: response.credential }),
+            body: JSON.stringify({ 
+              idToken: response.credential,
+              deviceId: localStorage.getItem("sconnect_device_id") || "default-device",
+              userAgent: navigator.userAgent
+            }),
           });
 
           const data = await res.json();
@@ -141,7 +163,12 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ 
+          email, 
+          password,
+          deviceId: localStorage.getItem("sconnect_device_id") || "default-device",
+          userAgent: navigator.userAgent
+        }),
       });
 
       const data = await res.json();

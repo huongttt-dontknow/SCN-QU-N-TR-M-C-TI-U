@@ -142,6 +142,39 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Định kỳ 15 giây kiểm tra xem thiết bị hiện tại có còn hợp lệ (không vượt quá 5 thiết bị)
+  useEffect(() => {
+    if (!currentLoggedUser) return;
+
+    const verifyDeviceSession = async () => {
+      try {
+        const deviceId = localStorage.getItem("sconnect_device_id") || "default-device";
+        const url = `/api/auth/verify-session?email=${encodeURIComponent(currentLoggedUser.email)}&deviceId=${encodeURIComponent(deviceId)}`;
+        const res = await fetch(url);
+        
+        if (res.ok) {
+          const data = await res.json();
+          if (!data.valid) {
+            console.warn("Phiên thiết bị không còn hợp lệ, tự động đăng xuất:", data.error);
+            // Xóa session và chuyển hướng
+            setCurrentLoggedUser(null);
+            if (typeof window !== "undefined") {
+              window.location.href = "/login?reason=device_evicted";
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi xác minh phiên thiết bị:", err);
+      }
+    };
+
+    // Kiểm tra ngay khi mount và lặp lại mỗi 15 giây
+    verifyDeviceSession();
+    const interval = setInterval(verifyDeviceSession, 15000);
+    return () => clearInterval(interval);
+  }, [currentLoggedUser]);
+
+
   return (
     <AppContext.Provider
       value={{

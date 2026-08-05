@@ -16,13 +16,21 @@ import {
 
 interface ObjectiveRadarChartProps {
   customData?: any[];
+  labelCurr?: string;
+  labelPrev?: string;
+  unitName?: string;
 }
 
-export default function ObjectiveRadarChart({ customData }: ObjectiveRadarChartProps) {
+export default function ObjectiveRadarChart({ 
+  customData,
+  labelCurr: propLabelCurr,
+  labelPrev: propLabelPrev,
+  unitName: propUnitName
+}: ObjectiveRadarChartProps) {
   const { filters, theme } = useApp();
   const isLight = theme === "light";
 
-  const { unitName, labelCurr, labelPrev, points } = getRadarScores(
+  const staticScores = getRadarScores(
     filters.unitCode,
     filters.periodType,
     filters.month,
@@ -30,7 +38,10 @@ export default function ObjectiveRadarChart({ customData }: ObjectiveRadarChartP
     filters.year
   );
 
-  const chartData = customData || points;
+  const chartData = customData || staticScores.points;
+  const labelCurr = propLabelCurr || staticScores.labelCurr;
+  const labelPrev = propLabelPrev || staticScores.labelPrev;
+  const unitName = propUnitName || staticScores.unitName;
 
   return (
     <div className="w-full h-[320px] flex items-center justify-center">

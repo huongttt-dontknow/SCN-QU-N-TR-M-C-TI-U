@@ -26,7 +26,31 @@ import {
 
 export default function DashboardPage() {
   const { filters, theme, currentLoggedUser, setFilters } = useApp();
-  const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
+  const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT" || filters.unitCode === "SCME";
+  const [dynamicRadarData, setDynamicRadarData] = useState<any>(null);
+  const [isLoadingRadar, setIsLoadingRadar] = useState(false);
+
+  useEffect(() => {
+    const fetchRadarData = async () => {
+      setIsLoadingRadar(true);
+      const pType = filters.periodType || "monthly";
+      const m = filters.month || "7";
+      const q = (filters.quarter || "Q3").replace("Q", "");
+      const y = filters.year || "2026";
+      try {
+        const res = await fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&quarter=${q}&year=${y}`);
+        if (res.ok) {
+          const data = await res.json();
+          setDynamicRadarData(data);
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải dữ liệu radar:", err);
+      } finally {
+        setIsLoadingRadar(false);
+      }
+    };
+    fetchRadarData();
+  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
   // Helper tính periodKey dựa trên bộ lọc
   const getPeriodKey = () => {
     if (filters.periodType === "weekly") {
@@ -126,7 +150,7 @@ export default function DashboardPage() {
   }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   useEffect(() => {
-    const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
+    const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT" || filters.unitCode === "SCME";
     const isNotWeekly = filters.periodType !== "weekly";
     
     if (!isParentUnit || !isNotWeekly) {
@@ -1236,13 +1260,15 @@ export default function DashboardPage() {
   }
 
   // Dữ liệu Bánh xe mục tiêu 7 mặt M1 -> M7 từ Excel
-  const radarData = getRadarScores(
+  const staticRadar = getRadarScores(
     filters.unitCode,
     filters.periodType,
     filters.month,
     filters.quarter,
     filters.year
   );
+
+  const radarData = dynamicRadarData || staticRadar;
 
   // Phân quyền Dashboard: Trưởng đơn vị / Người dùng chỉ được xem đơn vị của mình
   const isRestrictedUser = currentLoggedUser?.role === "Trưởng đơn vị" || currentLoggedUser?.role === "Người dùng";
@@ -1361,7 +1387,12 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
                   🎯 BÁNH XE MỤC TIÊU SỨC KHỎE ({radarData.unitName})
                 </h3>
-                <ObjectiveRadarChart />
+                <ObjectiveRadarChart 
+                  customData={radarData?.points}
+                  labelCurr={radarData?.labelCurr}
+                  labelPrev={radarData?.labelPrev}
+                  unitName={radarData?.unitName}
+                />
                 <div className="flex justify-center gap-4 text-xs font-bold mt-2">
                   <span className="flex items-center gap-1.5 text-emerald-500">
                     <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> {radarData.unitName} ({radarData.labelCurr})
@@ -1385,7 +1416,7 @@ export default function DashboardPage() {
                       <span>BIẾN ĐỘNG</span>
                     </div>
                   </div>
-                  {radarData.points.map(item => {
+                  {radarData.points.map((item: any) => {
                     const isUp = item.change >= 0;
                     return (
                       <div key={item.code} className="flex justify-between items-center py-1.5 border-b border-white/5 text-xs gap-2">
