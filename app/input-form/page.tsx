@@ -1168,6 +1168,8 @@ export default function InputFormPage() {
     const periodType = filters.periodType || "weekly";
     const f = (freq || "").toLowerCase().trim();
 
+    if (f === "") return true;
+
     if (periodType === "weekly") {
       return f === "weekly";
     } else if (periodType === "monthly") {

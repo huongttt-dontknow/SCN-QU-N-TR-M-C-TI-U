@@ -153,7 +153,8 @@ export async function GET(request: Request) {
                 unit: t.unit,
                 formula: t.formula,
                 group: t.group,
-                parentCode: t.parentCode
+                parentCode: t.parentCode,
+                frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
               };
             });
             await prisma.kpiData.createMany({ data: newKpis });
@@ -322,7 +323,8 @@ export async function GET(request: Request) {
             unit: t.unit,
             formula: t.formula,
             group: t.group,
-            parentCode: t.parentCode
+            parentCode: t.parentCode,
+            frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
           };
         });
 
