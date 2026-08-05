@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { MessageSquare, X, Send, RotateCcw, Bot, Minimize2, Maximize2 } from "lucide-react";
+import { useApp } from "@/context/AppContext";
 
 interface Message {
   role: "user" | "model";
@@ -9,6 +10,7 @@ interface Message {
 }
 
 export default function OmAgentWidget() {
+  const { currentLoggedUser } = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<"general" | "okr" | "kpi">("general");
@@ -259,6 +261,8 @@ export default function OmAgentWidget() {
       );
     });
   };
+
+  if (!currentLoggedUser) return null;
 
   return (
     <>
