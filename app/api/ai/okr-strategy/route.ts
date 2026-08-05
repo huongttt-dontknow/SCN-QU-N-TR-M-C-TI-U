@@ -548,7 +548,7 @@ export async function POST(request: Request) {
 
     // Thiết lập Generative Model của Gemini và khai báo Web Search Tool
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       tools: [{
         functionDeclarations: [{
           name: "searchMarketTrends",
