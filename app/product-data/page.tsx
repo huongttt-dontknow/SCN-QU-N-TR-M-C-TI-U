@@ -506,7 +506,7 @@ export default function ProductDataPage() {
     const fetchCurrent = fetch(`/api/kpi?unitCode=${filters.unitCode}&productCode=all&periodKey=${currentPeriodKey}&periodType=${pType}&aggregate=false`)
       .then(res => res.json());
 
-    const fetchPrev = fetch(`/api/kpi?unitCode=${filters.unitCode}&productCode=all&periodKey=${prevPeriodKey}&periodType=${pType}&aggregate=false`)
+    const fetchPrev = fetch(`/api/kpi?unitCode=${filters.unitCode}&productCode=all&periodKey=${prevPeriodKey}&periodType=${pType}&aggregate=false&indicatorCode=VM1-I02.01`)
       .then(res => res.json());
 
     Promise.all([fetchCurrent, fetchPrev])
@@ -627,14 +627,15 @@ export default function ProductDataPage() {
     };
   });
 
-  // Top 5 highest completion
-  const highestCompletion = [...productRevenueCompletion]
+  // Top 5 highest completion (>= 50%)
+  const highestCompletionAll = productRevenueCompletion.filter(p => p.pct >= 50);
+  const highestCompletion = [...highestCompletionAll]
     .sort((a, b) => b.pct - a.pct)
     .slice(0, 5);
 
-  // Top 5 lowest completion (Warning) - filter target > 0 to prioritize active items
-  const warningProducts = productRevenueCompletion.filter(p => p.target > 0);
-  const lowestCompletion = (warningProducts.length > 0 ? warningProducts : productRevenueCompletion)
+  // Top 5 lowest completion (Warning) (< 50%) - filter target > 0 to prioritize active items
+  const warningProducts = productRevenueCompletion.filter(p => p.target > 0 && p.pct < 50);
+  const lowestCompletion = [...warningProducts]
     .sort((a, b) => a.pct - b.pct)
     .slice(0, 5);
 
@@ -1087,6 +1088,10 @@ export default function ProductDataPage() {
             <div className="space-y-3 flex-1 flex flex-col justify-start">
               {isAllLoading ? (
                 <div className="text-xs text-slate-400 text-center py-8 font-bold animate-pulse">Đang tải bảng dữ liệu...</div>
+              ) : highestCompletionAll.length === 0 ? (
+                <div className="text-xs text-slate-400 text-center py-12 font-extrabold leading-relaxed">
+                  Không có đơn vị hoàn thành mục tiêu từ 50% trở lên
+                </div>
               ) : (
                 highestCompletion.map((p, idx) => (
                   <div key={p.id} className={`flex justify-between items-center py-2 border-b last:border-0 text-xs ${
@@ -1129,6 +1134,10 @@ export default function ProductDataPage() {
             <div className="space-y-3 flex-1 flex flex-col justify-start">
               {isAllLoading ? (
                 <div className="text-xs text-slate-400 text-center py-8 font-bold animate-pulse">Đang tải bảng dữ liệu...</div>
+              ) : warningProducts.length === 0 ? (
+                <div className="text-xs text-slate-400 text-center py-12 font-extrabold leading-relaxed">
+                  Không có sản phẩm nào hoàn thành dưới 50%
+                </div>
               ) : (
                 lowestCompletion.map((p, idx) => (
                   <div key={p.id} className={`flex justify-between items-center py-2 border-b last:border-0 text-xs ${

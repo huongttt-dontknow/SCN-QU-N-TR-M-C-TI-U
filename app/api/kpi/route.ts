@@ -97,6 +97,7 @@ export async function GET(request: Request) {
     productCode = searchParams.get("productCode") || undefined;
     periodKey = searchParams.get("periodKey") || "";
     periodType = searchParams.get("periodType") || "weekly";
+    const indicatorParam = searchParams.get("indicatorCode") || undefined;
 
     if ((!unitCode && !productCode) || !periodKey) {
       return NextResponse.json({ error: "Thiếu unitCode/productCode hoặc periodKey" }, { status: 400 });
@@ -130,53 +131,65 @@ export async function GET(request: Request) {
       const missingProductCodes = targetProductCodes.filter(p => !existingSet.has(p));
 
       if (missingProductCodes.length > 0) {
-        for (const pCode of missingProductCodes) {
-          const templates = await prisma.kpiData.findMany({
-            where: { productCode: pCode },
-            distinct: ["indicatorCode"]
-          });
-          if (templates.length > 0) {
-            const newKpis = templates.map(t => {
-              let defaultTarget = 0;
-              if (periodType === "weekly" && t.periodKey.startsWith("weekly")) {
-                defaultTarget = t.targetValue;
-              } else if (periodType === "monthly" && t.periodKey.startsWith("monthly")) {
-                defaultTarget = t.targetValue;
-              } else if (periodType === "quarterly" && t.periodKey.startsWith("quarterly")) {
-                defaultTarget = t.targetValue;
-              } else if (periodType === "yearly" && t.periodKey.startsWith("yearly")) {
-                defaultTarget = t.targetValue;
-              }
-              return {
-                indicatorCode: t.indicatorCode,
-                unitCode: t.unitCode || unitCode,
-                productCode: pCode,
-                periodType,
-                periodKey,
-                targetValue: defaultTarget,
-                actualValue: 0,
-                pic: t.pic,
-                status: "Chưa thực hiện",
-                explanation: "",
-                title: t.title,
-                unit: t.unit,
-                formula: t.formula,
-                group: t.group,
-                parentCode: t.parentCode,
-                frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
-              };
+        // Tìm các sản phẩm thực sự có mẫu trong DB để tránh query templates trống vô ích
+        const templatesDistinct = await prisma.kpiData.findMany({
+          where: { productCode: { in: missingProductCodes } },
+          distinct: ["productCode"],
+          select: { productCode: true }
+        });
+        const productsWithTemplates = new Set(templatesDistinct.map(t => t.productCode).filter(Boolean));
+        const realMissingCodes = missingProductCodes.filter(p => productsWithTemplates.has(p));
+
+        if (realMissingCodes.length > 0) {
+          for (const pCode of realMissingCodes) {
+            const templates = await prisma.kpiData.findMany({
+              where: { productCode: pCode },
+              distinct: ["indicatorCode"]
             });
-            await prisma.kpiData.createMany({ data: newKpis });
+            if (templates.length > 0) {
+              const newKpis = templates.map(t => {
+                let defaultTarget = 0;
+                if (periodType === "weekly" && t.periodKey.startsWith("weekly")) {
+                  defaultTarget = t.targetValue;
+                } else if (periodType === "monthly" && t.periodKey.startsWith("monthly")) {
+                  defaultTarget = t.targetValue;
+                } else if (periodType === "quarterly" && t.periodKey.startsWith("quarterly")) {
+                  defaultTarget = t.targetValue;
+                } else if (periodType === "yearly" && t.periodKey.startsWith("yearly")) {
+                  defaultTarget = t.targetValue;
+                }
+                return {
+                  indicatorCode: t.indicatorCode,
+                  unitCode: t.unitCode || unitCode,
+                  productCode: pCode,
+                  periodType,
+                  periodKey,
+                  targetValue: defaultTarget,
+                  actualValue: 0,
+                  pic: t.pic,
+                  status: "Chưa thực hiện",
+                  explanation: "",
+                  title: t.title,
+                  unit: t.unit,
+                  formula: t.formula,
+                  group: t.group,
+                  parentCode: t.parentCode,
+                  frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
+                };
+              });
+              await prisma.kpiData.createMany({ data: newKpis });
+            }
           }
         }
       }
 
-      // Lấy toàn bộ bản ghi sản phẩm của kỳ hiện tại
+      // Lấy toàn bộ bản ghi sản phẩm của kỳ hiện tại (lọc theo indicatorCode nếu có)
       let records = await prisma.kpiData.findMany({
         where: {
           productCode: { in: targetProductCodes },
           periodKey,
-          periodType
+          periodType,
+          ...(indicatorParam ? { indicatorCode: { endsWith: indicatorParam } } : {})
         }
       });
 
