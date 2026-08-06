@@ -370,6 +370,61 @@ export default function ProductDataPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hideCodes, setHideCodes] = useState(false);
 
+  // States for overall aggregate mode
+  const isAggregateMode = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
+  const [allProductsKpis, setAllProductsKpis] = useState<any[]>([]);
+  const [prevProductsKpis, setPrevProductsKpis] = useState<any[]>([]);
+  const [isAllLoading, setIsAllLoading] = useState(false);
+
+  const getPreviousPeriodKey = (key: string, type: string): string => {
+    if (type === "weekly") {
+      const parts = key.split("_");
+      if (parts.length === 3) {
+        const m = parseInt(parts[1]);
+        const w = parseInt(parts[2]);
+        if (w > 1) return `weekly_${m}_${w - 1}`;
+        const prevM = m > 1 ? m - 1 : 12;
+        return `weekly_${prevM}_4`;
+      }
+    } else if (type === "monthly") {
+      const parts = key.split("_");
+      if (parts.length === 2) {
+        const m = parseInt(parts[1]);
+        const prevM = m > 1 ? m - 1 : 12;
+        return `monthly_${prevM}`;
+      }
+    } else if (type === "quarterly") {
+      const parts = key.split("_");
+      if (parts.length === 2) {
+        const q = parseInt(parts[1]);
+        const prevQ = q > 1 ? q - 1 : 4;
+        return `quarterly_${prevQ}`;
+      }
+    } else if (type === "yearly") {
+      const parts = key.split("_");
+      if (parts.length === 2) {
+        const y = parseInt(parts[1]);
+        return `yearly_${y - 1}`;
+      }
+    }
+    return key;
+  };
+
+  const mapProductUnitToUnitCode = (unit: string): string => {
+    const mapping: Record<string, string> = {
+      "Creative Hub": "CR",
+      "Animated Story": "AS",
+      "CNGP": "CN",
+    };
+    return mapping[unit] || unit;
+  };
+
+  const handleProductClick = (productId: string, productUnit: string) => {
+    const unitCode = mapProductUnitToUnitCode(productUnit);
+    setFilters(prev => ({ ...prev, unitCode }));
+    setSelectedProductId(productId);
+  };
+
   // Phân quyền Báo cáo Sản phẩm: Trưởng đơn vị / Người dùng chỉ được xem sản phẩm thuộc đơn vị của họ.
   const isRestrictedUser = currentLoggedUser?.role === "Trưởng đơn vị" || currentLoggedUser?.role === "Người dùng";
   
@@ -405,6 +460,7 @@ export default function ProductDataPage() {
 
   // Fetch KPI data for the selected product and period filters
   useEffect(() => {
+    if (isAggregateMode) return;
     if (!selectedProductId) return;
     setIsLoading(true);
 
@@ -426,7 +482,48 @@ export default function ProductDataPage() {
         console.error("Lỗi khi tải dữ liệu sản phẩm:", err);
         setIsLoading(false);
       });
-  }, [selectedProductId, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
+  }, [selectedProductId, filters.periodType, filters.month, filters.week, filters.quarter, filters.year, isAggregateMode]);
+
+  // Fetch KPI data for ALL products in aggregate mode
+  useEffect(() => {
+    if (!isAggregateMode) return;
+    setIsAllLoading(true);
+
+    const pType = filters.periodType || "weekly";
+    const m = filters.month || "7";
+    const w = filters.week || "1";
+    const q = filters.quarter || "Q3";
+    const y = filters.year || "2026";
+
+    let currentPeriodKey = "";
+    if (pType === "weekly") currentPeriodKey = `weekly_${m}_${w}`;
+    else if (pType === "monthly") currentPeriodKey = `monthly_${m}`;
+    else if (pType === "quarterly") currentPeriodKey = `quarterly_${q.toLowerCase().replace("q", "")}`;
+    else currentPeriodKey = `yearly_${y}`;
+
+    const prevPeriodKey = getPreviousPeriodKey(currentPeriodKey, pType);
+
+    const fetchCurrent = fetch(`/api/kpi?unitCode=${filters.unitCode}&productCode=all&periodKey=${currentPeriodKey}&periodType=${pType}&aggregate=false`)
+      .then(res => res.json());
+
+    const fetchPrev = fetch(`/api/kpi?unitCode=${filters.unitCode}&productCode=all&periodKey=${prevPeriodKey}&periodType=${pType}&aggregate=false`)
+      .then(res => res.json());
+
+    Promise.all([fetchCurrent, fetchPrev])
+      .then(([currentData, prevData]) => {
+        if (Array.isArray(currentData)) {
+          setAllProductsKpis(currentData);
+        }
+        if (Array.isArray(prevData)) {
+          setPrevProductsKpis(prevData);
+        }
+        setIsAllLoading(false);
+      })
+      .catch(err => {
+        console.error("Lỗi khi tải dữ liệu tổng hợp:", err);
+        setIsAllLoading(false);
+      });
+  }, [isAggregateMode, filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   // Find currently selected product profile
   const currentProduct = filteredProductsList.find(p => p.id === selectedProductId) || null;
@@ -448,7 +545,6 @@ export default function ProductDataPage() {
 
   // Find metrics for widgets
   const getWidgetMetrics = (groupCode: string, displayCodes: string[], titles: string[]) => {
-    // 1. Try exact matches on displayCodes or titles
     const row = kpiRows.find(r => 
       displayCodes.includes(r.displayCode) || 
       titles.some(t => r.title.toLowerCase().includes(t.toLowerCase()))
@@ -460,7 +556,6 @@ export default function ProductDataPage() {
       return { target, actual, unit: row.unit || "" };
     }
 
-    // 2. Fallback to group summary row (e.g. M1, M2, M3)
     const groupRow = kpiRows.find(r => r.displayCode === groupCode || r.code === groupCode);
     if (groupRow) {
       const target = getTargetValue(groupRow);
@@ -468,7 +563,7 @@ export default function ProductDataPage() {
       return { target, actual, unit: groupRow.unit || "" };
     }
 
-    return { target: 100, actual: 0, unit: "" }; // final fallback
+    return { target: 100, actual: 0, unit: "" };
   };
 
   const revenueMetrics = getWidgetMetrics("M1", ["TM1-I02.01", "VM1-I02.01"], ["Tổng doanh thu", "Doanh thu kênh"]);
@@ -483,10 +578,90 @@ export default function ProductDataPage() {
     groupedProducts[u].push(p);
   });
 
+  // Calculate metrics for aggregate mode
+  const getAggregateMetrics = () => {
+    const m1Records = allProductsKpis.filter(r => r.indicatorCode.endsWith("-VM1-I02.01"));
+    let m1Target = 0;
+    let m1Actual = 0;
+    m1Records.forEach(r => {
+      m1Target += r.targetValue || 0;
+      m1Actual += r.actualValue || 0;
+    });
+
+    const m2Records = allProductsKpis.filter(r => r.indicatorCode.endsWith("-VM2-I01.01"));
+    let m2Target = 0;
+    let m2Actual = 0;
+    m2Records.forEach(r => {
+      m2Target += r.targetValue || 0;
+      m2Actual += r.actualValue || 0;
+    });
+
+    const m3Records = allProductsKpis.filter(r => r.indicatorCode.endsWith("-TM3-I01.02"));
+    let m3Target = 0;
+    let m3Actual = 0;
+    m3Records.forEach(r => {
+      m3Target += r.targetValue || 0;
+      m3Actual += r.actualValue || 0;
+    });
+
+    return {
+      m1Target, m1Actual, m1Pct: calculateCompletionPct(m1Target, m1Actual),
+      m2Target, m2Actual, m2Pct: calculateCompletionPct(m2Target, m2Actual),
+      m3Target, m3Actual, m3Pct: calculateCompletionPct(m3Target, m3Actual)
+    };
+  };
+
+  const aggMetrics = getAggregateMetrics();
+
+  // Aggregate leaderboards
+  const productRevenueCompletion = filteredProductsList.map(p => {
+    const rec = allProductsKpis.find(r => r.indicatorCode === `${p.id}-VM1-I02.01`);
+    const target = rec ? (rec.targetValue || 0) : 0;
+    const actual = rec ? (rec.actualValue || 0) : 0;
+    const pct = calculateCompletionPct(target, actual);
+    return {
+      ...p,
+      target,
+      actual,
+      pct
+    };
+  });
+
+  // Top 5 highest completion
+  const highestCompletion = [...productRevenueCompletion]
+    .sort((a, b) => b.pct - a.pct)
+    .slice(0, 5);
+
+  // Top 5 lowest completion (Warning) - filter target > 0 to prioritize active items
+  const warningProducts = productRevenueCompletion.filter(p => p.target > 0);
+  const lowestCompletion = (warningProducts.length > 0 ? warningProducts : productRevenueCompletion)
+    .sort((a, b) => a.pct - b.pct)
+    .slice(0, 5);
+
+  // Top 3-5 growth
+  const productRevenueGrowth = filteredProductsList.map(p => {
+    const currRec = allProductsKpis.find(r => r.indicatorCode === `${p.id}-VM1-I02.01`);
+    const prevRec = prevProductsKpis.find(r => r.indicatorCode === `${p.id}-VM1-I02.01`);
+    const currActual = currRec ? (currRec.actualValue || 0) : 0;
+    const prevActual = prevRec ? (prevRec.actualValue || 0) : 0;
+    const growthValue = currActual - prevActual;
+    const growthPct = prevActual > 0 ? Math.round((growthValue / prevActual) * 100) : 0;
+    return {
+      ...p,
+      currActual,
+      prevActual,
+      growthValue,
+      growthPct
+    };
+  }).filter(p => p.growthValue > 0);
+
+  const growthLeaderboard = [...productRevenueGrowth]
+    .sort((a, b) => b.growthValue - a.growthValue)
+    .slice(0, 5);
+
   if (isAccessDenied) {
     return (
       <div className="flex flex-col gap-6 text-slate-800 dark:text-white text-sm">
-        {/* 1. FREEZE FILTERS PANEL */}
         <FiltersHeader />
         
         <div className="flex flex-col items-center justify-center min-h-[400px] glass-panel p-8 text-center max-w-xl mx-auto my-12 animate-fade-in font-sans">
@@ -519,45 +694,69 @@ export default function ProductDataPage() {
       {/* FREEZE FILTERS */}
       <FiltersHeader />
 
-      {/* PRODUCT SELECTOR DROPDOWN */}
-      <div className={`${
-        theme === "light" 
-          ? "bg-white border border-slate-200 shadow-sm" 
-          : "bg-[#151226]/90 border border-purple-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
-      } p-4 rounded-xl flex items-center justify-between`}>
-        <div className="flex items-center gap-3">
-          <Layers size={20} className={theme === "light" ? "text-sky-600" : "text-cyan-400"} />
-          <h2 className={`text-sm font-extrabold uppercase tracking-wider ${theme === "light" ? "text-slate-800" : "text-white"}`}>
-            Chọn sản phẩm đo lường
-          </h2>
-        </div>
-        <select
-          value={selectedProductId}
-          onChange={(e) => setSelectedProductId(e.target.value)}
-          className={`text-sm font-bold rounded-lg px-3.5 py-2 focus:outline-none cursor-pointer w-72 border transition-all ${
+      {/* PRODUCT SELECTOR / SUMMARY HEADER */}
+      {isAggregateMode ? (
+        <div className={`${
+          theme === "light" 
+            ? "bg-white border border-slate-200 shadow-sm" 
+            : "bg-[#151226]/90 border border-purple-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+        } p-4 rounded-xl flex items-center justify-between`}>
+          <div className="flex items-center gap-3">
+            <Layers size={20} className={theme === "light" ? "text-sky-600" : "text-cyan-400"} />
+            <h2 className={`text-sm font-extrabold uppercase tracking-wider ${theme === "light" ? "text-slate-800" : "text-white"}`}>
+              Báo cáo tổng hợp tất cả sản phẩm
+            </h2>
+          </div>
+          <span className={`text-xs font-black px-3.5 py-1.5 rounded-lg border uppercase tracking-wider ${
             theme === "light"
-              ? "bg-white border-slate-300 text-slate-800 focus:border-sky-500"
-              : "bg-[#1f1a3e]/80 border-purple-500/20 text-white focus:border-cyan-400"
-          }`}
-        >
-          {Object.entries(groupedProducts).map(([unit, products]) => (
-            <optgroup key={unit} label={`Đơn vị: ${unit}`}>
-              {products.map(prod => (
-                <option key={prod.id} value={prod.id}>{prod.name}</option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-      </div>
+              ? "bg-slate-50 text-slate-600 border-slate-200"
+              : "bg-purple-950/20 text-indigo-300 border-indigo-500/20"
+          }`}>
+            Đơn vị tổng: {filters.unitCode === "SCVN" ? "BU Sconnect Việt Nam" : "Tổng Công Ty"}
+          </span>
+        </div>
+      ) : (
+        <div className={`${
+          theme === "light" 
+            ? "bg-white border border-slate-200 shadow-sm" 
+            : "bg-[#151226]/90 border border-purple-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+        } p-4 rounded-xl flex items-center justify-between`}>
+          <div className="flex items-center gap-3">
+            <Layers size={20} className={theme === "light" ? "text-sky-600" : "text-cyan-400"} />
+            <h2 className={`text-sm font-extrabold uppercase tracking-wider ${theme === "light" ? "text-slate-800" : "text-white"}`}>
+              Chọn sản phẩm đo lường
+            </h2>
+          </div>
+          <select
+            value={selectedProductId}
+            onChange={(e) => setSelectedProductId(e.target.value)}
+            className={`text-sm font-bold rounded-lg px-3.5 py-2 focus:outline-none cursor-pointer w-72 border transition-all ${
+              theme === "light"
+                ? "bg-white border-slate-300 text-slate-800 focus:border-sky-500"
+                : "bg-[#1f1a3e]/80 border-purple-500/20 text-white focus:border-cyan-400"
+            }`}
+          >
+            {Object.entries(groupedProducts).map(([unit, products]) => (
+              <optgroup key={unit} label={`Đơn vị: ${unit}`}>
+                {products.map(prod => (
+                  <option key={prod.id} value={prod.id}>{prod.name}</option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+      )}
 
-      {currentProduct && (
-        <div className="flex flex-col lg:flex-row gap-5">
-          {/* PRODUCT PROFILE CARD (25% Width) */}
+      {/* RENDER METRIC CARDS */}
+      {isAggregateMode ? (
+        // AGGREGATE DASHBOARD WIDGETS
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+          {/* Card 1: Product Summary Profile */}
           <div className={`${
             theme === "light" 
               ? "bg-white border border-slate-200 shadow-sm text-slate-800" 
               : "bg-[#151226]/90 border border-purple-500/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
-          } p-5 lg:w-1/4 flex flex-col justify-between shrink-0 min-h-[230px] rounded-2xl`}>
+          } p-5 flex flex-col justify-between h-[230px] rounded-2xl`}>
             <div>
               <span className={`text-xs font-black tracking-widest uppercase block mb-1 ${
                 theme === "light" ? "text-sky-600" : "text-cyan-400"
@@ -565,7 +764,7 @@ export default function ProductDataPage() {
                 Thông tin sản phẩm
               </span>
               <h3 className={`text-lg font-black mb-4 ${theme === "light" ? "text-slate-800" : "text-white"}`}>
-                {currentProduct.name}
+                {filteredProductsList.length} Sản phẩm
               </h3>
             </div>
             
@@ -573,250 +772,540 @@ export default function ProductDataPage() {
               <div className={`flex justify-between items-center py-2 border-b ${
                 theme === "light" ? "border-slate-100" : "border-white/5"
               }`}>
-                <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><Briefcase size={14} /> PIC</span>
-                <span className={`font-extrabold ${theme === "light" ? "text-slate-800" : "text-white"}`}>{currentProduct.pic || "Chưa gán"}</span>
-              </div>
-              <div className={`flex justify-between items-center py-2 border-b ${
-                theme === "light" ? "border-slate-100" : "border-white/5"
-              }`}>
-                <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><Users size={14} /> Quy mô (FTE)</span>
-                <span className={`font-extrabold ${theme === "light" ? "text-slate-800" : "text-white"}`}>{currentProduct.fte} nhân sự</span>
+                <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><Briefcase size={14} /> Sản xuất mới</span>
+                <span className={`font-extrabold ${theme === "light" ? "text-slate-800" : "text-white"}`}>
+                  {filteredProductsList.filter(p => p.type === "Sản xuất mới").length} sản phẩm
+                </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><FolderGit2 size={14} /> Phân loại</span>
-                <span className={`font-black px-2.5 py-1 rounded-lg text-xs border ${
-                  theme === "light"
-                    ? "text-sky-700 bg-sky-50 border-sky-200"
-                    : "text-cyan-300 bg-cyan-400/10 border-cyan-400/20"
-                }`}>
-                  {currentProduct.type || "Chưa phân loại"}
+                <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><FolderGit2 size={14} /> Phái sinh / Khai thác</span>
+                <span className={`font-extrabold ${theme === "light" ? "text-slate-800" : "text-white"}`}>
+                  {filteredProductsList.filter(p => p.type === "Phái sinh/ Khai thác").length} sản phẩm
                 </span>
               </div>
             </div>
           </div>
 
-          {/* CROSS COMPARE MULTI-METRIC WIDGETS (75% Width) */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-5">
-            
-            {/* Widget A: Doanh thu */}
+          {/* Card 2: Doanh thu M1 */}
+          <div className={`${
+            theme === "light" 
+              ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-emerald-600" 
+              : "bg-gradient-to-r from-[#2c4cf5] to-[#3a8bf6] text-white shadow-[0_10px_25px_rgba(44,76,245,0.4)] border-none"
+          } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
+            <div>
+              <span className={`text-xs font-black tracking-widest uppercase ${
+                theme === "light" ? "text-emerald-600" : "text-blue-100/90"
+              }`}>
+                Doanh thu (M1)
+              </span>
+              <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-blue-100/80"}`}>Hoàn thành kế hoạch</h4>
+            </div>
+            <div className="my-2">
+              <div className="flex flex-col gap-1">
+                <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
+                  {aggMetrics.m1Pct}%
+                </span>
+                <span className={`text-[10px] font-extrabold truncate ${theme === "light" ? "text-slate-500" : "text-blue-100/90"}`}>
+                  {aggMetrics.m1Actual.toLocaleString()} / {aggMetrics.m1Target.toLocaleString()} VNĐ
+                </span>
+              </div>
+              <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
+                <div 
+                  className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
+                  style={{ width: `${Math.min(100, aggMetrics.m1Pct)}%` }}
+                />
+              </div>
+            </div>
+            <div className={`text-[10px] flex items-center gap-1 border-t pt-2 font-bold ${
+              theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-blue-100/90"
+            }`}>
+              <TrendingUp size={12} className={theme === "light" ? "text-emerald-500" : "text-white"} />
+              <span>Doanh thu gộp {filteredProductsList.length} sản phẩm</span>
+            </div>
+          </div>
+
+          {/* Card 3: Sản lượng M2 */}
+          <div className={`${
+            theme === "light" 
+              ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-lime-500" 
+              : "bg-gradient-to-r from-[#8119e8] to-[#b327e5] text-white shadow-[0_10px_25px_rgba(129,25,232,0.4)] border-none"
+          } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
+            <div>
+              <span className={`text-xs font-black tracking-widest uppercase ${
+                theme === "light" ? "text-lime-600" : "text-purple-100/90"
+              }`}>
+                Sản lượng (M2)
+              </span>
+              <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-purple-100/80"}`}>Nội dung sản xuất</h4>
+            </div>
+            <div className="my-2">
+              <div className="flex flex-col gap-1">
+                <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
+                  {aggMetrics.m2Pct}%
+                </span>
+                <span className={`text-[10px] font-extrabold truncate ${theme === "light" ? "text-slate-500" : "text-purple-100/90"}`}>
+                  {aggMetrics.m2Actual.toLocaleString()} / {aggMetrics.m2Target.toLocaleString()} Video
+                </span>
+              </div>
+              <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
+                <div 
+                  className={`h-full rounded-full ${theme === "light" ? "bg-lime-500" : "bg-white"}`}
+                  style={{ width: `${Math.min(100, aggMetrics.m2Pct)}%` }}
+                />
+              </div>
+            </div>
+            <div className={`text-[10px] flex items-center gap-1 border-t pt-2 font-bold ${
+              theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-purple-100/90"
+            }`}>
+              <TrendingUp size={12} className={theme === "light" ? "text-lime-500" : "text-white"} />
+              <span>Sản lượng gộp {filteredProductsList.length} sản phẩm</span>
+            </div>
+          </div>
+
+          {/* Card 4: Lượt xem M3 */}
+          <div className={`${
+            theme === "light" 
+              ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-emerald-500" 
+              : "bg-gradient-to-r from-[#179fa9] to-[#25ccd8] text-white shadow-[0_10px_25px_rgba(23,159,169,0.4)] border-none"
+          } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
+            <div>
+              <span className={`text-xs font-black tracking-widest uppercase ${
+                theme === "light" ? "text-emerald-600" : "text-teal-100/90"
+              }`}>
+                Lượt xem (M3)
+              </span>
+              <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-teal-100/80"}`}>Traffic đạt được</h4>
+            </div>
+            <div className="my-2">
+              <div className="flex flex-col gap-1">
+                <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
+                  {aggMetrics.m3Pct}%
+                </span>
+                <span className={`text-[10px] font-extrabold truncate ${theme === "light" ? "text-slate-500" : "text-teal-100/90"}`}>
+                  {aggMetrics.m3Actual.toLocaleString()} / {aggMetrics.m3Target.toLocaleString()} Views
+                </span>
+              </div>
+              <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
+                <div 
+                  className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
+                  style={{ width: `${Math.min(100, aggMetrics.m3Pct)}%` }}
+                />
+              </div>
+            </div>
+            <div className={`text-[10px] flex items-center gap-1 border-t pt-2 font-bold ${
+              theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-teal-100/90"
+            }`}>
+              <TrendingUp size={12} className={theme === "light" ? "text-emerald-500" : "text-white"} />
+              <span>Lượt xem gộp {filteredProductsList.length} sản phẩm</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // SINGLE PRODUCT WIDGETS
+        currentProduct && (
+          <div className="flex flex-col lg:flex-row gap-5">
+            {/* PRODUCT PROFILE CARD (25% Width) */}
             <div className={`${
               theme === "light" 
-                ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-emerald-600" 
-                : "bg-gradient-to-r from-[#2c4cf5] to-[#3a8bf6] text-white shadow-[0_10px_25px_rgba(44,76,245,0.4)] border-none"
-            } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
+                ? "bg-white border border-slate-200 shadow-sm text-slate-800" 
+                : "bg-[#151226]/90 border border-purple-500/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+            } p-5 lg:w-1/4 flex flex-col justify-between shrink-0 min-h-[230px] rounded-2xl`}>
               <div>
-                <span className={`text-xs font-black tracking-widest uppercase ${
-                  theme === "light" ? "text-emerald-600" : "text-blue-100/90"
+                <span className={`text-xs font-black tracking-widest uppercase block mb-1 ${
+                  theme === "light" ? "text-sky-600" : "text-cyan-400"
                 }`}>
-                  Doanh thu (M1)
+                  Thông tin sản phẩm
                 </span>
-                <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-blue-100/80"}`}>Hoàn thành kế hoạch</h4>
+                <h3 className={`text-lg font-black mb-4 ${theme === "light" ? "text-slate-800" : "text-white"}`}>
+                  {currentProduct.name}
+                </h3>
               </div>
-              <div className="my-2">
-                <div className="flex items-baseline gap-2">
-                  <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
-                    {calculateCompletionPct(revenueMetrics.target, revenueMetrics.actual, "M1", "Doanh thu")}%
-                  </span>
-                  <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-blue-100/90"}`}>
-                    {revenueMetrics.actual.toLocaleString()} / {revenueMetrics.target.toLocaleString()} {revenueMetrics.unit || "VNĐ"}
+              
+              <div className="space-y-3 text-xs flex-1">
+                <div className={`flex justify-between items-center py-2 border-b ${
+                  theme === "light" ? "border-slate-100" : "border-white/5"
+                }`}>
+                  <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><Briefcase size={14} /> PIC</span>
+                  <span className={`font-extrabold ${theme === "light" ? "text-slate-800" : "text-white"}`}>{currentProduct.pic || "Chưa gán"}</span>
+                </div>
+                <div className={`flex justify-between items-center py-2 border-b ${
+                  theme === "light" ? "border-slate-100" : "border-white/5"
+                }`}>
+                  <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><Users size={14} /> Quy mô (FTE)</span>
+                  <span className={`font-extrabold ${theme === "light" ? "text-slate-800" : "text-white"}`}>{currentProduct.fte} nhân sự</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className={`font-extrabold flex items-center gap-1.5 ${theme === "light" ? "text-slate-500" : "text-slate-400"}`}><FolderGit2 size={14} /> Phân loại</span>
+                  <span className={`font-black px-2.5 py-1 rounded-lg text-xs border ${
+                    theme === "light"
+                      ? "text-sky-700 bg-sky-50 border-sky-200"
+                      : "text-cyan-300 bg-cyan-400/10 border-cyan-400/20"
+                  }`}>
+                    {currentProduct.type || "Chưa phân loại"}
                   </span>
                 </div>
-                <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
-                  <div 
-                    className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
-                    style={{ width: `${Math.min(100, calculateCompletionPct(revenueMetrics.target, revenueMetrics.actual, "M1", "Doanh thu"))}%` }}
-                  />
-                </div>
-              </div>
-              <div className={`text-xs flex items-center gap-1 border-t pt-2 font-bold ${
-                theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-blue-100/90"
-              }`}>
-                <TrendingUp size={14} className={theme === "light" ? "text-emerald-500" : "text-white"} />
-                <span>Tiến độ tổng hợp theo sản phẩm</span>
               </div>
             </div>
 
-            {/* Widget B: Sản lượng */}
-            <div className={`${
-              theme === "light" 
-                ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-lime-500" 
-                : "bg-gradient-to-r from-[#8119e8] to-[#b327e5] text-white shadow-[0_10px_25px_rgba(129,25,232,0.4)] border-none"
-            } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
-              <div>
-                <span className={`text-xs font-black tracking-widest uppercase ${
-                  theme === "light" ? "text-lime-600" : "text-purple-100/90"
+            {/* CROSS COMPARE MULTI-METRIC WIDGETS (75% Width) */}
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-5">
+              
+              {/* Widget A: Doanh thu */}
+              <div className={`${
+                theme === "light" 
+                  ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-emerald-600" 
+                  : "bg-gradient-to-r from-[#2c4cf5] to-[#3a8bf6] text-white shadow-[0_10px_25px_rgba(44,76,245,0.4)] border-none"
+              } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
+                <div>
+                  <span className={`text-xs font-black tracking-widest uppercase ${
+                    theme === "light" ? "text-emerald-600" : "text-blue-100/90"
+                  }`}>
+                    Doanh thu (M1)
+                  </span>
+                  <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-blue-100/80"}`}>Hoàn thành kế hoạch</h4>
+                </div>
+                <div className="my-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
+                      {calculateCompletionPct(revenueMetrics.target, revenueMetrics.actual, "M1", "Doanh thu")}%
+                    </span>
+                    <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-blue-100/90"}`}>
+                      {revenueMetrics.actual.toLocaleString()} / {revenueMetrics.target.toLocaleString()} {revenueMetrics.unit || "VNĐ"}
+                    </span>
+                  </div>
+                  <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
+                    <div 
+                      className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
+                      style={{ width: `${Math.min(100, calculateCompletionPct(revenueMetrics.target, revenueMetrics.actual, "M1", "Doanh thu"))}%` }}
+                    />
+                  </div>
+                </div>
+                <div className={`text-xs flex items-center gap-1 border-t pt-2 font-bold ${
+                  theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-blue-100/90"
                 }`}>
-                  Sản lượng (M2)
-                </span>
-                <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-purple-100/80"}`}>Nội dung sản xuất</h4>
-              </div>
-              <div className="my-2">
-                <div className="flex items-baseline gap-2">
-                  <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
-                    {calculateCompletionPct(productionMetrics.target, productionMetrics.actual, "M2", "Sản lượng")}%
-                  </span>
-                  <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-purple-100/90"}`}>
-                    {productionMetrics.actual.toLocaleString()} / {productionMetrics.target.toLocaleString()} {productionMetrics.unit || "ND"}
-                  </span>
-                </div>
-                <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
-                  <div 
-                    className={`h-full rounded-full ${theme === "light" ? "bg-lime-500" : "bg-white"}`}
-                    style={{ width: `${Math.min(100, calculateCompletionPct(productionMetrics.target, productionMetrics.actual, "M2", "Sản lượng"))}%` }}
-                  />
+                  <TrendingUp size={14} className={theme === "light" ? "text-emerald-500" : "text-white"} />
+                  <span>Tiến độ tổng hợp theo sản phẩm</span>
                 </div>
               </div>
-              <div className={`text-xs flex items-center gap-1 border-t pt-2 font-bold ${
-                theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-purple-100/90"
-              }`}>
-                <TrendingUp size={14} className={theme === "light" ? "text-lime-500" : "text-white"} />
-                <span>Số lượng hoàn thành theo chu kỳ</span>
-              </div>
-            </div>
 
-            {/* Widget C: Traffic */}
-            <div className={`${
-              theme === "light" 
-                ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-emerald-500" 
-                : "bg-gradient-to-r from-[#179fa9] to-[#25ccd8] text-white shadow-[0_10px_25px_rgba(23,159,169,0.4)] border-none"
-            } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
-              <div>
-                <span className={`text-xs font-black tracking-widest uppercase ${
-                  theme === "light" ? "text-emerald-600" : "text-teal-100/90"
+              {/* Widget B: Sản lượng */}
+              <div className={`${
+                theme === "light" 
+                  ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-lime-500" 
+                  : "bg-gradient-to-r from-[#8119e8] to-[#b327e5] text-white shadow-[0_10px_25px_rgba(129,25,232,0.4)] border-none"
+              } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
+                <div>
+                  <span className={`text-xs font-black tracking-widest uppercase ${
+                    theme === "light" ? "text-lime-600" : "text-purple-100/90"
+                  }`}>
+                    Sản lượng (M2)
+                  </span>
+                  <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-purple-100/80"}`}>Nội dung sản xuất</h4>
+                </div>
+                <div className="my-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
+                      {calculateCompletionPct(productionMetrics.target, productionMetrics.actual, "M2", "Sản lượng")}%
+                    </span>
+                    <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-purple-100/90"}`}>
+                      {productionMetrics.actual.toLocaleString()} / {productionMetrics.target.toLocaleString()} {productionMetrics.unit || "ND"}
+                    </span>
+                  </div>
+                  <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
+                    <div 
+                      className={`h-full rounded-full ${theme === "light" ? "bg-lime-500" : "bg-white"}`}
+                      style={{ width: `${Math.min(100, calculateCompletionPct(productionMetrics.target, productionMetrics.actual, "M2", "Sản lượng"))}%` }}
+                    />
+                  </div>
+                </div>
+                <div className={`text-xs flex items-center gap-1 border-t pt-2 font-bold ${
+                  theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-purple-100/90"
                 }`}>
-                  Lượt xem (M3)
-                </span>
-                <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-teal-100/80"}`}>Traffic đạt được</h4>
-              </div>
-              <div className="my-2">
-                <div className="flex items-baseline gap-2">
-                  <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
-                    {calculateCompletionPct(trafficMetrics.target, trafficMetrics.actual, "M3", "Lượt xem")}%
-                  </span>
-                  <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-teal-100/90"}`}>
-                    {trafficMetrics.actual.toLocaleString()} / {trafficMetrics.target.toLocaleString()} {trafficMetrics.unit || "Views"}
-                  </span>
-                </div>
-                <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
-                  <div 
-                    className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
-                    style={{ width: `${Math.min(100, calculateCompletionPct(trafficMetrics.target, trafficMetrics.actual, "M3", "Lượt xem"))}%` }}
-                  />
+                  <TrendingUp size={14} className={theme === "light" ? "text-lime-500" : "text-white"} />
+                  <span>Số lượng hoàn thành theo chu kỳ</span>
                 </div>
               </div>
-              <div className={`text-xs flex items-center gap-1 border-t pt-2 font-bold ${
-                theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-teal-100/90"
-              }`}>
-                <TrendingUp size={14} className={theme === "light" ? "text-emerald-500" : "text-white"} />
-                <span>Số lượt tiếp cận thực tế</span>
-              </div>
-            </div>
 
+              {/* Widget C: Traffic */}
+              <div className={`${
+                theme === "light" 
+                  ? "bg-white border border-slate-200 shadow-sm text-slate-800 border-t-4 border-t-emerald-500" 
+                  : "bg-gradient-to-r from-[#179fa9] to-[#25ccd8] text-white shadow-[0_10px_25px_rgba(23,159,169,0.4)] border-none"
+              } p-5 rounded-2xl flex flex-col justify-between h-[230px] transition-all duration-300 hover:scale-[1.02]`}>
+                <div>
+                  <span className={`text-xs font-black tracking-widest uppercase ${
+                    theme === "light" ? "text-emerald-600" : "text-teal-100/90"
+                  }`}>
+                    Lượt xem (M3)
+                  </span>
+                  <h4 className={`text-xs font-bold mt-1 ${theme === "light" ? "text-slate-500" : "text-teal-100/80"}`}>Traffic đạt được</h4>
+                </div>
+                <div className="my-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-black ${theme === "light" ? "text-slate-800" : "text-white text-shadow-sm"}`}>
+                      {calculateCompletionPct(trafficMetrics.target, trafficMetrics.actual, "M3", "Lượt xem")}%
+                    </span>
+                    <span className={`text-xs font-bold ${theme === "light" ? "text-slate-500" : "text-teal-100/90"}`}>
+                      {trafficMetrics.actual.toLocaleString()} / {trafficMetrics.target.toLocaleString()} {trafficMetrics.unit || "Views"}
+                    </span>
+                  </div>
+                  <div className={`w-full h-2 rounded-full mt-2 overflow-hidden border ${theme === "light" ? "bg-slate-100 border-slate-200" : "bg-white/20 border-white/10"}`}>
+                    <div 
+                      className={`h-full rounded-full ${theme === "light" ? "bg-emerald-500" : "bg-white"}`}
+                      style={{ width: `${Math.min(100, calculateCompletionPct(trafficMetrics.target, trafficMetrics.actual, "M3", "Lượt xem"))}%` }}
+                    />
+                  </div>
+                </div>
+                <div className={`text-xs flex items-center gap-1 border-t pt-2 font-bold ${
+                  theme === "light" ? "border-slate-100 text-slate-500" : "border-white/10 text-teal-100/90"
+                }`}>
+                  <TrendingUp size={14} className={theme === "light" ? "text-emerald-500" : "text-white"} />
+                  <span>Số lượt tiếp cận thực tế</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )
+      )}
+
+      {/* RENDER CONTENT SECTION (LEADERBOARDS FOR AGGREGATE OR FLAT GRID FOR SINGLE PRODUCT) */}
+      {isAggregateMode ? (
+        // LEADERBOARDS SECTION
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          {/* Column A: Top 5 Highest Completion */}
+          <div className={`${
+            theme === "light" 
+              ? "bg-white border border-slate-200 shadow-sm text-slate-800" 
+              : "bg-[#151226]/90 border border-purple-500/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+          } p-5 rounded-2xl flex flex-col min-h-[300px]`}>
+            <h3 className={`text-xs font-black tracking-widest uppercase mb-4 flex items-center gap-1.5 ${
+              theme === "light" ? "text-emerald-600" : "text-emerald-400"
+            }`}>
+              <TrendingUp size={16} /> Top 5 hoàn thành doanh thu
+            </h3>
+            <div className="space-y-3 flex-1 flex flex-col justify-start">
+              {isAllLoading ? (
+                <div className="text-xs text-slate-400 text-center py-8 font-bold animate-pulse">Đang tải bảng dữ liệu...</div>
+              ) : (
+                highestCompletion.map((p, idx) => (
+                  <div key={p.id} className={`flex justify-between items-center py-2 border-b last:border-0 text-xs ${
+                    theme === "light" ? "border-slate-100" : "border-white/5"
+                  }`}>
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="font-extrabold text-slate-400 w-4">{idx + 1}.</span>
+                      <button
+                        onClick={() => handleProductClick(p.id, p.unit)}
+                        className="font-black hover:underline text-left text-sky-500 hover:text-sky-400 truncate max-w-[150px]"
+                        title={`Xem chi tiết ${p.name}`}
+                      >
+                        {p.name}
+                      </button>
+                    </div>
+                    <span className={`font-black px-2.5 py-0.5 rounded-lg text-[10px] uppercase ${
+                      theme === "light" 
+                        ? "text-emerald-700 bg-emerald-50 border border-emerald-200" 
+                        : "text-emerald-300 bg-emerald-500/10 border border-emerald-500/20"
+                    }`}>
+                      {p.pct}%
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Column B: Top 5 Warning (Lowest Completion) */}
+          <div className={`${
+            theme === "light" 
+              ? "bg-white border border-slate-200 shadow-sm text-slate-800" 
+              : "bg-[#151226]/90 border border-purple-500/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+          } p-5 rounded-2xl flex flex-col min-h-[300px]`}>
+            <h3 className={`text-xs font-black tracking-widest uppercase mb-4 flex items-center gap-1.5 ${
+              theme === "light" ? "text-rose-600" : "text-rose-400"
+            }`}>
+              <AlertOctagon size={16} /> Top 5 Cảnh báo doanh thu thấp
+            </h3>
+            <div className="space-y-3 flex-1 flex flex-col justify-start">
+              {isAllLoading ? (
+                <div className="text-xs text-slate-400 text-center py-8 font-bold animate-pulse">Đang tải bảng dữ liệu...</div>
+              ) : (
+                lowestCompletion.map((p, idx) => (
+                  <div key={p.id} className={`flex justify-between items-center py-2 border-b last:border-0 text-xs ${
+                    theme === "light" ? "border-slate-100" : "border-white/5"
+                  }`}>
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="font-extrabold text-slate-400 w-4">{idx + 1}.</span>
+                      <button
+                        onClick={() => handleProductClick(p.id, p.unit)}
+                        className="font-black hover:underline text-left text-sky-500 hover:text-sky-400 truncate max-w-[150px]"
+                        title={`Xem chi tiết ${p.name}`}
+                      >
+                        {p.name}
+                      </button>
+                    </div>
+                    <span className={`font-black px-2.5 py-0.5 rounded-lg text-[10px] uppercase ${
+                      theme === "light" 
+                        ? "text-rose-700 bg-rose-50 border border-rose-200" 
+                        : "text-rose-300 bg-rose-500/10 border border-rose-500/20"
+                    }`}>
+                      {p.pct}%
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Column C: Top 3-5 Growth */}
+          <div className={`${
+            theme === "light" 
+              ? "bg-white border border-slate-200 shadow-sm text-slate-800" 
+              : "bg-[#151226]/90 border border-purple-500/10 text-white shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+          } p-5 rounded-2xl flex flex-col min-h-[300px]`}>
+            <h3 className={`text-xs font-black tracking-widest uppercase mb-4 flex items-center gap-1.5 ${
+              theme === "light" ? "text-emerald-600" : "text-emerald-400"
+            }`}>
+              <TrendingUp size={16} /> Top tăng trưởng kỳ trước
+            </h3>
+            <div className="space-y-3 flex-1 flex flex-col justify-start">
+              {isAllLoading ? (
+                <div className="text-xs text-slate-400 text-center py-8 font-bold animate-pulse">Đang tải bảng dữ liệu...</div>
+              ) : growthLeaderboard.length === 0 ? (
+                <div className="text-xs text-slate-400 text-center py-12 font-extrabold leading-relaxed">
+                  Không có sản phẩm nào có tăng trưởng so với kỳ trước
+                </div>
+              ) : (
+                growthLeaderboard.map((p, idx) => (
+                  <div key={p.id} className={`flex justify-between items-center py-2 border-b last:border-0 text-xs ${
+                    theme === "light" ? "border-slate-100" : "border-white/5"
+                  }`}>
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="font-extrabold text-slate-400 w-4">{idx + 1}.</span>
+                      <button
+                        onClick={() => handleProductClick(p.id, p.unit)}
+                        className="font-black hover:underline text-left text-sky-500 hover:text-sky-400 truncate max-w-[150px]"
+                        title={`Xem chi tiết ${p.name}`}
+                      >
+                        {p.name}
+                      </button>
+                    </div>
+                    <span className={`font-black px-2.5 py-0.5 rounded-lg text-[10px] uppercase ${
+                      theme === "light" 
+                        ? "text-emerald-700 bg-emerald-50 border border-emerald-200" 
+                        : "text-emerald-300 bg-emerald-500/10 border border-emerald-500/20"
+                    }`}>
+                      +{p.growthPct}%
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        // FLAT GRID KPI LIST
+        <div className={`${
+          theme === "light" 
+            ? "bg-white border border-slate-200 shadow-sm" 
+            : "bg-[#151226]/90 border border-purple-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+        } p-6 rounded-2xl overflow-hidden`}>
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h3 className={`text-sm font-black tracking-wider uppercase flex items-center gap-2 ${
+              theme === "light" ? "text-slate-800" : "text-indigo-400"
+            }`}>
+              📋 BẢNG CHỈ TIÊU PHẲNG SẢN PHẨM (FLAT GRID)
+            </h3>
+            <button
+              onClick={() => setHideCodes(!hideCodes)}
+              className={`text-xs font-black px-3.5 py-1.5 rounded-lg border transition-all shadow-sm active:scale-[0.98] ${
+                theme === "light"
+                  ? "bg-white hover:bg-slate-50 text-slate-700 border-slate-200"
+                  : "bg-purple-950/20 hover:bg-purple-900/30 text-indigo-300 border-indigo-500/20"
+              }`}
+            >
+              {hideCodes ? "👁️ Hiện mã chỉ tiêu" : "🙈 Ẩn mã chỉ tiêu"}
+            </button>
+          </div>
+          
+          <div className="overflow-x-auto">
+            {isLoading ? (
+              <div className={`font-bold p-3 text-center ${theme === "light" ? "text-slate-400" : "text-slate-500"}`}>Đang tải dữ liệu sản phẩm...</div>
+            ) : kpiRows.length === 0 ? (
+              <div className={`font-bold p-3 text-center ${theme === "light" ? "text-slate-400" : "text-slate-500"}`}>Không có dữ liệu chỉ tiêu trong kỳ này.</div>
+            ) : (
+              <table className="w-full text-left text-sm border-collapse">
+                <thead>
+                  <tr className={`border-b font-black uppercase text-xs tracking-wider ${
+                    theme === "light" 
+                      ? "border-slate-200 text-slate-600 bg-slate-50" 
+                      : "border-white/10 text-slate-300 bg-[#1c1836]/60"
+                  }`}>
+                    {!hideCodes && <th className="p-3 w-32 text-center">Mã chỉ tiêu</th>}
+                    <th className="p-3">Tên Chỉ tiêu</th>
+                    <th className="p-3 w-32 text-center">Kế hoạch</th>
+                    <th className="p-3 w-32 text-center">Thực tế</th>
+                    <th className="p-3 w-24 text-center">ĐVT</th>
+                    <th className="p-3 w-28 text-center">Hoàn thành</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {kpiRows
+                    .filter(row => !row.isParent)
+                    .map(row => {
+                      const target = getTargetValue(row);
+                      const actual = getActualValue(row);
+                      const pct = calculateCompletionPct(target, actual, row.displayCode || row.code, row.title);
+                      const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
+                      return (
+                        <tr key={row.code} className={`border-b ${
+                          theme === "light" 
+                            ? "border-slate-100 hover:bg-slate-50/50 text-slate-700" 
+                            : "border-white/5 hover:bg-[#1a1635]/50 text-slate-200"
+                        } text-sm transition-all`}>
+                          {!hideCodes && (
+                            <td className="p-3 text-center">
+                              <code className={`px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border ${
+                                isMGoal
+                                  ? (theme === "light" ? "bg-sky-50 text-sky-600 border-sky-300" : "bg-sky-950/20 text-sky-400 border-sky-500/20")
+                                  : (theme === "light" ? "bg-slate-100 text-sky-600 border-slate-300" : "bg-slate-800 text-sky-400 border-sky-500/20")
+                              }`}>
+                                {row.displayCode}
+                              </code>
+                            </td>
+                          )}
+                          <td className={`p-3 font-semibold ${
+                            isMGoal
+                              ? (theme === "light" ? "text-sky-600" : "text-sky-400")
+                              : (theme === "light" ? "text-slate-800" : "text-white")
+                          }`}>{row.title}</td>
+                          <td className={`p-3 text-center font-bold ${theme === "light" ? "text-slate-600" : "text-slate-300"}`}>
+                            {row.unit === "%" ? `${target}%` : target.toLocaleString()}
+                          </td>
+                          <td className={`p-3 text-center font-black ${theme === "light" ? "text-slate-900" : "text-white"}`}>
+                            {row.unit === "%" ? `${actual}%` : actual.toLocaleString()}
+                          </td>
+                          <td className="p-3 text-center font-bold text-slate-400 text-xs">{row.unit}</td>
+                          <td className="p-3 text-center">
+                            <span className={`px-2.5 py-1 rounded-lg font-black text-xs inline-block ${
+                              pct >= 100 
+                                ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" 
+                                : pct >= 80 
+                                ? "text-amber-500 bg-amber-500/10 border border-amber-500/20" 
+                                : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
+                            }`}>
+                              {pct}%
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       )}
-
-      {/* FLAT GRID KPI LIST */}
-      <div className={`${
-        theme === "light" 
-          ? "bg-white border border-slate-200 shadow-sm" 
-          : "bg-[#151226]/90 border border-purple-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
-      } p-6 rounded-2xl overflow-hidden`}>
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <h3 className={`text-sm font-black tracking-wider uppercase flex items-center gap-2 ${
-            theme === "light" ? "text-slate-800" : "text-indigo-400"
-          }`}>
-            📋 BẢNG CHỈ TIÊU PHẲNG SẢN PHẨM (FLAT GRID)
-          </h3>
-          <button
-            onClick={() => setHideCodes(!hideCodes)}
-            className={`text-xs font-black px-3.5 py-1.5 rounded-lg border transition-all shadow-sm active:scale-[0.98] ${
-              theme === "light"
-                ? "bg-white hover:bg-slate-50 text-slate-700 border-slate-200"
-                : "bg-purple-950/20 hover:bg-purple-900/30 text-indigo-300 border-indigo-500/20"
-            }`}
-          >
-            {hideCodes ? "👁️ Hiện mã chỉ tiêu" : "🙈 Ẩn mã chỉ tiêu"}
-          </button>
-        </div>
-        
-        <div className="overflow-x-auto">
-          {isLoading ? (
-            <div className={`font-bold p-3 text-center ${theme === "light" ? "text-slate-400" : "text-slate-500"}`}>Đang tải dữ liệu sản phẩm...</div>
-          ) : kpiRows.length === 0 ? (
-            <div className={`font-bold p-3 text-center ${theme === "light" ? "text-slate-400" : "text-slate-500"}`}>Không có dữ liệu chỉ tiêu trong kỳ này.</div>
-          ) : (
-            <table className="w-full text-left text-sm border-collapse">
-              <thead>
-                <tr className={`border-b font-black uppercase text-xs tracking-wider ${
-                  theme === "light" 
-                    ? "border-slate-200 text-slate-600 bg-slate-50" 
-                    : "border-white/10 text-slate-300 bg-[#1c1836]/60"
-                }`}>
-                  {!hideCodes && <th className="p-3 w-32 text-center">Mã chỉ tiêu</th>}
-                  <th className="p-3">Tên Chỉ tiêu</th>
-                  <th className="p-3 w-32 text-center">Kế hoạch</th>
-                  <th className="p-3 w-32 text-center">Thực tế</th>
-                  <th className="p-3 w-24 text-center">ĐVT</th>
-                  <th className="p-3 w-28 text-center">Hoàn thành</th>
-                </tr>
-              </thead>
-              <tbody>
-                {kpiRows
-                  .filter(row => !row.isParent)
-                  .map(row => {
-                    const target = getTargetValue(row);
-                    const actual = getActualValue(row);
-                    const pct = calculateCompletionPct(target, actual, row.displayCode || row.code, row.title);
-                    const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
-                    return (
-                      <tr key={row.code} className={`border-b ${
-                        theme === "light" 
-                          ? "border-slate-100 hover:bg-slate-50/50 text-slate-700" 
-                          : "border-white/5 hover:bg-[#1a1635]/50 text-slate-200"
-                      } text-sm transition-all`}>
-                        {!hideCodes && (
-                          <td className="p-3 text-center">
-                            <code className={`px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border ${
-                              isMGoal
-                                ? (theme === "light" ? "bg-sky-50 text-sky-600 border-sky-300" : "bg-sky-950/20 text-sky-400 border-sky-500/20")
-                                : (theme === "light" ? "bg-slate-100 text-sky-600 border-slate-300" : "bg-slate-800 text-sky-400 border-sky-500/20")
-                            }`}>
-                              {row.displayCode}
-                            </code>
-                          </td>
-                        )}
-                        <td className={`p-3 font-semibold ${
-                          isMGoal
-                            ? (theme === "light" ? "text-sky-600" : "text-sky-400")
-                            : (theme === "light" ? "text-slate-800" : "text-white")
-                        }`}>{row.title}</td>
-                        <td className={`p-3 text-center font-bold ${theme === "light" ? "text-slate-600" : "text-slate-300"}`}>
-                          {row.unit === "%" ? `${target}%` : target.toLocaleString()}
-                        </td>
-                        <td className={`p-3 text-center font-black ${theme === "light" ? "text-slate-900" : "text-white"}`}>
-                          {row.unit === "%" ? `${actual}%` : actual.toLocaleString()}
-                        </td>
-                        <td className="p-3 text-center font-bold text-slate-400 text-xs">{row.unit}</td>
-                        <td className="p-3 text-center">
-                          <span className={`px-2.5 py-1 rounded-lg font-black text-xs inline-block ${
-                            pct >= 100 
-                              ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" 
-                              : pct >= 80 
-                              ? "text-amber-500 bg-amber-500/10 border border-amber-500/20" 
-                              : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
-                          }`}>
-                            {pct}%
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
     </div>
   );
 }
