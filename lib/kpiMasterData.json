@@ -14112,151 +14112,6 @@
         }
       }
     },
-    "VM3-I01.02-DA3D": {
-      "title": "DA3D",
-      "unit": "Views",
-      "formula": "",
-      "pic": null,
-      "periods": {
-        "yearly_2026": {
-          "target": 739260000
-        },
-        "quarterly_1": {
-          "target": 12445999,
-          "actual": 701395,
-          "pct": 0.0564
-        },
-        "quarterly_2": {
-          "target": 55000000,
-          "actual": 174923,
-          "pct": 0.0032
-        },
-        "monthly_1": {
-          "target": 2000000
-        },
-        "monthly_2": {
-          "target": 5000000,
-          "actual": 341829,
-          "pct": 0.0684
-        },
-        "weekly_2_1": {
-          "target": 1250000
-        },
-        "weekly_2_2": {
-          "target": 1250000
-        },
-        "weekly_2_3": {
-          "target": 1250000
-        },
-        "weekly_2_4": {
-          "target": 1250000
-        },
-        "monthly_3": {
-          "target": 5000000,
-          "actual": 359566,
-          "pct": 0.0719
-        },
-        "weekly_3_1": {
-          "target": 1250000,
-          "actual": 210550,
-          "pct": 0.1684
-        },
-        "weekly_3_2": {
-          "target": 1250000,
-          "actual": 115265,
-          "pct": 0.0922
-        },
-        "weekly_3_3": {
-          "target": 1250000,
-          "actual": 9917,
-          "pct": 0.0079
-        },
-        "weekly_3_4": {
-          "target": 1250000,
-          "actual": 18031,
-          "pct": 0.0144
-        },
-        "weekly_3_5": {
-          "target": 1250000
-        },
-        "monthly_4": {
-          "target": 10000000,
-          "actual": 80387,
-          "pct": 0.008
-        },
-        "weekly_4_1": {
-          "target": 2333333,
-          "actual": 14830,
-          "pct": 0.0064
-        },
-        "weekly_4_2": {
-          "target": 2333333,
-          "actual": 13317,
-          "pct": 0.0057
-        },
-        "weekly_4_3": {
-          "target": 2333333,
-          "actual": 26116,
-          "pct": 0.0112
-        },
-        "weekly_4_4": {
-          "target": 2333333,
-          "actual": 20750,
-          "pct": 0.0089
-        },
-        "weekly_4_5": {
-          "target": 2333333
-        },
-        "monthly_5": {
-          "target": 10000000,
-          "actual": 43970,
-          "pct": 0.0044
-        },
-        "weekly_5_1": {
-          "target": 2500000,
-          "actual": 20892,
-          "pct": 0.0084
-        },
-        "weekly_5_2": {
-          "target": 2500000,
-          "actual": 10735,
-          "pct": 0.0043
-        },
-        "weekly_5_3": {
-          "target": 2500000,
-          "actual": 8088,
-          "pct": 0.0032
-        },
-        "weekly_5_4": {
-          "target": 2500000,
-          "actual": 10735,
-          "pct": 0.0043
-        },
-        "monthly_6": {
-          "target": 10000000
-        },
-        "weekly_6_1": {
-          "target": 2500000,
-          "actual": 13366,
-          "pct": 0.0053
-        },
-        "weekly_6_2": {
-          "target": 2500000,
-          "actual": 278368,
-          "pct": 0.1113
-        },
-        "weekly_6_3": {
-          "target": 2500000,
-          "actual": 250294,
-          "pct": 0.1001
-        },
-        "weekly_6_4": {
-          "target": 2500000,
-          "actual": 465156,
-          "pct": 0.1861
-        }
-      }
-    },
     "VM3-I01.02-KinhdoanhTraffi": {
       "title": "Kinh doanh Traffic Long",
       "unit": "Views",
@@ -15427,6 +15282,151 @@
         },
         "monthly_6": {
           "actual": 4
+        }
+      }
+    },
+    "VM3-I01.02-trafficshort": {
+      "title": "Kinh doanh Traffic Short",
+      "unit": "Views",
+      "formula": "",
+      "pic": null,
+      "periods": {
+        "yearly_2026": {
+          "target": 739260000
+        },
+        "quarterly_1": {
+          "target": 12445999,
+          "actual": 701395,
+          "pct": 0.0564
+        },
+        "quarterly_2": {
+          "target": 55000000,
+          "actual": 174923,
+          "pct": 0.0032
+        },
+        "monthly_1": {
+          "target": 2000000
+        },
+        "monthly_2": {
+          "target": 5000000,
+          "actual": 341829,
+          "pct": 0.0684
+        },
+        "weekly_2_1": {
+          "target": 1250000
+        },
+        "weekly_2_2": {
+          "target": 1250000
+        },
+        "weekly_2_3": {
+          "target": 1250000
+        },
+        "weekly_2_4": {
+          "target": 1250000
+        },
+        "monthly_3": {
+          "target": 5000000,
+          "actual": 359566,
+          "pct": 0.0719
+        },
+        "weekly_3_1": {
+          "target": 1250000,
+          "actual": 210550,
+          "pct": 0.1684
+        },
+        "weekly_3_2": {
+          "target": 1250000,
+          "actual": 115265,
+          "pct": 0.0922
+        },
+        "weekly_3_3": {
+          "target": 1250000,
+          "actual": 9917,
+          "pct": 0.0079
+        },
+        "weekly_3_4": {
+          "target": 1250000,
+          "actual": 18031,
+          "pct": 0.0144
+        },
+        "weekly_3_5": {
+          "target": 1250000
+        },
+        "monthly_4": {
+          "target": 10000000,
+          "actual": 80387,
+          "pct": 0.008
+        },
+        "weekly_4_1": {
+          "target": 2333333,
+          "actual": 14830,
+          "pct": 0.0064
+        },
+        "weekly_4_2": {
+          "target": 2333333,
+          "actual": 13317,
+          "pct": 0.0057
+        },
+        "weekly_4_3": {
+          "target": 2333333,
+          "actual": 26116,
+          "pct": 0.0112
+        },
+        "weekly_4_4": {
+          "target": 2333333,
+          "actual": 20750,
+          "pct": 0.0089
+        },
+        "weekly_4_5": {
+          "target": 2333333
+        },
+        "monthly_5": {
+          "target": 10000000,
+          "actual": 43970,
+          "pct": 0.0044
+        },
+        "weekly_5_1": {
+          "target": 2500000,
+          "actual": 20892,
+          "pct": 0.0084
+        },
+        "weekly_5_2": {
+          "target": 2500000,
+          "actual": 10735,
+          "pct": 0.0043
+        },
+        "weekly_5_3": {
+          "target": 2500000,
+          "actual": 8088,
+          "pct": 0.0032
+        },
+        "weekly_5_4": {
+          "target": 2500000,
+          "actual": 10735,
+          "pct": 0.0043
+        },
+        "monthly_6": {
+          "target": 10000000
+        },
+        "weekly_6_1": {
+          "target": 2500000,
+          "actual": 13366,
+          "pct": 0.0053
+        },
+        "weekly_6_2": {
+          "target": 2500000,
+          "actual": 278368,
+          "pct": 0.1113
+        },
+        "weekly_6_3": {
+          "target": 2500000,
+          "actual": 250294,
+          "pct": 0.1001
+        },
+        "weekly_6_4": {
+          "target": 2500000,
+          "actual": 465156,
+          "pct": 0.1861
         }
       }
     }
