@@ -1171,11 +1171,11 @@ export default function InputFormPage() {
     if (f === "") return true;
 
     if (periodType === "weekly") {
-      return f === "weekly";
+      return f === "weekly" || f === "tuần";
     } else if (periodType === "monthly") {
-      return f === "weekly" || f === "monthly";
+      return f === "weekly" || f === "tuần" || f === "monthly" || f === "tháng";
     } else if (periodType === "quarterly") {
-      return f === "weekly" || f === "monthly" || f === "quarterly";
+      return f === "weekly" || f === "tuần" || f === "monthly" || f === "tháng" || f === "quarterly" || f === "quý";
     } else if (periodType === "yearly") {
       return true;
     }
