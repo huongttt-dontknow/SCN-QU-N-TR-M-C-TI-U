@@ -116,12 +116,21 @@ export async function GET(request: Request) {
         return NextResponse.json([]);
       }
 
-      // Tự động kiểm tra và đồng bộ hóa danh sách chỉ tiêu cho từng sản phẩm (Self-healing)
-      for (const pCode of targetProductCodes) {
-        const count = await prisma.kpiData.count({
-          where: { productCode: pCode, periodKey, periodType }
-        });
-        if (count === 0) {
+      // Tự động kiểm tra và đồng bộ hóa danh sách chỉ tiêu cho từng sản phẩm (Self-healing) - Tối ưu hóa tránh N+1 query
+      const existingProductCodes = await prisma.kpiData.findMany({
+        where: {
+          productCode: { in: targetProductCodes },
+          periodKey,
+          periodType
+        },
+        distinct: ["productCode"],
+        select: { productCode: true }
+      });
+      const existingSet = new Set(existingProductCodes.map(r => r.productCode).filter(Boolean));
+      const missingProductCodes = targetProductCodes.filter(p => !existingSet.has(p));
+
+      if (missingProductCodes.length > 0) {
+        for (const pCode of missingProductCodes) {
           const templates = await prisma.kpiData.findMany({
             where: { productCode: pCode },
             distinct: ["indicatorCode"]
