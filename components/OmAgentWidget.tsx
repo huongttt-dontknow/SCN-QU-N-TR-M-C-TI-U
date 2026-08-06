@@ -224,27 +224,22 @@ export default function OmAgentWidget() {
     }
   };
 
-  // Simple formatter helper to replace Markdown-like markers (** and \n)
-  const formatMessageContent = (text: string, role: "user" | "model") => {
-    // Split by double newlines for paragraphs
-    const paragraphs = text.split("\n\n");
+  const renderTextContent = (rawText: string, role: "user" | "model") => {
+    if (!rawText.trim()) return null;
+    const paragraphs = rawText.split("\n\n");
     return paragraphs.map((p, pIdx) => {
-      // Split by newline for lines
       const lines = p.split("\n");
       return (
         <p key={pIdx} className="mb-2 leading-relaxed text-[13px] !text-white">
           {lines.map((line, lIdx) => {
-            // Simple markdown bold converter
             const parts = line.split("**");
             const renderedLine = parts.map((part, partIdx) => {
               if (partIdx % 2 === 1) {
                 if (role === "model") {
-                  // On green gradient background, use yellow/gold for highlights to maximize readability
                   const isPurple = /okr|kpi|chiến lược|làm lớn|làm tròn/i.test(part);
                   const colorClass = isPurple ? "text-yellow-300 font-extrabold" : "text-lime-200 font-bold";
                   return <strong key={partIdx} className={colorClass}>{part}</strong>;
                 } else {
-                  // On user dark slate background, use teal-200 for highlights
                   return <strong key={partIdx} className="font-black text-teal-200">{part}</strong>;
                 }
               }
@@ -260,6 +255,35 @@ export default function OmAgentWidget() {
         </p>
       );
     });
+  };
+
+  // Formatter helper to support <details><summary> Reasoning blocks
+  const formatMessageContent = (text: string, role: "user" | "model") => {
+    if (text.includes("<details>")) {
+      const parts = text.split(/<details>|<\/details>/g);
+      return parts.map((part, idx) => {
+        if (idx % 2 === 1) {
+          // Inside details block
+          const summaryMatch = part.match(/<summary>([\s\S]*?)<\/summary>/);
+          const summaryText = summaryMatch ? summaryMatch[1] : "Phân tích tư duy chiến lược";
+          const bodyText = part.replace(/<summary>[\s\S]*?<\/summary>/g, "");
+          
+          return (
+            <details key={idx} className="mb-3 bg-black/30 border border-white/10 rounded-lg p-3 text-[12px] text-lime-200/90">
+              <summary className="cursor-pointer font-bold text-lime-300 select-none hover:text-lime-200 transition-colors duration-150">
+                {summaryText.replace(/<\/?b>/g, "")}
+              </summary>
+              <div className="mt-2 pl-3 border-l border-lime-500/35 space-y-1 text-slate-100/90">
+                {renderTextContent(bodyText, role)}
+              </div>
+            </details>
+          );
+        } else {
+          return renderTextContent(part, role);
+        }
+      });
+    }
+    return renderTextContent(text, role);
   };
 
   if (!currentLoggedUser) return null;
