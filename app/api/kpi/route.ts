@@ -831,29 +831,38 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     { fromUnit: "CR", fromCode: "CM6-I01.02", toUnit: "SCVN", toCode: "CM6-I01.02-CR", title: "BP Creative" }
 ];
 
-  // 1. Đồng bộ các giá trị ngang từ con sang các chỉ tiêu tương ứng của cha
+  // 1. Đồng bộ các giá trị ngang từ con sang các chỉ tiêu tương ứng của cha - Tối ưu hóa truy vấn hàng loạt tránh N+1
+  const fromUnits = Array.from(new Set(syncMappings.map(m => m.fromUnit)));
+  const fromCodes = Array.from(new Set(syncMappings.map(m => m.fromCode)));
+  const sources = await prisma.kpiData.findMany({
+    where: {
+      unitCode: { in: fromUnits },
+      indicatorCode: { in: fromCodes },
+      periodKey,
+      periodType,
+      productCode: null
+    }
+  });
+  const sourceMap = new Map(sources.map(s => [`${s.unitCode}_${s.indicatorCode}`, s]));
+
+  const toUnits = Array.from(new Set(syncMappings.map(m => m.toUnit)));
+  const toCodes = Array.from(new Set(syncMappings.map(m => m.toCode)));
+  const targets = await prisma.kpiData.findMany({
+    where: {
+      unitCode: { in: toUnits },
+      indicatorCode: { in: toCodes },
+      periodKey,
+      periodType,
+      productCode: null
+    }
+  });
+  const targetMap = new Map(targets.map(t => [`${t.unitCode}_${t.indicatorCode}`, t]));
+
+  const dbOps = [];
   for (const map of syncMappings) {
-    const source = await prisma.kpiData.findFirst({
-      where: {
-        unitCode: map.fromUnit,
-        indicatorCode: map.fromCode,
-        periodKey,
-        periodType,
-        productCode: null
-      }
-    });
-
+    const source = sourceMap.get(`${map.fromUnit}_${map.fromCode}`);
     if (source) {
-      const existing = await prisma.kpiData.findFirst({
-        where: {
-          unitCode: map.toUnit,
-          indicatorCode: map.toCode,
-          periodKey,
-          periodType,
-          productCode: null
-        }
-      });
-
+      const existing = targetMap.get(`${map.toUnit}_${map.toCode}`);
       const updateData = {
         targetValue: source.targetValue,
         actualValue: source.actualValue,
@@ -862,27 +871,41 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
       };
 
       if (existing) {
-        await prisma.kpiData.update({
-          where: { id: existing.id },
-          data: updateData
-        });
+        if (
+          existing.targetValue !== source.targetValue ||
+          existing.actualValue !== source.actualValue ||
+          existing.status !== source.status
+        ) {
+          dbOps.push(
+            prisma.kpiData.update({
+              where: { id: existing.id },
+              data: updateData
+            })
+          );
+        }
       } else {
-        await prisma.kpiData.create({
-          data: {
-            unitCode: map.toUnit,
-            indicatorCode: map.toCode,
-            periodKey,
-            periodType,
-            targetValue: source.targetValue,
-            actualValue: source.actualValue,
-            title: map.title,
-            unit: source.unit || "",
-            status: source.status,
-            isOverridden: true
-          }
-        });
+        dbOps.push(
+          prisma.kpiData.create({
+            data: {
+              unitCode: map.toUnit,
+              indicatorCode: map.toCode,
+              periodKey,
+              periodType,
+              targetValue: source.targetValue,
+              actualValue: source.actualValue,
+              title: map.title,
+              unit: source.unit || "",
+              status: source.status,
+              isOverridden: true
+            }
+          })
+        );
       }
     }
+  }
+
+  if (dbOps.length > 0) {
+    await prisma.$transaction(dbOps);
   }
 
   // 2. Tự động cộng dồn / tính trung bình (Rollup) cho SCVN dựa trên parentCode và aggregationMethod
@@ -1155,6 +1178,19 @@ async function calculateAndSaveRadarScores(unitCode: string, periodKey: string, 
     M7: "Văn hóa"
   };
 
+  // Tải trước các bản ghi radar M1-M7 để tránh N+1 query
+  const existingScores = await prisma.kpiData.findMany({
+    where: {
+      unitCode,
+      indicatorCode: { in: ["M1", "M2", "M3", "M4", "M5", "M6", "M7"] },
+      periodKey,
+      periodType,
+      productCode: null
+    }
+  });
+  const existingMap = new Map(existingScores.map(e => [e.indicatorCode, e]));
+  const radarOps = [];
+
   for (const mCode of ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]) {
     const children = grouped[mCode] || [];
     const totalWeight = children.reduce((sum, c) => sum + (c.weight || 0), 0);
@@ -1170,52 +1206,58 @@ async function calculateAndSaveRadarScores(unitCode: string, periodKey: string, 
       }
       const calculatedScore = Math.round(weightedSum);
 
-      const existing = await prisma.kpiData.findFirst({
-        where: {
-          unitCode,
-          indicatorCode: mCode,
-          periodKey,
-          periodType,
-          productCode: null
-        }
-      });
+      const existing = existingMap.get(mCode);
 
       if (existing) {
         // Chỉ tự động cập nhật đè điểm số thực tế nếu bản ghi radar đó CHƯA bị người dùng ghi đè thủ công (isOverridden === false)
         if (!existing.isOverridden) {
-          await prisma.kpiData.update({
-            where: { id: existing.id },
-            data: {
-              actualValue: calculatedScore,
-              targetValue: calculatedScore, // Cột 2 (kết quả tạm tính) lưu vào targetValue để hiển thị
-              isOverridden: false
-            }
-          });
+          if (existing.actualValue !== calculatedScore || existing.targetValue !== calculatedScore) {
+            radarOps.push(
+              prisma.kpiData.update({
+                where: { id: existing.id },
+                data: {
+                  actualValue: calculatedScore,
+                  targetValue: calculatedScore, // Cột 2 (kết quả tạm tính) lưu vào targetValue để hiển thị
+                  isOverridden: false
+                }
+              })
+            );
+          }
         } else {
           // Nếu đã bị ghi đè, ta vẫn cập nhật cột "Kết quả tạm tính" (targetValue) để giao diện hiển thị đúng
-          await prisma.kpiData.update({
-            where: { id: existing.id },
-            data: {
-              targetValue: calculatedScore
-            }
-          });
+          if (existing.targetValue !== calculatedScore) {
+            radarOps.push(
+              prisma.kpiData.update({
+                where: { id: existing.id },
+                data: {
+                  targetValue: calculatedScore
+                }
+              })
+            );
+          }
         }
       } else {
-        await prisma.kpiData.create({
-          data: {
-            unitCode,
-            indicatorCode: mCode,
-            periodKey,
-            periodType,
-            targetValue: calculatedScore, // Cột 2
-            actualValue: calculatedScore, // Cột 3
-            title: objectiveNames[mCode],
-            unit: "%",
-            status: "Đã duyệt",
-            isOverridden: false // Cột 3 được xem là tự động tính toán ban đầu
-          }
-        });
+        radarOps.push(
+          prisma.kpiData.create({
+            data: {
+              unitCode,
+              indicatorCode: mCode,
+              periodKey,
+              periodType,
+              targetValue: calculatedScore, // Cột 2
+              actualValue: calculatedScore, // Cột 3
+              title: objectiveNames[mCode],
+              unit: "%",
+              status: "Đã duyệt",
+              isOverridden: false // Cột 3 được xem là tự động tính toán ban đầu
+            }
+          })
+        );
       }
     }
+  }
+
+  if (radarOps.length > 0) {
+    await prisma.$transaction(radarOps);
   }
 }
