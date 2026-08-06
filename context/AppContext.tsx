@@ -142,7 +142,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Định kỳ 15 giây kiểm tra xem thiết bị hiện tại có còn hợp lệ (không vượt quá 5 thiết bị)
+  // Định kỳ kiểm tra xem thiết bị hiện tại có còn hợp lệ (không vượt quá 5 thiết bị)
   useEffect(() => {
     if (!currentLoggedUser) return;
 
@@ -168,10 +168,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // Kiểm tra ngay khi mount và lặp lại mỗi 15 giây
+    // Kiểm tra ngay khi mount và khi tab được focus lại
     verifyDeviceSession();
-    const interval = setInterval(verifyDeviceSession, 15000);
-    return () => clearInterval(interval);
+    
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        verifyDeviceSession();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Lặp lại mỗi 60 giây nếu tab đang hiển thị hoạt động
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        verifyDeviceSession();
+      }
+    }, 60000);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [currentLoggedUser]);
 
 
