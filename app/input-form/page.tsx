@@ -1256,11 +1256,24 @@ export default function InputFormPage() {
 
   const scvnOrder = ["TM1-I01", "VM1-I01.01", "VM1-I01.02", "TM1-I02", "VM1-I02.01", "VM1-I02.01-WF", "VM1-I02.01-AS", "VM1-I02.01-NDTH", "VM1-I02.01-Lego", "DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01", "VM1-I02.01-DA", "VM1-I02.01-IP", "VM1-I02.02", "VM1-I02.02-WF", "VM1-I02.02-AS", "VM1-I02.02-NDTH", "VM1-I02.02-Lego", "DM1-I02.01", "SM1-I02.01.01", "MM1-I02.01.01", "CM1-I02.01-CNGP", "CM1-I02.02", "VM1-I02.03", "VM1-I02.03-WF", "VM1-I02.03-AS", "VM1-I02.03-NDTH", "VM1-I02.03-Lego", "SM1-I02.01.03", "MM1-I02.01.02", "VM1-I02.04", "VM1-I02.04-WF", "VM1-I02.04-AS", "VM1-I02.04", "VM1-I02.04-Lego", "SM1-I02.01.04", "MM1-I02.01.03", "CM1-I02.03", "TM1-I03", "VM1-I03.01", "TM1-I05", "VM1-I05.01", "VM1-I05.02", "VM1-I05.03", "VM1-I05.04", "TM2-I01", "VM2-I01.01", "VM2-I01.01-WF", "VM2-I01.01-AS", "VM2-I01.01-Lego", "VM2-I01.02-NDTH", "VM2-I02.01", "DM2-I01.01", "SM2-I01.01", "VM2-I01.03-NDTH", "CM2-I01.01", "MM2-I01.01", "VM2-I01.3", "VWM2-I01.3", "VAM2-I01.3-AS", "VM2-I01.4", "VWM2-I01.4", "VAM2-I01.4-AS", "VM2-I01.5", "VWM2-I01.5", "VAM2-I01.5-AS", "VM2-I01.6", "VWM2-I01.6", "VAM2-I01.6-AS", "TM2-I02", "TM2-I02.01", "VM2-I02.01-WF", "VM2-I02.01-AS", "VM2-I02.01-Lego", "VM2-I02.01-NDTH", "TM4-I02.01", "SM2-I02.01", "VM2-I02.01-SCMU", "VM2-I02.01-WF", "TM3-I01", "TM3-I01.02", "VM3-I01.02-WF", "VM3-I01.02-AS", "VM3-I01.02-Lego", "VM3-I01.02-NDTH", "DM3-I01.03", "SM3-I01.04", "MM3-I01.01", "NM3-I01.05", "CM3-I01.01", "TM3-I01.03", "VM2-I03.01-WF", "VM2-I03.01-AS", "VM2-I03.01-Lego", "VM2-I03.01-NDTH", "VM3-I01.04", "VM3-I01.04-AS", "VM3-I01.05", "VM3-I01.05-AS", "VM3-I01.06", "TM4-I01.01", "VM4-I01.01-WF", "TM4-I02", "TM4-I02.01", "VM4-I02.01-WF", "VM4-I02.01-AS", "VM4-I02.01-Lego", "VM4-I02.01-NDTH", "DM4-I02.01", "SM4-I02.01", "NM4-I02.03", "TM4-I02.02", "VM4-I02.02-WF", "VM4-I02.02-AS", "VM4-I02.02-Lego", "VM4-I02.02-NDTH", "DM4-I02.02", "MM4-I02.02", "TM4-I02.03", "VM4-I02.04", "VM4-I02.04-WF", "VM4-I02.04-AS", "VM4-I02.04-Lego", "VM4-I02.04-NDTH", "DM4-I02.04", "SM4-I02.06", "NM4-I02.04", "VM4-I02.05", "VM4-I02.05-Lego", "VM4-I02.05-DA01", "VM4-I02.05-SCS", "VM4-I02.05-SCMU", "VM4-I02.05-CNGP", "VM4-I02.05-CR", "VM4-I02.06", "TM5-I01", "TM5-I01.03", "VM5-I02", "VM5-I02.01", "VM5-I02.01-WF", "VM5-I02.01-AS", "VM5-I02.01-Lego", "VM5-I02.01-NDTH", "VM5-I02.01-SCS", "VM5-I02.01-WF", "VM5-I02.02", "VM5-I02.02-WF", "VM5-I02.02-Lego", "VM5-I02.03", "VM5-I02.03-WF", "VM5-I02.03-AS", "VM5-I02.03-Lego", "VM5-I02.03-NDTH", "VM5-I02.03-DA01", "VM5-I02.03-SCS", "VM5-I02.03-SCMU", "VM5-I02.03-CNGP", "VM5-I02.03-CR", "VM5-I02.04", "VM5-I02.04-WF", "VM5-I02.04-AS", "VM5-I02.04-Lego", "VM5-I02.04-NDTH", "VM5-I02.04-DA01", "VM5-I02.04-SCMU", "VM5-I02.04-CNGP", "VM5-I02.05", "VM5-I02.05.01", "VM5-I02.05.02", "TM6-I01", "TM6-I01.01", "VM6-I01.01-WF", "VM6-I01.01-AS", "VM6-I01.01-Lego", "VM6-I01.01-NDTH", "DM6-I01.01", "SM6-I01.01", "MM6-I01.01", "NM6-I01.01", "CM6-I01.01", "TM6-I01.02", "VM6-I01.02-WF", "VM6-I01.02-AS", "VM6-I01.02-Lego", "VM6-I01.02-NDTH", "DM6-I01.02", "SM6-I01.02", "MM6-I01.02", "NM6-I01.02", "CM6-I01.02", "VM6-I02", "TM6-I03", "TM6-I03.01", "TM6-I03.02", "TM7-I01", "VM7-I01.01", "VM7-I01.01-WF", "VM7-I01.01-AS", "VM7-I01.01-Lego", "VM7-I01.01-NDTH", "DM7-I01.01", "SM7-I01.01", "NM7-I01.01", "TM7-I02", "VM7-I02.01", "VM7-I02.01-WF", "VM7-I02.01-AS", "VM7-I02.01-Lego", "VM7-I02.01-NDTH", "DM7-I02.01", "NM7-I02.01", "CM7-I02.01", "VM7-I02.02", "VM7-I02.02-WF", "VM7-I02.02-AS", "VM7-I02.02-Lego", "VM7-I02.02-NDTH", "DM7-I02.02", "SM7-I02.02", "MM7-I02.02", "NM7-I02.02", "CM7-I02.03", "TM7-I03", "VM7-I03.01", "VM7-I03.01-WF", "VM7-I03.01-AS", "VM7-I03.01-Lego", "VM7-I03.01-NDTH", "DM7-I03.01", "SM7-I03.01", "MM7-I03.01", "NM7-I03.01", "CM7-I03.01", "VM7-I03.02", "VM7-I03.02-WF", "VM7-I03.02-AS", "VM7-I03.02-Lego", "VM7-I03.02-NDTH", "DM7-I03.02", "SM7-I03.02", "MM7-I03.02", "NM7-I03.02", "CM7-I03.02"];
   const sortKpis = (a: any, b: any) => {
-    const idxA = scvnOrder.indexOf(a.code);
-    const idxB = scvnOrder.indexOf(b.code);
-    if (idxA === -1 && idxB === -1) return 0;
+    const getBaseCode = (code: string) => {
+      let clean = code;
+      if (selectedProdId && clean.startsWith(selectedProdId + "-")) {
+        clean = clean.substring(selectedProdId.length + 1);
+      }
+      if (clean.includes("-sub-")) {
+        clean = clean.split("-sub-")[0];
+      }
+      return clean;
+    };
+    const codeA = getBaseCode(a.code);
+    const codeB = getBaseCode(b.code);
+    const idxA = scvnOrder.indexOf(codeA);
+    const idxB = scvnOrder.indexOf(codeB);
+    if (idxA === -1 && idxB === -1) return a.code.localeCompare(b.code);
     if (idxA === -1) return 1;
     if (idxB === -1) return -1;
+    if (idxA === idxB) return a.code.localeCompare(b.code);
     return idxA - idxB;
   };
 

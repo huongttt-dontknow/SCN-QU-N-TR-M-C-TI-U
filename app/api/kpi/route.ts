@@ -261,72 +261,52 @@ export async function GET(request: Request) {
       where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
 
-    if (kpiRecords.length === 0 && productCode) {
-      try {
-        const fs = require("fs");
-        const path = require("path");
-        const jsonPath = path.join(process.cwd(), "lib", "product_kpi_records.json");
-        if (fs.existsSync(jsonPath)) {
-          const raw = fs.readFileSync(jsonPath, "utf-8");
-          const kpiList = JSON.parse(raw);
-          kpiRecords = kpiList.filter((r: any) => 
-            r.productCode === productCode && 
-            r.periodKey === periodKey && 
-            r.periodType === periodType
-          ).map((r: any) => ({
-            ...r,
-            id: r.id || `${r.unitCode}-${r.productCode}-${r.indicatorCode}-${r.periodKey}`
-          }));
-        }
-      } catch (err) {
-        console.error("Lỗi đọc JSON dự phòng cho một sản phẩm:", err);
+    // Tải danh sách chỉ tiêu mẫu từ tệp JSON tương ứng
+    let jsonTemplates: any[] = [];
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
+      const jsonPath = path.join(process.cwd(), "lib", filename);
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        const parsed = JSON.parse(raw);
+        jsonTemplates = parsed.filter((r: any) => {
+          if (productCode) {
+            return r.productCode === productCode && r.periodKey === periodKey && r.periodType === periodType;
+          } else {
+            return r.unitCode === unitCode && (!r.productCode) && r.periodKey === periodKey && r.periodType === periodType;
+          }
+        });
       }
+    } catch (err) {
+      console.error("Lỗi đọc JSON template:", err);
     }
 
-    // Tự động kiểm tra và đồng bộ hóa danh sách chỉ tiêu của đơn vị (Self-healing mechanism)
-    const unitTemplates = await prisma.kpiData.findMany({
-      where: productCode ? { productCode } : { unitCode, productCode: null },
-      distinct: ["indicatorCode"]
-    });
-
-    if (unitTemplates.length > 0) {
+    if (jsonTemplates.length > 0) {
       // Tìm các chỉ tiêu template chưa có bản ghi trong kỳ hiện tại
       const existingCodes = new Set(kpiRecords.map(r => r.indicatorCode));
-      const missingTemplates = unitTemplates.filter(t => !existingCodes.has(t.indicatorCode));
+      const missingTemplates = jsonTemplates.filter(t => !existingCodes.has(t.indicatorCode));
 
       if (missingTemplates.length > 0) {
-        const newKpis = missingTemplates.map(t => {
-          // Lấy target kế hoạch mặc định tương ứng với loại kỳ (tuần, tháng, quý, năm)
-          let defaultTarget = 0;
-          if (periodType === "weekly" && t.periodKey.startsWith("weekly")) {
-            defaultTarget = t.targetValue;
-          } else if (periodType === "monthly" && t.periodKey.startsWith("monthly")) {
-            defaultTarget = t.targetValue;
-          } else if (periodType === "quarterly" && t.periodKey.startsWith("quarterly")) {
-            defaultTarget = t.targetValue;
-          } else if (periodType === "yearly" && t.periodKey.startsWith("yearly")) {
-            defaultTarget = t.targetValue;
-          }
-
-          return {
-            indicatorCode: t.indicatorCode,
-            unitCode: t.unitCode || unitCode,
-            productCode: productCode || null,
-            periodType,
-            periodKey,
-            targetValue: defaultTarget,
-            actualValue: 0,
-            pic: t.pic,
-            status: "Chưa thực hiện",
-            explanation: "",
-            title: t.title,
-            unit: t.unit,
-            formula: t.formula,
-            group: t.group,
-            parentCode: t.parentCode,
-            frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
-          };
-        });
+        const newKpis = missingTemplates.map(t => ({
+          indicatorCode: t.indicatorCode,
+          unitCode: t.unitCode || unitCode,
+          productCode: productCode || null,
+          periodType,
+          periodKey,
+          targetValue: t.targetValue || 0,
+          actualValue: t.actualValue || 0,
+          pic: t.pic || null,
+          status: "Chưa thực hiện",
+          explanation: "",
+          title: t.title || "",
+          unit: t.unit || "",
+          formula: t.formula || "",
+          group: t.group || "",
+          parentCode: t.parentCode || "",
+          frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
+        }));
 
         await prisma.kpiData.createMany({ data: newKpis });
 
@@ -336,50 +316,101 @@ export async function GET(request: Request) {
         });
       }
     } else {
-      // Nếu đơn vị chưa có chỉ tiêu nào (fallback ban đầu)
-      const defaultIndicators = [
-        { code: "VM1-I01.01", title: "Tỷ suất lợi nhuận ROI (%)", target: 15, pic: "Lê Đăng Khoa", type: "monthly", unit: "%", group: "M1. TÀI CHÍNH" },
-        { code: "VM1-I05.03", title: "Chi phí mua công cụ AI mới (VNĐ)", target: 50000000, pic: "Lê Quỳnh Nga", type: "monthly", unit: "VNĐ", group: "M1. TÀI CHÍNH" },
-        { code: "VM1-I05.04", title: "Chi phí CTV (Cộng tác viên)", target: 120000000, pic: "Vũ Trung Đức", type: "monthly", unit: "VNĐ", group: "M1. TÀI CHÍNH" },
-        { code: "VM2-I01.01", title: "Số lượng video hoàn thành sản xuất (Video)", target: 16, pic: "Lê Đăng Khoa", type: "weekly", unit: "Video", group: "M2. SẢN PHẨM" },
-        { code: "VM2-I01.02", title: "Số lượng video biên tập hoàn thành (funny) (Video)", target: 30, pic: "Lò Quế Hằng", type: "weekly", unit: "Video", group: "M2. SẢN PHẨM" },
-        { code: "VM2-I02.01", title: "Số sản phẩm phái sinh & khai thác (Sản phẩm)", target: 5, pic: "Vũ Trung Đức", type: "weekly", unit: "Sản phẩm", group: "M2. SẢN PHẨM" },
-        { code: "MM2-I01.01", title: "Số lượng sản phẩm âm nhạc hoàn thành (Bài)", target: 8, pic: "Vũ Trung Đức", type: "weekly", unit: "Bài", group: "M2. SẢN PHẨM" },
-        { code: "VM2-I01.3", title: "Số lượng ý tưởng mới (Ý tưởng)", target: 25, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2. SẢN PHẨM" },
-        { code: "VM2-I01.4", title: "Số lượng ý tưởng được chọn (Ý tưởng)", target: 15, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2. SẢN PHẨM" },
-        { code: "VM2-I01.5", title: "Tỷ lệ chọn ý tưởng (%)", target: 60, pic: "Lê Đăng Khoa", type: "weekly", unit: "%", group: "M2. SẢN PHẨM" },
-        { code: "VM2-I01.6", title: "SL Kịch bản mới SX (Kịch bản)", target: 10, pic: "Lê Đăng Khoa", type: "weekly", unit: "Kịch bản", group: "M2. SẢN PHẨM" },
-        { code: "TM3-I01.02", title: "Tổng traffic đơn vị (Views)", target: 120000000, pic: "Lê Đăng Khoa", type: "weekly", unit: "Views", group: "M3. KHÁCH HÀNG" },
-        { code: "TM3-I01.03", title: "Số lượng video upload (nội dung)", target: 45, pic: "Trịnh Quốc Thịnh", type: "weekly", unit: "Video", group: "M3. KHÁCH HÀNG" },
-        { code: "TM4-I01.01", title: "Độ phủ thương hiệu mới (Sub/Follower)", target: 50000, pic: "Lê Đăng Khoa", type: "monthly", unit: "Sub", group: "M4. THƯƠNG HIỆU" },
-        { code: "TM4-I02.01", title: "Số kênh đạt ngưỡng 10k $/tháng (Kênh)", target: 4, pic: "Trần Như Quỳnh", type: "monthly", unit: "Kênh", group: "M4. THƯƠNG HIỆU" },
-        { code: "VM4-I02.04", title: "Số vi phạm chính sách (Lần)", target: 0, pic: "Đào Thanh Công", type: "monthly", unit: "Lần", group: "M4. THƯƠNG HIỆU" },
-        { code: "VM5-I02.01", title: "Thời gian sản xuất TB 1 video (Ngày)", target: 5, pic: "Nguyễn Ánh Tùng", type: "weekly", unit: "Ngày", group: "M5. VẬN HÀNH" },
-        { code: "VM7-I03.01", title: "Tỷ lệ nhân sự không vi phạm kỷ luật (%)", target: 100, pic: "Trần Thị Diệu Ly", type: "monthly", unit: "%", group: "M7. VĂN HÓA" },
-      ];
-
-      const filteredDefaults = defaultIndicators.filter(ind => ind.type === periodType);
-      const newKpis = filteredDefaults.map(ind => ({
-        indicatorCode: ind.code,
-        unitCode,
-        periodType,
-        periodKey,
-        targetValue: ind.target,
-        actualValue: 0,
-        pic: ind.pic,
-        status: "Chưa thực hiện",
-        explanation: "",
-        title: ind.title,
-        unit: ind.unit,
-        formula: "",
-        group: ind.group,
-        parentCode: ind.code.split("-")[0]
-      }));
-
-      await prisma.kpiData.createMany({ data: newKpis });
-      kpiRecords = await prisma.kpiData.findMany({
-        where: { unitCode, periodKey, periodType },
+      // Cơ chế tự phục hồi dự phòng (fallback) dựa trên các bản ghi cũ trong DB
+      const unitTemplates = await prisma.kpiData.findMany({
+        where: productCode ? { productCode } : { unitCode, productCode: null },
+        distinct: ["indicatorCode"]
       });
+
+      if (unitTemplates.length > 0) {
+        const existingCodes = new Set(kpiRecords.map(r => r.indicatorCode));
+        const missingTemplates = unitTemplates.filter(t => !existingCodes.has(t.indicatorCode));
+
+        if (missingTemplates.length > 0) {
+          const newKpis = missingTemplates.map(t => {
+            let defaultTarget = 0;
+            if (periodType === "weekly" && t.periodKey.startsWith("weekly")) {
+              defaultTarget = t.targetValue;
+            } else if (periodType === "monthly" && t.periodKey.startsWith("monthly")) {
+              defaultTarget = t.targetValue;
+            } else if (periodType === "quarterly" && t.periodKey.startsWith("quarterly")) {
+              defaultTarget = t.targetValue;
+            } else if (periodType === "yearly" && t.periodKey.startsWith("yearly")) {
+              defaultTarget = t.targetValue;
+            }
+
+            return {
+              indicatorCode: t.indicatorCode,
+              unitCode: t.unitCode || unitCode,
+              productCode: productCode || null,
+              periodType,
+              periodKey,
+              targetValue: defaultTarget,
+              actualValue: 0,
+              pic: t.pic,
+              status: "Chưa thực hiện",
+              explanation: "",
+              title: t.title,
+              unit: t.unit,
+              formula: t.formula,
+              group: t.group,
+              parentCode: t.parentCode,
+              frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
+            };
+          });
+
+          await prisma.kpiData.createMany({ data: newKpis });
+
+          kpiRecords = await prisma.kpiData.findMany({
+            where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
+          });
+        }
+      } else {
+        // Fallback cứng cuối cùng nếu toàn bộ DB và JSON trống
+        const defaultIndicators = [
+          { code: "VM1-I01.01", title: "Tỷ suất lợi nhuận ROI (%)", target: 15, pic: "Lê Đăng Khoa", type: "monthly", unit: "%", group: "M1. TÀI CHÍNH" },
+          { code: "VM1-I05.03", title: "Chi phí mua công cụ AI mới (VNĐ)", target: 50000000, pic: "Lê Quỳnh Nga", type: "monthly", unit: "VNĐ", group: "M1. TÀI CHÍNH" },
+          { code: "VM1-I05.04", title: "Chi phí CTV (Cộng tác viên)", target: 120000000, pic: "Vũ Trung Đức", type: "monthly", unit: "VNĐ", group: "M1. TÀI CHÍNH" },
+          { code: "VM2-I01.01", title: "Số lượng video hoàn thành sản xuất (Video)", target: 16, pic: "Lê Đăng Khoa", type: "weekly", unit: "Video", group: "M2. SẢN PHẨM" },
+          { code: "VM2-I01.02", title: "Số lượng video biên tập hoàn thành (funny) (Video)", target: 30, pic: "Lò Quế Hằng", type: "weekly", unit: "Video", group: "M2. SẢN PHẨM" },
+          { code: "VM2-I02.01", title: "Số sản phẩm phái sinh & khai thác (Sản phẩm)", target: 5, pic: "Vũ Trung Đức", type: "weekly", unit: "Sản phẩm", group: "M2. SẢN PHẨM" },
+          { code: "MM2-I01.01", title: "Số lượng sản phẩm âm nhạc hoàn thành (Bài)", target: 8, pic: "Vũ Trung Đức", type: "weekly", unit: "Bài", group: "M2. SẢN PHẨM" },
+          { code: "VM2-I01.3", title: "Số lượng ý tưởng mới (Ý tưởng)", target: 25, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2. SẢN PHẨM" },
+          { code: "VM2-I01.4", title: "Số lượng ý tưởng được chọn (Ý tưởng)", target: 15, pic: "Lê Đăng Khoa", type: "weekly", unit: "Ý tưởng", group: "M2. SẢN PHẨM" },
+          { code: "VM2-I01.5", title: "Tỷ lệ chọn ý tưởng (%)", target: 60, pic: "Lê Đăng Khoa", type: "weekly", unit: "%", group: "M2. SẢN PHẨM" },
+          { code: "VM2-I01.6", title: "SL Kịch bản mới SX (Kịch bản)", target: 10, pic: "Lê Đăng Khoa", type: "weekly", unit: "Kịch bản", group: "M2. SẢN PHẨM" },
+          { code: "TM3-I01.02", title: "Tổng traffic đơn vị (Views)", target: 120000000, pic: "Lê Đăng Khoa", type: "weekly", unit: "Views", group: "M3. KHÁCH HÀNG" },
+          { code: "TM3-I01.03", title: "Số lượng video upload (nội dung)", target: 45, pic: "Trịnh Quốc Thịnh", type: "weekly", unit: "Video", group: "M3. KHÁCH HÀNG" },
+          { code: "TM4-I01.01", title: "Độ phủ thương hiệu mới (Sub/Follower)", target: 50000, pic: "Lê Đăng Khoa", type: "monthly", unit: "Sub", group: "M4. THƯƠNG HIỆU" },
+          { code: "TM4-I02.01", title: "Số kênh đạt ngưỡng 10k $/tháng (Kênh)", target: 4, pic: "Trần Như Quỳnh", type: "monthly", unit: "Kênh", group: "M4. THƯƠNG HIỆU" },
+          { code: "VM4-I02.04", title: "Số vi phạm chính sách (Lần)", target: 0, pic: "Đào Thanh Công", type: "monthly", unit: "Lần", group: "M4. THƯƠNG HIỆU" },
+          { code: "VM5-I02.01", title: "Thời gian sản xuất TB 1 video (Ngày)", target: 5, pic: "Nguyễn Ánh Tùng", type: "weekly", unit: "Ngày", group: "M5. VẬN HÀNH" },
+          { code: "VM7-I03.01", title: "Tỷ lệ nhân sự không vi phạm kỷ luật (%)", target: 100, pic: "Trần Thị Diệu Ly", type: "monthly", unit: "%", group: "M7. VĂN HÓA" },
+        ];
+
+        const filteredDefaults = defaultIndicators.filter(ind => ind.type === periodType);
+        const newKpis = filteredDefaults.map(ind => ({
+          indicatorCode: ind.code,
+          unitCode,
+          periodType,
+          periodKey,
+          targetValue: ind.target,
+          actualValue: 0,
+          pic: ind.pic,
+          status: "Chưa thực hiện",
+          explanation: "",
+          title: ind.title,
+          unit: ind.unit,
+          formula: "",
+          group: ind.group,
+          parentCode: ind.code.split("-")[0]
+        }));
+
+        await prisma.kpiData.createMany({ data: newKpis });
+        kpiRecords = await prisma.kpiData.findMany({
+          where: { unitCode, periodKey, periodType },
+        });
+      }
     }
 
     const metaMap = getMetadataMap(productCode);
