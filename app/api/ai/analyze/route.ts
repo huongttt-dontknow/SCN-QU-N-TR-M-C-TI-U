@@ -357,12 +357,7 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
         
         chatHistory.push({
           role: "model",
-          parts: [{
-            functionCall: {
-              name: "searchMarketTrends",
-              args: call.args
-            }
-          }] as any
+          parts: (result.response.candidates?.[0]?.content?.parts || []) as any
         });
         
         chatHistory.push({

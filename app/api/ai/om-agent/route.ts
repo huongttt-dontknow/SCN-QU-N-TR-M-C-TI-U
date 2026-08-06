@@ -414,15 +414,10 @@ ${sconnectContext}
         const queryArg = (call.args as any).query || "";
         const searchResultText = searchMarketTrends(queryArg);
         
-        // Nạp cuộc gọi hàm của Model vào lịch sử
+        // Nạp cuộc gọi hàm của Model vào lịch sử (bao gồm cả thought_signature của Gemini)
         chatHistory.push({
           role: "model",
-          parts: [{
-            functionCall: {
-              name: "searchMarketTrends",
-              args: call.args
-            }
-          }] as any
+          parts: (result.response.candidates?.[0]?.content?.parts || []) as any
         });
         
         // Nạp kết quả trả về của hàm dưới role 'user' (để tránh lỗi role 'function' bị Google deprecate)

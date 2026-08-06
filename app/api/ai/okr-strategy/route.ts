@@ -678,12 +678,7 @@ Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sá
           
           chatHistory.push({
             role: "model",
-            parts: [{
-              functionCall: {
-                name: "searchMarketTrends",
-                args: call.args
-              }
-            }] as any
+            parts: (result.response.candidates?.[0]?.content?.parts || []) as any
           });
           
           chatHistory.push({
