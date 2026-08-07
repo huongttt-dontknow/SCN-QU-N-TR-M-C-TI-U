@@ -1287,6 +1287,22 @@ export default function InputFormPage() {
         if (idx !== -1) return idx;
       }
 
+      // Thử tìm cha bằng cách cắt phần đuôi theo dấu chấm (.)
+      if (base.includes(".")) {
+        const parts = base.split(".");
+        for (let i = parts.length - 1; i > 0; i--) {
+          const parentCandidate = parts.slice(0, i).join(".");
+          let parentIdx = scvnOrder.indexOf(parentCandidate);
+          if (parentIdx !== -1) return parentIdx;
+
+          if (suffix) {
+            const parentCandidateWithSuffix = parentCandidate + "-" + suffix;
+            parentIdx = scvnOrder.indexOf(parentCandidateWithSuffix);
+            if (parentIdx !== -1) return parentIdx;
+          }
+        }
+      }
+
       // Nếu không tìm thấy, thử tìm cha của chỉ tiêu bằng cách cắt bỏ phần hậu tố sau dấu gạch ngang cuối cùng
       if (base.includes("-")) {
         const parts = base.split("-");
