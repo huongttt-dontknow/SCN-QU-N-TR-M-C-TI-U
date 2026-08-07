@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 function detectFrequency(freq: string | null, title: string, code: string): string {
   if (freq) return freq.toLowerCase().trim();
   const t = (title || "").toLowerCase();
