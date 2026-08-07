@@ -677,8 +677,6 @@ export async function POST(request: Request) {
   }
 }
 
-// Helper function to sync and aggregate KPIs between child and parent units
-// Helper function to sync and aggregate KPIs between child and parent units
 async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
   const syncMappings = [
     { fromUnit: "Wofloo", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-WF", title: "Doanh thu BP WF" },
@@ -829,36 +827,59 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     { fromUnit: "Music", fromCode: "MM6-I01.02", toUnit: "SCVN", toCode: "MM6-I01.02-SCMU", title: "SCMU" },
     { fromUnit: "CN", fromCode: "NM6-I01.02", toUnit: "SCVN", toCode: "NM6-I01.02-CNGP", title: "CNGP" },
     { fromUnit: "CR", fromCode: "CM6-I01.02", toUnit: "SCVN", toCode: "CM6-I01.02-CR", title: "BP Creative" }
-];
+  ];
 
-  // 1. Đồng bộ các giá trị ngang từ con sang các chỉ tiêu tương ứng của cha - Tối ưu hóa truy vấn hàng loạt tránh N+1
   const fromUnits = Array.from(new Set(syncMappings.map(m => m.fromUnit)));
   const fromCodes = Array.from(new Set(syncMappings.map(m => m.fromCode)));
-  const sources = await prisma.kpiData.findMany({
-    where: {
-      unitCode: { in: fromUnits },
-      indicatorCode: { in: fromCodes },
-      periodKey,
-      periodType,
-      productCode: null
-    }
-  });
-  const sourceMap = new Map(sources.map(s => [`${s.unitCode}_${s.indicatorCode}`, s]));
-
   const toUnits = Array.from(new Set(syncMappings.map(m => m.toUnit)));
   const toCodes = Array.from(new Set(syncMappings.map(m => m.toCode)));
-  const targets = await prisma.kpiData.findMany({
-    where: {
-      unitCode: { in: toUnits },
-      indicatorCode: { in: toCodes },
-      periodKey,
-      periodType,
-      productCode: null
-    }
-  });
-  const targetMap = new Map(targets.map(t => [`${t.unitCode}_${t.indicatorCode}`, t]));
 
-  const dbOps = [];
+  const specialCodes = ["VM3-I01.06", "TM3-I01.02", "VM2-I01.01", "VM2-I02.01", "MM2-I01.01", "VM2-I01.02", "VM1-I02.01"];
+  const tctRevenueCodes = [
+    "VM1-I02.01", "DM1-I02.01", "SM1-I02.01", "CM1-I02.01", "MM1-I02.01",
+    "NM1-I02.01", "EM1-I02.01", "HM1-I02.01", "WM1-I02.01", "AM1-I02.01"
+  ];
+
+  const [
+    sources,
+    targets,
+    scvnKpis,
+    scvnSpecialKpis,
+    tctSyncRecords,
+    tctRevenues,
+    tctRevRecord
+  ] = await Promise.all([
+    prisma.kpiData.findMany({
+      where: { unitCode: { in: fromUnits }, indicatorCode: { in: fromCodes }, periodKey, periodType, productCode: null }
+    }),
+    prisma.kpiData.findMany({
+      where: { unitCode: { in: toUnits }, indicatorCode: { in: toCodes }, periodKey, periodType, productCode: null }
+    }),
+    prisma.kpiData.findMany({
+      where: { unitCode: "SCVN", periodKey, periodType, productCode: null }
+    }),
+    prisma.kpiData.findMany({
+      where: { unitCode: "SCVN", indicatorCode: { in: specialCodes }, periodKey, periodType, productCode: null }
+    }),
+    prisma.kpiData.findMany({
+      where: { unitCode: "TCT", indicatorCode: { in: ["VM1-I02.01", "VM2-I01.01"] }, periodKey, periodType, productCode: null }
+    }),
+    prisma.kpiData.findMany({
+      where: { unitCode: "TCT", indicatorCode: { in: tctRevenueCodes }, periodKey, periodType, productCode: null }
+    }),
+    prisma.kpiData.findFirst({
+      where: { unitCode: "TCT", indicatorCode: "TM1-I02.01", periodKey, periodType, productCode: null }
+    })
+  ]);
+
+  const sourceMap = new Map(sources.map(s => [`${s.unitCode}_${s.indicatorCode}`, s]));
+  const targetMap = new Map(targets.map(t => [`${t.unitCode}_${t.indicatorCode}`, t]));
+  const specialMap = new Map(scvnSpecialKpis.map(k => [k.indicatorCode, k]));
+  const tctSyncMap = new Map(tctSyncRecords.map(r => [r.indicatorCode, r]));
+
+  const dbOps: { type: "create" | "update"; id?: string; data: any }[] = [];
+
+  // === PHẦN 1: ĐỒNG BỘ CON -> CHA ===
   for (const map of syncMappings) {
     const source = sourceMap.get(`${map.fromUnit}_${map.fromCode}`);
     if (source) {
@@ -876,50 +897,66 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
           existing.actualValue !== source.actualValue ||
           existing.status !== source.status
         ) {
-          dbOps.push(
-            prisma.kpiData.update({
-              where: { id: existing.id },
-              data: updateData
-            })
-          );
+          dbOps.push({
+            type: "update",
+            id: existing.id,
+            data: updateData
+          });
+          existing.targetValue = source.targetValue;
+          existing.actualValue = source.actualValue;
+          existing.status = source.status;
         }
       } else {
-        dbOps.push(
-          prisma.kpiData.create({
-            data: {
-              unitCode: map.toUnit,
-              indicatorCode: map.toCode,
-              periodKey,
-              periodType,
-              targetValue: source.targetValue,
-              actualValue: source.actualValue,
-              title: map.title,
-              unit: source.unit || "",
-              status: source.status,
-              isOverridden: true
-            }
-          })
-        );
+        const newRecord = {
+          id: `new-${map.toUnit}-${map.toCode}`,
+          unitCode: map.toUnit,
+          indicatorCode: map.toCode,
+          periodKey,
+          periodType,
+          targetValue: source.targetValue,
+          actualValue: source.actualValue,
+          title: map.title,
+          unit: source.unit || "",
+          status: source.status,
+          isOverridden: true,
+          parentCode: map.toCode.split("-")[0]
+        };
+        targetMap.set(`${map.toUnit}_${map.toCode}`, newRecord as any);
+        dbOps.push({
+          type: "create",
+          data: {
+            unitCode: map.toUnit,
+            indicatorCode: map.toCode,
+            periodKey,
+            periodType,
+            targetValue: source.targetValue,
+            actualValue: source.actualValue,
+            title: map.title,
+            unit: source.unit || "",
+            status: source.status,
+            isOverridden: true
+          }
+        });
       }
     }
   }
 
-  if (dbOps.length > 0) {
-    await prisma.$transaction(dbOps);
+  // === PHẦN 2: ROLLUP SCVN ===
+  const scvnRollupMap = new Map();
+  for (const k of scvnKpis) {
+    scvnRollupMap.set(k.indicatorCode, { ...k });
   }
-
-  // 2. Tự động cộng dồn / tính trung bình (Rollup) cho SCVN dựa trên parentCode và aggregationMethod
-  // Chạy 3 vòng lặp để đảm bảo tính toán từ lá lên các cành cây trung gian rồi lên gốc (thực hiện hoàn toàn IN-MEMORY để tránh N+1 write queries)
-  const scvnKpis = await prisma.kpiData.findMany({
-    where: { unitCode: "SCVN", periodKey, periodType, productCode: null }
+  targetMap.forEach((val: any, key: string) => {
+    if (key.startsWith("SCVN_")) {
+      scvnRollupMap.set(val.indicatorCode, val);
+    }
   });
 
-  const originalValues = new Map(scvnKpis.map(k => [k.indicatorCode, { targetValue: k.targetValue, actualValue: k.actualValue }]));
-  const kpiByCode = new Map(scvnKpis.map(k => [k.indicatorCode, { ...k }]));
+  const originalValues = new Map(Array.from(scvnRollupMap.values()).map(k => [k.indicatorCode, { targetValue: k.targetValue, actualValue: k.actualValue }]));
 
   for (let pass = 0; pass < 3; pass++) {
     const childrenByParent = new Map();
-    for (const k of Array.from(kpiByCode.values())) {
+    for (const k of Array.from(scvnRollupMap.values())) {
       if (k.parentCode) {
         if (!childrenByParent.has(k.parentCode)) {
           childrenByParent.set(k.parentCode, []);
@@ -929,7 +966,7 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     }
 
     for (const [parentCode, children] of Array.from(childrenByParent.entries())) {
-      const parentKpi = kpiByCode.get(parentCode);
+      const parentKpi = scvnRollupMap.get(parentCode);
       if (!parentKpi) continue;
 
       const method = parentKpi.aggregationMethod || "SUM";
@@ -957,41 +994,35 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     }
   }
 
-  const rollupOps = [];
-  for (const k of Array.from(kpiByCode.values())) {
+  for (const k of Array.from(scvnRollupMap.values())) {
     const orig = originalValues.get(k.indicatorCode);
     if (orig && (orig.targetValue !== k.targetValue || orig.actualValue !== k.actualValue)) {
-      rollupOps.push(
-        prisma.kpiData.update({
-          where: { id: k.id },
+      if (k.id.startsWith("new-")) {
+        const idx = dbOps.findIndex((op) => op.type === "create" && op.data.indicatorCode === k.indicatorCode);
+        if (idx !== -1) {
+          dbOps[idx].data.targetValue = k.targetValue;
+          dbOps[idx].data.actualValue = k.actualValue;
+        }
+      } else {
+        dbOps.push({
+          type: "update",
+          id: k.id,
           data: {
             targetValue: k.targetValue,
             actualValue: k.actualValue,
             isOverridden: true
           }
-        })
-      );
+        });
+      }
+      const spec = specialMap.get(k.indicatorCode);
+      if (spec) {
+        spec.targetValue = k.targetValue;
+        spec.actualValue = k.actualValue;
+      }
     }
   }
 
-  if (rollupOps.length > 0) {
-    await prisma.$transaction(rollupOps);
-  }
-
-  // 3. Tính toán đặc thù cho chỉ tiêu VM3-I01.06 (View TB/1 nội dung mới upload trong kỳ)
-  // Thực hiện truy vấn gộp một lần để tối ưu hóa hiệu năng
-  const specialCodes = ["VM3-I01.06", "TM3-I01.02", "VM2-I01.01", "VM2-I02.01", "MM2-I01.01", "VM2-I01.02", "VM1-I02.01"];
-  const scvnSpecialKpis = await prisma.kpiData.findMany({
-    where: {
-      unitCode: "SCVN",
-      indicatorCode: { in: specialCodes },
-      periodKey,
-      periodType,
-      productCode: null
-    }
-  });
-  const specialMap = new Map(scvnSpecialKpis.map(k => [k.indicatorCode, k]));
-
+  // === PHẦN 3: CHỈ TIÊU ĐẶC THÙ VM3-I01.06 ===
   const vm3_i01_06 = specialMap.get("VM3-I01.06");
   if (vm3_i01_06) {
     const tm3_i01_02 = specialMap.get("TM3-I01.02");
@@ -1019,8 +1050,9 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     const target_vm3 = totalVideoTarget > 0 ? (viewScvnTarget / totalVideoTarget) : 0;
 
     if (vm3_i01_06.targetValue !== target_vm3 || vm3_i01_06.actualValue !== actual_vm3) {
-      await prisma.kpiData.update({
-        where: { id: vm3_i01_06.id },
+      dbOps.push({
+        type: "update",
+        id: vm3_i01_06.id,
         data: {
           targetValue: target_vm3,
           actualValue: actual_vm3,
@@ -1030,31 +1062,23 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     }
   }
 
-  // Tải trước các bản ghi TCT tương ứng của VM1-I02.01 và VM2-I01.01
-  const tctSyncRecords = await prisma.kpiData.findMany({
-    where: {
-      unitCode: "TCT",
-      indicatorCode: { in: ["VM1-I02.01", "VM2-I01.01"] },
-      periodKey,
-      periodType,
-      productCode: null
-    }
-  });
-  const tctSyncMap = new Map(tctSyncRecords.map(r => [r.indicatorCode, r]));
-
-  // 4. Đồng bộ tổng doanh thu SCVN sang TCT (VM1-I02.01)
+  // === PHẦN 4 & 5: ĐỒNG BỘ SCVN -> TCT ===
   const scvnRevKpi = specialMap.get("VM1-I02.01");
   if (scvnRevKpi) {
     const tctScvnRecord = tctSyncMap.get("VM1-I02.01");
     if (tctScvnRecord) {
       if (tctScvnRecord.targetValue !== scvnRevKpi.targetValue || tctScvnRecord.actualValue !== scvnRevKpi.actualValue) {
-        await prisma.kpiData.update({
-          where: { id: tctScvnRecord.id },
+        dbOps.push({
+          type: "update",
+          id: tctScvnRecord.id,
           data: { targetValue: scvnRevKpi.targetValue, actualValue: scvnRevKpi.actualValue }
         });
+        tctScvnRecord.targetValue = scvnRevKpi.targetValue;
+        tctScvnRecord.actualValue = scvnRevKpi.actualValue;
       }
     } else {
-      await prisma.kpiData.create({
+      dbOps.push({
+        type: "create",
         data: {
           unitCode: "TCT",
           indicatorCode: "VM1-I02.01",
@@ -1068,22 +1092,28 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
           isOverridden: true
         }
       });
+      tctRevenues.push({
+        indicatorCode: "VM1-I02.01",
+        targetValue: scvnRevKpi.targetValue,
+        actualValue: scvnRevKpi.actualValue
+      } as any);
     }
   }
 
-  // 5. Đồng bộ tổng sản lượng sản xuất SCVN sang TCT (VM2-I01.01)
   const scvnVolKpi = specialMap.get("VM2-I01.01");
   if (scvnVolKpi) {
     const tctScvnVolRecord = tctSyncMap.get("VM2-I01.01");
     if (tctScvnVolRecord) {
       if (tctScvnVolRecord.targetValue !== scvnVolKpi.targetValue || tctScvnVolRecord.actualValue !== scvnVolKpi.actualValue) {
-        await prisma.kpiData.update({
-          where: { id: tctScvnVolRecord.id },
+        dbOps.push({
+          type: "update",
+          id: tctScvnVolRecord.id,
           data: { targetValue: scvnVolKpi.targetValue, actualValue: scvnVolKpi.actualValue }
         });
       }
     } else {
-      await prisma.kpiData.create({
+      dbOps.push({
+        type: "create",
         data: {
           unitCode: "TCT",
           indicatorCode: "VM2-I01.01",
@@ -1100,35 +1130,24 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     }
   }
 
-  // 6. Tính tổng doanh thu (TM1-I02.01) của TCT
-  const tctRevenueCodes = [
-    "VM1-I02.01", "DM1-I02.01", "SM1-I02.01", "CM1-I02.01", "MM1-I02.01",
-    "NM1-I02.01", "EM1-I02.01", "HM1-I02.01", "WM1-I02.01", "AM1-I02.01"
-  ];
-  const tctRevenues = await prisma.kpiData.findMany({
-    where: {
-      unitCode: "TCT",
-      indicatorCode: { in: tctRevenueCodes },
-      periodKey,
-      periodType,
-      productCode: null
-    }
-  });
-
+  // === PHẦN 6: ROLLUP TCT REVENUE ===
   let tctRevenueTarget = 0;
   let tctRevenueActual = 0;
   for (const r of tctRevenues) {
-    tctRevenueTarget += r.targetValue || 0;
-    tctRevenueActual += r.actualValue || 0;
+    if (r.indicatorCode === "VM1-I02.01" && scvnRevKpi) {
+      tctRevenueTarget += scvnRevKpi.targetValue || 0;
+      tctRevenueActual += scvnRevKpi.actualValue || 0;
+    } else {
+      tctRevenueTarget += r.targetValue || 0;
+      tctRevenueActual += r.actualValue || 0;
+    }
   }
 
-  const tctRevRecord = await prisma.kpiData.findFirst({
-    where: { unitCode: "TCT", indicatorCode: "TM1-I02.01", periodKey, periodType, productCode: null }
-  });
   if (tctRevRecord) {
     if (tctRevRecord.targetValue !== tctRevenueTarget || tctRevRecord.actualValue !== tctRevenueActual) {
-      await prisma.kpiData.update({
-        where: { id: tctRevRecord.id },
+      dbOps.push({
+        type: "update",
+        id: tctRevRecord.id,
         data: {
           targetValue: tctRevenueTarget,
           actualValue: tctRevenueActual,
@@ -1137,7 +1156,8 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
       });
     }
   } else {
-    await prisma.kpiData.create({
+    dbOps.push({
+      type: "create",
       data: {
         unitCode: "TCT",
         indicatorCode: "TM1-I02.01",
@@ -1151,6 +1171,18 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
         isOverridden: true
       }
     });
+  }
+
+  // === THỰC THI GIAO DỊCH DUY NHẤT ===
+  if (dbOps.length > 0) {
+    const prismaOps = dbOps.map(op => {
+      if (op.type === "create") {
+        return prisma.kpiData.create({ data: op.data });
+      } else {
+        return prisma.kpiData.update({ where: { id: op.id }, data: op.data });
+      }
+    });
+    await prisma.$transaction(prismaOps);
   }
 }
 

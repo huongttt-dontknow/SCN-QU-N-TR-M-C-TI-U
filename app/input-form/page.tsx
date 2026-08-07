@@ -1266,10 +1266,26 @@ export default function InputFormPage() {
       }
       return clean;
     };
-    const codeA = getBaseCode(a.code);
-    const codeB = getBaseCode(b.code);
-    const idxA = scvnOrder.indexOf(codeA);
-    const idxB = scvnOrder.indexOf(codeB);
+    const getSortIndex = (code: string) => {
+      const base = getBaseCode(code);
+      let idx = scvnOrder.indexOf(base);
+      if (idx !== -1) return idx;
+
+      // Nếu không tìm thấy, thử tìm cha của chỉ tiêu bằng cách cắt bỏ phần hậu tố sau dấu gạch ngang cuối cùng
+      if (base.includes("-")) {
+        const parts = base.split("-");
+        for (let i = parts.length - 1; i > 0; i--) {
+          const parentCandidate = parts.slice(0, i).join("-");
+          const parentIdx = scvnOrder.indexOf(parentCandidate);
+          if (parentIdx !== -1) {
+            return parentIdx;
+          }
+        }
+      }
+      return -1;
+    };
+    const idxA = getSortIndex(a.code);
+    const idxB = getSortIndex(b.code);
     if (idxA === -1 && idxB === -1) return a.code.localeCompare(b.code);
     if (idxA === -1) return 1;
     if (idxB === -1) return -1;
