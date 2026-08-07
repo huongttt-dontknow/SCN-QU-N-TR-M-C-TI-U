@@ -528,25 +528,42 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Thiếu thông tin hoặc dữ liệu cập nhật không hợp lệ" }, { status: 400 });
     }
 
-    // Cập nhật từng KPI tuần tự để hỗ trợ tự động sửa lỗi lệch ID và tạo mới
+    // Phân tích danh sách ID dạng UUID để tải hàng loạt nhằm tối ưu hóa tránh N+1 SELECT
+    const uuids = kpiUpdates.map(u => u.id).filter(id => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id));
+    const indicatorCodes = kpiUpdates.map(u => u.indicatorCode).filter(Boolean);
+
+    // Tải song song tất cả các bản ghi có thể khớp theo UUID hoặc mã chỉ tiêu
+    const [recordsByUuid, recordsByCode] = await Promise.all([
+      uuids.length > 0
+        ? prisma.kpiData.findMany({ where: { id: { in: uuids } } })
+        : Promise.resolve([]),
+      indicatorCodes.length > 0
+        ? prisma.kpiData.findMany({
+            where: {
+              unitCode,
+              productCode: (productCode && productCode !== "all") ? productCode : null,
+              indicatorCode: { in: indicatorCodes },
+              periodKey,
+              periodType
+            }
+          })
+        : Promise.resolve([])
+    ]);
+
+    const recordMap = new Map();
+    for (const r of recordsByUuid) {
+      recordMap.set(r.id, r);
+    }
+    for (const r of recordsByCode) {
+      recordMap.set(`${r.unitCode}_${r.productCode || 'null'}_${r.indicatorCode}_${r.periodKey}_${r.periodType}`, r);
+    }
+
+    const saveOps = [];
     for (const u of kpiUpdates) {
-      let record = null;
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(u.id);
-      
-      if (isUuid) {
-        record = await prisma.kpiData.findUnique({ where: { id: u.id } });
-      }
-      
+      let record = recordMap.get(u.id);
       if (!record && u.indicatorCode) {
-        record = await prisma.kpiData.findFirst({
-          where: {
-            unitCode,
-            productCode: (productCode && productCode !== "all") ? productCode : null,
-            indicatorCode: u.indicatorCode,
-            periodKey,
-            periodType
-          }
-        });
+        const key = `${unitCode}_${(productCode && productCode !== "all") ? productCode : 'null'}_${u.indicatorCode}_${periodKey}_${periodType}`;
+        record = recordMap.get(key);
       }
 
       const updateData = {
@@ -559,29 +576,37 @@ export async function POST(request: Request) {
       };
 
       if (record) {
-        await prisma.kpiData.update({
-          where: { id: record.id },
-          data: updateData,
-        });
+        saveOps.push(
+          prisma.kpiData.update({
+            where: { id: record.id },
+            data: updateData
+          })
+        );
       } else {
-        // Tạo mới bản ghi nếu chưa tồn tại
-        await prisma.kpiData.create({
-          data: {
-            id: isUuid ? u.id : undefined,
-            indicatorCode: u.indicatorCode,
-            unitCode,
-            productCode: (productCode && productCode !== "all") ? productCode : null,
-            periodType,
-            periodKey,
-            targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : 0,
-            actualValue: parseFloat(u.actualValue) || 0,
-            weight: u.weight !== undefined ? parseFloat(u.weight) : 0,
-            explanation: u.explanation || "",
-            status: u.status || "Đang thực hiện",
-            isOverridden: true,
-          }
-        });
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(u.id);
+        saveOps.push(
+          prisma.kpiData.create({
+            data: {
+              id: isUuid ? u.id : undefined,
+              indicatorCode: u.indicatorCode,
+              unitCode,
+              productCode: (productCode && productCode !== "all") ? productCode : null,
+              periodType,
+              periodKey,
+              targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : 0,
+              actualValue: parseFloat(u.actualValue) || 0,
+              weight: u.weight !== undefined ? parseFloat(u.weight) : 0,
+              explanation: u.explanation || "",
+              status: u.status || "Đang thực hiện",
+              isOverridden: true,
+            }
+          })
+        );
       }
+    }
+
+    if (saveOps.length > 0) {
+      await prisma.$transaction(saveOps);
     }
 
     const updatedRecords = await prisma.kpiData.findMany({
