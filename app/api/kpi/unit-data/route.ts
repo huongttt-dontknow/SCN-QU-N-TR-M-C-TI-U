@@ -349,9 +349,8 @@ export async function GET(request: Request) {
       if (row.displayCode === "M1" || row.displayCode === "M2" || row.displayCode === "M3" || row.displayCode === "M4" || row.displayCode === "M5" || row.displayCode === "M6" || row.displayCode === "M7") {
         continue;
       }
-      if (row.isParent) {
-        continue;
-      }
+      // resolves monthly/quarterly/yearly values for all indicators including intermediate parents
+
 
       const freq = row.frequency || "tuần";
       const aggMethod = row.aggregationMethod || "SUM";
@@ -387,20 +386,23 @@ export async function GET(request: Request) {
         }
         const subChildren = allRows.filter(r => r.parentCode === row.code);
         if (subChildren.length > 0) {
-          row.targetWeek = 0; row.actualWeek = 0;
-          row.targetMonth = 0; row.actualMonth = 0;
-          row.targetQuarter = 0; row.actualQuarter = 0;
-          row.targetYear = 0; row.actualYear = 0;
+          // Only perform rollup if the parent itself has no target or actual values set
+          if (row.targetMonth === 0 && row.actualMonth === 0 && row.targetWeek === 0 && row.actualWeek === 0) {
+            row.targetWeek = 0; row.actualWeek = 0;
+            row.targetMonth = 0; row.actualMonth = 0;
+            row.targetQuarter = 0; row.actualQuarter = 0;
+            row.targetYear = 0; row.actualYear = 0;
 
-          for (const child of subChildren) {
-            row.targetWeek += child.targetWeek;
-            row.actualWeek += child.actualWeek;
-            row.targetMonth += child.targetMonth;
-            row.actualMonth += child.actualMonth;
-            row.targetQuarter += child.targetQuarter;
-            row.actualQuarter += child.actualQuarter;
-            row.targetYear += child.targetYear;
-            row.actualYear += child.actualYear;
+            for (const child of subChildren) {
+              row.targetWeek += child.targetWeek;
+              row.actualWeek += child.actualWeek;
+              row.targetMonth += child.targetMonth;
+              row.actualMonth += child.actualMonth;
+              row.targetQuarter += child.targetQuarter;
+              row.actualQuarter += child.actualQuarter;
+              row.targetYear += child.targetYear;
+              row.actualYear += child.actualYear;
+            }
           }
         }
       }
