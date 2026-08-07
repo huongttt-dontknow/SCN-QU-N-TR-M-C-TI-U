@@ -336,17 +336,30 @@ const calculateCompletionPct = (target: number, actual: number, code?: string, t
   const tCode = (code || "").toUpperCase();
   const tTitle = (title || "").toUpperCase();
 
+  const isDisciplineNoViolation = 
+    tCode.includes("M7-I03.01") || 
+    tTitle.includes("KHÔNG VI PHẠM KỶ LUẬT");
+
   const isErrorOrPolicy = 
-    tCode.includes("TM7") || 
-    tCode.includes("VM7") ||
-    tTitle.includes("LỖI") || 
-    tTitle.includes("VI PHẠM") || 
-    tTitle.includes("CHÍNH SÁCH") || 
-    tTitle.includes("PHẠT") || 
-    tTitle.includes("KỶ LUẬT") || 
-    tTitle.includes("KHIẾU NẠI") ||
-    tTitle.includes("STRIKE") || 
-    tTitle.includes("CLAIM");
+    !isDisciplineNoViolation && (
+      tCode.includes("TM7") || 
+      tCode.includes("VM7") ||
+      tTitle.includes("LỖI") || 
+      tTitle.includes("VI PHẠM") || 
+      tTitle.includes("CHÍNH SÁCH") || 
+      tTitle.includes("PHẠT") || 
+      tTitle.includes("KỶ LUẬT") || 
+      tTitle.includes("KHIẾU NẠI") ||
+      tTitle.includes("STRIKE") || 
+      tTitle.includes("CLAIM")
+    );
+
+  if (isDisciplineNoViolation) {
+    if (actual >= 100 || actual > target) {
+      return 100;
+    }
+    return target > 0 ? Math.round((actual / target) * 100) : 100;
+  }
 
   if (target === 0) {
     if (actual === 0) {
@@ -360,7 +373,13 @@ const calculateCompletionPct = (target: number, actual: number, code?: string, t
     return actual <= target ? 100 : 0;
   }
 
-  return Math.round((actual / target) * 100);
+  const rawPct = Math.round((actual / target) * 100);
+  const isM1 = tCode.includes("M1");
+  if (isM1) {
+    return rawPct;
+  } else {
+    return Math.min(130, rawPct);
+  }
 };
 
 export default function ProductDataPage() {

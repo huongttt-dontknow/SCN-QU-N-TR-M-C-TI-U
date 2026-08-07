@@ -1271,8 +1271,53 @@ async function calculateAndSaveRadarScores(unitCode: string, periodKey: string, 
       for (const c of children) {
         const target = c.targetValue || 0;
         const actual = c.actualValue || 0;
-        // Khống chế tối đa 120% theo quy chế công ty
-        const completion = target > 0 ? Math.min(1.2, actual / target) * 100 : 100;
+        
+        let completion = 0;
+        const tCode = (c.indicatorCode || "").toUpperCase();
+        const tTitle = (c.title || "").toUpperCase();
+
+        const isDisciplineNoViolation = 
+          tCode.includes("M7-I03.01") || 
+          tTitle.includes("KHÔNG VI PHẠM KỶ LUẬT");
+
+        const isErrorOrPolicy = 
+          !isDisciplineNoViolation && (
+            tCode.includes("TM7") || 
+            tCode.includes("VM7") ||
+            tTitle.includes("LỖI") || 
+            tTitle.includes("VI PHẠM") || 
+            tTitle.includes("CHÍNH SÁCH") || 
+            tTitle.includes("PHẠT") || 
+            tTitle.includes("KỶ LUẬT") || 
+            tTitle.includes("KHIẾU NẠI") ||
+            tTitle.includes("STRIKE") || 
+            tTitle.includes("CLAIM")
+          );
+
+        if (isDisciplineNoViolation) {
+          if (actual >= 100 || actual > target) {
+            completion = 100;
+          } else {
+            completion = target > 0 ? (actual / target) * 100 : 100;
+          }
+        } else if (target === 0) {
+          if (actual === 0) {
+            completion = isErrorOrPolicy ? 100 : 0;
+          } else {
+            completion = isErrorOrPolicy ? 0 : 100;
+          }
+        } else if (isErrorOrPolicy) {
+          completion = actual <= target ? 100 : 0;
+        } else {
+          completion = target > 0 ? (actual / target) * 100 : 100;
+        }
+
+        // Cap at 130% for all metrics except M1
+        const isM1 = mCode === "M1" || tCode.includes("M1");
+        if (!isM1) {
+          completion = Math.min(130, completion);
+        }
+
         weightedSum += completion * ((c.weight || 0) / 100);
       }
       const calculatedScore = Math.round(weightedSum);

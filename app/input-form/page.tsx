@@ -876,17 +876,30 @@ export default function InputFormPage() {
     const tCode = (code || "").toUpperCase();
     const tTitle = (title || "").toUpperCase();
 
+    const isDisciplineNoViolation = 
+      tCode.includes("M7-I03.01") || 
+      tTitle.includes("KHÔNG VI PHẠM KỶ LUẬT");
+
     const isErrorOrPolicy = 
-      tCode.includes("TM7") || 
-      tCode.includes("VM7") ||
-      tTitle.includes("LỖI") || 
-      tTitle.includes("VI PHẠM") || 
-      tTitle.includes("CHÍNH SÁCH") || 
-      tTitle.includes("PHẠT") || 
-      tTitle.includes("KỶ LUẬT") || 
-      tTitle.includes("KHIẾU NẠI") ||
-      tTitle.includes("STRIKE") || 
-      tTitle.includes("CLAIM");
+      !isDisciplineNoViolation && (
+        tCode.includes("TM7") || 
+        tCode.includes("VM7") ||
+        tTitle.includes("LỖI") || 
+        tTitle.includes("VI PHẠM") || 
+        tTitle.includes("CHÍNH SÁCH") || 
+        tTitle.includes("PHẠT") || 
+        tTitle.includes("KỶ LUẬT") || 
+        tTitle.includes("KHIẾU NẠI") ||
+        tTitle.includes("STRIKE") || 
+        tTitle.includes("CLAIM")
+      );
+
+    if (isDisciplineNoViolation) {
+      if (actual >= 100 || actual > target) {
+        return 100;
+      }
+      return target > 0 ? Math.round((actual / target) * 100) : 100;
+    }
 
     if (target === 0) {
       if (actual === 0) {
@@ -900,7 +913,13 @@ export default function InputFormPage() {
       return actual <= target ? 100 : 0;
     }
 
-    return Math.round((actual / target) * 100);
+    const rawPct = Math.round((actual / target) * 100);
+    const isM1 = tCode.includes("M1");
+    if (isM1) {
+      return rawPct;
+    } else {
+      return Math.min(130, rawPct);
+    }
   };
 
   const getStatusStyle = (status: string) => {
@@ -1391,9 +1410,9 @@ export default function InputFormPage() {
     const vol = getMainMetrics(items, "M2", ["TM2-I01.01", "VM2-I01.01"], ["Số lượng video hoàn thành", "video hoàn thành sản xuất"]);
     const view = getMainMetrics(items, "M3", ["TM3-I01.02", "VM3-I01.02"], ["Tổng traffic", "Số lượt view Youtube", "view youtube"]);
 
-    const rRev = rev && rev.target > 0 ? Math.min(1.2, rev.actual / rev.target) * 100 : 100;
-    const rVol = vol && vol.target > 0 ? Math.min(1.2, vol.actual / vol.target) * 100 : 100;
-    const rView = view && view.target > 0 ? Math.min(1.2, view.actual / view.target) * 100 : 100;
+    const rRev = rev && rev.target > 0 ? (rev.actual / rev.target) * 100 : 100;
+    const rVol = vol && vol.target > 0 ? Math.min(1.3, vol.actual / vol.target) * 100 : 100;
+    const rView = view && view.target > 0 ? Math.min(1.3, view.actual / view.target) * 100 : 100;
 
     const phsWeekly = Math.round(0.5 * rRev + 0.3 * rVol + 0.2 * rView);
     const projectedMonthlyPHS = Math.min(115, Math.round(phsWeekly * 1.02));
@@ -1416,9 +1435,9 @@ export default function InputFormPage() {
     const vol = getMainMetrics(items, "M2", ["TM2-I01.01", "VM2-I01.01"], ["Số lượng video hoàn thành", "video hoàn thành sản xuất"]);
     const view = getMainMetrics(items, "M3", ["TM3-I01.02", "VM3-I01.02"], ["Tổng traffic", "Số lượt view Youtube", "view youtube"]);
 
-    const rRev = rev && rev.target > 0 ? Math.min(1.2, rev.actual / rev.target) * 100 : 100;
-    const rVol = vol && vol.target > 0 ? Math.min(1.2, vol.actual / vol.target) * 100 : 100;
-    const rView = view && view.target > 0 ? Math.min(1.2, view.actual / view.target) * 100 : 100;
+    const rRev = rev && rev.target > 0 ? (rev.actual / rev.target) * 100 : 100;
+    const rVol = vol && vol.target > 0 ? Math.min(1.3, vol.actual / vol.target) * 100 : 100;
+    const rView = view && view.target > 0 ? Math.min(1.3, view.actual / view.target) * 100 : 100;
 
     const phs = Math.round(0.4 * rRev + 0.3 * rVol + 0.2 * rView + 0.1 * 100);
 

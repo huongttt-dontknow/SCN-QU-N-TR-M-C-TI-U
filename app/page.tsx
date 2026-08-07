@@ -178,9 +178,9 @@ export default function DashboardPage() {
           const vol = mapped.find(i => i.code.includes("M2") || i.title.toLowerCase().includes("video hoàn thành") || i.title.toLowerCase().includes("sản lượng"));
           const view = mapped.find(i => i.code.includes("M3") || i.title.toLowerCase().includes("traffic") || i.title.toLowerCase().includes("view"));
 
-          const rRev = rev && rev.target > 0 ? Math.min(1.2, rev.actual / rev.target) * 100 : 100;
-          const rVol = vol && vol.target > 0 ? Math.min(1.2, vol.actual / vol.target) * 100 : 100;
-          const rView = view && view.target > 0 ? Math.min(1.2, view.actual / view.target) * 100 : 100;
+          const rRev = rev && rev.target > 0 ? (rev.actual / rev.target) * 100 : 100;
+          const rVol = vol && vol.target > 0 ? Math.min(1.3, vol.actual / vol.target) * 100 : 100;
+          const rView = view && view.target > 0 ? Math.min(1.3, view.actual / view.target) * 100 : 100;
 
           const phs = Math.round(0.4 * rRev + 0.3 * rVol + 0.2 * rView + 10);
           
@@ -288,17 +288,30 @@ export default function DashboardPage() {
     const tCode = (code || "").toUpperCase();
     const tTitle = (title || "").toUpperCase();
 
+    const isDisciplineNoViolation = 
+      tCode.includes("M7-I03.01") || 
+      tTitle.includes("KHÔNG VI PHẠM KỶ LUẬT");
+
     const isErrorOrPolicy = 
-      tCode.includes("TM7") || 
-      tCode.includes("VM7") ||
-      tTitle.includes("LỖI") || 
-      tTitle.includes("VI PHẠM") || 
-      tTitle.includes("CHÍNH SÁCH") || 
-      tTitle.includes("PHẠT") || 
-      tTitle.includes("KỶ LUẬT") || 
-      tTitle.includes("KHIẾU NẠI") ||
-      tTitle.includes("STRIKE") || 
-      tTitle.includes("CLAIM");
+      !isDisciplineNoViolation && (
+        tCode.includes("TM7") || 
+        tCode.includes("VM7") ||
+        tTitle.includes("LỖI") || 
+        tTitle.includes("VI PHẠM") || 
+        tTitle.includes("CHÍNH SÁCH") || 
+        tTitle.includes("PHẠT") || 
+        tTitle.includes("KỶ LUẬT") || 
+        tTitle.includes("KHIẾU NẠI") ||
+        tTitle.includes("STRIKE") || 
+        tTitle.includes("CLAIM")
+      );
+
+    if (isDisciplineNoViolation) {
+      if (actual >= 100 || actual > target) {
+        return 1.0;
+      }
+      return target > 0 ? actual / target : 1.0;
+    }
 
     if (target === 0) {
       if (actual === 0) {
@@ -312,7 +325,13 @@ export default function DashboardPage() {
       return actual <= target ? 1.0 : 0.0;
     }
 
-    return actual / target;
+    const rawRate = actual / target;
+    const isM1 = tCode.includes("M1");
+    if (isM1) {
+      return rawRate;
+    } else {
+      return Math.min(1.3, rawRate);
+    }
   };
 
   // Helper to fetch KPI record from DB if available, fallback to MASTER_KPI_DATA
