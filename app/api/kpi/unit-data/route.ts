@@ -476,7 +476,7 @@ export async function GET(request: Request) {
       }
     }
 
-    return NextResponse.json(allRows);
+    return NextResponse.json(allRows.map(r => ({ ...r, __test_version: "v3" })));
   } catch (error: any) {
     console.error("Lỗi xử lý dữ liệu KPI đơn vị:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
