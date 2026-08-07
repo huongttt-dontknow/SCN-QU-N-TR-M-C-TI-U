@@ -295,9 +295,9 @@ export async function GET(request: Request) {
         const parsed = JSON.parse(raw);
         jsonTemplates = parsed.filter((r: any) => {
           if (productCode) {
-            return r.productCode === productCode && r.periodKey === periodKey && r.periodType === periodType;
+            return r.productCode === productCode;
           } else {
-            return r.unitCode === unitCode && (!r.productCode) && r.periodKey === periodKey && r.periodType === periodType;
+            return r.unitCode === unitCode && (!r.productCode);
           }
         });
       }
@@ -305,20 +305,60 @@ export async function GET(request: Request) {
       console.error("Lỗi đọc JSON template:", err);
     }
 
-    if (jsonTemplates.length > 0) {
-      // Tìm các chỉ tiêu template chưa có bản ghi trong kỳ hiện tại
+    // Tải danh sách chỉ tiêu mẫu từ database (các bản ghi cũ)
+    const dbTemplates = await prisma.kpiData.findMany({
+      where: productCode ? { productCode } : { unitCode, productCode: null },
+      distinct: ["indicatorCode"]
+    });
+
+    // Gộp cả 2 nguồn mẫu (ưu tiên JSON) để có danh sách chỉ tiêu mẫu đầy đủ nhất
+    const templateMap = new Map<string, any>();
+    for (const t of dbTemplates) {
+      templateMap.set(t.indicatorCode, {
+        indicatorCode: t.indicatorCode,
+        title: t.title,
+        unit: t.unit,
+        formula: t.formula,
+        group: t.group,
+        parentCode: t.parentCode,
+        frequency: t.frequency,
+        pic: t.pic,
+        targetValue: t.targetValue
+      });
+    }
+    for (const t of jsonTemplates) {
+      templateMap.set(t.indicatorCode, {
+        indicatorCode: t.indicatorCode,
+        title: t.title || templateMap.get(t.indicatorCode)?.title,
+        unit: t.unit || templateMap.get(t.indicatorCode)?.unit,
+        formula: t.formula || templateMap.get(t.indicatorCode)?.formula,
+        group: t.group || templateMap.get(t.indicatorCode)?.group,
+        parentCode: t.parentCode || templateMap.get(t.indicatorCode)?.parentCode,
+        frequency: t.frequency || templateMap.get(t.indicatorCode)?.frequency,
+        pic: t.pic || templateMap.get(t.indicatorCode)?.pic,
+        targetValue: t.targetValue !== undefined ? t.targetValue : (templateMap.get(t.indicatorCode)?.targetValue || 0)
+      });
+    }
+
+    // Tự động kiểm tra và thêm các mẫu chỉ tiêu còn thiếu trong kỳ hiện tại
+    if (templateMap.size > 0) {
       const existingCodes = new Set(kpiRecords.map(r => r.indicatorCode));
-      const missingTemplates = jsonTemplates.filter(t => !existingCodes.has(t.indicatorCode));
+      const missingTemplates: any[] = [];
+      templateMap.forEach((t, indicatorCode) => {
+        if (!existingCodes.has(indicatorCode)) {
+          missingTemplates.push(t);
+        }
+      });
 
       if (missingTemplates.length > 0) {
         const newKpis = missingTemplates.map(t => ({
           indicatorCode: t.indicatorCode,
-          unitCode: t.unitCode || unitCode,
+          unitCode: unitCode,
           productCode: productCode || null,
           periodType,
           periodKey,
           targetValue: t.targetValue || 0,
-          actualValue: t.actualValue || 0,
+          actualValue: 0,
           pic: t.pic || null,
           status: "Chưa thực hiện",
           explanation: "",
@@ -338,56 +378,6 @@ export async function GET(request: Request) {
         });
       }
     } else {
-      // Cơ chế tự phục hồi dự phòng (fallback) dựa trên các bản ghi cũ trong DB
-      const unitTemplates = await prisma.kpiData.findMany({
-        where: productCode ? { productCode } : { unitCode, productCode: null },
-        distinct: ["indicatorCode"]
-      });
-
-      if (unitTemplates.length > 0) {
-        const existingCodes = new Set(kpiRecords.map(r => r.indicatorCode));
-        const missingTemplates = unitTemplates.filter(t => !existingCodes.has(t.indicatorCode));
-
-        if (missingTemplates.length > 0) {
-          const newKpis = missingTemplates.map(t => {
-            let defaultTarget = 0;
-            if (periodType === "weekly" && t.periodKey.startsWith("weekly")) {
-              defaultTarget = t.targetValue;
-            } else if (periodType === "monthly" && t.periodKey.startsWith("monthly")) {
-              defaultTarget = t.targetValue;
-            } else if (periodType === "quarterly" && t.periodKey.startsWith("quarterly")) {
-              defaultTarget = t.targetValue;
-            } else if (periodType === "yearly" && t.periodKey.startsWith("yearly")) {
-              defaultTarget = t.targetValue;
-            }
-
-            return {
-              indicatorCode: t.indicatorCode,
-              unitCode: t.unitCode || unitCode,
-              productCode: productCode || null,
-              periodType,
-              periodKey,
-              targetValue: defaultTarget,
-              actualValue: 0,
-              pic: t.pic,
-              status: "Chưa thực hiện",
-              explanation: "",
-              title: t.title,
-              unit: t.unit,
-              formula: t.formula,
-              group: t.group,
-              parentCode: t.parentCode,
-              frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
-            };
-          });
-
-          await prisma.kpiData.createMany({ data: newKpis });
-
-          kpiRecords = await prisma.kpiData.findMany({
-            where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
-          });
-        }
-      } else {
         // Fallback cứng cuối cùng nếu toàn bộ DB và JSON trống
         const defaultIndicators = [
           { code: "VM1-I01.01", title: "Tỷ suất lợi nhuận ROI (%)", target: 15, pic: "Lê Đăng Khoa", type: "monthly", unit: "%", group: "M1. TÀI CHÍNH" },
@@ -430,10 +420,9 @@ export async function GET(request: Request) {
 
         await prisma.kpiData.createMany({ data: newKpis });
         kpiRecords = await prisma.kpiData.findMany({
-          where: { unitCode, periodKey, periodType },
+          where: { unitCode, periodKey, periodType }
         });
       }
-    }
 
     const metaMap = getMetadataMap(productCode);
     const enrichedRecords = kpiRecords.map((r: any) => {
