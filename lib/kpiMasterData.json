@@ -163,7 +163,7 @@
       }
     },
     "VM1-I02.01": {
-      "title": "Tổng doanh thu",
+      "title": "Tổng doanh thu SCVN",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "PTGĐ Ly",
@@ -375,7 +375,7 @@
       }
     },
     "VM1-I02.01-WF": {
-      "title": "BP WF",
+      "title": "Doanh thu BP WF",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": "ThienNX",
@@ -582,7 +582,7 @@
       }
     },
     "VM1-I02.01-AS": {
-      "title": "BP AS",
+      "title": "Doanh thu BP AS",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": "ThinhTQ",
@@ -792,7 +792,7 @@
       }
     },
     "VM1-I02.01-NDTH": {
-      "title": "BP NDTH",
+      "title": "Doanh thu BP NDTH",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": "HangLQ",
@@ -996,7 +996,7 @@
       }
     },
     "VM1-I02.01-Lego": {
-      "title": "DA Lego",
+      "title": "Doanh thu DA Lego",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": "NgaLQ",
@@ -1205,8 +1205,8 @@
         }
       }
     },
-    "DM1-I02.01": {
-      "title": "DA 01",
+    "DM1-I02.01-DA01": {
+      "title": "Doanh thu DA 01",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -1412,8 +1412,8 @@
         }
       }
     },
-    "SM1-I02.01": {
-      "title": "SCS",
+    "SM1-I02.01-SCS": {
+      "title": "Doanh thu SCS",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -1464,8 +1464,8 @@
         }
       }
     },
-    "MM1-I02.01": {
-      "title": "SCMU",
+    "MM1-I02.01-SCMU": {
+      "title": "Doanh thu SCMU",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -1514,8 +1514,8 @@
         }
       }
     },
-    "NM1-I02.01": {
-      "title": "CNGP",
+    "NM1-I02.01-CNGP": {
+      "title": "Doanh thu CNGP",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -1566,8 +1566,8 @@
         }
       }
     },
-    "CM1-I02.01": {
-      "title": "BP Creative",
+    "CM1-I02.01-CR": {
+      "title": "Doanh thu BP Creative",
       "unit": "VNĐ",
       "formula": "DT phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -1660,7 +1660,7 @@
       }
     },
     "VM1-I02.02": {
-      "title": "Doanh thu nội bộ",
+      "title": "Doanh thu nội bộ SCVN",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu đơn vị tạo ra trong kỳ đánh giá",
       "pic": "PTGĐ Ly",
@@ -1872,7 +1872,7 @@
       }
     },
     "VM1-I02.02-WF": {
-      "title": "BP WF",
+      "title": "Doanh thu NB BP WF",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "KhoaLD",
@@ -2044,7 +2044,7 @@
       }
     },
     "VM1-I02.02-AS": {
-      "title": "BP AS",
+      "title": "Doanh thu NB BP AS",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "ThinhTQ",
@@ -2254,7 +2254,7 @@
       }
     },
     "VM1-I02.02-NDTH": {
-      "title": "BP NDTH",
+      "title": "Doanh thu NB BP NDTH",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "HangLQ",
@@ -2456,7 +2456,7 @@
       }
     },
     "VM1-I02.02-Lego": {
-      "title": "DA Lego",
+      "title": "Doanh thu NB DA Lego",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "NgaLQ",
@@ -2938,7 +2938,7 @@
       }
     },
     "VM1-I02.03-WF": {
-      "title": "BP WF",
+      "title": "Doanh thu chéo BP WF",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "ThienNX",
@@ -3066,7 +3066,7 @@
       }
     },
     "VM1-I02.03-AS": {
-      "title": "BP AS",
+      "title": "Doanh thu chéo BP AS",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "ThinhTQ",
@@ -3240,7 +3240,7 @@
       }
     },
     "VM1-I02.03-NDTH": {
-      "title": "BP NDTH",
+      "title": "Doanh thu chéo BP NDTH",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "HangLQ",
@@ -3266,14 +3266,14 @@
       }
     },
     "VM1-I02.03-Lego": {
-      "title": "DA Lego",
+      "title": "Doanh thu chéo DA Lego",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": "NgaLQ",
       "periods": {}
     },
     "VM1-I02.04": {
-      "title": "Doanh thu đối tác",
+      "title": "Doanh thu đối tác SCVN",
       "unit": "",
       "formula": "Tổng doanh thu bên ngoài cty tạo ra trong kỳ đánh giá",
       "pic": "PTGĐ Ly",
@@ -3457,7 +3457,7 @@
       }
     },
     "VM1-I02.04-WF": {
-      "title": "BP WF",
+      "title": "Doanh thu ĐT BP WF",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -3595,7 +3595,7 @@
       }
     },
     "VM1-I02.04-AS": {
-      "title": "BP AS",
+      "title": "Doanh thu ĐT BP AS",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -3735,7 +3735,7 @@
       }
     },
     "VM1-I02.04-Lego": {
-      "title": "DA Lego",
+      "title": "Doanh thu ĐT DA Lego",
       "unit": "VNĐ",
       "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
       "pic": null,
@@ -4012,7 +4012,7 @@
       }
     },
     "VM2-I01.01-WF": {
-      "title": "BP WF",
+      "title": "SP BP WF",
       "unit": "Nội dung",
       "formula": "Số lượng video hoàn thành sản xuất",
       "pic": null,
@@ -4207,7 +4207,7 @@
       }
     },
     "VM2-I01.01-AS": {
-      "title": "BP AS",
+      "title": "SP BP AS",
       "unit": "Nội dung",
       "formula": "Số lượng video hoàn thành sản xuất",
       "pic": null,
@@ -4410,7 +4410,7 @@
       }
     },
     "VM2-I01.01-Lego": {
-      "title": "DA Lego",
+      "title": "SP DA Lego",
       "unit": "Nội dung",
       "formula": "Số lượng video hoàn thành sản xuất",
       "pic": null,
@@ -4616,7 +4616,7 @@
       }
     },
     "VM2-I01.02-NDTH": {
-      "title": "BP NDTH",
+      "title": "SP BP NDTH",
       "unit": "Nội dung",
       "formula": "Số lượng video BIÊN TẬP hoàn thành (funny)",
       "pic": null,
@@ -4851,7 +4851,7 @@
         }
       }
     },
-    "DM2-I01.01": {
+    "DM2-I01.01-DA01": {
       "title": "DA 01",
       "unit": "Nội dung",
       "formula": "Số lượng video hoàn thành sản xuất",
@@ -4888,7 +4888,7 @@
         }
       }
     },
-    "SM2-I01.01": {
+    "SM2-I01.01-SCS": {
       "title": "SCS",
       "unit": "Nội dung",
       "formula": "Số lượng video hoàn thành sản xuất",
@@ -5234,7 +5234,7 @@
       }
     },
     "VM2-I02.01-WF": {
-      "title": "BP WF",
+      "title": "Video >1M  BP WF",
       "unit": "Nội dung",
       "formula": "",
       "pic": null,
@@ -5288,7 +5288,7 @@
       }
     },
     "VM2-I02.01-AS": {
-      "title": "BP AS",
+      "title": "Video >1M  BP AS",
       "unit": "Nội dung",
       "formula": "",
       "pic": null,
@@ -5299,14 +5299,14 @@
       }
     },
     "VM2-I02.01-Lego": {
-      "title": "DA Lego",
+      "title": "Video >1M  DA Lego",
       "unit": "Nội dung",
       "formula": "",
       "pic": null,
       "periods": {}
     },
     "VM2-I02.01-NDTH": {
-      "title": "BP NDTH",
+      "title": "Video >1M  BP NDTH",
       "unit": "Nội dung",
       "formula": "",
       "pic": null,
@@ -5360,8 +5360,8 @@
         }
       }
     },
-    "TM4-I02.01": {
-      "title": "DA 01",
+    "TM4-I02.01-DA01": {
+      "title": "Video >1M  DA 01",
       "unit": "Nội dung",
       "formula": "",
       "pic": null,
@@ -5765,7 +5765,7 @@
       }
     },
     "VM3-I01.02-WF": {
-      "title": "BP WF",
+      "title": "View BP WF",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -5970,7 +5970,7 @@
       }
     },
     "VM3-I01.02-AS": {
-      "title": "BP AS",
+      "title": "View BP AS",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -6178,7 +6178,7 @@
       }
     },
     "VM3-I01.02-Lego": {
-      "title": "DA Lego",
+      "title": "View DA Lego",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -6386,7 +6386,7 @@
       }
     },
     "VM3-I01.02-NDTH": {
-      "title": "BP NDTH",
+      "title": "View BP NDTH",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -6587,8 +6587,8 @@
         }
       }
     },
-    "DM3-I01.03": {
-      "title": "DA 01",
+    "DM3-I01.03-DA01": {
+      "title": "View DA 01",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -6789,8 +6789,8 @@
         }
       }
     },
-    "SM3-I01.04": {
-      "title": "SCS",
+    "SM3-I01.04-SCS": {
+      "title": "View SCS",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -6836,8 +6836,8 @@
         }
       }
     },
-    "MM3-I01.01": {
-      "title": "SCMU",
+    "MM3-I01.01-SCMU": {
+      "title": "View SCMU",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -6883,8 +6883,8 @@
         }
       }
     },
-    "NM3-I01.05": {
-      "title": "CNGP",
+    "NM3-I01.05-CNGP": {
+      "title": "View CNGP",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -6919,8 +6919,8 @@
         }
       }
     },
-    "CM3-I01.01": {
-      "title": "BP Creative",
+    "CM3-I01.01-CR": {
+      "title": "View BP Creative",
       "unit": "Views",
       "formula": "",
       "pic": null,
@@ -7946,7 +7946,7 @@
       }
     },
     "VM4-I01.01-WF": {
-      "title": "BP WF",
+      "title": "Độ phủ BP WF",
       "unit": "Subs/Followers",
       "formula": "Tổng số subcribers/Followers tăng trưởng MỚI trong kỳ (bao gồm cả kênh thương hiệu và kênh khai thác)",
       "pic": null,
@@ -8119,7 +8119,7 @@
         }
       }
     },
-    "DM4-I02.01": {
+    "DM4-I02.01-DA01": {
       "title": "DA 01",
       "unit": "Kênh",
       "formula": "",
@@ -8396,7 +8396,7 @@
         }
       }
     },
-    "DM4-I02.02": {
+    "DM4-I02.02-DA01": {
       "title": "DA 01",
       "unit": "Kênh",
       "formula": "",
@@ -8636,14 +8636,14 @@
         }
       }
     },
-    "DM4-I02.04": {
+    "DM4-I02.04-DA01": {
       "title": "DA 01",
       "unit": "SL",
       "formula": "",
       "pic": null,
       "periods": {}
     },
-    "SM4-I02.06": {
+    "SM4-I02.06-SCS": {
       "title": "SCS",
       "unit": "SL",
       "formula": "",
@@ -8663,7 +8663,7 @@
       "pic": null,
       "periods": {}
     },
-    "NM4-I02.04": {
+    "NM4-I02.04-CNGP": {
       "title": "CNGP",
       "unit": "SL",
       "formula": "",
@@ -9015,7 +9015,7 @@
       }
     },
     "VM5-I02.02-WF": {
-      "title": "BP WF",
+      "title": "Hiệu suất SX BP WF",
       "unit": "ND",
       "formula": "",
       "pic": null,
@@ -9068,7 +9068,7 @@
       }
     },
     "VM5-I02.02-Lego": {
-      "title": "DA Lego",
+      "title": "Hiệu suất SX DA Lego",
       "unit": "ND",
       "formula": "",
       "pic": null,
@@ -9215,7 +9215,7 @@
       }
     },
     "VM5-I02.03-WF": {
-      "title": "BP WF",
+      "title": "Hiệu suất DT kênh BP WF",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9268,7 +9268,7 @@
       }
     },
     "VM5-I02.03-AS": {
-      "title": "BP AS",
+      "title": "Hiệu suất DT kênh BP AS",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9328,7 +9328,7 @@
       }
     },
     "VM5-I02.03-Lego": {
-      "title": "DA Lego",
+      "title": "Hiệu suất DT kênh DA Lego",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9386,7 +9386,7 @@
       }
     },
     "VM5-I02.03-NDTH": {
-      "title": "BP NDTH",
+      "title": "Hiệu suất DT kênh BP NDTH",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9495,7 +9495,7 @@
       }
     },
     "VM5-I02.04-WF": {
-      "title": "BP WF",
+      "title": "Hiệu suất QTK BP WF",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9544,7 +9544,7 @@
       }
     },
     "VM5-I02.04-AS": {
-      "title": "BP AS",
+      "title": "Hiệu suất QTK BP AS",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9600,7 +9600,7 @@
       }
     },
     "VM5-I02.04-Lego": {
-      "title": "DA Lego",
+      "title": "Hiệu suất QTK DA Lego",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9656,7 +9656,7 @@
       }
     },
     "VM5-I02.04-NDTH": {
-      "title": "BP NDTH",
+      "title": "Hiệu suất QTK BP NDTH",
       "unit": "VNĐ",
       "formula": "",
       "pic": null,
@@ -9872,7 +9872,7 @@
         }
       }
     },
-    "DM6-I01.01": {
+    "DM6-I01.01-DA01": {
       "title": "DA 01",
       "unit": "Buổi",
       "formula": "",
@@ -9883,7 +9883,7 @@
         }
       }
     },
-    "SM6-I01.01": {
+    "SM6-I01.01-SCS": {
       "title": "SCS",
       "unit": "Buổi",
       "formula": "",
@@ -9896,7 +9896,7 @@
         }
       }
     },
-    "MM6-I01.01": {
+    "MM6-I01.01-SCMU": {
       "title": "SCMU",
       "unit": "Buổi",
       "formula": "",
@@ -9909,7 +9909,7 @@
         }
       }
     },
-    "CM6-I01.01": {
+    "CM6-I01.01-CR": {
       "title": "BP Creative",
       "unit": "Buổi",
       "formula": "",
@@ -10865,7 +10865,7 @@
         }
       }
     },
-    "DM7-I03.01": {
+    "DM7-I03.01-DA01": {
       "title": "DA 01",
       "unit": "%",
       "formula": "",
@@ -10881,7 +10881,7 @@
         }
       }
     },
-    "SM7-I03.01": {
+    "SM7-I03.01-SCS": {
       "title": "SCS",
       "unit": "%",
       "formula": "",
@@ -10897,7 +10897,7 @@
         }
       }
     },
-    "MM7-I03.01": {
+    "MM7-I03.01-SCMU": {
       "title": "SCMU",
       "unit": "%",
       "formula": "",
@@ -10913,7 +10913,7 @@
         }
       }
     },
-    "NM7-I03.01": {
+    "NM7-I03.01-CNGP": {
       "title": "CNGP",
       "unit": "%",
       "formula": "",
@@ -10929,7 +10929,7 @@
         }
       }
     },
-    "CM7-I03.01": {
+    "CM7-I03.01-CR": {
       "title": "BP Creative",
       "unit": "%",
       "formula": "",
@@ -11195,7 +11195,7 @@
         }
       }
     },
-    "DM7-I03.02": {
+    "DM7-I03.02-DA01": {
       "title": "DA 01",
       "unit": "Lần",
       "formula": "",
@@ -11208,7 +11208,7 @@
         }
       }
     },
-    "SM7-I03.02": {
+    "SM7-I03.02-SCS": {
       "title": "SCS",
       "unit": "Lần",
       "formula": "",
@@ -11219,7 +11219,7 @@
         }
       }
     },
-    "MM7-I03.02": {
+    "MM7-I03.02-SCMU": {
       "title": "SCMU",
       "unit": "Lần",
       "formula": "",
@@ -11230,7 +11230,7 @@
         }
       }
     },
-    "NM7-I03.02": {
+    "NM7-I03.02-CNGP": {
       "title": "CNGP",
       "unit": "Lần",
       "formula": "",
@@ -11241,7 +11241,7 @@
         }
       }
     },
-    "CM7-I03.02": {
+    "CM7-I03.02-CR": {
       "title": "BP Creative",
       "unit": "Lần",
       "formula": "",

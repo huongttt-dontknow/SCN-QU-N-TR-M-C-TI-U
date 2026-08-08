@@ -18,7 +18,7 @@ const renameMap = {
 async function main() {
   console.log("=== BẮT ĐẦU DI TRÚ VÀ CẬP NHẬT CHỈ TIÊU SCVN ===");
   
-  const rulesPath = "C:\\Users\\admin\\.gemini\\antigravity\\brain\\157fccb7-a01f-49c8-8216-83497733d96d\\scratch\\scvn_rules.json";
+  const rulesPath = path.join(__dirname, "..", "scvn_rules.json");
   if (!fs.existsSync(rulesPath)) {
     console.error("Lỗi: Không tìm thấy file scvn_rules.json");
     process.exit(1);
