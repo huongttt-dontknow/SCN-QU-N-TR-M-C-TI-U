@@ -304,9 +304,18 @@ export async function GET(request: Request) {
           isOverriddenWeek: false,
           isOverriddenMonth: false,
           isOverriddenQuarter: false,
-          isOverriddenYear: false
+          isOverriddenYear: false,
+          periods: {}
         };
       }
+
+      if (!compiledRows[code].periods) {
+        compiledRows[code].periods = {};
+      }
+      compiledRows[code].periods[r.periodKey] = {
+        target: r.targetValue,
+        actual: r.actualValue
+      };
 
       const pKey = r.periodKey;
       if (pKey === targetWeekKey) {
@@ -363,6 +372,11 @@ export async function GET(request: Request) {
         row.targetMonth = monthVal.target;
         row.actualMonth = monthVal.actual;
       }
+      if (!row.periods) row.periods = {};
+      row.periods[`monthly_${month}`] = {
+        target: row.targetMonth,
+        actual: row.actualMonth
+      };
 
       // Lũy kế Quý (nếu không ghi đè)
       if (!row.isOverriddenQuarter) {
@@ -370,6 +384,10 @@ export async function GET(request: Request) {
         row.targetQuarter = quarterVal.target;
         row.actualQuarter = quarterVal.actual;
       }
+      row.periods[`quarterly_${quarter.toLowerCase().replace("q", "")}`] = {
+        target: row.targetQuarter,
+        actual: row.actualQuarter
+      };
 
       // Lũy kế Năm (nếu không ghi đè)
       if (!row.isOverriddenYear) {
@@ -377,6 +395,10 @@ export async function GET(request: Request) {
         row.targetYear = yearVal.target;
         row.actualYear = yearVal.actual;
       }
+      row.periods[`yearly_${year}`] = {
+        target: row.targetYear,
+        actual: row.actualYear
+      };
     }
 
     // Tự động tính gộp dữ liệu từ con lên cha cho các chỉ tiêu cha trung gian (ví dụ: VM1-I02.02, VM1-I02.03, VM1-I02.04)

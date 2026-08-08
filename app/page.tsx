@@ -350,26 +350,37 @@ export default function DashboardPage() {
     if (unitCode === filters.unitCode && dbKpis && dbKpis.length > 0) {
       const match = dbKpis.find(k => k.code === searchCode);
       if (match) {
-        let target = 0;
-        let actual = 0;
-        if (pKey.startsWith("weekly_")) {
-          target = match.targetWeek || 0;
-          actual = match.actualWeek || 0;
-        } else if (pKey.startsWith("monthly_")) {
-          target = match.targetMonth || 0;
-          actual = match.actualMonth || 0;
-        } else if (pKey.startsWith("quarterly_")) {
-          target = match.targetQuarter || 0;
-          actual = match.actualQuarter || 0;
-        } else if (pKey.startsWith("yearly_")) {
-          target = match.targetYear || 0;
-          actual = match.actualYear || 0;
+        if (match.periods && match.periods[pKey]) {
+          const target = match.periods[pKey].target || 0;
+          const actual = match.periods[pKey].actual || 0;
+          return {
+            target,
+            actual,
+            pct: calculateCompletionRate(target, actual, searchCode)
+          };
         }
-        return {
-          target,
-          actual,
-          pct: calculateCompletionRate(target, actual, searchCode)
-        };
+        if (pKey === periodKey) {
+          let target = 0;
+          let actual = 0;
+          if (pKey.startsWith("weekly_")) {
+            target = match.targetWeek || 0;
+            actual = match.actualWeek || 0;
+          } else if (pKey.startsWith("monthly_")) {
+            target = match.targetMonth || 0;
+            actual = match.actualMonth || 0;
+          } else if (pKey.startsWith("quarterly_")) {
+            target = match.targetQuarter || 0;
+            actual = match.actualQuarter || 0;
+          } else if (pKey.startsWith("yearly_")) {
+            target = match.targetYear || 0;
+            actual = match.actualYear || 0;
+          }
+          return {
+            target,
+            actual,
+            pct: calculateCompletionRate(target, actual, searchCode)
+          };
+        }
       }
     }
 
@@ -377,26 +388,37 @@ export default function DashboardPage() {
     if (unitCode === "SCVN" && scvnKpis && scvnKpis.length > 0) {
       const match = scvnKpis.find(k => k.code === searchCode);
       if (match) {
-        let target = 0;
-        let actual = 0;
-        if (pKey.startsWith("weekly_")) {
-          target = match.targetWeek || 0;
-          actual = match.actualWeek || 0;
-        } else if (pKey.startsWith("monthly_")) {
-          target = match.targetMonth || 0;
-          actual = match.actualMonth || 0;
-        } else if (pKey.startsWith("quarterly_")) {
-          target = match.targetQuarter || 0;
-          actual = match.actualQuarter || 0;
-        } else if (pKey.startsWith("yearly_")) {
-          target = match.targetYear || 0;
-          actual = match.actualYear || 0;
+        if (match.periods && match.periods[pKey]) {
+          const target = match.periods[pKey].target || 0;
+          const actual = match.periods[pKey].actual || 0;
+          return {
+            target,
+            actual,
+            pct: calculateCompletionRate(target, actual, searchCode)
+          };
         }
-        return {
-          target,
-          actual,
-          pct: calculateCompletionRate(target, actual, searchCode)
-        };
+        if (pKey === periodKey) {
+          let target = 0;
+          let actual = 0;
+          if (pKey.startsWith("weekly_")) {
+            target = match.targetWeek || 0;
+            actual = match.actualWeek || 0;
+          } else if (pKey.startsWith("monthly_")) {
+            target = match.targetMonth || 0;
+            actual = match.actualMonth || 0;
+          } else if (pKey.startsWith("quarterly_")) {
+            target = match.targetQuarter || 0;
+            actual = match.actualQuarter || 0;
+          } else if (pKey.startsWith("yearly_")) {
+            target = match.targetYear || 0;
+            actual = match.actualYear || 0;
+          }
+          return {
+            target,
+            actual,
+            pct: calculateCompletionRate(target, actual, searchCode)
+          };
+        }
       }
     }
 
@@ -432,26 +454,37 @@ export default function DashboardPage() {
       if (mappedCodeForMember) {
         const match = scvnKpis.find(k => k.code === mappedCodeForMember);
         if (match) {
-          let target = 0;
-          let actual = 0;
-          if (pKey.startsWith("weekly_")) {
-            target = match.targetWeek || 0;
-            actual = match.actualWeek || 0;
-          } else if (pKey.startsWith("monthly_")) {
-            target = match.targetMonth || 0;
-            actual = match.actualMonth || 0;
-          } else if (pKey.startsWith("quarterly_")) {
-            target = match.targetQuarter || 0;
-            actual = match.actualQuarter || 0;
-          } else if (pKey.startsWith("yearly_")) {
-            target = match.targetYear || 0;
-            actual = match.actualYear || 0;
+          if (match.periods && match.periods[pKey]) {
+            const target = match.periods[pKey].target || 0;
+            const actual = match.periods[pKey].actual || 0;
+            return {
+              target,
+              actual,
+              pct: calculateCompletionRate(target, actual, mappedCodeForMember)
+            };
           }
-          return {
-            target,
-            actual,
-            pct: calculateCompletionRate(target, actual, searchCode)
-          };
+          if (pKey === periodKey) {
+            let target = 0;
+            let actual = 0;
+            if (pKey.startsWith("weekly_")) {
+              target = match.targetWeek || 0;
+              actual = match.actualWeek || 0;
+            } else if (pKey.startsWith("monthly_")) {
+              target = match.targetMonth || 0;
+              actual = match.actualMonth || 0;
+            } else if (pKey.startsWith("quarterly_")) {
+              target = match.targetQuarter || 0;
+              actual = match.actualQuarter || 0;
+            } else if (pKey.startsWith("yearly_")) {
+              target = match.targetYear || 0;
+              actual = match.actualYear || 0;
+            }
+            return {
+              target,
+              actual,
+              pct: calculateCompletionRate(target, actual, searchCode)
+            };
+          }
         }
       }
     }
