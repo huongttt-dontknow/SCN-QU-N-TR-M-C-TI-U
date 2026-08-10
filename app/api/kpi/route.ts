@@ -549,6 +549,10 @@ export async function POST(request: Request) {
 
     const saveOps = [];
     for (const u of kpiUpdates) {
+      // Bỏ qua cập nhật client cho các chỉ tiêu nhóm lớn M1-M7
+      if (["M1", "M2", "M3", "M4", "M5", "M6", "M7"].includes(u.indicatorCode)) {
+        continue;
+      }
       let record = recordMap.get(u.id);
       if (!record && u.indicatorCode) {
         const key = `${unitCode}_${(productCode && productCode !== "all") ? productCode : 'null'}_${u.indicatorCode}_${periodKey}_${periodType}`;
@@ -1266,9 +1270,10 @@ async function calculateAndSaveRadarScores(unitCode: string, periodKey: string, 
     const children = grouped[mCode] || [];
     const totalWeight = children.reduce((sum, c) => sum + (c.weight || 0), 0);
 
-    if (totalWeight > 0) {
-      let weightedSum = 0;
-      for (const c of children) {
+    if (children.length > 0) {
+      let calculatedScore = 0;
+      
+      const getCompletion = (c: any) => {
         const target = c.targetValue || 0;
         const actual = c.actualValue || 0;
         
@@ -1312,15 +1317,27 @@ async function calculateAndSaveRadarScores(unitCode: string, periodKey: string, 
           completion = target > 0 ? (actual / target) * 100 : 100;
         }
 
-        // Cap at 130% for all metrics except M1
         const isM1 = mCode === "M1" || tCode.includes("M1");
         if (!isM1) {
           completion = Math.min(130, completion);
         }
+        return completion;
+      };
 
-        weightedSum += completion * ((c.weight || 0) / 100);
+      if (totalWeight > 0) {
+        let weightedSum = 0;
+        for (const c of children) {
+          const completion = getCompletion(c);
+          weightedSum += completion * ((c.weight || 0) / 100);
+        }
+        calculatedScore = Math.round(weightedSum);
+      } else {
+        let completionSum = 0;
+        for (const c of children) {
+          completionSum += getCompletion(c);
+        }
+        calculatedScore = Math.round(completionSum / children.length);
       }
-      const calculatedScore = Math.round(weightedSum);
 
       const existing = existingMap.get(mCode);
 
