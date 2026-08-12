@@ -5169,7 +5169,9 @@
     "target": 0,
     "actual": 0,
     "parentCode": "TM7-I03",
-    "rollup": "AVERAGE"
+    "rollup": "AVERAGE",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5184,7 +5186,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5199,7 +5203,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5214,7 +5220,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5229,7 +5237,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5244,7 +5254,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5259,7 +5271,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5274,7 +5288,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5289,7 +5305,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",
@@ -5304,7 +5322,9 @@
     "weight": 0,
     "target": 0,
     "actual": 0,
-    "parentCode": "VM7-I03.01"
+    "parentCode": "VM7-I03.01",
+    "targetValue": 0.9389,
+    "actualValue": 0.9722
   },
   {
     "unitCode": "SCVN",

@@ -640,9 +640,17 @@ export default function DashboardPage() {
   const topUnit = [...barComparisonData].sort((a, b) => b.completion - a.completion)[0] || { name: "Dự án 01", completion: 88 };
 
   // Card 4: Kỷ luật (Tháng/Quý/Năm) vs Biến động doanh thu cao nhất (Tuần)
-  const disciplinePct = (scvnDisciplineRec && (scvnDisciplineRec.actual || scvnDisciplineRec.actual === 0))
-    ? `${scvnDisciplineRec.actual}%` 
-    : (scvnDisciplineRec?.pct ? `${(scvnDisciplineRec.pct * 100).toFixed(1)}%` : "97.22%");
+  let discValNum = 97.22;
+  if (scvnDisciplineRec && scvnDisciplineRec.actual !== undefined && scvnDisciplineRec.actual !== null && scvnDisciplineRec.actual !== 0) {
+    if (scvnDisciplineRec.actual > 0 && scvnDisciplineRec.actual <= 1) {
+      discValNum = Math.round(scvnDisciplineRec.actual * 10000) / 100;
+    } else {
+      discValNum = Math.round(scvnDisciplineRec.actual * 100) / 100;
+    }
+  } else if (scvnDisciplineRec?.pct) {
+    discValNum = Math.round(scvnDisciplineRec.pct * 10000) / 100;
+  }
+  const disciplinePct = `${discValNum}%`;
 
   // Tính toán biến động doanh thu theo tuần cho 9 đơn vị
   const getPrevWeeklyPeriodKey = (mStr: string, wStr: string) => {
