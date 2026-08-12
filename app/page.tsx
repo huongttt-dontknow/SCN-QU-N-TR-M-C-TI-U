@@ -559,7 +559,7 @@ export default function DashboardPage() {
   // Số liệu thực tế đơn vị cấp Toàn hệ thống/BU
   const scvnRevRec = getKpiRecord(filters.unitCode, "VM1-I02.01", periodKey);
   const scvnVolRec = getKpiRecord(filters.unitCode, "VM2-I01.01", periodKey);
-  const scvnDisciplineRec = getKpiRecord(filters.unitCode, "TM7-I01.01", periodKey);
+  const scvnDisciplineRec = getKpiRecord(filters.unitCode, "VM7-I03.01", periodKey);
   const scvnRoiRec = getKpiRecord(filters.unitCode, "VM1-I01.01", periodKey);
 
   // Calculations for Card 3 & 4 when isParentUnit is false:
@@ -640,7 +640,9 @@ export default function DashboardPage() {
   const topUnit = [...barComparisonData].sort((a, b) => b.completion - a.completion)[0] || { name: "Dự án 01", completion: 88 };
 
   // Card 4: Kỷ luật (Tháng/Quý/Năm) vs Biến động doanh thu cao nhất (Tuần)
-  const disciplinePct = scvnDisciplineRec?.actual ? `${scvnDisciplineRec.actual}%` : (scvnDisciplineRec?.pct ? `${(scvnDisciplineRec.pct * 100).toFixed(1)}%` : "99.85%");
+  const disciplinePct = (scvnDisciplineRec && (scvnDisciplineRec.actual || scvnDisciplineRec.actual === 0))
+    ? `${scvnDisciplineRec.actual}%` 
+    : (scvnDisciplineRec?.pct ? `${(scvnDisciplineRec.pct * 100).toFixed(1)}%` : "97.22%");
 
   // Tính toán biến động doanh thu theo tuần cho 9 đơn vị
   const getPrevWeeklyPeriodKey = (mStr: string, wStr: string) => {

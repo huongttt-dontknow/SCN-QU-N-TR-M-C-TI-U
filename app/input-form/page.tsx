@@ -14,7 +14,8 @@ import {
   Building2,
   Award,
   Crown,
-  Target
+  Target,
+  Loader2
 } from "lucide-react";
 
 const PRODUCTS_CATALOG = [
@@ -390,6 +391,7 @@ export default function InputFormPage() {
   const [productsList, setProductsList] = useState<ProductLine[]>(PRODUCTS_CATALOG.map(p => ({ id: p.id, name: p.name, code: p.id, unitCode: p.unit })));
   const [kpis, setKpis] = useState<KpiItem[]>([]);
   const [productKpis, setProductKpis] = useState<ProductKpiItem[]>([]);
+  const [isTableLoading, setIsTableLoading] = useState<boolean>(true);
 
   // Synchronize state with refs to resolve React state race conditions during handleSaveRow
   const kpisRef = useRef<KpiItem[]>([]);
@@ -526,9 +528,26 @@ export default function InputFormPage() {
     }
   };
 
+  const isChildUnitIndicator = (k: KpiItem) => {
+    if (!k || !k.code) return false;
+    const code = k.code.trim();
+    if (/-(WF|AS|Lego|NDTH|DA01|SCS|SCMU|CNGP|CR)$/i.test(code)) return true;
+    if (k.parentCode && !isRootCategoryCode(k.parentCode) && !isHeaderOnlyRow(k.parentCode)) {
+      return true;
+    }
+    return false;
+  };
+
   const checkKpiNeedsExplanation = (k: KpiItem) => {
+    if (!k || !k.code) return false;
     if (k.target <= 0) return false;
-    
+
+    // Rule A: Exclude root categories (M1-M7) and section headers
+    if (isRootCategoryCode(k.code) || isHeaderOnlyRow(k.code)) return false;
+
+    // Rule B: For SCVN, exclude child unit indicators (only require explanation for parent indicators!)
+    if (filters.unitCode === "SCVN" && isChildUnitIndicator(k)) return false;
+
     const currentActual = k.actual;
     const target = k.target;
     const completionRate = currentActual / target;
@@ -548,73 +567,69 @@ export default function InputFormPage() {
     return false;
   };
 
-  // Fetch previous period KPI data
+  // 1 & 2. Fetch unit-level & previous period KPI data in parallel
   useEffect(() => {
     let isMounted = true;
+    setIsTableLoading(true);
+
+    const pKey = getPeriodKey();
     const prevKey = getPrevPeriodKey();
     const pType = filters.periodType || "weekly";
-    
-    fetch(`/api/kpi?unitCode=${filters.unitCode}&periodKey=${prevKey}&periodType=${pType}`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted && Array.isArray(data)) {
-          const dict: Record<string, number> = {};
-          data.forEach((d: any) => {
-            dict[d.indicatorCode] = d.actualValue || 0;
-          });
-          setPrevKpis(dict);
-        }
-      })
-      .catch(err => console.error("Lỗi tải dữ liệu KPI kỳ trước:", err));
 
-    return () => {
-      isMounted = false;
-    };
-  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
+    const currUrl = `/api/kpi?unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}`;
+    const prevUrl = `/api/kpi?unitCode=${filters.unitCode}&periodKey=${prevKey}&periodType=${pType}`;
 
-  // 2. Fetch unit-level KPI data
-  useEffect(() => {
-    let isMounted = true;
-    const pKey = getPeriodKey();
-    const pType = filters.periodType || "weekly";
-    
-    fetch(`/api/kpi?unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted && Array.isArray(data) && data.length > 0) {
-          const mapped = data.map((d: any) => ({
-            id: d.id || `${d.indicatorCode}_${filters.unitCode}`,
-            code: d.indicatorCode,
-            title: d.title || d.indicatorCode,
-            unit: d.unit || "",
-            formula: d.formula || "",
-            target: d.targetValue,
-            actual: d.actualValue,
-            weight: d.weight || 0,
-            status: d.status || "Chờ duyệt",
-            pic: d.pic || "",
-            group: d.group || "Chỉ số bổ sung",
-            frequency: d.frequency || "",
-            parentCode: d.parentCode || ""
-          }));
-          setKpis(mapped);
-          kpisRef.current = mapped;
-          
-          const loadedExplanations: Record<string, string> = {};
-          data.forEach((d: any) => {
-            if (d.explanation) {
-              loadedExplanations[d.id] = d.explanation;
-            }
-          });
-          setExplanations(loadedExplanations);
-          
-          const firstWithStatus = data.find((d: any) => d.status);
-          if (firstWithStatus) {
-            setReportStatus(firstWithStatus.status);
+    Promise.all([
+      fetch(currUrl).then(res => res.json()).catch(() => []),
+      fetch(prevUrl).then(res => res.json()).catch(() => [])
+    ]).then(([currData, prevData]) => {
+      if (!isMounted) return;
+
+      if (Array.isArray(prevData)) {
+        const dict: Record<string, number> = {};
+        prevData.forEach((d: any) => {
+          dict[d.indicatorCode] = d.actualValue || 0;
+        });
+        setPrevKpis(dict);
+      }
+
+      if (Array.isArray(currData) && currData.length > 0) {
+        const mapped = currData.map((d: any) => ({
+          id: d.id || `${d.indicatorCode}_${filters.unitCode}`,
+          code: d.indicatorCode,
+          title: d.title || d.indicatorCode,
+          unit: d.unit || "",
+          formula: d.formula || "",
+          target: d.targetValue,
+          actual: d.actualValue,
+          weight: d.weight || 0,
+          status: d.status || "Chờ duyệt",
+          pic: d.pic || "",
+          group: d.group || "Chỉ số bổ sung",
+          frequency: d.frequency || "",
+          parentCode: d.parentCode || ""
+        }));
+        setKpis(mapped);
+        kpisRef.current = mapped;
+
+        const loadedExplanations: Record<string, string> = {};
+        currData.forEach((d: any) => {
+          if (d.explanation) {
+            loadedExplanations[d.id] = d.explanation;
           }
+        });
+        setExplanations(loadedExplanations);
+
+        const firstWithStatus = currData.find((d: any) => d.status);
+        if (firstWithStatus) {
+          setReportStatus(firstWithStatus.status);
         }
-      })
-      .catch(err => console.error("Lỗi tải dữ liệu nhập liệu KPI:", err));
+      }
+      setIsTableLoading(false);
+    }).catch(err => {
+      console.error("Lỗi tải dữ liệu nhập liệu KPI:", err);
+      if (isMounted) setIsTableLoading(false);
+    });
 
     return () => {
       isMounted = false;
@@ -776,16 +791,83 @@ export default function InputFormPage() {
     return false;
   };
 
+  const recalculateParentRollups = (currentKpis: any[], changedChildCode: string): any[] => {
+    let list = [...currentKpis];
+    const changed = list.find(k => k.code === changedChildCode);
+    if (!changed || !changed.parentCode) return list;
+
+    let currentParentCode: string | null = changed.parentCode;
+    const visited = new Set<string>();
+
+    while (currentParentCode && !visited.has(currentParentCode)) {
+      visited.add(currentParentCode);
+      const parentIndex = list.findIndex(k => k.code === currentParentCode);
+      if (parentIndex === -1) break;
+
+      const parent = list[parentIndex];
+      const children = list.filter(k => k.parentCode === parent.code);
+      if (children.length > 0) {
+        const isAverage = parent.rollup === "AVERAGE" || 
+          parent.code.startsWith("VM5-I02") || 
+          parent.code === "VM3-I01.04" || 
+          parent.code === "VM3-I01.05" || 
+          parent.code === "TM4-I02.03" ||
+          parent.code === "VM1-I01.01" ||
+          parent.code === "VM1-I01.02" ||
+          parent.code === "VM1-I05.01" ||
+          parent.code === "VM1-I05.02" ||
+          parent.code === "VM7-I03.01" ||
+          parent.code === "VM7-I01.01" ||
+          parent.code === "VM7-I02.01";
+        
+        const sumTarget = children.reduce((acc, c) => acc + (c.target || 0), 0);
+        const sumActual = children.reduce((acc, c) => acc + (c.actual || 0), 0);
+        
+        const validTargetChildren = children.filter(c => (c.target || 0) > 0);
+        const validActualChildren = children.filter(c => (c.actual || 0) > 0);
+
+        const newTarget = isAverage 
+          ? (validTargetChildren.length > 0 ? sumTarget / validTargetChildren.length : (sumTarget / children.length)) 
+          : sumTarget;
+        const newActual = isAverage 
+          ? (validActualChildren.length > 0 ? sumActual / validActualChildren.length : (sumActual / children.length)) 
+          : sumActual;
+
+        list[parentIndex] = {
+          ...parent,
+          target: Math.round(newTarget * 100) / 100,
+          actual: Math.round(newActual * 100) / 100
+        };
+
+        currentParentCode = parent.parentCode;
+      } else {
+        break;
+      }
+    }
+
+    return list;
+  };
+
   const handleInputChange = (id: string, val: string) => {
     const numVal = parseFloat(val) || 0;
-    setKpis(prev => prev.map(k => k.id === id ? { ...k, actual: numVal } : k));
-    kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, actual: numVal } : k);
+    setKpis(prev => {
+      const targetItem = prev.find(k => k.id === id);
+      const updated = prev.map(k => k.id === id ? { ...k, actual: numVal } : k);
+      const recalculated = targetItem ? recalculateParentRollups(updated, targetItem.code) : updated;
+      kpisRef.current = recalculated;
+      return recalculated;
+    });
   };
 
   const handleTargetChange = (id: string, val: string) => {
     const numVal = parseFloat(val) || 0;
-    setKpis(prev => prev.map(k => k.id === id ? { ...k, target: numVal } : k));
-    kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, target: numVal } : k);
+    setKpis(prev => {
+      const targetItem = prev.find(k => k.id === id);
+      const updated = prev.map(k => k.id === id ? { ...k, target: numVal } : k);
+      const recalculated = targetItem ? recalculateParentRollups(updated, targetItem.code) : updated;
+      kpisRef.current = recalculated;
+      return recalculated;
+    });
   };
 
   const handleWeightChange = (id: string, val: string) => {
@@ -1216,18 +1298,6 @@ export default function InputFormPage() {
     return true;
   };
 
-  const isHeaderOnlyRow = (code: string) => {
-    const headers = [
-      "TM1-I01", "TM1-I02", "TM1-I03", "TM1-I05",
-      "TM2-I01", "TM2-I02",
-      "TM3-I01",
-      "TM4-I01", "TM4-I02",
-      "TM6-I01",
-      "TM7-I01", "TM7-I02", "TM7-I03"
-    ];
-    return headers.includes(code);
-  };
-
   const getDepth = (kpi: any) => {
     let depth = 0;
     let curr = kpi;
@@ -1273,8 +1343,46 @@ export default function InputFormPage() {
     return depth;
   };
 
-  const scvnOrder = ["TM1-I01", "VM1-I01.01", "VM1-I01.02", "TM1-I02", "VM1-I02.01", "VM1-I02.01-WF", "VM1-I02.01-AS", "VM1-I02.01-NDTH", "VM1-I02.01-Lego", "DM1-I02.01-DA01", "SM1-I02.01-SCS", "MM1-I02.01-SCMU", "NM1-I02.01-CNGP", "CM1-I02.01-CR", "VM1-I02.01-DA", "VM1-I02.01-IP", "VM1-I02.02", "VM1-I02.02-WF", "VM1-I02.02-AS", "VM1-I02.02-NDTH", "VM1-I02.02-Lego", "DM1-I02.02-DA01", "SM1-I02.01.01-SCS", "MM1-I02.01.01-SCMU", "CM1-I02.01-CNGP", "CM1-I02.02-CR", "VM1-I02.03", "VM1-I02.03-WF", "VM1-I02.03-AS", "VM1-I02.03-NDTH", "VM1-I02.03-Lego", "SM1-I02.01.03-SCS", "MM1-I02.01.02-SCMU", "VM1-I02.04", "VM1-I02.04-WF", "VM1-I02.04-AS", "VM1-I02.04-NDTH", "VM1-I02.04-Lego", "SM1-I02.01.04-SCS", "MM1-I02.01.03-SCMU", "CM1-I02.03-CR", "TM1-I03", "VM1-I03.01", "TM1-I05", "VM1-I05.01", "VM1-I05.02", "VM1-I05.03", "VM1-I05.04", "TM2-I01", "VM2-I01.01", "VM2-I01.01-WF", "VM2-I01.01-AS", "VM2-I01.01-Lego", "VM2-I01.02-NDTH", "VM2-I02.01", "DM2-I01.01-DA01", "SM2-I01.01-SCS", "VM2-I01.03-NDTH", "CM2-I01.01-CR", "MM2-I01.01-SCMU", "VM2-I01.3", "VWM2-I01.3-WF", "VAM2-I01.3-AS", "VM2-I01.4", "VWM2-I01.4-WF", "VAM2-I01.4-AS", "VM2-I01.5", "VWM2-I01.5-WF", "VAM2-I01.5-AS", "VM2-I01.6", "VWM2-I01.6-WF", "VAM2-I01.6-AS", "TM2-I02", "TM2-I02.01", "VM2-I02.01-WF", "VM2-I02.01-AS", "VM2-I02.01-Lego", "VM2-I02.01-NDTH", "TM4-I02.01-DA01", "SM2-I02.01-SCS", "VM2-I02.01-SCMU", "VM2-I02.01-CR", "TM3-I01", "TM3-I01.02", "VM3-I01.02-WF", "VM3-I01.02-AS", "VM3-I01.02-Lego", "VM3-I01.02-NDTH", "DM3-I01.03-DA01", "SM3-I01.04-SCS", "MM3-I01.01-SCMU", "NM3-I01.05-CNGP", "CM3-I01.01-CR", "TM3-I01.03", "VM2-I03.01-WF", "VM2-I03.01-AS", "VM2-I03.01-Lego", "VM2-I03.01-NDTH", "VM3-I01.04", "VM3-I01.04-WF", "VM3-I01.04-AS", "VM3-I01.05", "VM3-I01.05-WF", "VM3-I01.05-AS", "VM3-I01.06", "TM4-I01.01", "VM4-I01.01-WF", "TM4-I02", "TM4-I02.01", "VM4-I02.01-WF", "VM4-I02.01-AS", "VM4-I02.01-Lego", "VM4-I02.01-NDTH", "DM4-I02.01-DA01", "SM4-I02.01-SCS", "TM4-I02.01-SCMU", "NM4-I02.03-CNGP", "TM4-I02.02", "VM4-I02.02-WF", "VM4-I02.02-AS", "VM4-I02.02-Lego", "VM4-I02.02-NDTH", "DM4-I02.02-DA01", "TM4-I02.02-SCS", "MM4-I02.02-SCMU", "TM4-I02.02-CNGP", "TM4-I02.02-CR", "TM4-I02.03", "VM4-I02.04", "VM4-I02.04-WF", "VM4-I02.04-AS", "VM4-I02.04-Lego", "VM4-I02.04-NDTH", "DM4-I02.04-DA01", "SM4-I02.06-SCS", "VM4-I02.04-SCMU", "NM4-I02.04-CNGP", "VM4-I02.04-CR", "VM4-I02.05", "VM4-I02.05-WF", "VM4-I02.05-AS", "VM4-I02.05-Lego", "VM4-I02.05-NDTH", "VM4-I02.05-DA01", "VM4-I02.05-SCS", "VM4-I02.05-SCMU", "VM4-I02.05-CNGP", "VM4-I02.05-CR", "VM4-I02.06", "TM5-I01", "TM5-I01.03", "VM5-I02", "VM5-I02.01", "VM5-I02.01-WF", "VM5-I02.01-AS", "VM5-I02.01-Lego", "VM5-I02.01-NDTH", "VM5-I02.01-SCS", "VM5-I02.01-CR", "VM5-I02.02", "VM5-I02.02-WF", "VM5-I02.02-AS", "VM5-I02.02-Lego", "VM5-I02.02-SCS", "VM5-I02.03", "VM5-I02.03-WF", "VM5-I02.03-AS", "VM5-I02.03-Lego", "VM5-I02.03-NDTH", "VM5-I02.03-DA01", "VM5-I02.03-SCS", "VM5-I02.03-SCMU", "VM5-I02.03-CNGP", "VM5-I02.03-CR", "VM5-I02.04", "VM5-I02.04-WF", "VM5-I02.04-AS", "VM5-I02.04-Lego", "VM5-I02.04-NDTH", "VM5-I02.04-DA01", "VM5-I02.04-SCS", "VM5-I02.04-SCMU", "VM5-I02.04-CNGP", "VM5-I02.05", "VM5-I02.05.01", "VM5-I02.05.02", "TM6-I01", "TM6-I01.01", "VM6-I01.01-WF", "VM6-I01.01-AS", "VM6-I01.01-Lego", "VM6-I01.01-NDTH", "DM6-I01.01-DA01", "SM6-I01.01-SCS", "MM6-I01.01-SCMU", "NM6-I01.01-CNGP", "CM6-I01.01-CR", "TM6-I01.02", "VM6-I01.02-WF", "VM6-I01.02-AS", "VM6-I01.02-Lego", "VM6-I01.02-NDTH", "DM6-I01.02-DA01", "SM6-I01.02-SCS", "MM6-I01.02-SCMU", "NM6-I01.02-CNGP", "CM6-I01.02-CR", "VM6-I02", "TM6-I03", "TM6-I03.01", "TM6-I03.02", "TM7-I01", "VM7-I01.01", "VM7-I01.01-WF", "VM7-I01.01-AS", "VM7-I01.01-Lego", "VM7-I01.01-NDTH", "DM7-I01.01-DA01", "SM7-I01.01-SCS", "NM7-I01.01-CNGP", "TM7-I02", "VM7-I02.01", "VM7-I02.01-WF", "VM7-I02.01-AS", "VM7-I02.01-Lego", "VM7-I02.01-NDTH", "DM7-I02.01-DA01", "VM7-I02.01-SCS", "VM7-I02.01-SCMU", "NM7-I02.01-CNGP", "CM7-I02.01-CR", "VM7-I02.02", "VM7-I02.02-WF", "VM7-I02.02-AS", "VM7-I02.02-Lego", "VM7-I02.02-NDTH", "DM7-I02.02-DA01", "SM7-I02.02-SCS", "MM7-I02.02-SCMU", "NM7-I02.02-CNGP", "CM7-I02.03-CR", "TM7-I03", "VM7-I03.01", "VM7-I03.01-WF", "VM7-I03.01-AS", "VM7-I03.01-Lego", "VM7-I03.01-NDTH", "DM7-I03.01-DA01", "SM7-I03.01-SCS", "MM7-I03.01-SCMU", "NM7-I03.01-CNGP", "CM7-I03.01-CR", "VM7-I03.02", "VM7-I03.02-WF", "VM7-I03.02-AS", "VM7-I03.02-Lego", "VM7-I03.02-NDTH", "DM7-I03.02-DA01", "SM7-I03.02-SCS", "MM7-I03.02-SCMU", "NM7-I03.02-CNGP", "CM7-I03.02-CR"];
+  const isRootCategoryCode = (code: string) => {
+    if (!code) return false;
+    const clean = code.trim().toUpperCase();
+    return ["M1", "M2", "M3", "M4", "M5", "M6", "M7"].includes(clean) || /^([A-Z0-9]+-)?M[1-7]$/.test(clean);
+  };
+
+  const isHeaderOnlyRow = (code: string) => {
+    const headers = [
+      "TM1-I01", "TM1-I02", "TM1-I03", "TM1-I05",
+      "TM2-I01", "TM2-I02",
+      "TM3-I01",
+      "TM4-I01", "TM4-I02",
+      "TM6-I01",
+      "TM7-I01", "TM7-I02", "TM7-I03"
+    ];
+    return headers.includes(code);
+  };
+
+  const scvnOrder = ["TM1-I01","VM1-I01.01","VM1-I01.02","TM1-I02","VM1-I02.01","VM1-I02.01-WF","VM1-I02.01-AS","VM1-I02.01-NDTH","VM1-I02.01-Lego","DM1-I02.01-DA01","SM1-I02.01","MM1-I02.01","NM1-I02.01","CM1-I02.01-CR","VM1-I02.01-DA","VM1-I02.01-IP","VM1-I02.02","VM1-I02.02-WF","VM1-I02.02-AS","VM1-I02.02-NDTH","VM1-I02.02-Lego","DM1-I02.02-DA01","SM1-I02.01.01","MM1-I02.01.01","CM1-I02.01-CNGP","CM1-I02.02-CR","VM1-I02.03","VM1-I02.03-WF","VM1-I02.03-AS","VM1-I02.03-NDTH","VM1-I02.03-Lego","SM1-I02.01.03","MM1-I02.01.02","VM1-I02.04","VM1-I02.04-WF","VM1-I02.04-AS","VM1-I02.04-NDTH","VM1-I02.04-Lego","SM1-I02.01.04","MM1-I02.01.03","CM1-I02.03-CR","TM1-I03","VM1-I03.01","TM1-I05","VM1-I05.01","VM1-I05.02","VM1-I05.03","VM1-I05.04","TM2-I01","VM2-I01.01","VM2-I01.01-WF","VM2-I01.01-AS","VM2-I01.01-Lego","VM2-I01.02-NDTH","VM2-I02.01","DM2-I01.01-DA01","SM2-I01.01","VM2-I01.03-NDTH","CM2-I01.01-CR","MM2-I01.01","VM2-I01.3","VWM2-I01.3-WF","VAM2-I01.3-AS","VM2-I01.4","VWM2-I01.4-WF","VAM2-I01.4-AS","VM2-I01.5","VWM2-I01.5-WF","VAM2-I01.5-AS","VM2-I01.6","VWM2-I01.6-WF","VAM2-I01.6-AS","TM2-I02","TM2-I02.01","VM2-I02.01-WF","VM2-I02.01-AS","VM2-I02.01-Lego","VM2-I02.01-NDTH","TM4-I02.01-DA01","SM2-I02.01","VM2-I02.01-SCMU","VM2-I02.01-CR","TM3-I01","TM3-I01.02","VM3-I01.02-WF","VM3-I01.02-AS","VM3-I01.02-Lego","VM3-I01.02-NDTH","DM3-I01.03-DA01","SM3-I01.04-SCS","MM3-I01.01-SCMU","NM3-I01.05-CNGP","CM3-I01.01-CR","TM3-I01.03","VM2-I03.01-WF","VM2-I03.01-AS","VM2-I03.01-Lego","VM2-I03.01-NDTH","VM3-I01.04","VM3-I01.04-WF","VM3-I01.04-AS","VM3-I01.05","VM3-I01.05-WF","VM3-I01.05-AS","VM3-I01.06","TM4-I01.01","VM4-I01.01-WF","TM4-I02","TM4-I02.01","VM4-I02.01-WF","VM4-I02.01-AS","VM4-I02.01-Lego","VM4-I02.01-NDTH","DM4-I02.01-DA01","SM4-I02.01-SCS","MM4-I02.01-SCMU","NM4-I02.03-CNGP","TM4-I02.02","VM4-I02.02-WF","VM4-I02.02-AS","VM4-I02.02-Lego","VM4-I02.02-NDTH","DM4-I02.02-DA01","SM4-I02.02-SCS","MM4-I02.02-SCMU","NM4-I02.02-CNGP","CM4-I02.02-CR","TM4-I02.03","VM4-I02.04","VM4-I02.04-WF","VM4-I02.04-AS","VM4-I02.04-Lego","VM4-I02.04-NDTH","DM4-I02.04-DA01","SM4-I02.04-SCS","MM4-I02.04-SCMU","NM4-I02.04-CNGP","CM4-I02.04-CR","VM4-I02.05","VM4-I02.05-WF","VM4-I02.05-AS","VM4-I02.05-Lego","VM4-I02.05-NDTH","DM4-I02.05-DA01","SM4-I02.05-SCS","MM4-I02.05-SCMU","NM4-I02.05-CNGP","CM4-I02.05-CR","VM4-I02.06","VM4-I02.06-WF","VM4-I02.06-AS","VM4-I02.06-Lego","VM4-I02.06-NDTH","DM4-I02.06-DA01","SM4-I02.06-SCS","MM4-I02.06-SCMU","NM4-I02.06-CNGP","CM4-I02.06-CR","TM5-I01","TM5-I01.03","VM5-I02","VM5-I02.01","VM5-I02.01-WF","VM5-I02.01-AS","VM5-I02.01-Lego","VM5-I02.01-NDTH","SM5-I02.01-SCS","VM5-I02.01-CR","VM5-I02.02","VM5-I02.02-WF","VM5-I02.02-AS","VM5-I02.02-Lego","SM5-I02.02-SCS","VM5-I02.03","VM5-I02.03-WF","VM5-I02.03-AS","VM5-I02.03-Lego","VM5-I02.03-NDTH","VM5-I02.03-DA01","SM5-I02.03-SCS","MM5-I02.03-SCMU","NM5-I02.03-CNGP","VM5-I02.03-CR","VM5-I02.04","VM5-I02.04-WF","VM5-I02.04-AS","VM5-I02.04-Lego","VM5-I02.04-NDTH","VM5-I02.04-DA01","SM5-I02.04-SCS","MM5-I02.04-SCMU","NM5-I02.04-CNGP","VM5-I02.05","VM5-I02.05.01","VM5-I02.05.02","TM6-I01","TM6-I01.01","VM6-I01.01-WF","VM6-I01.01-AS","VM6-I01.01-Lego","VM6-I01.01-NDTH","DM6-I01.01-DA01","SM6-I01.01-SCS","MM6-I01.01-SCMU","NM6-I01.01-CNGP","CM6-I01.01-CR","TM6-I01.02","VM6-I01.02-WF","VM6-I01.02-AS","VM6-I01.02-Lego","VM6-I01.02-NDTH","DM6-I01.02-DA01","SM6-I01.02-SCS","MM6-I01.02-SCMU","NM6-I01.02-CNGP","CM6-I01.02-CR","VM6-I02","TM6-I03","TM6-I03.01","TM6-I03.02","TM7-I01","VM7-I01.01","VM7-I01.01-WF","VM7-I01.01-AS","VM7-I01.01-Lego","VM7-I01.01-NDTH","DM7-I01.01-DA01","SM7-I01.01-SCS","MM7-I01.01-SCMU","NM7-I01.01-CNGP","CM7-I01.01-CR","TM7-I02","VM7-I02.01","VM7-I02.01-WF","VM7-I02.01-AS","VM7-I02.01-Lego","VM7-I02.01-NDTH","DM7-I02.01-DA01","SM7-I02.01-SCS","MM7-I02.01-SCMU","NM7-I02.01-CNGP","CM7-I02.01-CR","VM7-I02.02","VM7-I02.02-WF","VM7-I02.02-AS","VM7-I02.02-Lego","VM7-I02.02-NDTH","DM7-I02.02-DA01","SM7-I02.02-SCS","MM7-I02.02-SCMU","NM7-I02.02-CNGP","CM7-I02.03-CR","TM7-I03","VM7-I03.01","VM7-I03.01-WF","VM7-I03.01-AS","VM7-I03.01-Lego","VM7-I03.01-NDTH","DM7-I03.01-DA01","SM7-I03.01-SCS","MM7-I03.01-SCMU","NM7-I03.01-CNGP","CM7-I03.01-CR","VM7-I03.02","VM7-I03.02-WF","VM7-I03.02-AS","VM7-I03.02-Lego","VM7-I03.02-NDTH","DM7-I03.02-DA01","SM7-I03.02-SCS","MM7-I03.02-SCMU","NM7-I03.02-CNGP","CM7-I03.02-CR"];
+  const getGroupOrder = (groupName: string) => {
+    if (!groupName) return 99;
+    const match = groupName.match(/M([1-7])/i) || groupName.match(/([1-7])\./);
+    if (match) return parseInt(match[1]);
+    if (groupName.includes("M1")) return 1;
+    if (groupName.includes("M2")) return 2;
+    if (groupName.includes("M3")) return 3;
+    if (groupName.includes("M4")) return 4;
+    if (groupName.includes("M5")) return 5;
+    if (groupName.includes("M6")) return 6;
+    if (groupName.includes("M7")) return 7;
+    return 99;
+  };
+
   const sortKpis = (a: any, b: any) => {
+    const grpA = getGroupOrder(a.group);
+    const grpB = getGroupOrder(b.group);
+    if (grpA !== grpB) {
+      return grpA - grpB;
+    }
+
     const getUnitSuffix = (unit: string) => {
       if (!unit) return "";
       const u = unit.toUpperCase();
@@ -1369,7 +1477,8 @@ export default function InputFormPage() {
   const visibleKpis = kpis
     .filter(k => visibleKpisSet.has(k.code))
     .sort(sortKpis);
-  const groups = Array.from(new Set(visibleKpis.map(k => k.group).filter(Boolean)));
+  const groups = Array.from(new Set(visibleKpis.map(k => k.group).filter(Boolean)))
+    .sort((a, b) => getGroupOrder(a) - getGroupOrder(b));
 
   const directVisibleProductKpis = productKpis.filter(pk => shouldShowByFrequency(pk.frequency, pk.title, pk.code));
   const visibleProductKpisSet = new Set<string>();
@@ -1392,7 +1501,8 @@ export default function InputFormPage() {
   const visibleProductKpis = productKpis
     .filter(pk => visibleProductKpisSet.has(pk.code))
     .sort(sortKpis);
-  const prodGroups = Array.from(new Set(visibleProductKpis.map(pk => pk.group).filter(Boolean)));
+  const prodGroups = Array.from(new Set(visibleProductKpis.map(pk => pk.group).filter(Boolean)))
+    .sort((a, b) => getGroupOrder(a) - getGroupOrder(b));
 
   // Thuật toán PSH cho Tab 2
   const isWeekly = filters.periodType === "weekly";
@@ -1524,7 +1634,21 @@ export default function InputFormPage() {
               </div>
             </div>
 
-            <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
+            <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative min-h-[250px]">
+              {isTableLoading && (
+                <div className="absolute inset-0 z-30 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-8 rounded-xl transition-all duration-300">
+                  <div className="relative flex items-center justify-center mb-4">
+                    <Loader2 className="w-12 h-12 text-emerald-400 animate-spin" />
+                    <Sparkles className="w-5 h-5 text-amber-300 absolute animate-pulse" />
+                  </div>
+                  <h4 className="text-sm font-black text-emerald-400 uppercase tracking-wider mb-1.5 flex items-center gap-2">
+                    ⚡ Đang tải bảng nhập liệu Bộ 7 Mục tiêu...
+                  </h4>
+                  <p className="text-xs font-semibold text-slate-300 animate-pulse text-center max-w-md">
+                    Vui lòng đợi xíu nhé! Hệ thống đang đồng bộ và tính toán số liệu thực tế...
+                  </p>
+                </div>
+              )}
               <table className="w-full text-left text-sm border-collapse">
                 <thead className="sticky top-0 z-10 bg-slate-950 shadow">
                   <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
@@ -1543,7 +1667,7 @@ export default function InputFormPage() {
                 </thead>
                 <tbody>
                   {groups.map(groupName => {
-                    const items = visibleKpis.filter(k => k.group === groupName);
+                    const items = visibleKpis.filter(k => k.group === groupName && !isRootCategoryCode(k.code));
                     if (items.length === 0) return null;
                     return (
                       <React.Fragment key={groupName}>
@@ -1722,9 +1846,24 @@ export default function InputFormPage() {
               </h3>
             </div>
             <div className="space-y-3">
-              {kpis
-                .filter(k => checkKpiNeedsExplanation(k))
-                .map(k => {
+              {(() => {
+                const filtered = kpis.filter(k => checkKpiNeedsExplanation(k));
+                const sorted = [...filtered].sort((a, b) => {
+                  const rateA = a.target > 0 ? a.actual / a.target : 1;
+                  const rateB = b.target > 0 ? b.actual / b.target : 1;
+                  return rateA - rateB;
+                });
+                const displayKpis = filters.unitCode === "SCVN" ? sorted : sorted.slice(0, 5);
+
+                if (displayKpis.length === 0) {
+                  return (
+                    <div className="p-4 text-center text-xs text-emerald-400 font-bold bg-emerald-950/20 border border-emerald-500/20 rounded-xl">
+                      🎉 Không có chỉ tiêu nào cần giải trình trong kỳ này!
+                    </div>
+                  );
+                }
+
+                return displayKpis.map(k => {
                   const currentActual = k.actual;
                   const target = k.target;
                   const completionRate = currentActual / target;
@@ -1770,7 +1909,8 @@ export default function InputFormPage() {
                       />
                     </div>
                   );
-                })}
+                });
+              })()}
               <div className="flex justify-end">
                 <button
                   onClick={handleSaveExplanations}
@@ -2025,7 +2165,7 @@ export default function InputFormPage() {
                 </thead>
                 <tbody>
                   {prodGroups.map(groupName => {
-                    const items = visibleProductKpis.filter(k => k.group === groupName);
+                    const items = visibleProductKpis.filter(k => k.group === groupName && !isRootCategoryCode(k.code));
                     if (items.length === 0) return null;
                     return (
                       <React.Fragment key={groupName}>

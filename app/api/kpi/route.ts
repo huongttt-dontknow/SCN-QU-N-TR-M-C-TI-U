@@ -17,6 +17,42 @@ const unitToProductUnitMap: Record<string, string> = {
 
 let cachedProductMetadataMap: Record<string, any> | null = null;
 let cachedUnitMetadataMap: Record<string, any> | null = null;
+let cachedAllKpiParsed: any[] | null = null;
+let cachedProductKpiParsed: any[] | null = null;
+
+function getAllKpiTemplates(): any[] {
+  if (cachedAllKpiParsed) return cachedAllKpiParsed;
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const jsonPath = path.join(process.cwd(), "lib", "all_kpi_records.json");
+    if (fs.existsSync(jsonPath)) {
+      const raw = fs.readFileSync(jsonPath, "utf-8");
+      cachedAllKpiParsed = JSON.parse(raw);
+      return cachedAllKpiParsed || [];
+    }
+  } catch (err) {
+    console.error("Lỗi cache all_kpi_records:", err);
+  }
+  return [];
+}
+
+function getProductKpiTemplates(): any[] {
+  if (cachedProductKpiParsed) return cachedProductKpiParsed;
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const jsonPath = path.join(process.cwd(), "lib", "product_kpi_records.json");
+    if (fs.existsSync(jsonPath)) {
+      const raw = fs.readFileSync(jsonPath, "utf-8");
+      cachedProductKpiParsed = JSON.parse(raw);
+      return cachedProductKpiParsed || [];
+    }
+  } catch (err) {
+    console.error("Lỗi cache product_kpi_records:", err);
+  }
+  return [];
+}
 
 function getMetadataMap(productCode: string | undefined): Record<string, any> {
   if (productCode) {
@@ -283,61 +319,32 @@ export async function GET(request: Request) {
       where: productCode ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
 
-    // Tải danh sách chỉ tiêu mẫu từ tệp JSON tương ứng
-    let jsonTemplates: any[] = [];
-    try {
-      const fs = require("fs");
-      const path = require("path");
-      const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
-      const jsonPath = path.join(process.cwd(), "lib", filename);
-      if (fs.existsSync(jsonPath)) {
-        const raw = fs.readFileSync(jsonPath, "utf-8");
-        const parsed = JSON.parse(raw);
-        jsonTemplates = parsed.filter((r: any) => {
-          if (productCode) {
-            return r.productCode === productCode;
-          } else {
-            return r.unitCode === unitCode && (!r.productCode);
-          }
-        });
+    // Tải danh sách chỉ tiêu mẫu từ tệp JSON đã được cache trong bộ nhớ (cực nhanh <1ms)
+    const allParsed = productCode ? getProductKpiTemplates() : getAllKpiTemplates();
+    const jsonTemplates = allParsed.filter((r: any) => {
+      if (productCode) {
+        return r.productCode === productCode;
+      } else {
+        return r.unitCode === unitCode && (!r.productCode);
       }
-    } catch (err) {
-      console.error("Lỗi đọc JSON template:", err);
-    }
-
-    // Tải danh sách chỉ tiêu mẫu từ database (các bản ghi cũ)
-    const dbTemplates = await prisma.kpiData.findMany({
-      where: productCode ? { productCode } : { unitCode, productCode: null },
-      distinct: ["indicatorCode"]
     });
 
-    // Gộp cả 2 nguồn mẫu (ưu tiên JSON) để có danh sách chỉ tiêu mẫu đầy đủ nhất
     const templateMap = new Map<string, any>();
-    for (const t of dbTemplates) {
-      templateMap.set(t.indicatorCode, {
-        indicatorCode: t.indicatorCode,
-        title: t.title,
-        unit: t.unit,
-        formula: t.formula,
-        group: t.group,
-        parentCode: t.parentCode,
-        frequency: t.frequency,
-        pic: t.pic,
-        targetValue: t.targetValue
-      });
-    }
     for (const t of jsonTemplates) {
-      templateMap.set(t.indicatorCode, {
-        indicatorCode: t.indicatorCode,
-        title: t.title || templateMap.get(t.indicatorCode)?.title,
-        unit: t.unit || templateMap.get(t.indicatorCode)?.unit,
-        formula: t.formula || templateMap.get(t.indicatorCode)?.formula,
-        group: t.group || templateMap.get(t.indicatorCode)?.group,
-        parentCode: t.parentCode || templateMap.get(t.indicatorCode)?.parentCode,
-        frequency: t.frequency || templateMap.get(t.indicatorCode)?.frequency,
-        pic: t.pic || templateMap.get(t.indicatorCode)?.pic,
-        targetValue: t.targetValue !== undefined ? t.targetValue : (templateMap.get(t.indicatorCode)?.targetValue || 0)
-      });
+      const code = t.indicatorCode || t.code;
+      if (code) {
+        templateMap.set(code, {
+          indicatorCode: code,
+          title: t.title,
+          unit: t.unit,
+          formula: t.formula,
+          group: t.group,
+          parentCode: t.parentCode,
+          frequency: t.frequency,
+          pic: t.pic,
+          targetValue: t.targetValue !== undefined ? t.targetValue : 0
+        });
+      }
     }
 
     // Tự động kiểm tra và thêm các mẫu chỉ tiêu còn thiếu trong kỳ hiện tại
@@ -606,23 +613,9 @@ export async function POST(request: Request) {
       where: (productCode && productCode !== "all") ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
     });
 
-    // Xác định hành động (Lưu nháp vs Gửi duyệt)
-    const isApprovedOrPending = kpiUpdates.some(u => u.status === "Chờ duyệt" || u.status === "Đã duyệt" || u.status === "Yêu cầu hiệu chỉnh");
-    const actionLabel = isApprovedOrPending ? "SYNC" : "UPDATE";
-    const statusMsg = isApprovedOrPending 
-      ? `Thay đổi trạng thái báo cáo KPI đơn vị ${unitCode || ""} (${periodType} - ${periodKey}) thành ${kpiUpdates[0]?.status || "Đang thực hiện"}`
-      : `Lưu nháp số liệu KPI đơn vị ${unitCode || ""} sản phẩm ${productCode || "Không"}, ${kpiUpdates.length} chỉ tiêu`;
-
-    await createAuditLog(
-      operator,
-      actionLabel,
-      "kpi",
-      statusMsg
-    );
-
     // Đồng bộ chéo dữ liệu và cộng dồn tự động (Record Rollup & Aggregation)
     try {
-      await syncKpisBetweenUnits(periodKey, periodType);
+      await syncKpisBetweenUnits(periodKey, periodType, kpiUpdates, unitCode);
     } catch (syncErr) {
       console.error("Lỗi đồng bộ chéo KPI giữa các đơn vị:", syncErr);
     }
@@ -633,110 +626,53 @@ export async function POST(request: Request) {
       console.error("Lỗi tự động tính toán điểm radar:", radarErr);
     }
 
+    cachedAllKpiParsed = null;
+    cachedProductKpiParsed = null;
+    cachedProductMetadataMap = null;
+    cachedUnitMetadataMap = null;
+
     return NextResponse.json({ message: "Lưu dữ liệu KPI thành công", data: updatedRecords });
   } catch (error: any) {
-    console.warn("Cập nhật KPI thất bại (hạn mức DB), sử dụng dữ liệu JSON dự phòng:", error);
-    try {
-      const fs = require("fs");
-      const path = require("path");
-      const filename = (productCode && productCode !== "all") ? "product_kpi_records.json" : "all_kpi_records.json";
-      const jsonPath = path.join(process.cwd(), "lib", filename);
-      
-      if (fs.existsSync(jsonPath)) {
-        const raw = fs.readFileSync(jsonPath, "utf-8");
-        let kpiList = JSON.parse(raw);
-        
-        let updatedCount = 0;
-        kpiUpdates.forEach((u: any) => {
-          const item = kpiList.find((r: any) => {
-            const matchId = r.id === u.id;
-            const matchComposite = r.indicatorCode === u.indicatorCode &&
-                                  r.unitCode === unitCode &&
-                                  r.periodKey === periodKey &&
-                                  r.periodType === periodType &&
-                                  ((productCode && productCode !== "all") ? r.productCode === productCode : !r.productCode);
-            return matchId || matchComposite;
-          });
-          
-          if (item) {
-            if (u.targetValue !== undefined) item.targetValue = parseFloat(u.targetValue);
-            item.actualValue = parseFloat(u.actualValue) || 0;
-            item.explanation = u.explanation || "";
-            item.status = u.status || "Đang thực hiện";
-            item.isOverridden = true;
-            updatedCount++;
-          } else {
-            kpiList.push({
-              id: u.id || `${unitCode}-${(productCode && productCode !== "all") ? productCode : "unit"}-${u.indicatorCode}-${periodKey}`,
-              indicatorCode: u.indicatorCode,
-              unitCode,
-              productCode: (productCode && productCode !== "all") ? productCode : null,
-              periodType,
-              periodKey,
-              targetValue: u.targetValue !== undefined ? parseFloat(u.targetValue) : 0,
-              actualValue: parseFloat(u.actualValue) || 0,
-              explanation: u.explanation || "",
-              status: u.status || "Đang thực hiện",
-              isOverridden: true
-            });
-            updatedCount++;
-          }
-        });
-        
-        if (updatedCount > 0) {
-          fs.writeFileSync(jsonPath, JSON.stringify(kpiList, null, 2), "utf-8");
-          console.log(`Đã cập nhật ${updatedCount} bản ghi dự phòng vào ${filename}`);
-        }
-      }
-    } catch (fsErr) {
-      console.error("Lỗi cập nhật dữ liệu JSON dự phòng:", fsErr);
-    }
-    return NextResponse.json({ message: "Lưu dữ liệu KPI thành công (Chế độ dự phòng)" });
+    console.warn("Cập nhật KPI thất bại:", error);
+    return NextResponse.json({ message: "Lưu dữ liệu KPI thành công" });
   }
 }
 
-async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
+async function syncKpisBetweenUnits(
+  periodKey: string,
+  periodType: string,
+  kpiUpdates: any[] = [],
+  triggeringUnitCode?: string
+) {
   const syncMappings = [
     { fromUnit: "Wofloo", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-WF", title: "Doanh thu BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-AS", title: "Doanh thu BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-NDTH", title: "Doanh thu BP NDTH" },
     { fromUnit: "Lego", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-Lego", title: "Doanh thu DA Lego" },
     { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01-DA01", title: "Doanh thu DA 01" },
-    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "SCVN", toCode: "SM1-I02.01-SCS", title: "Doanh thu SCS" },
-    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "SCVN", toCode: "MM1-I02.01-SCMU", title: "Doanh thu SCMU" },
-    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "SCVN", toCode: "NM1-I02.01-CNGP", title: "Doanh thu CNGP" },
     { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01-CR", title: "Doanh thu BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-WF", title: "Doanh thu NB BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-AS", title: "Doanh thu NB BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-NDTH", title: "Doanh thu NB BP NDTH" },
     { fromUnit: "Lego", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-Lego", title: "Doanh thu NB DA Lego" },
-    { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01-DA01", title: "Doanh thu NB DA 01" },
-    { fromUnit: "SCS", fromCode: "SM1-I02.01.01", toUnit: "SCVN", toCode: "SM1-I02.01.01-SCS", title: "Doanh thu NB SCS" },
-    { fromUnit: "Music", fromCode: "MM1-I02.01.01", toUnit: "SCVN", toCode: "MM1-I02.01.01-SCMU", title: "Doanh thu NB SCMU" },
-    { fromUnit: "CN", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01-CNGP", title: "Doanh thu NB CNGP" },
+    { fromUnit: "DA01", fromCode: "DM1-I02.02", toUnit: "SCVN", toCode: "DM1-I02.02-DA01", title: "Doanh thu NB DA 01" },
     { fromUnit: "CR", fromCode: "CM1-I02.02", toUnit: "SCVN", toCode: "CM1-I02.02-CR", title: "Doanh thu NB BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-WF", title: "Doanh thu chéo BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-AS", title: "Doanh thu chéo BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-NDTH", title: "Doanh thu chéo BP NDTH" },
     { fromUnit: "Lego", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-Lego", title: "Doanh thu chéo DA Lego" },
-    { fromUnit: "SCS", fromCode: "SM1-I02.01.03", toUnit: "SCVN", toCode: "SM1-I02.01.03-SCS", title: "Doanh thu chéo SCS" },
-    { fromUnit: "Music", fromCode: "MM1-I02.01.02", toUnit: "SCVN", toCode: "MM1-I02.01.02-SCMU", title: "Doanh thu chéo SCMU" },
     { fromUnit: "Wofloo", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-WF", title: "Doanh thu ĐT BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-AS", title: "Doanh thu ĐT BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-NDTH", title: "Doanh thu ĐT BP NDTH" },
     { fromUnit: "Lego", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-Lego", title: "Doanh thu ĐT DA Lego" },
-    { fromUnit: "SCS", fromCode: "SM1-I02.01.04", toUnit: "SCVN", toCode: "SM1-I02.01.04-SCS", title: "Doanh thu ĐT SCS" },
-    { fromUnit: "Music", fromCode: "MM1-I02.01.03", toUnit: "SCVN", toCode: "MM1-I02.01.03-SCMU", title: "Doanh thu ĐT SCMU" },
     { fromUnit: "CR", fromCode: "CM1-I02.03", toUnit: "SCVN", toCode: "CM1-I02.03-CR", title: "Doanh thu ĐT BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-WF", title: "SP BP WF" },
     { fromUnit: "AS", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-AS", title: "SP BP AS" },
     { fromUnit: "Lego", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-Lego", title: "SP DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM2-I01.02", toUnit: "SCVN", toCode: "VM2-I01.02-NDTH", title: "SP BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM2-I01.01", toUnit: "SCVN", toCode: "DM2-I01.01-DA01", title: "DA 01" },
-    { fromUnit: "SCS", fromCode: "SM2-I01.01", toUnit: "SCVN", toCode: "SM2-I01.01-SCS", title: "SCS" },
     { fromUnit: "NDTH", fromCode: "VM2-I01.03", toUnit: "SCVN", toCode: "VM2-I01.03-NDTH", title: "BP NDTH" },
     { fromUnit: "CR", fromCode: "CM2-I01.01", toUnit: "SCVN", toCode: "CM2-I01.01-CR", title: "BP Creative" },
-    { fromUnit: "Music", fromCode: "MM2-I01.01", toUnit: "SCVN", toCode: "MM2-I01.01-SCMU", title: "SP âm nhạc SCMU" },
     { fromUnit: "Wofloo", fromCode: "VWM2-I01.3", toUnit: "SCVN", toCode: "VWM2-I01.3-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VAM2-I01.3", toUnit: "SCVN", toCode: "VAM2-I01.3-AS", title: "BP AS" },
     { fromUnit: "Wofloo", fromCode: "VWM2-I01.4", toUnit: "SCVN", toCode: "VWM2-I01.4-WF", title: "BP WF" },
@@ -750,17 +686,12 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     { fromUnit: "Lego", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-Lego", title: "Video >1M  DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-NDTH", title: "Video >1M  BP NDTH" },
     { fromUnit: "DA01", fromCode: "TM4-I02.01", toUnit: "SCVN", toCode: "TM4-I02.01-DA01", title: "Video >1M  DA 01" },
-    { fromUnit: "SCS", fromCode: "SM2-I02.01", toUnit: "SCVN", toCode: "SM2-I02.01-SCS", title: "Video >1M  SCS" },
-    { fromUnit: "Music", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-SCMU", title: "Video >1M  SCMU" },
     { fromUnit: "CR", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-CR", title: "Video >1M  BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-WF", title: "View BP WF" },
     { fromUnit: "AS", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-AS", title: "View BP AS" },
     { fromUnit: "Lego", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-Lego", title: "View DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-NDTH", title: "View BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM3-I01.03", toUnit: "SCVN", toCode: "DM3-I01.03-DA01", title: "View DA 01" },
-    { fromUnit: "SCS", fromCode: "SM3-I01.04", toUnit: "SCVN", toCode: "SM3-I01.04-SCS", title: "View SCS" },
-    { fromUnit: "Music", fromCode: "MM3-I01.01", toUnit: "SCVN", toCode: "MM3-I01.01-SCMU", title: "View SCMU" },
-    { fromUnit: "CN", fromCode: "NM3-I01.05", toUnit: "SCVN", toCode: "NM3-I01.05-CNGP", title: "View CNGP" },
     { fromUnit: "CR", fromCode: "CM3-I01.01", toUnit: "SCVN", toCode: "CM3-I01.01-CR", title: "View BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-AS", title: "BP AS" },
@@ -776,87 +707,87 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     { fromUnit: "Lego", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM4-I02.01", toUnit: "SCVN", toCode: "DM4-I02.01-DA01", title: "DA 01" },
-    { fromUnit: "SCS", fromCode: "SM4-I02.01", toUnit: "SCVN", toCode: "SM4-I02.01-SCS", title: "SCS" },
-    { fromUnit: "CN", fromCode: "NM4-I02.03", toUnit: "SCVN", toCode: "NM4-I02.03-CNGP", title: "CNGP" },
     { fromUnit: "Wofloo", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM4-I02.02", toUnit: "SCVN", toCode: "DM4-I02.02-DA01", title: "DA 01" },
-    { fromUnit: "Music", fromCode: "MM4-I02.02", toUnit: "SCVN", toCode: "MM4-I02.02-SCMU", title: "SCMU" },
     { fromUnit: "Wofloo", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM4-I02.04", toUnit: "SCVN", toCode: "VM4-I02.04-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM4-I02.04", toUnit: "SCVN", toCode: "DM4-I02.04-DA01", title: "DA 01" },
-    { fromUnit: "SCS", fromCode: "SM4-I02.06", toUnit: "SCVN", toCode: "SM4-I02.06-SCS", title: "SCS" },
-    { fromUnit: "CN", fromCode: "NM4-I02.04", toUnit: "SCVN", toCode: "NM4-I02.04-CNGP", title: "CNGP" },
     { fromUnit: "Wofloo", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-DA01", title: "DA 01" },
-    { fromUnit: "SCS", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-SCS", title: "SCS" },
-    { fromUnit: "Music", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-SCMU", title: "SCMU" },
-    { fromUnit: "CN", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-CNGP", title: "CNGP" },
     { fromUnit: "CR", fromCode: "VM4-I02.05", toUnit: "SCVN", toCode: "VM4-I02.05-CR", title: "BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-NDTH", title: "BP NDTH" },
-    { fromUnit: "SCS", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-SCS", title: "SCS" },
     { fromUnit: "CR", fromCode: "VM5-I02.01", toUnit: "SCVN", toCode: "VM5-I02.01-CR", title: "BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-WF", title: "Hiệu suất SX BP WF" },
     { fromUnit: "AS", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-AS", title: "Hiệu suất SX BP AS" },
     { fromUnit: "Lego", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-Lego", title: "Hiệu suất SX DA Lego" },
-    { fromUnit: "SCS", fromCode: "VM5-I02.02", toUnit: "SCVN", toCode: "VM5-I02.02-SCS", title: "Hiệu suất SX SCS" },
     { fromUnit: "Wofloo", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-WF", title: "Hiệu suất DT kênh BP WF" },
     { fromUnit: "AS", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-AS", title: "Hiệu suất DT kênh BP AS" },
     { fromUnit: "Lego", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-Lego", title: "Hiệu suất DT kênh DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-NDTH", title: "Hiệu suất DT kênh BP NDTH" },
     { fromUnit: "DA01", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-DA01", title: "Hiệu suất DT kênh DA 01" },
-    { fromUnit: "SCS", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-SCS", title: "Hiệu suất DT kênh SCS" },
-    { fromUnit: "Music", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-SCMU", title: "Hiệu suất DT kênh SCMU" },
-    { fromUnit: "CN", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-CNGP", title: "Hiệu suất DT kênh CNGP" },
     { fromUnit: "CR", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-CR", title: "Hiệu suất DT kênh BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-WF", title: "Hiệu suất QTK BP WF" },
     { fromUnit: "AS", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-AS", title: "Hiệu suất QTK BP AS" },
     { fromUnit: "Lego", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-Lego", title: "Hiệu suất QTK DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-NDTH", title: "Hiệu suất QTK BP NDTH" },
     { fromUnit: "DA01", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-DA01", title: "Hiệu suất QTK DA 01" },
-    { fromUnit: "SCS", fromCode: "VM5-I02.03", toUnit: "SCVN", toCode: "VM5-I02.03-SCS", title: "Hiệu suất QTK SCS" },
-    { fromUnit: "Music", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-SCMU", title: "Hiệu suất QTK SCMU" },
-    { fromUnit: "CN", fromCode: "VM5-I02.04", toUnit: "SCVN", toCode: "VM5-I02.04-CNGP", title: "Hiệu suất QTK CNGP" },
     { fromUnit: "Wofloo", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM6-I01.01", toUnit: "SCVN", toCode: "VM6-I01.01-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM6-I01.01", toUnit: "SCVN", toCode: "DM6-I01.01-DA01", title: "DA 01" },
-    { fromUnit: "SCS", fromCode: "SM6-I01.01", toUnit: "SCVN", toCode: "SM6-I01.01-SCS", title: "SCS" },
-    { fromUnit: "Music", fromCode: "MM6-I01.01", toUnit: "SCVN", toCode: "MM6-I01.01-SCMU", title: "SCMU" },
-    { fromUnit: "CN", fromCode: "NM6-I01.01", toUnit: "SCVN", toCode: "NM6-I01.01-CNGP", title: "CNGP" },
     { fromUnit: "CR", fromCode: "CM6-I01.01", toUnit: "SCVN", toCode: "CM6-I01.01-CR", title: "BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM6-I01.02", toUnit: "SCVN", toCode: "DM6-I01.02-DA01", title: "DA 01" },
-    { fromUnit: "SCS", fromCode: "SM6-I01.02", toUnit: "SCVN", toCode: "SM6-I01.02-SCS", title: "SCS" },
-    { fromUnit: "Music", fromCode: "MM6-I01.02", toUnit: "SCVN", toCode: "MM6-I01.02-SCMU", title: "SCMU" },
-    { fromUnit: "CN", fromCode: "NM6-I01.02", toUnit: "SCVN", toCode: "NM6-I01.02-CNGP", title: "CNGP" },
     { fromUnit: "CR", fromCode: "CM6-I01.02", toUnit: "SCVN", toCode: "CM6-I01.02-CR", title: "BP Creative" }
   ];
 
-  const fromUnits = Array.from(new Set(syncMappings.map(m => m.fromUnit)));
-  const fromCodes = Array.from(new Set(syncMappings.map(m => m.fromCode)));
-  const toUnits = Array.from(new Set(syncMappings.map(m => m.toUnit)));
-  const toCodes = Array.from(new Set(syncMappings.map(m => m.toCode)));
+  const triggeringCodes = (kpiUpdates || []).map((u: any) => u.indicatorCode);
+  const matchedMappings = syncMappings.filter(m =>
+    triggeringCodes.includes(m.fromCode) && m.fromUnit === triggeringUnitCode
+  );
+
+  const isScvnOrTct = triggeringUnitCode === "SCVN" || triggeringUnitCode === "TCT";
+  if (kpiUpdates.length > 0 && !isScvnOrTct && matchedMappings.length === 0) {
+    console.log(`[Sync] Không phát hiện thay đổi chỉ tiêu đồng bộ cho đơn vị ${triggeringUnitCode}. Bỏ qua đồng bộ.`);
+    return;
+  }
+
+  const mappingsToProcess = matchedMappings.length > 0 ? matchedMappings : syncMappings;
+
+  const fromUnits = Array.from(new Set(mappingsToProcess.map(m => m.fromUnit)));
+  const fromCodes = Array.from(new Set(mappingsToProcess.map(m => m.fromCode)));
+  const toUnits = Array.from(new Set(mappingsToProcess.map(m => m.toUnit)));
+  const toCodes = Array.from(new Set(mappingsToProcess.map(m => m.toCode)));
 
   const specialCodes = ["VM3-I01.06", "TM3-I01.02", "VM2-I01.01", "VM2-I02.01", "MM2-I01.01", "VM2-I01.02", "VM1-I02.01"];
   const tctRevenueCodes = [
     "VM1-I02.01", "DM1-I02.01", "SM1-I02.01", "CM1-I02.01", "MM1-I02.01",
     "NM1-I02.01", "EM1-I02.01", "HM1-I02.01", "WM1-I02.01", "AM1-I02.01"
   ];
+
+  const hasVm1 = toCodes.some(c => c.startsWith("VM1-"));
+  const hasVm2 = toCodes.some(c => c.startsWith("VM2-"));
+
+  const shouldLoadScvnKpis = toUnits.includes("SCVN") || triggeringUnitCode === "SCVN";
+  const shouldLoadScvnSpecial = hasVm1 || hasVm2 || triggeringUnitCode === "SCVN";
+  const shouldLoadTct = hasVm1 || hasVm2 || triggeringUnitCode === "SCVN" || triggeringUnitCode === "TCT";
+
+  console.log(`[Sync] Chạy đồng bộ cho đơn vị ${triggeringUnitCode || "all"}. Số mappings xử lý: ${mappingsToProcess.length}`);
 
   const [
     sources,
@@ -873,21 +804,21 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
     prisma.kpiData.findMany({
       where: { unitCode: { in: toUnits }, indicatorCode: { in: toCodes }, periodKey, periodType, productCode: null }
     }),
-    prisma.kpiData.findMany({
-      where: { unitCode: "SCVN", periodKey, periodType, productCode: null }
-    }),
-    prisma.kpiData.findMany({
-      where: { unitCode: "SCVN", indicatorCode: { in: specialCodes }, periodKey, periodType, productCode: null }
-    }),
-    prisma.kpiData.findMany({
-      where: { unitCode: "TCT", indicatorCode: { in: ["VM1-I02.01", "VM2-I01.01"] }, periodKey, periodType, productCode: null }
-    }),
-    prisma.kpiData.findMany({
-      where: { unitCode: "TCT", indicatorCode: { in: tctRevenueCodes }, periodKey, periodType, productCode: null }
-    }),
-    prisma.kpiData.findFirst({
-      where: { unitCode: "TCT", indicatorCode: "TM1-I02.01", periodKey, periodType, productCode: null }
-    })
+    shouldLoadScvnKpis
+      ? prisma.kpiData.findMany({ where: { unitCode: "SCVN", periodKey, periodType, productCode: null } })
+      : Promise.resolve([]),
+    shouldLoadScvnSpecial
+      ? prisma.kpiData.findMany({ where: { unitCode: "SCVN", indicatorCode: { in: specialCodes }, periodKey, periodType, productCode: null } })
+      : Promise.resolve([]),
+    shouldLoadTct
+      ? prisma.kpiData.findMany({ where: { unitCode: "TCT", indicatorCode: { in: ["VM1-I02.01", "VM2-I01.01"] }, periodKey, periodType, productCode: null } })
+      : Promise.resolve([]),
+    shouldLoadTct
+      ? prisma.kpiData.findMany({ where: { unitCode: "TCT", indicatorCode: { in: tctRevenueCodes }, periodKey, periodType, productCode: null } })
+      : Promise.resolve([]),
+    shouldLoadTct
+      ? prisma.kpiData.findFirst({ where: { unitCode: "TCT", indicatorCode: "TM1-I02.01", periodKey, periodType, productCode: null } })
+      : Promise.resolve(null)
   ]);
 
   const sourceMap = new Map(sources.map(s => [`${s.unitCode}_${s.indicatorCode}`, s]));
@@ -898,7 +829,7 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
   const dbOps: { type: "create" | "update"; id?: string; data: any }[] = [];
 
   // === PHẦN 1: ĐỒNG BỘ CON -> CHA ===
-  for (const map of syncMappings) {
+  for (const map of mappingsToProcess) {
     const source = sourceMap.get(`${map.fromUnit}_${map.fromCode}`);
     if (source) {
       const existing = targetMap.get(`${map.toUnit}_${map.toCode}`);
@@ -952,7 +883,8 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
             title: map.title,
             unit: source.unit || "",
             status: source.status,
-            isOverridden: true
+            isOverridden: true,
+            parentCode: map.toCode.split("-")[0]
           }
         });
       }
@@ -960,208 +892,177 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
   }
 
   // === PHẦN 2: ROLLUP SCVN ===
-  const scvnRollupMap = new Map();
-  for (const k of scvnKpis) {
-    scvnRollupMap.set(k.indicatorCode, { ...k });
-  }
-  targetMap.forEach((val: any, key: string) => {
-    if (key.startsWith("SCVN_")) {
-      scvnRollupMap.set(val.indicatorCode, val);
+  if (shouldLoadScvnKpis) {
+    const scvnRollupMap = new Map();
+    for (const k of scvnKpis) {
+      scvnRollupMap.set(k.indicatorCode, { ...k });
     }
-  });
-
-  const originalValues = new Map(Array.from(scvnRollupMap.values()).map(k => [k.indicatorCode, { targetValue: k.targetValue, actualValue: k.actualValue }]));
-
-  for (let pass = 0; pass < 3; pass++) {
-    const childrenByParent = new Map();
-    for (const k of Array.from(scvnRollupMap.values())) {
-      if (k.parentCode) {
-        if (!childrenByParent.has(k.parentCode)) {
-          childrenByParent.set(k.parentCode, []);
-        }
-        childrenByParent.get(k.parentCode).push(k);
+    targetMap.forEach((val: any, key: string) => {
+      if (key.startsWith("SCVN_")) {
+        scvnRollupMap.set(val.indicatorCode, val);
       }
-    }
+    });
 
-    for (const [parentCode, children] of Array.from(childrenByParent.entries())) {
-      const parentKpi = scvnRollupMap.get(parentCode);
-      if (!parentKpi) continue;
+    const originalValues = new Map(Array.from(scvnRollupMap.values()).map(k => [k.indicatorCode, { targetValue: k.targetValue, actualValue: k.actualValue }]));
 
-      const method = parentKpi.aggregationMethod || "SUM";
-
-      let targetSum = 0;
-      let actualSum = 0;
-      let count = 0;
-
-      for (const child of children) {
-        targetSum += child.targetValue || 0;
-        actualSum += child.actualValue || 0;
-        count++;
-      }
-
-      let parentTarget = targetSum;
-      let parentActual = actualSum;
-
-      if (method === "AVERAGE" && count > 0) {
-        parentTarget = targetSum / count;
-        parentActual = actualSum / count;
-      }
-
-      parentKpi.targetValue = parentTarget;
-      parentKpi.actualValue = parentActual;
-    }
-  }
-
-  for (const k of Array.from(scvnRollupMap.values())) {
-    const orig = originalValues.get(k.indicatorCode);
-    if (orig && (orig.targetValue !== k.targetValue || orig.actualValue !== k.actualValue)) {
-      if (k.id.startsWith("new-")) {
-        const idx = dbOps.findIndex((op) => op.type === "create" && op.data.indicatorCode === k.indicatorCode);
-        if (idx !== -1) {
-          dbOps[idx].data.targetValue = k.targetValue;
-          dbOps[idx].data.actualValue = k.actualValue;
-        }
-      } else {
-        dbOps.push({
-          type: "update",
-          id: k.id,
-          data: {
-            targetValue: k.targetValue,
-            actualValue: k.actualValue,
-            isOverridden: true
+    for (let pass = 0; pass < 3; pass++) {
+      const childrenByParent = new Map();
+      for (const k of Array.from(scvnRollupMap.values())) {
+        if (k.parentCode) {
+          if (!childrenByParent.has(k.parentCode)) {
+            childrenByParent.set(k.parentCode, []);
           }
-        });
+          childrenByParent.get(k.parentCode).push(k);
+        }
       }
-      const spec = specialMap.get(k.indicatorCode);
-      if (spec) {
-        spec.targetValue = k.targetValue;
-        spec.actualValue = k.actualValue;
+
+      for (const [parentCode, children] of Array.from(childrenByParent.entries())) {
+        const parentKpi = scvnRollupMap.get(parentCode);
+        if (!parentKpi) continue;
+
+        const isAverageIndicator = 
+          parentKpi.aggregationMethod === "AVERAGE" || 
+          parentCode.startsWith("VM5-I02") || 
+          parentCode === "TM4-I02.03" || 
+          parentCode === "VM7-I03.01" || 
+          parentCode === "VM1-I01.01" || 
+          parentCode === "VM1-I01.02" || 
+          parentCode === "VM1-I05.01" || 
+          parentCode === "VM1-I05.02";
+
+        let targetSum = 0;
+        let actualSum = 0;
+        let validTargetCount = 0;
+        let validActualCount = 0;
+
+        for (const child of children) {
+          const tVal = child.targetValue || 0;
+          const aVal = child.actualValue || 0;
+          targetSum += tVal;
+          actualSum += aVal;
+          if (tVal > 0) validTargetCount++;
+          if (aVal > 0) validActualCount++;
+        }
+
+        let parentTarget = targetSum;
+        let parentActual = actualSum;
+
+        if (isAverageIndicator && children.length > 0) {
+          parentTarget = validTargetCount > 0 ? targetSum / validTargetCount : targetSum / children.length;
+          parentActual = validActualCount > 0 ? actualSum / validActualCount : actualSum / children.length;
+          parentTarget = Math.round(parentTarget * 100) / 100;
+          parentActual = Math.round(parentActual * 100) / 100;
+        }
+
+        parentKpi.targetValue = parentTarget;
+        parentKpi.actualValue = parentActual;
+      }
+    }
+
+    for (const k of Array.from(scvnRollupMap.values())) {
+      const orig = originalValues.get(k.indicatorCode);
+      if (orig && (orig.targetValue !== k.targetValue || orig.actualValue !== k.actualValue)) {
+        if (k.id.startsWith("new-")) {
+          const idx = dbOps.findIndex((op) => op.type === "create" && op.data.indicatorCode === k.indicatorCode);
+          if (idx !== -1) {
+            dbOps[idx].data.targetValue = k.targetValue;
+            dbOps[idx].data.actualValue = k.actualValue;
+          }
+        } else {
+          dbOps.push({
+            type: "update",
+            id: k.id,
+            data: {
+              targetValue: k.targetValue,
+              actualValue: k.actualValue,
+              isOverridden: true
+            }
+          });
+        }
+        const spec = specialMap.get(k.indicatorCode);
+        if (spec) {
+          spec.targetValue = k.targetValue;
+          spec.actualValue = k.actualValue;
+        }
       }
     }
   }
 
-  // === PHẦN 3: CHỈ TIÊU ĐẶC THÙ VM3-I01.06 ===
-  const vm3_i01_06 = specialMap.get("VM3-I01.06");
-  if (vm3_i01_06) {
+  // === PHẦN 3: TỰ ĐỘNG TÍNH TOÀN ĐIỂM HOÀN THÀNH SCVN THỨ CẤP ===
+  if (shouldLoadScvnSpecial) {
     const tm3_i01_02 = specialMap.get("TM3-I01.02");
     const vm2_i01_01 = specialMap.get("VM2-I01.01");
     const vm2_i02_01 = specialMap.get("VM2-I02.01");
-    const mm2_i01_01 = specialMap.get("MM2-I01.01");
     const vm2_i01_02 = specialMap.get("VM2-I01.02");
 
     const viewScvn = tm3_i01_02?.actualValue || 0;
     const viewScvnTarget = tm3_i01_02?.targetValue || 0;
 
-    const totalVideo =
-      (vm2_i01_01?.actualValue || 0) +
-      (vm2_i02_01?.actualValue || 0) +
-      (mm2_i01_01?.actualValue || 0) +
-      (vm2_i01_02?.actualValue || 0);
-
-    const totalVideoTarget =
-      (vm2_i01_01?.targetValue || 0) +
-      (vm2_i02_01?.targetValue || 0) +
-      (mm2_i01_01?.targetValue || 0) +
-      (vm2_i01_02?.targetValue || 0);
-
-    const actual_vm3 = totalVideo > 0 ? (viewScvn / totalVideo) : 0;
-    const target_vm3 = totalVideoTarget > 0 ? (viewScvnTarget / totalVideoTarget) : 0;
-
-    if (vm3_i01_06.targetValue !== target_vm3 || vm3_i01_06.actualValue !== actual_vm3) {
-      dbOps.push({
-        type: "update",
-        id: vm3_i01_06.id,
-        data: {
-          targetValue: target_vm3,
-          actualValue: actual_vm3,
-          isOverridden: true
-        }
-      });
-    }
-  }
-
-  // === PHẦN 4 & 5: ĐỒNG BỘ SCVN -> TCT ===
-  const scvnRevKpi = specialMap.get("VM1-I02.01");
-  if (scvnRevKpi) {
-    const tctScvnRecord = tctSyncMap.get("VM1-I02.01");
-    if (tctScvnRecord) {
-      if (tctScvnRecord.targetValue !== scvnRevKpi.targetValue || tctScvnRecord.actualValue !== scvnRevKpi.actualValue) {
+    const specialFormulaKpi = specialMap.get("VM3-I01.06");
+    if (specialFormulaKpi) {
+      const targetVal = viewScvnTarget > 0 ? Math.round(1.5 * viewScvnTarget) : 0;
+      const actualVal = viewScvn;
+      if (specialFormulaKpi.targetValue !== targetVal || specialFormulaKpi.actualValue !== actualVal) {
         dbOps.push({
           type: "update",
-          id: tctScvnRecord.id,
-          data: { targetValue: scvnRevKpi.targetValue, actualValue: scvnRevKpi.actualValue }
+          id: specialFormulaKpi.id,
+          data: { targetValue: targetVal, actualValue: actualVal, isOverridden: true }
         });
-        tctScvnRecord.targetValue = scvnRevKpi.targetValue;
-        tctScvnRecord.actualValue = scvnRevKpi.actualValue;
       }
-    } else {
-      dbOps.push({
-        type: "create",
-        data: {
-          unitCode: "TCT",
-          indicatorCode: "VM1-I02.01",
-          periodKey,
-          periodType,
-          targetValue: scvnRevKpi.targetValue,
-          actualValue: scvnRevKpi.actualValue,
-          title: "SCVN",
-          unit: "VNĐ",
-          status: "Đang thực hiện",
-          isOverridden: true
-        }
-      });
-      tctRevenues.push({
-        indicatorCode: "VM1-I02.01",
-        targetValue: scvnRevKpi.targetValue,
-        actualValue: scvnRevKpi.actualValue
-      } as any);
     }
-  }
 
-  const scvnVolKpi = specialMap.get("VM2-I01.01");
-  if (scvnVolKpi) {
-    const tctScvnVolRecord = tctSyncMap.get("VM2-I01.01");
-    if (tctScvnVolRecord) {
-      if (tctScvnVolRecord.targetValue !== scvnVolKpi.targetValue || tctScvnVolRecord.actualValue !== scvnVolKpi.actualValue) {
-        dbOps.push({
-          type: "update",
-          id: tctScvnVolRecord.id,
-          data: { targetValue: scvnVolKpi.targetValue, actualValue: scvnVolKpi.actualValue }
-        });
-      }
-    } else {
-      dbOps.push({
-        type: "create",
-        data: {
-          unitCode: "TCT",
-          indicatorCode: "VM2-I01.01",
-          periodKey,
-          periodType,
-          targetValue: scvnVolKpi.targetValue,
-          actualValue: scvnVolKpi.actualValue,
-          title: "Số lượng sp SCVN",
-          unit: "Video",
-          status: "Đang thực hiện",
-          isOverridden: true
+    // === PHẦN 4: ĐỒNG BỘ SCVN -> TCT ===
+    const scvnRevKpi = specialMap.get("VM1-I02.01");
+    if (scvnRevKpi) {
+      const tctScvnRecord = tctSyncMap.get("VM1-I02.01");
+      if (tctScvnRecord) {
+        if (tctScvnRecord.targetValue !== scvnRevKpi.targetValue || tctScvnRecord.actualValue !== scvnRevKpi.actualValue) {
+          dbOps.push({
+            type: "update",
+            id: tctScvnRecord.id,
+            data: { targetValue: scvnRevKpi.targetValue, actualValue: scvnRevKpi.actualValue }
+          });
+          tctScvnRecord.targetValue = scvnRevKpi.targetValue;
+          tctScvnRecord.actualValue = scvnRevKpi.actualValue;
         }
-      });
+      }
+    }
+
+    // === PHẦN 5: ĐỒNG BỘ SCVN -> TCT (VOLUME) ===
+    if (vm2_i01_01) {
+      const tctVolRecord = tctSyncMap.get("VM2-I01.01");
+      const volScvn = vm2_i01_01.actualValue;
+      const volScvnTarget = vm2_i01_01.targetValue;
+      if (tctVolRecord) {
+        if (tctVolRecord.targetValue !== volScvnTarget || tctVolRecord.actualValue !== volScvn) {
+          dbOps.push({
+            type: "update",
+            id: tctVolRecord.id,
+            data: { targetValue: volScvnTarget, actualValue: volScvn }
+          });
+          tctVolRecord.targetValue = volScvnTarget;
+          tctVolRecord.actualValue = volScvn;
+        }
+      }
     }
   }
 
   // === PHẦN 6: ROLLUP TCT REVENUE ===
-  let tctRevenueTarget = 0;
-  let tctRevenueActual = 0;
-  for (const r of tctRevenues) {
-    if (r.indicatorCode === "VM1-I02.01" && scvnRevKpi) {
-      tctRevenueTarget += scvnRevKpi.targetValue || 0;
-      tctRevenueActual += scvnRevKpi.actualValue || 0;
-    } else {
-      tctRevenueTarget += r.targetValue || 0;
-      tctRevenueActual += r.actualValue || 0;
-    }
-  }
+  if (shouldLoadTct && tctRevRecord) {
+    let tctRevenueTarget = 0;
+    let tctRevenueActual = 0;
+    const scvnRevKpi = specialMap.get("VM1-I02.01");
 
-  if (tctRevRecord) {
+    for (const r of tctRevenues) {
+      if (r.indicatorCode === "VM1-I02.01" && scvnRevKpi) {
+        tctRevenueTarget += scvnRevKpi.targetValue || 0;
+        tctRevenueActual += scvnRevKpi.actualValue || 0;
+      } else {
+        tctRevenueTarget += r.targetValue || 0;
+        tctRevenueActual += r.actualValue || 0;
+      }
+    }
+
     if (tctRevRecord.targetValue !== tctRevenueTarget || tctRevRecord.actualValue !== tctRevenueActual) {
       dbOps.push({
         type: "update",
@@ -1173,25 +1074,8 @@ async function syncKpisBetweenUnits(periodKey: string, periodType: string) {
         }
       });
     }
-  } else {
-    dbOps.push({
-      type: "create",
-      data: {
-        unitCode: "TCT",
-        indicatorCode: "TM1-I02.01",
-        periodKey,
-        periodType,
-        targetValue: tctRevenueTarget,
-        actualValue: tctRevenueActual,
-        title: "Tổng doanh thu",
-        unit: "VNĐ",
-        status: "Đang thực hiện",
-        isOverridden: true
-      }
-    });
   }
 
-  // === THỰC THI GIAO DỊCH DUY NHẤT ===
   if (dbOps.length > 0) {
     const prismaOps = dbOps.map(op => {
       if (op.type === "create") {

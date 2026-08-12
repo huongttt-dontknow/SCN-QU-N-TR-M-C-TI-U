@@ -1,0 +1,402 @@
+[
+  {
+    "code": "TM1-I01",
+    "title": "Đảm bảo tỷ suất lợi nhuận",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Quý",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM1-I01.01",
+    "title": "ROI",
+    "unit": "%",
+    "measuring": "ROI = (Tổng doanh thu - tổng chi phí)/Tổng chi phí",
+    "frequency": "Quý",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1-I01",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "TM1-I02",
+    "title": "Tăng trưởng doanh thu",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tuần",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM1-I02.01",
+    "title": "Tổng doanh thu kênh",
+    "unit": "VND",
+    "measuring": "Tổng doanh thu kênh KD sản phẩm trong kỳ đánh giá",
+    "frequency": "Tuần",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM1-I05",
+    "title": "Kiểm soát chi phí",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tháng",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM1-I05.02",
+    "title": "Tối ưu chi phí sản xuất",
+    "unit": "%",
+    "measuring": "Chi phí sản xuất 1 ND/tổng chi phí",
+    "frequency": "Quý",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1-I05",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM1-I05.03",
+    "title": "CP Mua mới công cụ AI",
+    "unit": "VNĐ",
+    "measuring": "Chi phí mua công cụ AI phân bổ hàng tháng",
+    "frequency": "Tháng",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1-I05",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM1-I05.04",
+    "title": "Chi phí CTV (Cộng tác viên)",
+    "unit": "VNĐ",
+    "measuring": "Chi phí CTV (Nghiệm thu tuần nào tính chi phí cho tuần đó)",
+    "frequency": "Tuần",
+    "group": "M1. TÀI CHÍNH/KINH DOANH",
+    "parentCode": "TM1-I05",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM2-I01",
+    "title": "Đảm bảo số lượng nội dung số sản xuất",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM2-I01.01",
+    "title": "Số lượng video hoàn thành sản xuất",
+    "unit": "Nội dung",
+    "measuring": "Số lượng video hoàn thành sản xuất",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2-I01",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM2-I01.3",
+    "title": "Số lượng ý tưởng mới",
+    "unit": "Ý tưởng",
+    "measuring": "Số lượng ý tưởng mới sx trong kỳ (áp dụng cho đơn vị sx có biên kịch)",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2-I01",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM2-I01.4",
+    "title": "Số lượng ý tưởng được chọn",
+    "unit": "Ý tưởng",
+    "measuring": "Số lượng ý tưởng được chọn sx trong kỳ (áp dụng cho đơn vị sx có biên kịch)",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2-I01",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM2-I01.5",
+    "title": "Tỷ lệ chọn ý tưởng",
+    "unit": "%",
+    "measuring": "SL ý tưởng được chọn/ SL ý tưởng mới trong kỳ",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2-I01",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM2-I01.6",
+    "title": "SL Kịch bản mới SX",
+    "unit": "Kịch bản",
+    "measuring": "SL Kịch bản mới được đưa vào sản xuất trong kỳ",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2-I01",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM2-I02",
+    "title": "Đảm bảo nội dung đạt chuẩn chất lượng",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM2-I02.01",
+    "title": "SL video đạt ngưỡng 1 triệu views (youtube)",
+    "unit": "Nội dung",
+    "measuring": "SL video đạt >=1 Triệu view trên nền tảng Youtube trong kỳ",
+    "frequency": "Tuần",
+    "group": "M2. SẢN PHẨM/SẢN XUẤT",
+    "parentCode": "TM2-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM3-I01",
+    "title": "Gia tăng số lượng khách hàng nền tảng",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tuần",
+    "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
+    "parentCode": "TM3",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM3-I01.02",
+    "title": "Tổng traffic (nội dung long)",
+    "unit": "Views",
+    "measuring": "Số lượng view trên nền tảng youtube",
+    "frequency": "Tuần",
+    "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
+    "parentCode": "TM3-I01",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM3-I01.01",
+    "title": "Traffic shorts",
+    "unit": "Views",
+    "measuring": "Số lượng view shorts trên nền tảng youtube",
+    "frequency": "Tuần",
+    "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
+    "parentCode": "TM3-I01.02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM3-I01.03",
+    "title": "Số lượng video upload",
+    "unit": "Nội dung",
+    "measuring": "Số lượng video sản xuất mới được upload lên kênh lần đầu (ko bao gồm khai thác/ reup)",
+    "frequency": "Tuần",
+    "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
+    "parentCode": "TM3-I01",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM3-I01.04",
+    "title": "Tỉ lệ chuyển đổi (CTR)- 24h",
+    "unit": "%",
+    "measuring": "Tỉ lệ giữ chân khách hàng của các ND sản xuất up mới lần đầu trong kỳ đánh giá",
+    "frequency": "Tuần",
+    "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
+    "parentCode": "TM3-I01",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "TM3-I01.05",
+    "title": "Tỉ lệ giữ chân khách hàng (APV)- 24h",
+    "unit": "%",
+    "measuring": "Tỉ lệ giữ chân khách hàng của các ND sản xuất up mới lần đầu trong kỳ đánh giá",
+    "frequency": "Tuần",
+    "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
+    "parentCode": "TM3-I01",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "TM3-I01.06",
+    "title": "View TB/1 nội dung mới upload trong kỳ",
+    "unit": "Views",
+    "measuring": "View TB/1 nội dung mới upload trong kỳ (Bao gồm cả nội dung khai thác up lại)",
+    "frequency": "Tháng",
+    "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
+    "parentCode": "TM3-I01",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "TM4-I02",
+    "title": "Phát triển hệ thống kênh kinh doanh",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tháng",
+    "group": "M4. THƯƠNG HIỆU/KÊNH KINH DOANH",
+    "parentCode": "TM4",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM4-I02.01",
+    "title": "Số kênh đạt ngưỡng 10k $/ tháng",
+    "unit": "Kênh",
+    "measuring": "Số kênh đạt ngưỡng 10k $/ tháng toàn hệ thống",
+    "frequency": "Tháng",
+    "group": "M4. THƯƠNG HIỆU/KÊNH KINH DOANH",
+    "parentCode": "TM4-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM4-I02.02",
+    "title": "Số kênh đạt các ngưỡng mới hoặc đạt huy hiệu",
+    "unit": "Kênh",
+    "measuring": "Số kênh đạt các ngưỡng mới (nút vàng/ nút bạc/ nút kim cương) hoặc đạt huy hiệu",
+    "frequency": "Tháng",
+    "group": "M4. THƯƠNG HIỆU/KÊNH KINH DOANH",
+    "parentCode": "TM4-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM4-I02.04",
+    "title": "Số vi phạm chính sách",
+    "unit": "SL",
+    "measuring": "Số vi phạm trên kênh : TKT, gậy CĐ, gậy BQ, chết kênh...",
+    "frequency": "Tháng",
+    "group": "M4. THƯƠNG HIỆU/KÊNH KINH DOANH",
+    "parentCode": "TM4-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM4-I02.05",
+    "title": "Tổng số kênh kinh doanh",
+    "unit": "SL",
+    "measuring": "Tổng số kênh của đơn vị, bao gồm kênh BKT (Bật kiếm tiền) và kênh chưa BKT",
+    "frequency": "Tháng",
+    "group": "M4. THƯƠNG HIỆU/KÊNH KINH DOANH",
+    "parentCode": "TM4-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM4-I02.06",
+    "title": "Số kênh BKT",
+    "unit": "SL",
+    "measuring": "Tổng số lượng kênh được BKT tính đến kỳ đánh giá",
+    "frequency": "Tháng",
+    "group": "M4. THƯƠNG HIỆU/KÊNH KINH DOANH",
+    "parentCode": "TM4-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM5-I02",
+    "title": "Quản trị hiệu suất",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tháng",
+    "group": "M5. QUẢN TRỊ VẬN HÀNH",
+    "parentCode": "VM5",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM5-I02.01",
+    "title": "Thời gian sản xuất TB 1 video",
+    "unit": "Ngày",
+    "measuring": "Thời gian sản xuất TB 1 video",
+    "frequency": "Tháng",
+    "group": "M5. QUẢN TRỊ VẬN HÀNH",
+    "parentCode": "VM5-I02",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM5-I02.02",
+    "title": "Hiệu suất sản xuất",
+    "unit": "ND",
+    "measuring": "Số NDSX/ số nhân sự sx trong kỳ (ko tính quản lý BP/DA)",
+    "frequency": "Tháng",
+    "group": "M5. QUẢN TRỊ VẬN HÀNH",
+    "parentCode": "VM5-I02",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM5-I02.03",
+    "title": "Hiệu suất doanh thu kênh",
+    "unit": "VNĐ",
+    "measuring": "Tổng DT/ trung bình số lượng kênh trong kỳ đánh giá",
+    "frequency": "Tháng",
+    "group": "M5. QUẢN TRỊ VẬN HÀNH",
+    "parentCode": "VM5-I02",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM5-I02.05",
+    "title": "Hiệu suất doanh thu/người",
+    "unit": "VNĐ",
+    "measuring": "Doanh thu đem về trên kênh/ tổng SL nhân sự của DA",
+    "frequency": "Tháng",
+    "group": "M5. QUẢN TRỊ VẬN HÀNH",
+    "parentCode": "VM5-I02",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM5-I02.06",
+    "title": "Chi phí sx TB/1 SP",
+    "unit": "VNĐ",
+    "measuring": "Chi phí Tb sản xuất 1 sản phẩm",
+    "frequency": "Tháng",
+    "group": "M5. QUẢN TRỊ VẬN HÀNH",
+    "parentCode": "VM5-I02",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM5-I02.07",
+    "title": "Chuyển đổi số AI",
+    "unit": "SL",
+    "measuring": "Số nhiệm vụ hoàn thành được giao từng tháng",
+    "frequency": "Tháng",
+    "group": "M5. QUẢN TRỊ VẬN HÀNH",
+    "parentCode": "VM5-I02",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM6-I02",
+    "title": "Số lượng nhân sự fulltime",
+    "unit": "NS",
+    "measuring": "Tổng số nhân sự sản xuất/kinh doanh cho sp full time trong kỳ đánh giá",
+    "frequency": "Tháng",
+    "group": "M6. NHÂN SỰ TỔ CHỨC",
+    "parentCode": "VM6",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "TM7-I03",
+    "title": "Thúc đấy văn hóa kỷ luật",
+    "unit": "",
+    "measuring": "",
+    "frequency": "Tháng",
+    "group": "M7. VĂN HÓA DOANH NGHIỆP",
+    "parentCode": "TM7",
+    "aggregationMethod": "SUM"
+  },
+  {
+    "code": "VM7-I03.01",
+    "title": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+    "unit": "%",
+    "measuring": "Số nhân sự không vi phạm/Tổng số nhân sự",
+    "frequency": "Tháng",
+    "group": "M7. VĂN HÓA DOANH NGHIỆP",
+    "parentCode": "TM7-I03",
+    "aggregationMethod": "AVG"
+  },
+  {
+    "code": "VM7-I03.02",
+    "title": "Số vi phạm tuân thủ",
+    "unit": "Lần",
+    "measuring": "Số lần vi phạm tuân thủ trong kỳ",
+    "frequency": "Tháng",
+    "group": "M7. VĂN HÓA DOANH NGHIỆP",
+    "parentCode": "TM7-I03",
+    "aggregationMethod": "SUM"
+  }
+]

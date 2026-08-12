@@ -59,6 +59,8 @@ model KpiData {
   updatedAt     DateTime @updatedAt
 
   @@unique([indicatorCode, unitCode, periodKey])
+  @@index([unitCode, periodKey, periodType])
+  @@index([productCode, periodKey, periodType])
 }
 
 // Bảng OKR Objectives (Mục tiêu)

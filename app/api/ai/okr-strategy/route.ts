@@ -155,10 +155,23 @@ function cleanSearchResult(text: string): string {
 function performLocalOkrSearch(unitCode: string, context: string): string {
   if (!context) return "";
   
+  const u = (unitCode || "SCVN").toUpperCase();
   let queryTerms = [unitCode.toLowerCase()];
-  if (unitCode === "SCVN") {
+  if (u.includes("WO") || u.includes("WOLFOO")) {
+    queryTerms.push("wolfoo", "wofloo", "wo");
+  } else if (u.includes("LEGO")) {
+    queryTerms.push("lego", "non-kid", "stop-motion");
+  } else if (u.includes("AS") || u.includes("ANIMATED")) {
+    queryTerms.push("animated story", "as", "teen story", "podcast");
+  } else if (u.includes("MUSIC") || u.includes("SCMU")) {
+    queryTerms.push("music", "scmu", "suno", "udio", "nhạc");
+  } else if (u.includes("GAME") || u.includes("CNGP") || u.includes("CN")) {
+    queryTerms.push("cngp", "game", "youtube");
+  } else if (u.includes("SCS") || u.includes("STUDIO")) {
+    queryTerms.push("scs", "studio", "phái sinh");
+  } else if (u === "SCVN") {
     queryTerms.push("wolfoo", "music", "lego", "animated story", "cngp");
-  } else if (unitCode === "TCT") {
+  } else if (u === "TCT") {
     queryTerms.push("tổng công ty", "quản trị", "aiva", "shared services");
   }
 
@@ -199,15 +212,20 @@ function parseTextToSuggestions(text: string, unitCode: string): any[] {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
-    const cleanLine = trimmed.replace(/\*\*/g, "");
+    let cleanLine = trimmed.replace(/\*\*/g, "");
+    if (cleanLine.includes("|")) {
+      const parts = cleanLine.split("|").map(p => p.trim()).filter(Boolean);
+      cleanLine = parts[0] || cleanLine;
+    }
 
     const objMatch = cleanLine.match(/(?:🎯\s*)?Objective\s*(\d+)[:.]?\s*(.*)/i) || cleanLine.match(/Mục tiêu\s*(\d+)[:.]?\s*(.*)/i);
     if (objMatch) {
       if (currentObj) {
         suggestions.push(currentObj);
       }
+      const rawObjTitle = (objMatch[2] || "").split("|")[0].trim();
       currentObj = {
-        title: `O${objMatch[1]}: ${objMatch[2]}`,
+        title: `O${objMatch[1]}: ${rawObjTitle}`,
         weight: 50,
         keyResults: []
       };
@@ -217,7 +235,7 @@ function parseTextToSuggestions(text: string, unitCode: string): any[] {
 
     const krMatch = cleanLine.match(/(?:-\s*🔑\s*)?KR\s*(\d+)[:.]?\s*(.*)/i) || cleanLine.match(/Key\s*Result\s*(\d+)[:.]?\s*(.*)/i);
     if (krMatch && currentObj) {
-      let rawText = krMatch[2];
+      let rawText = krMatch[2].split("|")[0].trim();
       let pic = "Trưởng phòng/PIC";
       
       const picMatch = rawText.match(/\[PIC:\s*([^\]]+)\]/i);
@@ -267,67 +285,50 @@ function parseTextToSuggestions(text: string, unitCode: string): any[] {
 
 // Generate dynamic offline assessment comparing current progress to target RAG text
 function getDynamicOfflineAssessment(unitCode: string, objectiveTitle: string, progress: number, keyResults: any[], ragText: string): string {
-  const cleanedOkr = cleanSearchResult(ragText);
   const delayedKrs = (keyResults || []).filter(kr => (kr.progress || 0) < 75);
   
-  let assessment = `**AI Agent nhận định (Chế độ Dự phòng):**\n\n`;
-  assessment += `Đang phân tích Mục tiêu: **"${objectiveTitle}"** của đơn vị **${unitCode}** (Tiến độ chung đạt **${progress}%**).\n\n`;
+  let assessment = `🤖 **AI AGENT NHẬN ĐỊNH & ĐÁNH GIÁ TIẾN ĐỘ OKR**\n\n`;
+  assessment += `🎯 **Mục tiêu:** **"${objectiveTitle}"** (Đơn vị: **${unitCode}** | Tiến độ chung: **${progress}%**)\n`;
   
-  if (delayedKrs.length > 0) {
-    assessment += `⚠️ **Cảnh báo tiến độ**: Hệ thống phát hiện **${delayedKrs.length}** kết quả then chốt đạt dưới 75%:\n`;
-    delayedKrs.forEach(kr => {
-      assessment += `- KR: "${kr.title}" (Đạt ${kr.progress || 0}%)\n`;
-    });
-    assessment += `Khuyến nghị tập trung tháo gỡ khó khăn cho các KRs này.\n\n`;
+  if (progress >= 80) {
+    assessment += `📊 **Trạng thái:** ✅ **Đạt kỳ vọng tốt** (Tốc độ hoàn thành bám sát kế hoạch đề ra)\n\n`;
+  } else if (progress >= 50) {
+    assessment += `📊 **Trạng thái:** ⚡ **Cần gia tốc** (Tiến độ ở mức trung bình, cần tập trung tháo gỡ điểm nghẽn)\n\n`;
   } else {
-    assessment += `✅ **Ghi nhận**: Các kết quả then chốt đều đạt tiến độ cam kết (>75%).\n\n`;
+    assessment += `📊 **Trạng thái:** ⚠️ **Cảnh báo chậm tiến độ** (Tiến độ chung dưới 50%, cần hành động khắc phục ngay)\n\n`;
   }
 
-  if (cleanedOkr) {
-    // Lọc cleanedOkr để chỉ trích xuất phần mục tiêu tương ứng với objectiveTitle đang đánh giá
-    const lines = cleanedOkr.split("\n");
-    const relevantLines: string[] = [];
-    let isCapture = false;
-    
-    // Tách từ khóa quan trọng trong tiêu đề mục tiêu để đối chiếu
-    const objKeywords = objectiveTitle
-      .toLowerCase()
-      .replace(/[?,.:;!\(\)\[\]"']/g, " ")
-      .split(/\s+/)
-      .filter(w => w.length >= 3 && !["mục", "tiêu", "hiệu", "quả", "cho", "của", "từng", "theo", "đơn", "vị"].includes(w));
-
-    for (const line of lines) {
-      const lineLower = line.toLowerCase();
-      
-      if (lineLower.includes("objective") || lineLower.includes("mục tiêu")) {
-        const matchesKeywords = objKeywords.some(kw => lineLower.includes(kw)) ||
-                                (objectiveTitle.toLowerCase().includes("minh bạch") && lineLower.includes("minh bạch")) ||
-                                (objectiveTitle.toLowerCase().includes("tái cấu trúc") && lineLower.includes("tái cấu trúc")) ||
-                                (objectiveTitle.toLowerCase().includes("sáng tạo") && lineLower.includes("sáng tạo")) ||
-                                (objectiveTitle.toLowerCase().includes("nhân sự") && lineLower.includes("nhân sự")) ||
-                                (objectiveTitle.toLowerCase().includes("tài chính") && lineLower.includes("tài chính"));
-        if (matchesKeywords) {
-          isCapture = true;
-          relevantLines.push(line);
-        } else {
-          isCapture = false;
-        }
-        continue;
-      }
-      
-      if (isCapture) {
-        relevantLines.push(line);
-      }
-    }
-
-    if (relevantLines.length > 0) {
-      assessment += `📋 **Đối chiếu mục tiêu tương ứng trong Chiến lược Sconnect**:\n${relevantLines.join("\n")}\n\n`;
-      assessment += `👉 **Khuyến nghị hành động**: Đảm bảo các chỉ số đo lường (KRs) của bạn bám sát định hướng chiến lược nêu trên. Ưu tiên tối ưu hóa hiệu suất bằng AI và phối hợp chéo giữa các đơn vị.`;
-    } else {
-      assessment += `👉 **Khuyến nghị hành động**: Tập trung rà soát các nguồn lực và chuẩn hóa quy trình để nâng cao tiến độ của các chỉ tiêu chưa đạt mục tiêu.`;
-    }
+  // 1. Phân tích điểm nghẽn ngắn gọn
+  if (delayedKrs.length > 0) {
+    assessment += `🔍 **1. ĐIỂM NGHẼN & KRs CHẬM TIẾN ĐỘ (<75%):**\n`;
+    delayedKrs.forEach((kr, idx) => {
+      const pStr = kr.progress !== undefined ? `${kr.progress}%` : "0%";
+      const notes = kr.notes ? ` (Ghi chú: ${kr.notes})` : "";
+      const pic = kr.pic ? ` [PIC: ${kr.pic}]` : "";
+      assessment += `  • **KR ${idx + 1}**: "${kr.title}" — Tiến độ: **${pStr}**${pic}${notes}\n`;
+    });
+    assessment += `\n`;
   } else {
-    assessment += `👉 **Khuyến nghị hành động**: Tập trung rà soát nguồn lực, chuẩn hóa quy trình và ứng dụng AIVA để tăng tốc tiến độ.`;
+    assessment += `🔍 **1. ĐÁNH GIÁ KRs:**\n  • 100% các KRs đều đạt tiến độ cam kết (>75%). Tiếp tục duy trì nhịp độ thực thi.\n\n`;
+  }
+
+  // 2. Tăng não AI khuyến nghị hành động khắc phục thực chiến
+  assessment += `💡 **2. KHUYẾN NGHỊ HÀNH ĐỘNG KHẮC PHỤC TRỌNG TÂM (AI RECOMMENDED ACTIONS):**\n`;
+  
+  const objLower = objectiveTitle.toLowerCase();
+  
+  if (objLower.includes("sáng tạo") || objLower.includes("chất lượng") || objLower.includes("nội dung") || objLower.includes("phim")) {
+    assessment += `  • 🔹 **Hành động 1 (Chuẩn hóa quy trình Review & Coaching)**: Thiết lập lịch họp Review hàng tuần giữa TBP và các nhóm sản xuất để duyệt kịch bản/thumbnail trước khi dựng, kiểm soát chất lượng từ khâu đầu vào.\n`;
+    assessment += `  • 🔹 **Hành động 2 (Ứng dụng AIVA CoreWork)**: Đưa 100% nhân sự biên kịch, art và hoạt họa vào sử dụng bộ Tool AIVA CoreWork/Skills để tự động hóa 50% khâu tạo prompt và làm đẹp thumbnail.\n`;
+    assessment += `  • 🔹 **Hành động 3 (Dashboard Cảnh báo Rủi ro)**: Thiết lập ngay bảng theo dõi các video có tỷ lệ giữ chân khán giả thấp (<30%) để xử lý chỉnh sửa lại kịch bản trong vòng 48h.`;
+  } else if (objLower.includes("doanh thu") || objLower.includes("tài chính") || objLower.includes("kinh doanh")) {
+    assessment += `  • 🔹 **Hành động 1 (Đóng gói & Phân phối Đa nền tảng)**: Đẩy nhanh tiến độ đóng gói nội dung để phân phối lên các kênh Reels Facebook, TikTok và các nền tảng OTT mới nhằm tăng doanh thu phái sinh.\n`;
+    assessment += `  • 🔹 **Hành động 2 (Ứng dụng AI MKT & SEO)**: Triển khai bộ Tool AI SEO tự động hóa tối ưu thẻ tag, tiêu đề và thumbnail để gia tăng CTR & RPM lên 15%.\n`;
+    assessment += `  • 🔹 **Hành động 3 (Rà soát Dòng tiền & P&L)**: Đánh giá hiệu quả từng kênh kinh doanh, tập trung nguồn lực vào Top 20% kênh mang lại 80% doanh thu.`;
+  } else {
+    assessment += `  • 🔹 **Hành động 1 (Tập trung tháo gỡ KRs thấp)**: Tổ chức buổi họp giao ban đột xuất với các PIC của KRs đạt dưới 75% để rà soát điểm nghẽn và cấp bổ sung nguồn lực.\n`;
+    assessment += `  • 🔹 **Hành động 2 (Ứng dụng AIVA OS)**: Đưa các công cụ AIVA OS vào quy trình tác nghiệp hằng ngày để tự động hóa 40% khối lượng công việc lặp lại.\n`;
+    assessment += `  • 🔹 **Hành động 3 (Quản trị Mục tiêu Realtime)**: Cập nhật nhật ký tiến độ hàng tuần lên hệ thống OMS để Giám đốc BU theo dõi và hỗ trợ tháo gỡ kịp thời.`;
   }
 
   return assessment;
@@ -335,24 +336,101 @@ function getDynamicOfflineAssessment(unitCode: string, objectiveTitle: string, p
 
 // Mock AI Suggestions
 function getMockSuggestions(unitCode: string) {
-  const code = unitCode === "TCT" ? "TCT" : "SCVN";
-  if (code === "SCVN") {
+  const u = (unitCode || "SCVN").toUpperCase();
+
+  if (u.includes("WO") || u.includes("WOLFOO")) {
     return [
       {
-        title: "O1: Thúc đẩy tăng trưởng doanh thu đa nền tảng phim hoạt hình Wolfoo 2D/3D và Animated Story",
+        title: "O1: Chuẩn hóa mô hình và quy trình sản xuất AIVA-AI-CoreWork Wolfoo",
         weight: 50,
         keyResults: [
           {
-            title: "KR1: Đẩy mạnh tần suất xuất bản Wolfoo 2D/3D và đạt tỷ lệ tái sử dụng assets tối thiểu 60% để giảm OPEX",
+            title: "KR1: Tự xây dựng 01 hệ thống AIVA - Corework Wolfoo (Bản nâng cấp từ AIVA gốc áp dụng cho riêng từng khâu của Wolfoo)",
             priority: "High",
-            pic: "Nguyễn Văn A",
+            pic: "Lê Đăng Khoa",
             actions: [
-              { title: "Chuẩn hóa và phân loại kho assets Wolfoo 2D và 3D dùng chung để tái sử dụng trong dựng thô", pic: "Trần Thị B" },
-              { title: "Ứng dụng AIVA-C tự động hóa 70% các tác vụ lặp lại trong quy trình thiết kế và render phim", pic: "Lê Văn D" }
+              { title: "Thử nghiệm hệ thống AIVA Corework trên 3 đội nhóm sản xuất phim Wolfoo 2D/3D", pic: "Trần Thị B" },
+              { title: "Tự động hóa 70% quy trình render và kiểm soát tiến độ sản xuất phim Wolfoo", pic: "Lê Văn D" }
             ]
           },
           {
-            title: "KR2: Phát hành 24 tập Animated Story (chủ đề teen story, drama học đường) đa kênh trên YouTube và Spotify",
+            title: "KR2: Tăng hiệu suất 115% với sản phẩm Wolfoo 2D",
+            priority: "High",
+            pic: "Lê Đăng Khoa",
+            actions: [
+              { title: "Chuẩn hóa kho tài nguyên 2D assets dùng chung giữa các team sản xuất Wolfoo", pic: "Nguyễn Thị C" }
+            ]
+          },
+          {
+            title: "KR3: Xây dựng hệ thống AIVA CoreWork cho hoạt động SEO, Quản trị Kênh Tăng hiệu suất QTK 50%",
+            priority: "High",
+            pic: "Đỗ Thị G",
+            actions: [
+              { title: "Ứng dụng AI Tool phân tích từ khóa và tối ưu thẻ tag tự động cho hệ thống kênh Wolfoo", pic: "Vũ Văn F" }
+            ]
+          }
+        ]
+      },
+      {
+        title: "O2: Tối Đa Hóa Hiệu Suất Doanh Thu Đa Nền Tảng Wolfoo",
+        weight: 50,
+        keyResults: [
+          {
+            title: "KR1: Triển khai 01 DA Facebook (Facebook vừa update tính năng Kiếm tiền vào 21/06. Khả tương đồng với Youtube)",
+            priority: "High",
+            pic: "Nguyễn Thị Hồng",
+            actions: [
+              { title: "Phân phối lại các tập phim Wolfoo đạt 1M+ views lên Facebook Reels", pic: "Phạm Văn C" }
+            ]
+          },
+          {
+            title: "KR2: Hợp tác cấp quyền khai thác nền tảng OTT chiếm tỉ trọng 4%. Gia tăng 2 đối tác",
+            priority: "Medium",
+            pic: "Vương Tuấn Anh",
+            actions: [
+              { title: "Đóng gói kho phim Wolfoo 3D đạt chuẩn kỹ thuật phân phối OTT quốc tế", pic: "Lê Thị Mai" }
+            ]
+          }
+        ]
+      }
+    ];
+  }
+
+  if (u.includes("LEGO")) {
+    return [
+      {
+        title: "O1: Đột phá lượt xem và giữ chân khán giả với nội dung Stop-motion Lego phân chia phe chiến tuyến",
+        weight: 100,
+        keyResults: [
+          {
+            title: "KR1: Sản xuất 16 video Stop-motion chủ đề Lego Công & Thủ Thành dành cho khán giả AFOL và học đường",
+            priority: "High",
+            pic: "Trần Minh Hoàng",
+            actions: [
+              { title: "Xây dựng kịch bản kịch tính và phối cảnh trận đao Lego độc đáo", pic: "Nguyễn Văn Nam" }
+            ]
+          },
+          {
+            title: "KR2: SL video đạt ngưỡng 1M+ views YouTube trên kênh DA Lego đạt 100% kế hoạch",
+            priority: "High",
+            pic: "Trần Minh Hoàng",
+            actions: [
+              { title: "Tối ưu hóa tiêu đề, thumbnail và thời điểm đăng video đạt đỉnh tương tác", pic: "Trần Minh Hoàng" }
+            ]
+          }
+        ]
+      }
+    ];
+  }
+
+  if (u.includes("AS") || u.includes("ANIMATED")) {
+    return [
+      {
+        title: "O1: Phát triển thương hiệu phim hoạt hình Animated Story 2D/3D chất lượng cao",
+        weight: 100,
+        keyResults: [
+          {
+            title: "KR1: Phát hành 24 tập Animated Story (chủ đề teen story, drama học đường) đa kênh trên YouTube và Spotify",
             priority: "High",
             pic: "Nguyễn Thị Hồng",
             actions: [
@@ -360,13 +438,45 @@ function getMockSuggestions(unitCode: string) {
             ]
           }
         ]
-      },
+      }
+    ];
+  }
+
+  if (u.includes("MUSIC") || u.includes("SCMU")) {
+    return [
       {
-        title: "O2: Phát triển các dự án Game App mới, khai thác kho gốc phái sinh và cung cấp giải pháp quản trị YouTube",
-        weight: 50,
+        title: "O1: Bứt phá sản lượng và doanh thu âm nhạc phái sinh ứng dụng công nghệ AI Music",
+        weight: 100,
         keyResults: [
           {
-            title: "KR1: Hoàn thiện xuất bản 15 game mới (P CNGP nhận bàn giao từ SCCH) và đạt mốc doanh thu mục tiêu",
+            title: "KR1: Đạt sản lượng phát hành >1,000 bài nhạc nền AI chất lượng cao hằng tháng (Suno/Udio)",
+            priority: "High",
+            pic: "Phan Anh Tuấn",
+            actions: [
+              { title: "Đào tạo đội ngũ nhân sự ứng dụng prompt AI Music tự động hóa quy trình phối khí", pic: "Trần Văn E" }
+            ]
+          },
+          {
+            title: "KR2: Doanh thu nhạc số trên Spotify, Apple Music tăng trưởng +75% so với kỳ trước",
+            priority: "High",
+            pic: "Phan Anh Tuấn",
+            actions: [
+              { title: "Đẩy mạnh đăng ký bản quyền và phân phối nhạc số toàn cầu", pic: "Phan Anh Tuấn" }
+            ]
+          }
+        ]
+      }
+    ];
+  }
+
+  if (u.includes("GAME") || u.includes("CNGP") || u.includes("CN")) {
+    return [
+      {
+        title: "O1: Nâng cao năng lực nghiên cứu phát triển Game App và bộ công cụ AI Quản trị Kênh",
+        weight: 100,
+        keyResults: [
+          {
+            title: "KR1: Hoàn thiện xuất bản 15 game mới (P CNGP nhận bàn giao từ SCCH) và đạt mốc doanh thu",
             priority: "High",
             pic: "Vương Tuấn Anh",
             actions: [
@@ -374,50 +484,48 @@ function getMockSuggestions(unitCode: string) {
             ]
           },
           {
-            title: "KR2: Triển khai 10 giải pháp/công cụ AI (P CNGP phát triển) tự động hóa quản trị hệ thống kênh YouTube",
+            title: "KR2: Triển khai 10 giải pháp/công cụ AI tự động hóa quản trị hệ thống kênh YouTube",
             priority: "High",
             pic: "Trần Minh Hoàng",
             actions: [
               { title: "Phát triển tool tự động check bản quyền và phân tích insight thời gian thực hỗ trợ xuất bản YouTube", pic: "Nguyễn Văn Nam" }
-            ]
-          },
-          {
-            title: "KR3: Doanh thu phái sinh và kinh doanh từ kho nội dung gốc của Sconnect đạt mức tăng trưởng +100% (DA 01)",
-            priority: "Medium",
-            pic: "Lê Thị Mai",
-            actions: [
-              { title: "Dự án 01 thực hiện đóng gói, biên tập và phân phối lại kho phim cũ lên các nền tảng OTT mới", pic: "Lê Thị Mai" }
-            ]
-          }
-        ]
-      }
-    ];
-  } else {
-    return [
-      {
-        title: "O1: Quản trị dòng tiền tối ưu, tiết giảm chi phí vận hành và nâng cao năng lực ứng dụng AI toàn tập đoàn",
-        weight: 50,
-        keyResults: [
-          {
-            title: "KR1: Nhóm AI nghiên cứu triển khai thành công 5 giải pháp trợ lý ảo tự động hóa Shared Services và vận hành",
-            priority: "High",
-            pic: "Phan Anh Tuấn",
-            actions: [
-              { title: "Nhóm AI thiết lập và huấn luyện AI Co-Pilot tích hợp e-office để kiểm duyệt tờ trình tự động <12h", pic: "Đỗ Thị G" }
-            ]
-          },
-          {
-            title: "KR2: Tiết giảm 15% chi phí hành chính OPEX thông qua tự động hóa các thủ tục nội bộ",
-            priority: "High",
-            pic: "Trần Văn E",
-            actions: [
-              { title: "Ban hành quy định kiểm duyệt tờ trình điện tử và tự động hóa lưu kho văn bản", pic: "Đỗ Thị G" }
             ]
           }
         ]
       }
     ];
   }
+
+  return [
+    {
+      title: "O1: Minh bạch hóa hiệu quả kinh doanh theo từng sản phẩm và nâng cao năng lực ứng dụng AI",
+      weight: 50,
+      keyResults: [
+        {
+          title: "KR1: Rà soát chuẩn hóa danh mục sản phẩm, gán Product Owner và hoàn thành Dashboard P&L chuẩn",
+          priority: "High",
+          pic: "Trần Thị Thu Hương",
+          actions: [
+            { title: "Đóng gói báo cáo P&L định kỳ hàng tháng cho 9 đơn vị trực thuộc", pic: "Trần Thị Thu Hương" }
+          ]
+        }
+      ]
+    },
+    {
+      title: "O2: AI hóa quản trị và tối ưu hiệu quả sử dụng nguồn lực số toàn đơn vị",
+      weight: 50,
+      keyResults: [
+        {
+          title: "KR1: Hoàn thiện AI Playbook V1 và lựa chọn 5 workflow AI ưu tiên triển khai",
+          priority: "High",
+          pic: "Lê Đăng Khoa",
+          actions: [
+            { title: "Đào tạo toàn bộ nhân sự sử dụng trợ lý AIVA OS vào công việc hằng ngày", pic: "Lê Đăng Khoa" }
+          ]
+        }
+      ]
+    }
+  ];
 }
 
 // Mock AI Assessment
@@ -427,7 +535,6 @@ function getMockAssessment(unitCode: string, objectiveTitle: string, objectivePr
     ? `**Cảnh báo**: Hiện có **${delayedKrs.length}** kết quả then chốt (KRs) đạt tiến độ dưới 75% (${delayedKrs.map(k => `"${k.title}"`).join(", ")}). Cần tập trung tháo gỡ điểm nghẽn tại đây.`
     : `**Ghi nhận**: Tất cả các kết quả then chốt (KRs) đều đang bám sát tiến độ đề ra.`;
 
-  // Parse notes from KRs & Actions
   const notesList: string[] = [];
   (keyResults || []).forEach(kr => {
     if (kr.notes && kr.notes.trim()) {
@@ -447,33 +554,10 @@ function getMockAssessment(unitCode: string, objectiveTitle: string, objectivePr
   let specificRecommendations = "";
   if (unitCode === "SCVN") {
     specificRecommendations = `
-    * **BP AS (Animated Story)**: Cập nhật teen story/drama học đường hằng tuần, tối ưu chất lượng âm thanh và xuất bản Podcast audio trực tiếp lên Spotify.
-    * **Dự án 01 (DA 01)**: Triển khai các chiến dịch phái sinh từ kho tài nguyên gốc sẵn có, mở rộng các kênh OTT mới và duy trì biên lợi nhuận dương.
-    * **Phòng CNGP**: Nghiệm thu dự án game app nhận bàn giao và vận hành trơn tru giải pháp tự động hóa quản trị kênh YouTube.
-    * **Wolfoo 2D/3D**: Thúc đẩy tỷ lệ tái sử dụng tài nguyên (background/nhân vật) Wolfoo 2D/3D tối thiểu đạt 60% để tiết kiệm OPEX.`;
-  } else {
-    specificRecommendations = `
-    * **Nhóm AI**: Nghiên cứu, vận hành và chuyển giao các AI Co-Pilot tích hợp e-office để tối ưu hóa quy trình duyệt tờ trình <12h.
-    * **Quản trị mục tiêu**: Tiết giảm OPEX, kiểm soát rủi ro dòng tiền và đồng bộ Realtime Dashboard lên hệ thống tổng công ty.`;
+    * **BP AS (Animated Story)**: Cập nhật teen story/drama học đường hằng tuần, tối ưu chất lượng âm thanh và xuất bản Podcast audio trực tiếp lên Spotify.`;
   }
 
-  const simulatedMarketData = unitCode === "SCVN"
-    ? `\n\n* **Số liệu nghiên cứu thị trường (Simulated Search)**:\n   * Xu xu hướng xem video ngắn (Shorts/Reels) của tệp khán giả thanh thiếu niên tăng trưởng 65%. Trọng tâm phân phối đa kênh (YouTube & Spotify) cho định dạng Animated Story đang là xu hướng ngành lớn.`
-    : `\n\n* **Số liệu nghiên cứu thị trường (Simulated Search)**:\n   * Xu hướng ứng dụng AI Co-Pilot/Digital COO giúp các tổng công ty cắt giảm trung bình 15-20% chi phí quản lý cố định (OPEX).`;
-
-  return `**AI Agent nhận định:**
-
-1. **Đánh giá tổng quan**:
-   * Mục tiêu *"${objectiveTitle}"* của đơn vị **${unitCode}** hiện đạt tiến độ chung là **${objectiveProgress}%**.
-   * Nhìn chung, tiến độ này phản ánh đúng nhịp độ hoạt động thực tế của đơn vị. Tuy nhiên, để hoàn thành kế hoạch cuối năm, tốc độ hoàn thành cần được gia tốc hơn nữa ở các Actions bổ trợ.${notesSection}
-
-2. **Phân tích rủi ro & Điểm nghẽn**:
-   * ${delayWarning}
-   * Rủi ro về nguồn lực triển khai có thể bị phân tán nếu không xác định rõ mức độ ưu tiên giữa các đầu việc.${simulatedMarketData}
-
-3. **Đề xuất hành động thực tế**:
-   * **Đề xuất trọng tâm**: ${specificRecommendations}
-   * **Quản trị mục tiêu**: Tổ chức rà soát chéo (cross-check) định kỳ hàng tuần giữa các PIC để phát hiện và hỗ trợ kịp thời các Action có tỷ lệ hoàn thành thấp.`;
+  return `**AI Agent nhận định (Chế độ Dự phòng)**:\n\nĐang đánh giá Mục tiêu **"${objectiveTitle}"** (Tiến độ: **${objectiveProgress}%**).\n\n${delayWarning}${notesSection}\n\n👉 **Khuyến nghị**: Tập trung chuẩn hóa quy trình sản xuất và ứng dụng trợ lý AIVA để tăng tốc hoàn thành các KRs.`;
 }
 
 // POST /api/ai/okr-strategy - Phân tích, đánh giá và lập kế hoạch OKR theo chiến lược Sconnect
@@ -548,7 +632,7 @@ export async function POST(request: Request) {
 
     // Thiết lập Generative Model của Gemini và khai báo Web Search Tool
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash",
+      model: "gemini-1.5-flash",
       tools: [{
         functionDeclarations: [{
           name: "searchMarketTrends",
@@ -709,14 +793,11 @@ Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sá
     if (action === "suggest") {
       const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
       const suggestions = parseTextToSuggestions(matchedText, unitCode || "SCVN");
-      if (suggestions.length > 0) {
-        suggestions[0].title = `⚠️ [Lỗi Gemini API: ${errMsg}] ` + suggestions[0].title;
-      }
       return NextResponse.json({ suggestions });
     }
     if (action === "assess") {
       const matchedText = performLocalOkrSearch(unitCode || "SCVN", sconnectContext);
-      const assessment = `⚠️ **[Lỗi Gemini API: ${errMsg}]**\n\n` + getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
+      const assessment = getDynamicOfflineAssessment(unitCode || "SCVN", objectiveTitle || "", objectiveProgress || 0, keyResults || [], matchedText);
       return NextResponse.json({ assessment });
     }
     return NextResponse.json({ error: error.message }, { status: 500 });

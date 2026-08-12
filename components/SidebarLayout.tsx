@@ -81,6 +81,7 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
                 <Link
                   key={item.path}
                   href={item.path}
+                  prefetch={true}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     isActive
                       ? "bg-gradient-to-r from-emerald-500/20 to-lime-500/10 text-emerald-400 border-l-2 border-emerald-500 shadow-md font-bold"

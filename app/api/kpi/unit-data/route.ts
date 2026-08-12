@@ -138,9 +138,32 @@ export async function GET(request: Request) {
     // Lấy toàn bộ bản ghi KPI của đơn vị hoặc sản phẩm trong năm
     let records: any[] = [];
     try {
-      records = await prisma.kpiData.findMany({
-        where: productCode ? { productCode } : { unitCode, productCode: null }
-      });
+      if (productCode) {
+        records = await prisma.kpiData.findMany({ where: { productCode } });
+      } else if (unitCode === "SCVN") {
+        records = await prisma.kpiData.findMany({ where: { unitCode: "SCVN", productCode: null } });
+      } else {
+        const unitSuffixMap: Record<string, string> = {
+          "Wofloo": "-WF", "WO": "-WF", "WF": "-WF",
+          "AS": "-AS",
+          "Lego": "-Lego", "LEGO": "-Lego",
+          "NDTH": "-NDTH",
+          "DA01": "-DA01",
+          "SCS": "-SCS",
+          "Music": "-SCMU", "SCMU": "-SCMU",
+          "CN": "-CNGP", "CNGP": "-CNGP",
+          "CR": "-CR", "Creative": "-CR"
+        };
+        const suffix = unitSuffixMap[unitCode];
+        records = await prisma.kpiData.findMany({
+          where: {
+            OR: [
+              { unitCode, productCode: null },
+              ...(suffix ? [{ unitCode: "SCVN", indicatorCode: { endsWith: suffix }, productCode: null }] : [])
+            ]
+          }
+        });
+      }
     } catch (dbErr) {
       console.warn("Lấy KPI từ DB thất bại (hạn mức), sử dụng dữ liệu JSON dự phòng:", dbErr);
       const fs = require("fs");

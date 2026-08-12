@@ -94,9 +94,17 @@ export async function GET(request: Request) {
       const staticPoint = staticData.points.find((p) => p.code === mCode);
       const currRec = currRecordMap.get(mCode);
 
-      // Điểm kỳ này: Ưu tiên DB (actualValue), fallback dữ liệu tĩnh (m6_26)
-      const currVal = currRec !== undefined ? currRec.actualValue : (staticPoint ? staticPoint["Kỳ này"] : 80);
-      const calculatedVal = currRec !== undefined ? currRec.targetValue : currVal; // Lưu tạm tính ở targetValue
+      // Điểm kỳ này: Ưu tiên DB (tính % hoàn thành từ target/actual), fallback dữ liệu tĩnh
+      let currVal = staticPoint ? staticPoint["Kỳ này"] : 80;
+      if (currRec !== undefined) {
+        if (currRec.targetValue > 0 && (currRec.actualValue > 500 || currRec.targetValue > 500)) {
+          currVal = Math.min(130, Math.round((currRec.actualValue / currRec.targetValue) * 1000) / 10);
+        } else {
+          currVal = currRec.actualValue;
+        }
+      }
+
+      const calculatedVal = currRec !== undefined ? (currRec.targetValue > 500 ? currVal : currRec.targetValue) : currVal;
       const explanation = currRec !== undefined ? currRec.explanation : "";
       const isOverridden = currRec !== undefined ? currRec.isOverridden : false;
 
@@ -105,7 +113,11 @@ export async function GET(request: Request) {
       if (isPrevDynamic) {
         const prevRec = prevRecordMap.get(mCode);
         if (prevRec !== undefined) {
-          prevVal = prevRec.actualValue;
+          if (prevRec.targetValue > 0 && (prevRec.actualValue > 500 || prevRec.targetValue > 500)) {
+            prevVal = Math.min(130, Math.round((prevRec.actualValue / prevRec.targetValue) * 1000) / 10);
+          } else {
+            prevVal = prevRec.actualValue;
+          }
         }
       }
 
@@ -114,7 +126,7 @@ export async function GET(request: Request) {
         code: mCode,
         "Kỳ này": currVal,
         "Kỳ trước": prevVal,
-        change: currVal - prevVal,
+        change: Math.round((currVal - prevVal) * 10) / 10,
         calculatedVal, // Kết quả tạm tính (Cột 2)
         explanation, // Ghi chú (Cột 4)
         isOverridden,
