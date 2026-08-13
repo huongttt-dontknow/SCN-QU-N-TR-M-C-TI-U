@@ -1913,23 +1913,23 @@ export default function InputFormPage() {
 
               return (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                     {/* Card 1: Doanh thu (Viền Xanh Dương) */}
-                    <div className={`p-4 rounded-xl border-2 flex flex-col justify-between transition-all ${
+                    <div className={`p-3 rounded-xl border-2 flex flex-col justify-between transition-all ${
                       theme === "light"
                         ? "bg-sky-50/90 border-sky-500 text-slate-900 shadow-sm"
                         : "bg-slate-900/80 border-sky-500/40 text-white"
                     }`}>
-                      <span className={`text-xs font-black uppercase tracking-wider block mb-1 ${
+                      <span className={`text-[11px] font-black uppercase tracking-wider block mb-0.5 ${
                         theme === "light" ? "text-sky-800" : "text-sky-400"
                       }`}>
                         💰 TỔNG DOANH THU ĐƠN VỊ
                       </span>
-                      <div className="flex items-baseline justify-between mt-1">
-                        <span className={`text-3xl font-black ${theme === "light" ? "text-sky-900" : "text-white"}`}>{revPct}%</span>
-                        <span className={`text-xs font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
+                      <div className="flex items-baseline justify-between mt-0.5">
+                        <span className={`text-2xl font-black ${theme === "light" ? "text-sky-900" : "text-white"}`}>{revPct}%</span>
+                        <span className={`text-[11px] font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
                       </div>
-                      <div className={`text-xs mt-2 font-bold border-t pt-2 ${
+                      <div className={`text-[11px] mt-1.5 font-bold border-t pt-1.5 ${
                         theme === "light" ? "text-slate-700 border-sky-200" : "text-slate-300 border-white/5"
                       }`}>
                         {revActual >= 1e9 ? `${(revActual / 1e9).toFixed(2)} Tỷ` : `${(revActual / 1e6).toFixed(0)} Tr`} / {revTarget >= 1e9 ? `${(revTarget / 1e9).toFixed(2)} Tỷ VNĐ` : `${(revTarget / 1e6).toFixed(0)} Tr VNĐ`}
@@ -1937,21 +1937,21 @@ export default function InputFormPage() {
                     </div>
 
                     {/* Card 2: Sản lượng (Viền Xanh Lá Cây) */}
-                    <div className={`p-4 rounded-xl border-2 flex flex-col justify-between transition-all ${
+                    <div className={`p-3 rounded-xl border-2 flex flex-col justify-between transition-all ${
                       theme === "light"
                         ? "bg-emerald-50/90 border-emerald-500 text-slate-900 shadow-sm"
                         : "bg-slate-900/80 border-emerald-500/40 text-white"
                     }`}>
-                      <span className={`text-xs font-black uppercase tracking-wider block mb-1 ${
+                      <span className={`text-[11px] font-black uppercase tracking-wider block mb-0.5 ${
                         theme === "light" ? "text-emerald-800" : "text-emerald-400"
                       }`}>
                         🎬 SẢN LƯỢNG SẢN XUẤT
                       </span>
-                      <div className="flex items-baseline justify-between mt-1">
-                        <span className={`text-3xl font-black ${theme === "light" ? "text-emerald-800" : "text-emerald-400"}`}>{volPct}%</span>
-                        <span className={`text-xs font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
+                      <div className="flex items-baseline justify-between mt-0.5">
+                        <span className={`text-2xl font-black ${theme === "light" ? "text-emerald-800" : "text-emerald-400"}`}>{volPct}%</span>
+                        <span className={`text-[11px] font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
                       </div>
-                      <div className={`text-xs mt-2 font-bold border-t pt-2 ${
+                      <div className={`text-[11px] mt-1.5 font-bold border-t pt-1.5 ${
                         theme === "light" ? "text-slate-700 border-emerald-200" : "text-slate-300 border-white/5"
                       }`}>
                         {volActual} / {volTarget} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}
@@ -1959,21 +1959,21 @@ export default function InputFormPage() {
                     </div>
 
                     {/* Card 3: Traffic (Viền Đỏ/Cam) */}
-                    <div className={`p-4 rounded-xl border-2 flex flex-col justify-between transition-all ${
+                    <div className={`p-3 rounded-xl border-2 flex flex-col justify-between transition-all ${
                       theme === "light"
                         ? "bg-rose-50/90 border-rose-500 text-slate-900 shadow-sm"
                         : "bg-slate-900/80 border-rose-500/40 text-white"
                     }`}>
-                      <span className={`text-xs font-black uppercase tracking-wider block mb-1 ${
+                      <span className={`text-[11px] font-black uppercase tracking-wider block mb-0.5 ${
                         theme === "light" ? "text-rose-800" : "text-rose-400"
                       }`}>
                         📊 TRAFFIC / VIEWS
                       </span>
-                      <div className="flex items-baseline justify-between mt-1">
-                        <span className={`text-3xl font-black ${theme === "light" ? "text-rose-800" : "text-rose-400"}`}>{trafficPct}%</span>
-                        <span className={`text-xs font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
+                      <div className="flex items-baseline justify-between mt-0.5">
+                        <span className={`text-2xl font-black ${theme === "light" ? "text-rose-800" : "text-rose-400"}`}>{trafficPct}%</span>
+                        <span className={`text-[11px] font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
                       </div>
-                      <div className={`text-xs mt-2 font-bold border-t pt-2 ${
+                      <div className={`text-[11px] mt-1.5 font-bold border-t pt-1.5 ${
                         theme === "light" ? "text-slate-700 border-rose-200" : "text-slate-300 border-white/5"
                       }`}>
                         {trafficActual >= 1e6 ? `${(trafficActual / 1e6).toFixed(1)}M views` : `${trafficActual} views`}
@@ -2047,11 +2047,11 @@ export default function InputFormPage() {
                       value={quickReportText}
                       onChange={(e) => setQuickReportText(e.target.value)}
                       disabled={isReadOnly}
-                      rows={3}
+                      rows={5}
                       placeholder="Bấm nút '✨ AI Tạo Báo Cáo Nhanh' hoặc tự nhập tóm tắt kết quả nổi bật & kiến nghị ngắn gọn gửi tới Giám đốc BU..."
-                      className={`w-full rounded-xl p-3 text-xs resize-none transition-all focus:outline-none ${
+                      className={`w-full rounded-xl p-3.5 text-xs font-medium resize-y min-h-[110px] transition-all focus:outline-none ${
                         theme === "light"
-                          ? "bg-white border-2 border-slate-300 text-slate-900 font-medium placeholder-slate-400 focus:border-cyan-600 shadow-sm"
+                          ? "bg-white border-2 border-slate-300 text-slate-900 placeholder-slate-400 focus:border-cyan-600 shadow-sm"
                           : "bg-slate-950 border border-white/10 text-white focus:border-cyan-400 disabled:opacity-60"
                       }`}
                     />
