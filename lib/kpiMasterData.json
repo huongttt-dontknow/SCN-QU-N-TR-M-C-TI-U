@@ -2661,34 +2661,6 @@
         }
       }
     },
-    "VM1-I02.02-DA01": {
-      "title": "DA 01",
-      "unit": "VNĐ",
-      "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
-      "pic": null,
-      "periods": {
-        "monthly_7": {
-          "target": 651900000,
-          "actual": 424605317,
-          "pct": 0.6513
-        },
-        "weekly_7_1": {
-          "target": 56458080,
-          "actual": 66859174,
-          "pct": 1.1842
-        },
-        "weekly_7_2": {
-          "target": 67958800,
-          "actual": 72829006,
-          "pct": 1.0717
-        },
-        "weekly_7_3": {
-          "target": 67958800,
-          "actual": 78106582,
-          "pct": 1.1493
-        }
-      }
-    },
     "SM1-I02.01.01": {
       "title": "SCS",
       "unit": "VNĐ",
@@ -2723,39 +2695,6 @@
       "periods": {
         "monthly_7": {
           "target": 133083880
-        }
-      }
-    },
-    "MM1-I02.01.01-CNGP": {
-      "title": "CNGP",
-      "unit": "VNĐ",
-      "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
-      "pic": null,
-      "periods": {
-        "monthly_7": {
-          "target": 250000000,
-          "actual": 38795478,
-          "pct": 0.1552
-        }
-      }
-    },
-    "VM1-I02.02-PD": {
-      "title": "BP PD",
-      "unit": "VNĐ",
-      "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
-      "pic": "PTGĐ Ly",
-      "periods": {
-        "yearly_2026": {
-          "target": 1947796452
-        },
-        "quarterly_1": {
-          "target": 90955800
-        },
-        "quarterly_3": {
-          "target": 613464224
-        },
-        "quarterly_4": {
-          "target": 964148289
         }
       }
     },
