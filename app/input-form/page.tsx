@@ -1875,17 +1875,23 @@ export default function InputFormPage() {
           </div>
 
           {/* KHỐI 2: TỔNG KẾT NHANH KẾT QUẢ, CẢNH BÁO AI (<50%) & BÁO CÁO NHANH GỬI GIÁM ĐỐC BU */}
-          <div className="glass-panel p-5 space-y-5 border-l-4 border-l-cyan-500">
-            <div className="flex flex-wrap justify-between items-center gap-3 border-b border-white/10 pb-3">
-              <h3 className="text-sm font-black text-cyan-400 tracking-wider uppercase flex items-center gap-2">
-                <Sparkles size={16} className="text-cyan-400" /> ⚡ KHỐI 2: TỔNG KẾT NHANH KẾT QUẢ, CẢNH BÁO AI & BÁO CÁO NHANH GỬI GIÁM ĐỐC BU
+          <div className={`p-5 space-y-5 rounded-2xl border-l-4 border-l-cyan-500 shadow-md transition-all ${
+            theme === "light"
+              ? "bg-white border border-[#E2E8F0]"
+              : "glass-panel"
+          }`}>
+            <div className="flex flex-wrap justify-between items-center gap-3 border-b border-slate-200 dark:border-white/10 pb-3">
+              <h3 className={`text-sm font-black tracking-wider uppercase flex items-center gap-2 ${
+                theme === "light" ? "text-cyan-700" : "text-cyan-400"
+              }`}>
+                <Sparkles size={16} className={theme === "light" ? "text-cyan-600" : "text-cyan-400"} /> ⚡ KHỐI 2: TỔNG KẾT NHANH KẾT QUẢ, CẢNH BÁO AI & BÁO CÁO NHANH GỬI GIÁM ĐỐC BU
               </h3>
-              <span className="text-xs text-slate-400 font-semibold">
+              <span className={`text-xs font-semibold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>
                 Đơn vị: <strong>{filters.unitCode}</strong> • {filters.periodType === "weekly" ? `Tuần ${filters.week} (Tháng ${filters.month})` : filters.periodType === "monthly" ? `Tháng ${filters.month}` : filters.periodType === "quarterly" ? `Quý ${filters.quarter}` : `Năm ${filters.year}`}
               </span>
             </div>
 
-            {/* A. THẺ TỔNG KẾT NHANH 3 CHỈ SỐ CHÍNH */}
+            {/* A. THẺ TỔNG KẾT NHANH 3 CHỈ SỐ CHÍNH (3 VIỀN: XANH DƯƠNG - XANH LÁ - ĐỎ) */}
             {(() => {
               const revItem = kpis.find(k => k.code === "VM1-I02.01" || k.code.startsWith("MM1-I02.01") || k.code.startsWith("SM1-I02.01") || k.code.startsWith("DM1-I02.01") || k.code.startsWith("NM1-I02.01") || k.code.startsWith("CM1-I02.01"));
               const volItem = kpis.find(k => k.code === "VM2-I01.01" || k.code.startsWith("MM2-I01.01") || k.code.startsWith("SM2-I01.01") || k.code.startsWith("DM2-I01.01") || k.code.startsWith("NM2-I01.01") || k.code.startsWith("CM2-I01.01"));
@@ -1908,85 +1914,109 @@ export default function InputFormPage() {
               return (
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {/* Card 1: Doanh thu */}
-                    <div className="bg-slate-900/80 p-4 rounded-xl border border-purple-500/30 flex flex-col justify-between">
-                      <span className="text-[10px] font-black text-purple-400 uppercase tracking-wider block mb-1">
+                    {/* Card 1: Doanh thu (Viền Xanh Dương) */}
+                    <div className={`p-4 rounded-xl border-2 flex flex-col justify-between transition-all ${
+                      theme === "light"
+                        ? "bg-sky-50/90 border-sky-500 text-slate-900 shadow-sm"
+                        : "bg-slate-900/80 border-sky-500/40 text-white"
+                    }`}>
+                      <span className={`text-xs font-black uppercase tracking-wider block mb-1 ${
+                        theme === "light" ? "text-sky-800" : "text-sky-400"
+                      }`}>
                         💰 TỔNG DOANH THU ĐƠN VỊ
                       </span>
                       <div className="flex items-baseline justify-between mt-1">
-                        <span className="text-2xl font-black text-white">{revPct}%</span>
-                        <span className="text-xs text-slate-400 font-bold">Thực tế / KH</span>
+                        <span className={`text-3xl font-black ${theme === "light" ? "text-sky-900" : "text-white"}`}>{revPct}%</span>
+                        <span className={`text-xs font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
                       </div>
-                      <div className="text-[11px] text-slate-300 mt-2 font-semibold border-t border-white/5 pt-2">
+                      <div className={`text-xs mt-2 font-bold border-t pt-2 ${
+                        theme === "light" ? "text-slate-700 border-sky-200" : "text-slate-300 border-white/5"
+                      }`}>
                         {revActual >= 1e9 ? `${(revActual / 1e9).toFixed(2)} Tỷ` : `${(revActual / 1e6).toFixed(0)} Tr`} / {revTarget >= 1e9 ? `${(revTarget / 1e9).toFixed(2)} Tỷ VNĐ` : `${(revTarget / 1e6).toFixed(0)} Tr VNĐ`}
                       </div>
                     </div>
 
-                    {/* Card 2: Sản lượng */}
-                    <div className="bg-slate-900/80 p-4 rounded-xl border border-emerald-500/30 flex flex-col justify-between">
-                      <span className="text-[10px] font-black text-emerald-400 uppercase tracking-wider block mb-1">
+                    {/* Card 2: Sản lượng (Viền Xanh Lá Cây) */}
+                    <div className={`p-4 rounded-xl border-2 flex flex-col justify-between transition-all ${
+                      theme === "light"
+                        ? "bg-emerald-50/90 border-emerald-500 text-slate-900 shadow-sm"
+                        : "bg-slate-900/80 border-emerald-500/40 text-white"
+                    }`}>
+                      <span className={`text-xs font-black uppercase tracking-wider block mb-1 ${
+                        theme === "light" ? "text-emerald-800" : "text-emerald-400"
+                      }`}>
                         🎬 SẢN LƯỢNG SẢN XUẤT
                       </span>
                       <div className="flex items-baseline justify-between mt-1">
-                        <span className="text-2xl font-black text-emerald-400">{volPct}%</span>
-                        <span className="text-xs text-slate-400 font-bold">Thực tế / KH</span>
+                        <span className={`text-3xl font-black ${theme === "light" ? "text-emerald-800" : "text-emerald-400"}`}>{volPct}%</span>
+                        <span className={`text-xs font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
                       </div>
-                      <div className="text-[11px] text-slate-300 mt-2 font-semibold border-t border-white/5 pt-2">
+                      <div className={`text-xs mt-2 font-bold border-t pt-2 ${
+                        theme === "light" ? "text-slate-700 border-emerald-200" : "text-slate-300 border-white/5"
+                      }`}>
                         {volActual} / {volTarget} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}
                       </div>
                     </div>
 
-                    {/* Card 3: Traffic */}
-                    <div className="bg-slate-900/80 p-4 rounded-xl border border-sky-500/30 flex flex-col justify-between">
-                      <span className="text-[10px] font-black text-sky-400 uppercase tracking-wider block mb-1">
+                    {/* Card 3: Traffic (Viền Đỏ/Cam) */}
+                    <div className={`p-4 rounded-xl border-2 flex flex-col justify-between transition-all ${
+                      theme === "light"
+                        ? "bg-rose-50/90 border-rose-500 text-slate-900 shadow-sm"
+                        : "bg-slate-900/80 border-rose-500/40 text-white"
+                    }`}>
+                      <span className={`text-xs font-black uppercase tracking-wider block mb-1 ${
+                        theme === "light" ? "text-rose-800" : "text-rose-400"
+                      }`}>
                         📊 TRAFFIC / VIEWS
                       </span>
                       <div className="flex items-baseline justify-between mt-1">
-                        <span className="text-2xl font-black text-sky-400">{trafficPct}%</span>
-                        <span className="text-xs text-slate-400 font-bold">Thực tế / KH</span>
+                        <span className={`text-3xl font-black ${theme === "light" ? "text-rose-800" : "text-rose-400"}`}>{trafficPct}%</span>
+                        <span className={`text-xs font-extrabold ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>Thực tế / KH</span>
                       </div>
-                      <div className="text-[11px] text-slate-300 mt-2 font-semibold border-t border-white/5 pt-2">
+                      <div className={`text-xs mt-2 font-bold border-t pt-2 ${
+                        theme === "light" ? "text-slate-700 border-rose-200" : "text-slate-300 border-white/5"
+                      }`}>
                         {trafficActual >= 1e6 ? `${(trafficActual / 1e6).toFixed(1)}M views` : `${trafficActual} views`}
                       </div>
                     </div>
                   </div>
 
-                  {/* B. CẢNH BÁO VẮN TẮT AI AGENT (<50%) */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-white/10 space-y-2">
-                    <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                  {/* B. CẢNH BÁO TÓM TẮT VẮN TẮT AI AGENT (2-3 DÒNG) */}
+                  <div className={`p-4 rounded-xl border transition-all ${
+                    theme === "light"
+                      ? "bg-amber-50/90 border-amber-300 text-amber-950 shadow-sm"
+                      : "bg-slate-950 border-amber-500/20 text-amber-200"
+                  }`}>
+                    <h4 className={`text-xs font-black uppercase tracking-wider flex items-center gap-1.5 mb-1.5 ${
+                      theme === "light" ? "text-amber-800" : "text-amber-400"
+                    }`}>
                       ⚠️ CẢNH BÁO TỰ ĐỘNG TỪ AI AGENT (CÁC CHỈ TIÊU ĐẠT &lt; 50% KẾ HOẠCH)
                     </h4>
                     {lowItems.length > 0 ? (
-                      <div className="space-y-1.5 pt-1">
-                        {lowItems.map(item => {
-                          const pct = item.target > 0 ? Math.round((item.actual / item.target) * 100) : 0;
-                          return (
-                            <div key={item.id} className="flex flex-wrap justify-between items-center bg-rose-950/40 p-2.5 rounded-lg border border-rose-500/30 text-xs gap-2">
-                              <div className="flex items-center gap-2">
-                                <span className="bg-rose-500 text-white font-extrabold text-[10px] px-2 py-0.5 rounded">
-                                  {item.code}
-                                </span>
-                                <span className="font-bold text-white">{item.title}</span>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <span className="text-rose-400 font-black">Chỉ đạt {pct}% (Thực tế: {item.actual} / KH: {item.target})</span>
-                                <span className="text-[10px] text-slate-300 italic">➔ Cần bổ sung giải trình & action khắc phục ở Khối 3 & 4</span>
-                              </div>
-                            </div>
-                          );
-                        })}
+                      <div className="space-y-1 text-xs font-semibold leading-relaxed">
+                        <p className={theme === "light" ? "text-rose-800 font-bold" : "text-rose-400 font-bold"}>
+                          • AI Agent phát hiện <strong>{lowItems.length} chỉ tiêu</strong> đang đạt dưới 50% kế hoạch trong kỳ này.
+                        </p>
+                        <p className={theme === "light" ? "text-slate-800" : "text-slate-200"}>
+                          • Danh sách các chỉ tiêu nổi bật: <strong>{lowItems.slice(0, 3).map(i => `${i.title} (${i.code})`).join(", ")}</strong>...
+                        </p>
+                        <p className={`text-[11px] italic mt-1 ${theme === "light" ? "text-slate-600" : "text-slate-400"}`}>
+                          👉 Trưởng đơn vị vui lòng bổ sung thông tin giải trình ở <strong>Khối 3</strong> và chọn hành động phục hồi ở <strong>Khối 4</strong> trước khi trình Giám đốc BU.
+                        </p>
                       </div>
                     ) : (
-                      <div className="p-3 text-center text-xs text-emerald-400 font-bold bg-emerald-950/20 border border-emerald-500/20 rounded-lg">
-                        🟢 AI Agent ghi nhận: Không có chỉ tiêu nào đạt dưới 50% kế hoạch trong kỳ này!
+                      <div className={`text-xs font-bold ${theme === "light" ? "text-emerald-800" : "text-emerald-400"}`}>
+                        🟢 AI Agent ghi nhận: Tất cả các chỉ tiêu chính của đơn vị đều duy trì tiến độ đạt trên 50% kế hoạch trong kỳ này!
                       </div>
                     )}
                   </div>
 
                   {/* C. KHU VỰC BÁO CÁO NHANH GỬI GIÁM ĐỐC BU */}
                   <div className="space-y-2 pt-1">
-                    <div className="flex justify-between items-center">
-                      <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <div className="flex flex-wrap justify-between items-center gap-2">
+                      <label className={`text-xs font-extrabold flex items-center gap-1.5 ${
+                        theme === "light" ? "text-slate-800" : "text-slate-200"
+                      }`}>
                         ✍️ Nội dung Báo cáo nhanh của Trưởng đơn vị gửi Giám đốc BU:
                       </label>
                       <div className="flex items-center gap-2">
@@ -1994,17 +2024,21 @@ export default function InputFormPage() {
                           type="button"
                           onClick={handleGenerateQuickReport}
                           disabled={isGeneratingQuickReport}
-                          className="bg-cyan-800 hover:bg-cyan-700 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition-all flex items-center gap-1 shadow"
+                          className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl transition-all flex items-center gap-1 shadow"
                         >
-                          <Sparkles size={12} />
-                          <span>{isGeneratingQuickReport ? "⌛ Đang tổng hợp..." : "✨ AI Tạo Báo Cáo Nhanh"}</span>
+                          <Sparkles size={13} style={{ color: "#ffffff" }} />
+                          <span style={{ color: "#ffffff" }}>{isGeneratingQuickReport ? "⌛ Đang tổng hợp..." : "✨ AI Tạo Báo Cáo Nhanh"}</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => showToast("💾 Đã lưu thành công nội dung Báo cáo nhanh cho Giám đốc BU!")}
-                          className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold px-3 py-1 rounded-lg border border-white/10 transition-all flex items-center gap-1"
+                          className={`text-xs font-extrabold px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1 ${
+                            theme === "light"
+                              ? "bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 shadow-sm"
+                              : "bg-slate-800 hover:bg-slate-700 text-slate-200 border-white/10"
+                          }`}
                         >
-                          <Save size={12} />
+                          <Save size={13} />
                           <span>Lưu báo cáo nhanh</span>
                         </button>
                       </div>
@@ -2015,7 +2049,11 @@ export default function InputFormPage() {
                       disabled={isReadOnly}
                       rows={3}
                       placeholder="Bấm nút '✨ AI Tạo Báo Cáo Nhanh' hoặc tự nhập tóm tắt kết quả nổi bật & kiến nghị ngắn gọn gửi tới Giám đốc BU..."
-                      className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-cyan-400 disabled:opacity-60 resize-none"
+                      className={`w-full rounded-xl p-3 text-xs resize-none transition-all focus:outline-none ${
+                        theme === "light"
+                          ? "bg-white border-2 border-slate-300 text-slate-900 font-medium placeholder-slate-400 focus:border-cyan-600 shadow-sm"
+                          : "bg-slate-950 border border-white/10 text-white focus:border-cyan-400 disabled:opacity-60"
+                      }`}
                     />
                   </div>
                 </div>
