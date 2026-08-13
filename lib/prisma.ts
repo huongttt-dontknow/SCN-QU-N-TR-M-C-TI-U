@@ -5,7 +5,7 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const databaseUrl = process.env.DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/sconnect_kpi?schema=public";
 let url = databaseUrl;
 if (url && !url.includes("pgbouncer=true")) {
   if (url.includes("?")) {
