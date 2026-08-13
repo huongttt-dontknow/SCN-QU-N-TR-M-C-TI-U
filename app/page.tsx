@@ -346,7 +346,7 @@ export default function DashboardPage() {
       searchCode = "TM1-I02.01";
     }
 
-    const candidateCodes = [searchCode];
+    const candidateCodes: string[] = [];
     if (unitCode === "Music") {
       if (code === "VM1-I02.01") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU");
       if (code === "VM2-I01.01") candidateCodes.push("MM2-I01.01", "MM2-I01.01-SCMU");
@@ -393,6 +393,7 @@ export default function DashboardPage() {
       if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01-SCS", "SM7-I03.01");
       if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04-SCS", "SM3-I01.04");
     }
+    candidateCodes.push(searchCode);
 
     const findInList = (list: any[]) => {
       if (!list || list.length === 0) return null;
