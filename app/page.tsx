@@ -338,7 +338,7 @@ export default function DashboardPage() {
   const getKpiRecord = (unitCode: string, code: string, pKey: string) => {
     let searchCode = code;
     // Map discipline code for child units if viewing a child unit
-    if (code === "TM7-I01.01" && unitCode !== "SCVN" && unitCode !== "TCT") {
+    if ((code === "TM7-I01.01" || code === "VM7-I03.01") && unitCode !== "SCVN" && unitCode !== "TCT") {
       searchCode = "VM7-I03.01";
     }
     // Map TCT total revenue code
@@ -346,113 +346,58 @@ export default function DashboardPage() {
       searchCode = "TM1-I02.01";
     }
 
-    // If unitCode is the selected unit, search dbKpis (from state)
-    if (unitCode === filters.unitCode && dbKpis && dbKpis.length > 0) {
-      const match = dbKpis.find(k => k.code === searchCode);
-      if (match) {
-        if (match.periods && match.periods[pKey]) {
-          const target = match.periods[pKey].target || 0;
-          const actual = match.periods[pKey].actual || 0;
-          return {
-            target,
-            actual,
-            pct: calculateCompletionRate(target, actual, searchCode)
-          };
-        }
-        if (pKey === periodKey) {
-          let target = 0;
-          let actual = 0;
-          if (pKey.startsWith("weekly_")) {
-            target = match.targetWeek || 0;
-            actual = match.actualWeek || 0;
-          } else if (pKey.startsWith("monthly_")) {
-            target = match.targetMonth || 0;
-            actual = match.actualMonth || 0;
-          } else if (pKey.startsWith("quarterly_")) {
-            target = match.targetQuarter || 0;
-            actual = match.actualQuarter || 0;
-          } else if (pKey.startsWith("yearly_")) {
-            target = match.targetYear || 0;
-            actual = match.actualYear || 0;
-          }
-          return {
-            target,
-            actual,
-            pct: calculateCompletionRate(target, actual, searchCode)
-          };
-        }
-      }
+    const candidateCodes = [searchCode];
+    if (unitCode === "Music") {
+      if (code === "VM1-I02.01") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU");
+      if (code === "VM2-I01.01") candidateCodes.push("MM2-I01.01", "MM2-I01.01-SCMU");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("MM7-I03.01", "MM7-I03.01-SCMU");
+      if (code === "VM3-I01.02") candidateCodes.push("MM3-I01.01", "MM3-I01.01-SCMU");
+    } else if (unitCode === "Wofloo") {
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-WF");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-WF");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-WF");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-WF");
+    } else if (unitCode === "AS") {
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-AS");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-AS");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-AS");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-AS");
+    } else if (unitCode === "Lego") {
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-Lego");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-Lego");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-Lego");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-Lego");
+    } else if (unitCode === "DA01") {
+      if (code === "VM1-I02.01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("DM2-I01.01-DA01", "DM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("DM7-I03.01-DA01", "DM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("DM3-I01.03-DA01", "DM3-I01.03");
+    } else if (unitCode === "NDTH") {
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.02-NDTH");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-NDTH");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-NDTH");
+    } else if (unitCode === "CR") {
+      if (code === "VM1-I02.01") candidateCodes.push("CM1-I02.01-CR", "CM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("CM2-I01.01-CR", "CM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("CM7-I03.01-CR", "CM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("CM3-I01.01-CR", "CM3-I01.01");
+    } else if (unitCode === "CN") {
+      if (code === "VM1-I02.01") candidateCodes.push("NM1-I02.01-CNGP", "NM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("NM2-I01.01-CNGP", "NM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("NM7-I03.01-CNGP", "NM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("NM3-I01.05-CNGP", "NM3-I01.05");
+    } else if (unitCode === "SCS") {
+      if (code === "VM1-I02.01") candidateCodes.push("SM1-I02.01-SCS", "SM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("SM2-I01.01-SCS", "SM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01-SCS", "SM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04-SCS", "SM3-I01.04");
     }
 
-    // Otherwise if it's SCVN, search scvnKpis
-    if (unitCode === "SCVN" && scvnKpis && scvnKpis.length > 0) {
-      const match = scvnKpis.find(k => k.code === searchCode);
-      if (match) {
-        if (match.periods && match.periods[pKey]) {
-          const target = match.periods[pKey].target || 0;
-          const actual = match.periods[pKey].actual || 0;
-          return {
-            target,
-            actual,
-            pct: calculateCompletionRate(target, actual, searchCode)
-          };
-        }
-        if (pKey === periodKey) {
-          let target = 0;
-          let actual = 0;
-          if (pKey.startsWith("weekly_")) {
-            target = match.targetWeek || 0;
-            actual = match.actualWeek || 0;
-          } else if (pKey.startsWith("monthly_")) {
-            target = match.targetMonth || 0;
-            actual = match.actualMonth || 0;
-          } else if (pKey.startsWith("quarterly_")) {
-            target = match.targetQuarter || 0;
-            actual = match.actualQuarter || 0;
-          } else if (pKey.startsWith("yearly_")) {
-            target = match.targetYear || 0;
-            actual = match.actualYear || 0;
-          }
-          return {
-            target,
-            actual,
-            pct: calculateCompletionRate(target, actual, searchCode)
-          };
-        }
-      }
-    }
-
-    // If unitCode is a member of SCVN, we can search in scvnKpis using mapped indicator code
-    if (scvnKpis && scvnKpis.length > 0) {
-      let mappedCodeForMember = "";
-      if (code === "VM1-I02.01") {
-        if (unitCode === "Wofloo") mappedCodeForMember = "VM1-I02.01-WF";
-        else if (unitCode === "AS") mappedCodeForMember = "VM1-I02.01-AS";
-        else if (unitCode === "NDTH") mappedCodeForMember = "VM1-I02.01-NDTH";
-        else if (unitCode === "Lego") mappedCodeForMember = "VM1-I02.01-Lego";
-        else if (unitCode === "DA01") mappedCodeForMember = "DM1-I02.01";
-        else if (unitCode === "SCS") mappedCodeForMember = "SM1-I02.01";
-        else if (unitCode === "Music") mappedCodeForMember = "MM1-I02.01";
-        else if (unitCode === "CN") mappedCodeForMember = "NM1-I02.01";
-        else if (unitCode === "CR") mappedCodeForMember = "CM1-I02.01";
-      } else if (code === "VM2-I01.01") {
-        if (unitCode === "Wofloo") mappedCodeForMember = "VM2-I01.01-WF";
-        else if (unitCode === "AS") mappedCodeForMember = "VM2-I01.01-AS";
-        else if (unitCode === "Lego") mappedCodeForMember = "VM2-I01.01-Lego";
-      } else if (code === "VM3-I01.02") {
-        if (unitCode === "Wofloo") mappedCodeForMember = "VM3-I01.02-WF";
-        else if (unitCode === "AS") mappedCodeForMember = "VM3-I01.02-AS";
-        else if (unitCode === "NDTH") mappedCodeForMember = "VM3-I01.02-NDTH";
-        else if (unitCode === "Lego") mappedCodeForMember = "VM3-I01.02-Lego";
-        else if (unitCode === "DA01") mappedCodeForMember = "DM3-I01.03";
-        else if (unitCode === "SCS") mappedCodeForMember = "SM3-I01.04";
-        else if (unitCode === "Music") mappedCodeForMember = "MM3-I01.01";
-        else if (unitCode === "CN") mappedCodeForMember = "NM3-I01.05";
-        else if (unitCode === "CR") mappedCodeForMember = "CM3-I01.01";
-      }
-
-      if (mappedCodeForMember) {
-        const match = scvnKpis.find(k => k.code === mappedCodeForMember);
+    const findInList = (list: any[]) => {
+      if (!list || list.length === 0) return null;
+      for (const cCode of candidateCodes) {
+        const match = list.find(k => (k.code === cCode || k.indicatorCode === cCode) && (k.targetValue > 0 || k.actualValue > 0 || (k.periods && k.periods[pKey])));
         if (match) {
           if (match.periods && match.periods[pKey]) {
             const target = match.periods[pKey].target || 0;
@@ -460,45 +405,50 @@ export default function DashboardPage() {
             return {
               target,
               actual,
-              pct: calculateCompletionRate(target, actual, mappedCodeForMember)
+              pct: calculateCompletionRate(target, actual, cCode, match.title)
             };
           }
-          if (pKey === periodKey) {
-            let target = 0;
-            let actual = 0;
-            if (pKey.startsWith("weekly_")) {
-              target = match.targetWeek || 0;
-              actual = match.actualWeek || 0;
-            } else if (pKey.startsWith("monthly_")) {
-              target = match.targetMonth || 0;
-              actual = match.actualMonth || 0;
-            } else if (pKey.startsWith("quarterly_")) {
-              target = match.targetQuarter || 0;
-              actual = match.actualQuarter || 0;
-            } else if (pKey.startsWith("yearly_")) {
-              target = match.targetYear || 0;
-              actual = match.actualYear || 0;
-            }
-            return {
-              target,
-              actual,
-              pct: calculateCompletionRate(target, actual, searchCode)
-            };
+          let target = match.targetMonth ?? match.targetValue ?? 0;
+          let actual = match.actualMonth ?? match.actualValue ?? 0;
+          if (pKey.startsWith("weekly_")) {
+            target = match.targetWeek ?? match.targetValue ?? 0;
+            actual = match.actualWeek ?? match.actualValue ?? 0;
+          } else if (pKey.startsWith("quarterly_")) {
+            target = match.targetQuarter ?? match.targetValue ?? 0;
+            actual = match.actualQuarter ?? match.actualValue ?? 0;
+          } else if (pKey.startsWith("yearly_")) {
+            target = match.targetYear ?? match.targetValue ?? 0;
+            actual = match.actualYear ?? match.actualValue ?? 0;
           }
+          return {
+            target,
+            actual,
+            pct: calculateCompletionRate(target, actual, cCode, match.title)
+          };
         }
       }
+      return null;
+    };
+
+    if (unitCode === filters.unitCode) {
+      const res = findInList(dbKpis);
+      if (res) return res;
     }
 
-    // Fallback to getMasterKpiRecord
-    const mRec = getMasterKpiRecord(unitCode, searchCode, pKey);
-    if (mRec) {
-      const target = mRec.target || 0;
-      const actual = mRec.actual || 0;
-      return {
-        target,
-        actual,
-        pct: calculateCompletionRate(target, actual, searchCode)
-      };
+    const resSCVN = findInList(scvnKpis);
+    if (resSCVN) return resSCVN;
+
+    for (const cCode of candidateCodes) {
+      const mRec = getMasterKpiRecord(unitCode, cCode, pKey);
+      if (mRec && ((mRec.target || 0) > 0 || (mRec.actual || 0) > 0)) {
+        const target = mRec.target || 0;
+        const actual = mRec.actual || 0;
+        return {
+          target,
+          actual,
+          pct: calculateCompletionRate(target, actual, cCode)
+        };
+      }
     }
     return null;
   };
@@ -1593,14 +1543,14 @@ export default function DashboardPage() {
                 SẢN LƯỢNG SẢN XUẤT ({getUnitName(filters.unitCode)})
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
-                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (filters.unitCode === "SCS" ? "Sản phẩm" : "Video")}</span>
+                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}</span>
               </div>
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
                 Đạt {volPct}% Kế hoạch
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (filters.unitCode === "SCS" ? "Sản phẩm" : "Video")})</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})</span>
             </div>
           </div>
 
