@@ -630,23 +630,47 @@ export async function POST(request: Request) {
       console.warn("Lỗi truy vấn DB objectives chéo, bỏ qua dữ liệu bổ sung:", dbErr);
     }
 
-    // Thiết lập Generative Model của Gemini và khai báo Web Search Tool
-    const model = genAI.getGenerativeModel({
-      model: "gemini-flash-latest",
-      tools: [{
-        functionDeclarations: [{
-          name: "searchMarketTrends",
-          description: "Search Google/YouTube and Spotify for market trends, competitor strategies, and audience statistics for Sconnect units (Wolfoo animation, teen drama Spotify, Game app, Tubrr MCN, digital music).",
-          parameters: {
-            type: FunctionDeclarationSchemaType.OBJECT,
-            properties: {
-              query: { type: FunctionDeclarationSchemaType.STRING, description: "Search query containing keywords like 'Wolfoo views trend', 'Spotify teen podcast drama', etc." }
-            },
-            required: ["query"]
-          }
-        }]
+    // Thiết lập Generative Model của Gemini với danh sách mô hình dự phòng tự động
+    const MODEL_FALLBACK_LIST = [
+      "gemini-flash-latest",
+      "gemini-2.5-flash",
+      "gemini-1.5-flash-latest",
+      "gemini-2.5-pro",
+      "gemini-pro-latest"
+    ];
+
+    const tools = [{
+      functionDeclarations: [{
+        name: "searchMarketTrends",
+        description: "Search Google/YouTube and Spotify for market trends, competitor strategies, and audience statistics for Sconnect units (Wolfoo animation, teen drama Spotify, Game app, Tubrr MCN, digital music).",
+        parameters: {
+          type: FunctionDeclarationSchemaType.OBJECT,
+          properties: {
+            query: { type: FunctionDeclarationSchemaType.STRING, description: "Search query containing keywords like 'Wolfoo views trend', 'Spotify teen podcast drama', etc." }
+          },
+          required: ["query"]
+        }
       }]
-    });
+    }];
+
+    const executeWithFallback = async (contents: any[]) => {
+      let lastError: any = null;
+      for (const mName of MODEL_FALLBACK_LIST) {
+        try {
+          const m = genAI.getGenerativeModel({
+            model: mName,
+            tools
+          });
+          const res = await m.generateContent({ contents });
+          if (res) return { result: res, modelInstance: m };
+        } catch (err: any) {
+          console.warn(`Model ${mName} (OKR strategy) tạm thời quá tải (${err?.message}), thử mô hình tiếp theo...`);
+          lastError = err;
+          await new Promise(r => setTimeout(r, 250));
+        }
+      }
+      throw lastError || new Error("Tất cả các mô hình Gemini AI đều tạm thời quá tải.");
+    };
 
     // 1. NGHIỆP VỤ AI PLANNING: GỢI Ý MỤC TIÊU THEO CHIẾN LƯỢC SCONNECT
     if (action === "suggest") {
@@ -668,13 +692,13 @@ Dựa trên đơn vị "${unitCode}", hãy đưa ra các đề xuất phù hợp
 - Nếu đơn vị là "TCT" (Tổng công ty): Tập trung vào quản trị hệ thống, tối ưu hóa dòng tiền, gia tăng hiệu suất vận hành toàn tập đoàn, và nhân rộng hệ điều hành AIVA.
 - Nếu đơn vị là "SCVN" (Sconnect Việt Nam): Tập trung vào các bộ phận con như Wolfoo 2D/3D (tái sử dụng assets), BP AS (teen story/drama học đường trên YouTube & Spotify), Dự án 01 (khai thác kho gốc), BP Music (nhạc số AI), P CNGP (game app & YouTube).
 
-YÊU CẦU ĐẦU RA:
-Trả về phản hồi định dạng JSON duy nhất dưới dạng một đối tượng (không kèm markdown block hoặc bất kỳ văn bản giải thích nào):
+ĐỊNH DẠNG ĐẦU RA:
+Trả về duy nhất định dạng JSON (không có bất kỳ văn bản hướng dẫn hay khối mã markdown nào bên ngoài), theo đúng cấu trúc mẫu sau:
 {
   "suggestions": [
     {
-      "title": "Tên Objective đề xuất (Ví dụ: O1: Tối ưu hóa chi phí vận hành hệ thống sản xuất và nâng tỷ lệ tái sử dụng assets Wolfoo 3D)",
-      "weight": 50,
+      "title": "Tên Objective đề xuất (Ví dụ: Bứt phá quy mô và hiệu suất sản xuất nội dung hoạt hình Wolfoo)",
+      "period": "Q4/2026",
       "keyResults": [
         {
           "title": "Tên Key Result đề xuất (Ví dụ: KR1: Đạt tỷ lệ tái sử dụng assets Wolfoo 3D tối thiểu 60%)",
@@ -692,7 +716,7 @@ Trả về phản hồi định dạng JSON duy nhất dưới dạng một đ�
   ]
 }
 `;
-      const result = await model.generateContent(prompt);
+      const { result } = await executeWithFallback([{ role: "user", parts: [{ text: prompt }] }]);
       const responseText = result.response.text().trim();
       const cleanJson = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
       const data = JSON.parse(cleanJson);
@@ -749,9 +773,7 @@ Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sá
         }
       ];
 
-      let result = await model.generateContent({
-        contents: chatHistory
-      });
+      const { result, modelInstance } = await executeWithFallback(chatHistory);
       
       const functionCalls = result.response.functionCalls();
       if (functionCalls && functionCalls.length > 0) {
@@ -775,7 +797,7 @@ Trả về phản hồi dạng TEXT (sử dụng markdown in đậm **, danh sá
             }] as any
           });
           
-          const toolResponse = await model.generateContent({
+          const toolResponse = await modelInstance.generateContent({
             contents: chatHistory
           });
           return NextResponse.json({ assessment: toolResponse.response.text() });

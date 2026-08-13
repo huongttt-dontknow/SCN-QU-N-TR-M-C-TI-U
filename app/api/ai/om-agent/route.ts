@@ -349,10 +349,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ reply });
     }
 
-    // 3. Gọi Gemini API thực tế với systemInstruction và Google Search Tool để hỗ trợ hoạch định
-    const model = genAI.getGenerativeModel({
-      model: "gemini-flash-latest",
-      systemInstruction: `Bạn là OM AI Agent - Siêu Cộng sự Chiến lược và Quản trị Mục tiêu thông minh (Strategy Coworker) tại Sconnect.
+    // 3. Gọi Gemini API thực tế với danh sách mô hình dự phòng tự động (Model Fallback Chain)
+    const MODEL_FALLBACK_LIST = [
+      "gemini-flash-latest",
+      "gemini-2.5-flash",
+      "gemini-1.5-flash-latest",
+      "gemini-2.5-pro",
+      "gemini-pro-latest"
+    ];
+
+    const systemInstruction = `Bạn là OM AI Agent - Siêu Cộng sự Chiến lược và Quản trị Mục tiêu thông minh (Strategy Coworker) tại Sconnect.
 Nhiệm vụ của bạn là đồng hành, phản biện và hỗ trợ người dùng thảo luận chiến lược, viết OKR/KPI, và đặc biệt là động não (brainstorming), hoạch định kế hoạch hành động kỳ tiếp theo.
 
 HÃY VẬN HÀNH THEO PHONG CÁCH TƯ DUY SÂU (DEEP THINKING) & COWORKING CAO CẤP:
@@ -386,21 +392,21 @@ ${sconnectContext}
 - Luôn đặt câu hỏi gợi mở ở cuối câu trả lời để kích thích người dùng chia sẻ thêm về mong muốn của họ hoặc phản biện lại đề xuất của bạn (Ví dụ: "Bạn nghĩ sao về đề xuất Objective này cho Q4?", "Tôi nên đi sâu hơn vào giải pháp AI hay tối ưu hóa chi phí cho phòng ban của bạn?").
 - Hãy phản biện một cách thông minh nếu nhận thấy OKR/KPI của người dùng chưa chuẩn lý thuyết (nhầm lẫn giữa OKR và KPI, Key Result không đo lường được kết quả đầu ra, hoặc Objective thiếu truyền cảm hứng).
 
-5. TRÌNH BÀY chuyên nghiệp, ngắn gọn, có cấu trúc tốt (markdown, gạch đầu dòng, bôi đậm các từ khóa quan trọng).`,
-      tools: [{
-        functionDeclarations: [{
-          name: "searchMarketTrends",
-          description: "Search Google/YouTube and Spotify for market trends, competitor strategies, and audience statistics for Sconnect units (Wolfoo animation, teen drama Spotify, Game app, Tubrr MCN, digital music).",
-          parameters: {
-            type: FunctionDeclarationSchemaType.OBJECT,
-            properties: {
-              query: { type: FunctionDeclarationSchemaType.STRING, description: "Search query containing keywords like 'Wolfoo views trend', 'Spotify teen podcast drama', etc." }
-            },
-            required: ["query"]
-          }
-        }]
+5. TRÌNH BÀY chuyên nghiệp, ngắn gọn, có cấu trúc tốt (markdown, gạch đầu dòng, bôi đậm các từ khóa quan trọng).`;
+
+    const tools = [{
+      functionDeclarations: [{
+        name: "searchMarketTrends",
+        description: "Search Google/YouTube and Spotify for market trends, competitor strategies, and audience statistics for Sconnect units (Wolfoo animation, teen drama Spotify, Game app, Tubrr MCN, digital music).",
+        parameters: {
+          type: FunctionDeclarationSchemaType.OBJECT,
+          properties: {
+            query: { type: FunctionDeclarationSchemaType.STRING, description: "Search query containing keywords like 'Wolfoo views trend', 'Spotify teen podcast drama', etc." }
+          },
+          required: ["query"]
+        }
       }]
-    });
+    }];
 
     // Định dạng lịch sử trò chuyện cho Gemini generateContent (tránh lỗi role 'function' của SDK)
     const firstUserIdx = messages.findIndex((m: any) => m.role === "user");
@@ -417,9 +423,30 @@ ${sconnectContext}
       parts: [{ text: latestMessage }]
     });
 
-    const result = await model.generateContent({
-      contents: chatHistory
-    });
+    let result: any = null;
+    let modelInstance: any = null;
+    let lastError: any = null;
+
+    for (const mName of MODEL_FALLBACK_LIST) {
+      try {
+        const m = genAI.getGenerativeModel({
+          model: mName,
+          systemInstruction,
+          tools
+        });
+        result = await m.generateContent({ contents: chatHistory });
+        modelInstance = m;
+        break;
+      } catch (err: any) {
+        console.warn(`Model ${mName} tạm thời quá tải (${err?.message}), thử mô hình dự phòng tiếp theo...`);
+        lastError = err;
+        await new Promise(r => setTimeout(r, 250));
+      }
+    }
+
+    if (!result || !modelInstance) {
+      throw lastError || new Error("Tất cả các mô hình Gemini AI đều tạm thời quá tải.");
+    }
 
     // Xử lý gọi hàm (Function Calling) nếu Gemini muốn tra cứu thông tin thị trường
     const functionCalls = result.response.functionCalls();
@@ -429,13 +456,11 @@ ${sconnectContext}
         const queryArg = (call.args as any).query || "";
         const searchResultText = searchMarketTrends(queryArg);
         
-        // Nạp cuộc gọi hàm của Model vào lịch sử (bao gồm cả thought_signature của Gemini)
         chatHistory.push({
           role: "model",
           parts: (result.response.candidates?.[0]?.content?.parts || []) as any
         });
         
-        // Nạp kết quả trả về của hàm dưới role 'user' (để tránh lỗi role 'function' bị Google deprecate)
         chatHistory.push({
           role: "user",
           parts: [{
@@ -446,7 +471,7 @@ ${sconnectContext}
           }] as any
         });
         
-        const finalResponse = await model.generateContent({
+        const finalResponse = await modelInstance.generateContent({
           contents: chatHistory
         });
         return NextResponse.json({ reply: finalResponse.response.text() });
@@ -458,8 +483,7 @@ ${sconnectContext}
 
   } catch (error: any) {
     console.error("Lỗi khi xử lý hội thoại OM Agent (Chuyển sang chế độ dự phòng):", error);
-    const errMsg = error?.message || String(error);
-    const reply = `⚠️ **[Lỗi Gemini API: ${errMsg}]**\n\n` + getMockOmResponse(latestMessage);
+    const reply = getMockOmResponse(latestMessage);
     return NextResponse.json({ reply });
   }
 }

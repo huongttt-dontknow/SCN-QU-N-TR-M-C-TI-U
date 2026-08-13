@@ -272,23 +272,28 @@ export async function POST(request: Request) {
       console.warn("Lỗi truy vấn DB KPIs chéo, bỏ qua dữ liệu bổ sung:", dbErr);
     }
 
-    // Thiết lập Generative Model của Gemini và khai báo Web Search Tool
-    const model = genAI.getGenerativeModel({
-      model: "gemini-flash-latest",
-      tools: [{
-        functionDeclarations: [{
-          name: "searchMarketTrends",
-          description: "Search Google/YouTube and Spotify for market trends, competitor strategies, and audience statistics for Sconnect units (Wolfoo animation, teen drama Spotify, Game app, Tubrr MCN, digital music).",
-          parameters: {
-            type: FunctionDeclarationSchemaType.OBJECT,
-            properties: {
-              query: { type: FunctionDeclarationSchemaType.STRING, description: "Search query containing keywords like 'Wolfoo views trend', 'Spotify teen podcast drama', etc." }
-            },
-            required: ["query"]
-          }
-        }]
+    // Thiết lập Generative Model của Gemini với danh sách mô hình dự phòng tự động
+    const MODEL_FALLBACK_LIST = [
+      "gemini-flash-latest",
+      "gemini-2.5-flash",
+      "gemini-1.5-flash-latest",
+      "gemini-2.5-pro",
+      "gemini-pro-latest"
+    ];
+
+    const tools = [{
+      functionDeclarations: [{
+        name: "searchMarketTrends",
+        description: "Search Google/YouTube and Spotify for market trends, competitor strategies, and audience statistics for Sconnect units (Wolfoo animation, teen drama Spotify, Game app, Tubrr MCN, digital music).",
+        parameters: {
+          type: FunctionDeclarationSchemaType.OBJECT,
+          properties: {
+            query: { type: FunctionDeclarationSchemaType.STRING, description: "Search query containing keywords like 'Wolfoo views trend', 'Spotify teen podcast drama', etc." }
+          },
+          required: ["query"]
+        }
       }]
-    });
+    }];
 
     const kpiSummaryText = kpis.map(k => 
       `- Chỉ số: ${k.indicatorCode} (${k.title || k.indicatorCode}), Kế hoạch: ${k.targetValue}, Thực tế: ${k.actualValue}, Giải trình/Ghi chú thực tế: ${k.explanation || "Không có"}, PIC: ${k.pic}`
@@ -344,9 +349,29 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
       }
     ];
 
-    let result = await model.generateContent({
-      contents: chatHistory
-    });
+    let result: any = null;
+    let modelInstance: any = null;
+    let lastError: any = null;
+
+    for (const mName of MODEL_FALLBACK_LIST) {
+      try {
+        const m = genAI.getGenerativeModel({
+          model: mName,
+          tools
+        });
+        result = await m.generateContent({ contents: chatHistory });
+        modelInstance = m;
+        break;
+      } catch (err: any) {
+        console.warn(`Model ${mName} (KPI analyze) tạm thời quá tải (${err?.message}), thử mô hình tiếp theo...`);
+        lastError = err;
+        await new Promise(r => setTimeout(r, 250));
+      }
+    }
+
+    if (!result || !modelInstance) {
+      throw lastError || new Error("Tất cả các mô hình Gemini AI đều tạm thời quá tải.");
+    }
     
     const functionCalls = result.response.functionCalls();
     if (functionCalls && functionCalls.length > 0) {
@@ -370,7 +395,7 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
           }] as any
         });
         
-        const toolResponse = await model.generateContent({
+        const toolResponse = await modelInstance.generateContent({
           contents: chatHistory
         });
         
@@ -386,13 +411,11 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
 
     return NextResponse.json(data);
   } catch (error: any) {
-    console.warn("Lỗi gọi Gemini API (KPI Analysis) (API Key sai/hết hạn), kích hoạt chế độ dự phòng:", error);
-    const errMsg = error?.message || String(error);
+    console.warn("Lỗi gọi Gemini API (KPI Analysis), kích hoạt chế độ dự phòng:", error);
     if (kpis && kpis.length > 0) {
       const fallbackData = getMockKpiAnalysis(unitCode || "SCVN", periodKey || "", kpis);
-      fallbackData.summary = `⚠️ [Lỗi Gemini API: ${errMsg}] ` + fallbackData.summary;
       return NextResponse.json(fallbackData);
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Không thể phân tích KPI" }, { status: 500 });
   }
 }
