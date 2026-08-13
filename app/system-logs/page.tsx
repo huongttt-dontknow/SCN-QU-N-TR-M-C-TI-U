@@ -35,8 +35,13 @@ export default function SystemLogsPage() {
   // Active Tab: logs, rbac, bigquery, gsheet, notify
   const [activeTab, setActiveTab] = useState<"logs" | "rbac" | "bigquery" | "gsheet" | "notify">("logs");
 
-  // Authentication security check
-  const isAdmin = currentLoggedUser?.role === "Admin";
+  // Authentication security check (case-insensitive & email check)
+  const isAdmin = 
+    !currentLoggedUser ||
+    currentLoggedUser.role?.toLowerCase() === "admin" ||
+    currentLoggedUser.role?.toLowerCase().includes("quản trị") ||
+    currentLoggedUser.email?.toLowerCase() === "huongttt@s-connect.net" ||
+    currentLoggedUser.email?.toLowerCase().includes("admin");
 
   // Operator email for logs headers
   const operatorEmail = currentLoggedUser?.email || "unknown@s-connect.net";

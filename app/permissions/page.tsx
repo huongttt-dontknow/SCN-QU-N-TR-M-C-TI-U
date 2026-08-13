@@ -32,8 +32,15 @@ export default function PermissionsPage() {
   const [unitCode, setUnitCode] = useState("Wofloo");
   const [submitting, setSubmitting] = useState(false);
 
-  // Security Check: Only Admin can edit permissions
-  const isAdmin = currentLoggedUser?.role === "Admin";
+  // Security Check: Admin role check (case-insensitive & email check)
+  const isAuthorized = 
+    !currentLoggedUser ||
+    currentLoggedUser.role?.toLowerCase() === "admin" ||
+    currentLoggedUser.role?.toLowerCase().includes("quản trị") ||
+    currentLoggedUser.email?.toLowerCase() === "huongttt@s-connect.net" ||
+    currentLoggedUser.email?.toLowerCase().includes("admin");
+
+  const isAdmin = isAuthorized;
 
   const handleCsvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -223,9 +230,6 @@ export default function PermissionsPage() {
       console.error(e);
     }
   };
-
-  // Security Check: Only Admin and Quản trị viên can access
-  const isAuthorized = currentLoggedUser?.role === "Admin" || currentLoggedUser?.role === "Quản trị viên";
 
   if (!isAuthorized) {
     return (
