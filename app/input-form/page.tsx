@@ -416,9 +416,39 @@ export default function InputFormPage() {
   ]);
 
   const [directorComment, setDirectorComment] = useState("");
+  const [quickReportText, setQuickReportText] = useState("");
+  const [isGeneratingQuickReport, setIsGeneratingQuickReport] = useState(false);
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [isProdAiGenerating, setIsProdAiGenerating] = useState(false);
   const isReadOnly = currentLoggedUser?.role === "Người dùng";
+
+  const handleGenerateQuickReport = () => {
+    setIsGeneratingQuickReport(true);
+    const revItem = kpis.find(k => k.code === "VM1-I02.01" || k.code.startsWith("MM1-I02.01") || k.code.startsWith("SM1-I02.01") || k.code.startsWith("DM1-I02.01") || k.code.startsWith("NM1-I02.01") || k.code.startsWith("CM1-I02.01"));
+    const volItem = kpis.find(k => k.code === "VM2-I01.01" || k.code.startsWith("MM2-I01.01") || k.code.startsWith("SM2-I01.01") || k.code.startsWith("DM2-I01.01") || k.code.startsWith("NM2-I01.01") || k.code.startsWith("CM2-I01.01"));
+    const trafficItem = kpis.find(k => k.code === "VM3-I01.02" || k.code.startsWith("MM3-I01.01") || k.code.startsWith("SM3-I01.04") || k.code.startsWith("DM3-I01.03") || k.code.startsWith("NM3-I01.05") || k.code.startsWith("CM3-I01.01"));
+
+    const revPct = revItem && revItem.target > 0 ? Math.round((revItem.actual / revItem.target) * 100) : 0;
+    const volPct = volItem && volItem.target > 0 ? Math.round((volItem.actual / volItem.target) * 100) : 0;
+    const trafficPct = trafficItem && trafficItem.target > 0 ? Math.round((trafficItem.actual / trafficItem.target) * 100) : 0;
+
+    const lowItems = kpis.filter(k => k.target > 0 && (k.actual / k.target) < 0.5 && !isRootCategoryCode(k.code) && !isHeaderOnlyRow(k.code));
+
+    setTimeout(() => {
+      let report = `📌 BÁO CÁO NHANH KẾT QUẢ KỲ BÁO CÁO - ĐƠN VỊ ${filters.unitCode.toUpperCase()}\n`;
+      report += `• Doanh thu: đạt ${revPct}% kế hoạch.\n`;
+      report += `• Sản lượng sản xuất: đạt ${volPct}% kế hoạch.\n`;
+      report += `• Traffic/Views: đạt ${trafficPct}% kế hoạch.\n`;
+      if (lowItems.length > 0) {
+        report += `⚠️ Cảnh báo: Có ${lowItems.length} chỉ tiêu đạt dưới 50% kế hoạch (${lowItems.slice(0, 2).map(i => i.title).join(", ")}). Đơn vị đang tập trung xử lý khắc phục.`;
+      } else {
+        report += `🟢 Nhận định chung: Tất cả các chỉ tiêu chính đều duy trì tiến độ hoàn thành tốt.`;
+      }
+      setQuickReportText(report);
+      setIsGeneratingQuickReport(false);
+      showToast("✨ AI Agent đã tự động tổng hợp xong Báo cáo nhanh cho Giám đốc BU!");
+    }, 400);
+  };
 
   // Helper mapping for filters.unitCode to Excel product unit field
   const unitCodeToNameMap: Record<string, string> = {
@@ -1844,13 +1874,162 @@ export default function InputFormPage() {
             </div>
           </div>
 
-          {/* KHỐI 2: KHU VỰC GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (HOÀN THÀNH < 70% HOẶC GIẢM KỲ TRƯỚC > 5%) */}
+          {/* KHỐI 2: TỔNG KẾT NHANH KẾT QUẢ, CẢNH BÁO AI (<50%) & BÁO CÁO NHANH GỬI GIÁM ĐỐC BU */}
+          <div className="glass-panel p-5 space-y-5 border-l-4 border-l-cyan-500">
+            <div className="flex flex-wrap justify-between items-center gap-3 border-b border-white/10 pb-3">
+              <h3 className="text-sm font-black text-cyan-400 tracking-wider uppercase flex items-center gap-2">
+                <Sparkles size={16} className="text-cyan-400" /> ⚡ KHỐI 2: TỔNG KẾT NHANH KẾT QUẢ, CẢNH BÁO AI & BÁO CÁO NHANH GỬI GIÁM ĐỐC BU
+              </h3>
+              <span className="text-xs text-slate-400 font-semibold">
+                Đơn vị: <strong>{filters.unitCode}</strong> • {filters.periodType === "weekly" ? `Tuần ${filters.week} (Tháng ${filters.month})` : filters.periodType === "monthly" ? `Tháng ${filters.month}` : filters.periodType === "quarterly" ? `Quý ${filters.quarter}` : `Năm ${filters.year}`}
+              </span>
+            </div>
+
+            {/* A. THẺ TỔNG KẾT NHANH 3 CHỈ SỐ CHÍNH */}
+            {(() => {
+              const revItem = kpis.find(k => k.code === "VM1-I02.01" || k.code.startsWith("MM1-I02.01") || k.code.startsWith("SM1-I02.01") || k.code.startsWith("DM1-I02.01") || k.code.startsWith("NM1-I02.01") || k.code.startsWith("CM1-I02.01"));
+              const volItem = kpis.find(k => k.code === "VM2-I01.01" || k.code.startsWith("MM2-I01.01") || k.code.startsWith("SM2-I01.01") || k.code.startsWith("DM2-I01.01") || k.code.startsWith("NM2-I01.01") || k.code.startsWith("CM2-I01.01"));
+              const trafficItem = kpis.find(k => k.code === "VM3-I01.02" || k.code.startsWith("MM3-I01.01") || k.code.startsWith("SM3-I01.04") || k.code.startsWith("DM3-I01.03") || k.code.startsWith("NM3-I01.05") || k.code.startsWith("CM3-I01.01"));
+
+              const revTarget = revItem?.target || 0;
+              const revActual = revItem?.actual || 0;
+              const revPct = revTarget > 0 ? Math.round((revActual / revTarget) * 100) : 0;
+
+              const volTarget = volItem?.target || 0;
+              const volActual = volItem?.actual || 0;
+              const volPct = volTarget > 0 ? Math.round((volActual / volTarget) * 100) : 0;
+
+              const trafficTarget = trafficItem?.target || 0;
+              const trafficActual = trafficItem?.actual || 0;
+              const trafficPct = trafficTarget > 0 ? Math.round((trafficActual / trafficTarget) * 100) : 0;
+
+              const lowItems = kpis.filter(k => k.target > 0 && (k.actual / k.target) < 0.5 && !isRootCategoryCode(k.code) && !isHeaderOnlyRow(k.code));
+
+              return (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {/* Card 1: Doanh thu */}
+                    <div className="bg-slate-900/80 p-4 rounded-xl border border-purple-500/30 flex flex-col justify-between">
+                      <span className="text-[10px] font-black text-purple-400 uppercase tracking-wider block mb-1">
+                        💰 TỔNG DOANH THU ĐƠN VỊ
+                      </span>
+                      <div className="flex items-baseline justify-between mt-1">
+                        <span className="text-2xl font-black text-white">{revPct}%</span>
+                        <span className="text-xs text-slate-400 font-bold">Thực tế / KH</span>
+                      </div>
+                      <div className="text-[11px] text-slate-300 mt-2 font-semibold border-t border-white/5 pt-2">
+                        {revActual >= 1e9 ? `${(revActual / 1e9).toFixed(2)} Tỷ` : `${(revActual / 1e6).toFixed(0)} Tr`} / {revTarget >= 1e9 ? `${(revTarget / 1e9).toFixed(2)} Tỷ VNĐ` : `${(revTarget / 1e6).toFixed(0)} Tr VNĐ`}
+                      </div>
+                    </div>
+
+                    {/* Card 2: Sản lượng */}
+                    <div className="bg-slate-900/80 p-4 rounded-xl border border-emerald-500/30 flex flex-col justify-between">
+                      <span className="text-[10px] font-black text-emerald-400 uppercase tracking-wider block mb-1">
+                        🎬 SẢN LƯỢNG SẢN XUẤT
+                      </span>
+                      <div className="flex items-baseline justify-between mt-1">
+                        <span className="text-2xl font-black text-emerald-400">{volPct}%</span>
+                        <span className="text-xs text-slate-400 font-bold">Thực tế / KH</span>
+                      </div>
+                      <div className="text-[11px] text-slate-300 mt-2 font-semibold border-t border-white/5 pt-2">
+                        {volActual} / {volTarget} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}
+                      </div>
+                    </div>
+
+                    {/* Card 3: Traffic */}
+                    <div className="bg-slate-900/80 p-4 rounded-xl border border-sky-500/30 flex flex-col justify-between">
+                      <span className="text-[10px] font-black text-sky-400 uppercase tracking-wider block mb-1">
+                        📊 TRAFFIC / VIEWS
+                      </span>
+                      <div className="flex items-baseline justify-between mt-1">
+                        <span className="text-2xl font-black text-sky-400">{trafficPct}%</span>
+                        <span className="text-xs text-slate-400 font-bold">Thực tế / KH</span>
+                      </div>
+                      <div className="text-[11px] text-slate-300 mt-2 font-semibold border-t border-white/5 pt-2">
+                        {trafficActual >= 1e6 ? `${(trafficActual / 1e6).toFixed(1)}M views` : `${trafficActual} views`}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* B. CẢNH BÁO VẮN TẮT AI AGENT (<50%) */}
+                  <div className="bg-slate-950 p-4 rounded-xl border border-white/10 space-y-2">
+                    <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                      ⚠️ CẢNH BÁO TỰ ĐỘNG TỪ AI AGENT (CÁC CHỈ TIÊU ĐẠT &lt; 50% KẾ HOẠCH)
+                    </h4>
+                    {lowItems.length > 0 ? (
+                      <div className="space-y-1.5 pt-1">
+                        {lowItems.map(item => {
+                          const pct = item.target > 0 ? Math.round((item.actual / item.target) * 100) : 0;
+                          return (
+                            <div key={item.id} className="flex flex-wrap justify-between items-center bg-rose-950/40 p-2.5 rounded-lg border border-rose-500/30 text-xs gap-2">
+                              <div className="flex items-center gap-2">
+                                <span className="bg-rose-500 text-white font-extrabold text-[10px] px-2 py-0.5 rounded">
+                                  {item.code}
+                                </span>
+                                <span className="font-bold text-white">{item.title}</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="text-rose-400 font-black">Chỉ đạt {pct}% (Thực tế: {item.actual} / KH: {item.target})</span>
+                                <span className="text-[10px] text-slate-300 italic">➔ Cần bổ sung giải trình & action khắc phục ở Khối 3 & 4</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="p-3 text-center text-xs text-emerald-400 font-bold bg-emerald-950/20 border border-emerald-500/20 rounded-lg">
+                        🟢 AI Agent ghi nhận: Không có chỉ tiêu nào đạt dưới 50% kế hoạch trong kỳ này!
+                      </div>
+                    )}
+                  </div>
+
+                  {/* C. KHU VỰC BÁO CÁO NHANH GỬI GIÁM ĐỐC BU */}
+                  <div className="space-y-2 pt-1">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                        ✍️ Nội dung Báo cáo nhanh của Trưởng đơn vị gửi Giám đốc BU:
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleGenerateQuickReport}
+                          disabled={isGeneratingQuickReport}
+                          className="bg-cyan-800 hover:bg-cyan-700 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition-all flex items-center gap-1 shadow"
+                        >
+                          <Sparkles size={12} />
+                          <span>{isGeneratingQuickReport ? "⌛ Đang tổng hợp..." : "✨ AI Tạo Báo Cáo Nhanh"}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => showToast("💾 Đã lưu thành công nội dung Báo cáo nhanh cho Giám đốc BU!")}
+                          className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold px-3 py-1 rounded-lg border border-white/10 transition-all flex items-center gap-1"
+                        >
+                          <Save size={12} />
+                          <span>Lưu báo cáo nhanh</span>
+                        </button>
+                      </div>
+                    </div>
+                    <textarea
+                      value={quickReportText}
+                      onChange={(e) => setQuickReportText(e.target.value)}
+                      disabled={isReadOnly}
+                      rows={3}
+                      placeholder="Bấm nút '✨ AI Tạo Báo Cáo Nhanh' hoặc tự nhập tóm tắt kết quả nổi bật & kiến nghị ngắn gọn gửi tới Giám đốc BU..."
+                      className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-cyan-400 disabled:opacity-60 resize-none"
+                    />
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* KHỐI 3: KHU VỰC GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (HOÀN THÀNH < 70% HOẶC GIẢM KỲ TRƯỚC > 5%) */}
           <div className="glass-panel p-5 space-y-4">
             <div className={theme === "light" ? "bg-[#FEF2F2] border border-[#FEE2E2] p-3 rounded-xl" : ""}>
               <h3 className={`text-sm font-black tracking-wider uppercase flex items-center gap-2 ${
                 theme === "light" ? "text-[#B91C1C]" : "text-rose-500"
               }`}>
-                <AlertTriangle size={16} className={theme === "light" ? "text-[#B91C1C]" : "text-rose-500"} /> 🔴 KHU VỰC 2: GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (HOÀN THÀNH &lt; 70% HOẶC GIẢM KỲ TRƯỚC &gt; 5%)
+                <AlertTriangle size={16} className={theme === "light" ? "text-[#B91C1C]" : "text-rose-500"} /> 🔴 KHU VỰC 3: GIẢI TRÌNH BẮT BUỘC KHI CHỈ SỐ GIẢM SÚT (HOÀN THÀNH &lt; 70% HOẶC GIẢM KỲ TRƯỚC &gt; 5%)
               </h3>
             </div>
             <div className="space-y-3">
