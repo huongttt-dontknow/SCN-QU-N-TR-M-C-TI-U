@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getFriendlyIndicatorTitle } from "@/lib/kpiMasterData";
 
 export const dynamic = "force-dynamic";
 
@@ -324,7 +325,7 @@ export async function GET(request: Request) {
         compiledRows[code] = {
           code: code,
           displayCode: displayCode,
-          title: title,
+          title: getFriendlyIndicatorTitle(code, title),
           unit: unit,
           targetWeek: 0, actualWeek: 0,
           targetMonth: 0, actualMonth: 0,

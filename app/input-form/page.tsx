@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import FiltersHeader from "@/components/FiltersHeader";
+import { getFriendlyIndicatorTitle } from "@/lib/kpiMasterData";
 import { 
   Save, 
   Sparkles, 
@@ -1793,7 +1794,7 @@ export default function InputFormPage() {
                                   {!hasChildren && depth > 0 && (
                                     <span className="text-slate-500 mr-1.5 font-normal select-none">↳</span>
                                   )}
-                                  <span className="flex-1">{kpi.title}</span>
+                                  <span className="flex-1">{getFriendlyIndicatorTitle(kpi.code, kpi.title)}</span>
                                 </div>
                               </td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>

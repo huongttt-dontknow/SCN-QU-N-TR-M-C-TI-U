@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, LogIn, Mail, AlertCircle, KeyRound } from "lucide-react";
+import { ShieldCheck, LogIn, Mail, AlertCircle, KeyRound, HelpCircle, Send, CheckCircle2, X } from "lucide-react";
 
 export default function LoginPage() {
   const { currentLoggedUser, setCurrentLoggedUser, usersList, refreshUsers } = useApp();
@@ -18,6 +18,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [deviceId, setDeviceId] = useState("");
+
+  // States cho Modal Quên mật khẩu
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotCode, setForgotCode] = useState("");
+  const [selectedAdmin, setSelectedAdmin] = useState("lyttd@s-connect.net");
+  const [forgotNote, setForgotNote] = useState("");
+  const [forgotSubmitting, setForgotSubmitting] = useState(false);
+  const [forgotSuccessMsg, setForgotSuccessMsg] = useState("");
+  const [forgotErrorMsg, setForgotErrorMsg] = useState("");
 
   // Kiểm tra lý do đăng xuất nếu bị đẩy phiên đăng nhập và tạo deviceId
   useEffect(() => {
@@ -186,6 +196,59 @@ export default function LoginPage() {
     }
   };
 
+  // Mở Modal Quên Mật Khẩu
+  const handleOpenForgotModal = () => {
+    setForgotEmail(emailInput.trim() || "");
+    setForgotCode("");
+    setSelectedAdmin("lyttd@s-connect.net");
+    setForgotNote("");
+    setForgotSuccessMsg("");
+    setForgotErrorMsg("");
+    setShowForgotModal(true);
+  };
+
+  // Gửi Yêu Cầu Quên Mật Khẩu
+  const handleSendForgotRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail.trim()) {
+      setForgotErrorMsg("Vui lòng nhập Email công ty!");
+      return;
+    }
+    if (!forgotEmail.trim().toLowerCase().endsWith("@s-connect.net")) {
+      setForgotErrorMsg("Email phải có tên miền @s-connect.net!");
+      return;
+    }
+
+    setForgotSubmitting(true);
+    setForgotErrorMsg("");
+    setForgotSuccessMsg("");
+
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: forgotEmail.trim(),
+          employeeCode: forgotCode.trim(),
+          adminEmail: selectedAdmin,
+          note: forgotNote.trim()
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setForgotSuccessMsg(data.message || "Yêu cầu hỗ trợ đã được gửi thành công!");
+      } else {
+        setForgotErrorMsg(data.error || "Không thể gửi yêu cầu hỗ trợ.");
+      }
+    } catch (err) {
+      console.error(err);
+      setForgotErrorMsg("Có lỗi xảy ra khi gửi yêu cầu. Vui lòng kiểm tra lại kết nối.");
+    } finally {
+      setForgotSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white relative overflow-hidden font-sans">
       {/* Background Gradients */}
@@ -289,6 +352,17 @@ export default function LoginPage() {
               <LogIn size={15} />
               {loading ? "ĐANG KIỂM TRA..." : "TIẾP TỤC"}
             </button>
+
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={handleOpenForgotModal}
+                className="text-[11px] text-emerald-400 hover:text-emerald-300 font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
+              >
+                <HelpCircle size={13} />
+                Quên mật khẩu? Gửi yêu cầu hỗ trợ Admin
+              </button>
+            </div>
           </form>
         )}
 
@@ -342,9 +416,18 @@ export default function LoginPage() {
               </div>
             ) : (
               <div className="space-y-1">
-                <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
-                  Mật khẩu tài khoản
-                </label>
+                <div className="flex justify-between items-center">
+                  <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
+                    Mật khẩu tài khoản
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleOpenForgotModal}
+                    className="text-[10px] text-emerald-400 hover:underline font-extrabold cursor-pointer"
+                  >
+                    Quên mật khẩu?
+                  </button>
+                </div>
                 <div className="relative">
                   <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input
@@ -371,6 +454,141 @@ export default function LoginPage() {
         )}
 
       </div>
+
+      {/* MODAL QUÊN MẬT KHẨU / YÊU CẦU HỖ TRỢ ADMIN */}
+      {showForgotModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl relative space-y-4">
+            
+            {/* Header Modal */}
+            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                  <HelpCircle size={18} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Yêu Cầu Hỗ Trợ Đặt Lại Mật Khẩu</h3>
+                  <p className="text-[10px] text-slate-400">Gửi thông báo xác minh trực tiếp đến Admin</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowForgotModal(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Success Message */}
+            {forgotSuccessMsg ? (
+              <div className="space-y-4 text-center py-4">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                  <CheckCircle2 size={28} />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-sm font-bold text-emerald-400">Đã gửi yêu cầu thành công!</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-xl border border-white/5">
+                    {forgotSuccessMsg}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowForgotModal(false)}
+                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition-all"
+                >
+                  Đóng cửa sổ
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSendForgotRequest} className="space-y-3.5">
+                
+                {forgotErrorMsg && (
+                  <div className="bg-rose-500/10 border border-rose-500/30 text-rose-400 p-3 rounded-xl text-xs flex gap-2 items-center">
+                    <AlertCircle size={15} className="shrink-0" />
+                    <span>{forgotErrorMsg}</span>
+                  </div>
+                )}
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+                    Email Công Ty (@s-connect.net) *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="tennhanvien@s-connect.net"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+                    Mã Nhân Sự SCN (Tùy chọn)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="VD: SCN0066"
+                    value={forgotCode}
+                    onChange={(e) => setForgotCode(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+                    Admin Tiếp Nhận Hỗ Trợ *
+                  </label>
+                  <select
+                    value={selectedAdmin}
+                    onChange={(e) => setSelectedAdmin(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500/80 font-semibold"
+                  >
+                    <option value="lyttd@s-connect.net">Trần Thị Diệu Ly (lyttd@s-connect.net)</option>
+                    <option value="huongttt@s-connect.net">Trần Thị Thu Hương (huongttt@s-connect.net)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+                    Ghi chú / Lý do hỗ trợ
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="VD: Em bị quên mật khẩu cá nhân tự đặt..."
+                    value={forgotNote}
+                    onChange={(e) => setForgotNote(e.target.value)}
+                    className="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/80 font-semibold resize-none"
+                  />
+                </div>
+
+                <div className="pt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowForgotModal(false)}
+                    className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition-colors"
+                  >
+                    Hủy bỏ
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={forgotSubmitting}
+                    className="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all disabled:opacity-50"
+                  >
+                    <Send size={14} />
+                    {forgotSubmitting ? "Đang gửi..." : "Gửi yêu cầu"}
+                  </button>
+                </div>
+
+              </form>
+            )}
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

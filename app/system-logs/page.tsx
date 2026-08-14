@@ -18,7 +18,10 @@ import {
   AlertTriangle,
   Upload,
   Download,
-  Settings
+  Settings,
+  KeyRound,
+  Copy,
+  Check
 } from "lucide-react";
 
 export default function SystemLogsPage() {
@@ -130,6 +133,56 @@ export default function SystemLogsPage() {
   const [role, setRole] = useState("Trưởng đơn vị");
   const [unitCode, setUnitCode] = useState("Wofloo");
   const [submittingUser, setSubmittingUser] = useState(false);
+
+  // States cho Modal Reset Mật Khẩu Admin
+  const [resetTargetUser, setResetTargetUser] = useState<User | null>(null);
+  const [resetModeState, setResetModeState] = useState<"temporary" | "clear">("temporary");
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetResult, setResetResult] = useState<any | null>(null);
+  const [copiedPass, setCopiedPass] = useState(false);
+
+  const handleOpenResetModal = (user: User) => {
+    setResetTargetUser(user);
+    setResetModeState("temporary");
+    setResetResult(null);
+    setCopiedPass(false);
+  };
+
+  const handleExecuteResetPassword = async () => {
+    if (!resetTargetUser) return;
+    setResetLoading(true);
+    try {
+      const res = await fetch("/api/users/reset-password", {
+        method: "POST",
+        headers: requestHeaders,
+        body: JSON.stringify({
+          userId: resetTargetUser.id,
+          employeeCode: resetTargetUser.employeeCode,
+          email: resetTargetUser.email,
+          resetMode: resetModeState
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResetResult(data);
+        fetchLogs(); // Làm mới dữ liệu nhật ký log hệ thống
+      } else {
+        alert(`Lỗi reset mật khẩu: ${data.error || "Không thành công"}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Có lỗi xảy ra khi reset mật khẩu.");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  const handleCopyTempPassword = (pass: string) => {
+    navigator.clipboard.writeText(pass);
+    setCopiedPass(true);
+    setTimeout(() => setCopiedPass(false), 2000);
+  };
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -902,6 +955,14 @@ export default function SystemLogsPage() {
                         <td className="p-3 text-center">
                           <div className="flex items-center gap-1.5 justify-center">
                             <button
+                              onClick={() => handleOpenResetModal(u)}
+                              className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-all"
+                              title="Cấp lại mật khẩu cho nhân sự này"
+                            >
+                              <KeyRound size={12} />
+                              Reset Pass
+                            </button>
+                            <button
                               onClick={() => handleSimulateUser(u)}
                               className="bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded text-[10px] font-bold"
                               title="Giả lập trạng thái đăng nhập của tài khoản này"
@@ -911,6 +972,7 @@ export default function SystemLogsPage() {
                             <button
                               onClick={() => handleDeleteUser(u.id)}
                               className="text-rose-400 hover:text-rose-300 p-1 rounded"
+                              title="Xóa tài khoản"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -1233,6 +1295,161 @@ export default function SystemLogsPage() {
             >
               Lưu cấu hình thông báo
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL RESET MẬT KHẨU CHO ADMIN */}
+      {resetTargetUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in text-xs font-sans">
+          <div className="bg-slate-900 border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl relative space-y-4 text-white">
+            
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                  <KeyRound size={18} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Reset Mật Khẩu Nhân Sự</h3>
+                  <p className="text-[10px] text-slate-400">Xác minh & cấp lại mật khẩu cho tài khoản OMS</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setResetTargetUser(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Thông tin nhân sự */}
+            <div className="bg-slate-950/60 border border-white/5 rounded-xl p-3 space-y-1">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400 font-bold">Nhân sự:</span>
+                <span className="font-extrabold text-amber-400">{resetTargetUser.fullname}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400 font-bold">Mã SCN / Email:</span>
+                <span className="font-mono text-slate-300">{resetTargetUser.employeeCode} | {resetTargetUser.email}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-400 font-bold">Đơn vị & Vai trò:</span>
+                <span className="text-slate-300">{resetTargetUser.unitCode} ({resetTargetUser.role})</span>
+              </div>
+            </div>
+
+            {/* KẾT QUẢ RESET MẬT KHẨU (NẾU ĐÃ THỰC HIỆN) */}
+            {resetResult ? (
+              <div className="space-y-3 pt-1">
+                <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-3 rounded-xl text-xs space-y-1">
+                  <div className="font-bold flex items-center gap-1.5">
+                    <Check size={16} /> Đã reset mật khẩu thành công!
+                  </div>
+                  <div className="text-[11px] text-slate-300">
+                    Nhật ký hoạt động đã được ghi tự động vào Audit Log của hệ thống.
+                  </div>
+                </div>
+
+                {resetResult.temporaryPassword ? (
+                  <div className="space-y-1.5 bg-slate-950 p-3.5 rounded-xl border border-amber-500/30">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
+                      Mật khẩu tạm thời mới cấp:
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 bg-slate-900 px-3 py-2 rounded-lg text-emerald-400 font-mono text-sm font-bold border border-white/10 select-all tracking-wider text-center">
+                        {resetResult.temporaryPassword}
+                      </code>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyTempPassword(resetResult.temporaryPassword)}
+                        className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-lg flex items-center gap-1 transition-all shrink-0"
+                      >
+                        {copiedPass ? <Check size={14} /> : <Copy size={14} />}
+                        {copiedPass ? "Đã copy" : "Copy"}
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-slate-400 italic pt-1">
+                      * Hãy gửi mật khẩu tạm này cho nhân sự để họ thực hiện đăng nhập và đổi mật khẩu mới.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-slate-950 p-3 rounded-xl border border-white/10 text-slate-300 text-center">
+                    Tài khoản đã được đưa về trạng thái trắng mật khẩu. Nhân sự có thể khởi tạo mật khẩu mới khi đăng nhập.
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setResetTargetUser(null)}
+                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition-colors"
+                >
+                  Đóng cửa sổ
+                </button>
+              </div>
+            ) : (
+              /* THIẾT LẬP CHẾ ĐỘ RESET */
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                    Phương thức cấp lại mật khẩu *
+                  </label>
+                  
+                  <label className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${resetModeState === "temporary" ? "bg-amber-500/10 border-amber-500/50 text-white" : "bg-slate-950 border-white/10 text-slate-400"}`}>
+                    <input
+                      type="radio"
+                      name="resetMode"
+                      checked={resetModeState === "temporary"}
+                      onChange={() => setResetModeState("temporary")}
+                      className="mt-0.5 accent-amber-500"
+                    />
+                    <div>
+                      <div className="font-bold text-xs">Cấp mật khẩu tạm thời tự động (Khuyên dùng)</div>
+                      <div className="text-[10px] text-slate-400 leading-normal mt-0.5">
+                        Tạo mật khẩu ngẫu nhiên an toàn để Admin copy gửi cho nhân sự.
+                      </div>
+                    </div>
+                  </label>
+
+                  <label className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${resetModeState === "clear" ? "bg-amber-500/10 border-amber-500/50 text-white" : "bg-slate-950 border-white/10 text-slate-400"}`}>
+                    <input
+                      type="radio"
+                      name="resetMode"
+                      checked={resetModeState === "clear"}
+                      onChange={() => setResetModeState("clear")}
+                      className="mt-0.5 accent-amber-500"
+                    />
+                    <div>
+                      <div className="font-bold text-xs">Xóa mật khẩu (Về trạng thái khởi tạo)</div>
+                      <div className="text-[10px] text-slate-400 leading-normal mt-0.5">
+                        Xóa mật khẩu hiện tại trong DB để người dùng tự tạo mật khẩu khi nhập Email đăng nhập.
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setResetTargetUser(null)}
+                    className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition-colors"
+                  >
+                    Hủy bỏ
+                  </button>
+                  <button
+                    type="button"
+                    disabled={resetLoading}
+                    onClick={handleExecuteResetPassword}
+                    className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50"
+                  >
+                    <KeyRound size={14} />
+                    {resetLoading ? "Đang xử lý..." : "Xác nhận Reset"}
+                  </button>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       )}

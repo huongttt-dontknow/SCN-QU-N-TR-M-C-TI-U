@@ -440,9 +440,14 @@ export default function DashboardPage() {
       if (res) return res;
     }
 
-    if (unitCode === "SCVN") {
+    if (scvnKpis && scvnKpis.length > 0) {
       const resSCVN = findInList(scvnKpis);
       if (resSCVN) return resSCVN;
+    }
+
+    if (dbKpis && dbKpis.length > 0) {
+      const resDB = findInList(dbKpis);
+      if (resDB) return resDB;
     }
 
     for (const cCode of candidateCodes) {
