@@ -188242,5 +188242,37 @@
     "title": "VWM2-I01.6-WF",
     "unit": "",
     "isOverridden": true
+  },
+  {
+    "id": "Music-unit-MM1-I02.01-monthly_8",
+    "indicatorCode": "MM1-I02.01",
+    "unitCode": "Music",
+    "productCode": null,
+    "periodType": "monthly",
+    "periodKey": "monthly_8",
+    "targetValue": 283961768,
+    "actualValue": 0,
+    "weight": 0,
+    "explanation": "",
+    "status": "Chưa thực hiện",
+    "title": "MM1-I02.01",
+    "unit": "",
+    "isOverridden": true
+  },
+  {
+    "id": "Music-unit-MM1-I02.01.01-monthly_8",
+    "indicatorCode": "MM1-I02.01.01",
+    "unitCode": "Music",
+    "productCode": null,
+    "periodType": "monthly",
+    "periodKey": "monthly_8",
+    "targetValue": 113584707,
+    "actualValue": 0,
+    "weight": 0,
+    "explanation": "",
+    "status": "Chưa thực hiện",
+    "title": "MM1-I02.01.01",
+    "unit": "",
+    "isOverridden": true
   }
 ]
