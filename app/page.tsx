@@ -400,6 +400,7 @@ export default function DashboardPage() {
       for (const cCode of candidateCodes) {
         const match = list.find(k => 
           (k.code === cCode || k.displayCode === cCode || k.indicatorCode === cCode) && 
+          (!k.periodKey || k.periodKey === pKey) &&
           ((k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
         );
         if (match) {
