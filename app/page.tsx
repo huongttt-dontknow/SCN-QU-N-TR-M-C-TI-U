@@ -588,15 +588,26 @@ export default function DashboardPage() {
       sumMonthAct += mAct;
       sumMonthTarget += mTgt;
     }
+
+    // Sum targets for all 3 months in the quarter to form the total quarter target (e.g. 1.990.450.000 for DA01 Q2)
+    let fullQuarterTarget = qTarget;
+    if (fullQuarterTarget === 0 || filters.periodType === "monthly") {
+      let qTargetSum = 0;
+      for (let mIdx = startM; mIdx < startM + 3; mIdx++) {
+        const mRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${mIdx}`);
+        qTargetSum += mRec?.target || 0;
+      }
+      fullQuarterTarget = qTargetSum > 0 ? qTargetSum : (qTarget > 0 ? qTarget : sumMonthTarget);
+    }
+
     const qActualReal = qActual > 0 ? qActual : sumMonthAct;
-    const realQTarget = qTarget > 0 ? qTarget : sumMonthTarget;
 
     if (filters.periodType === "monthly") {
-      quarterCompletionPct = Math.round(calculateCompletionRate(realQTarget, sumMonthAct, "VM1-I02.01") * 100);
+      quarterCompletionPct = Math.round(calculateCompletionRate(fullQuarterTarget, sumMonthAct, "VM1-I02.01") * 100);
     } else if (qRec && qRec.pct > 0) {
       quarterCompletionPct = Math.round(qRec.pct * 100);
     } else {
-      quarterCompletionPct = Math.round(calculateCompletionRate(realQTarget, qActualReal, "VM1-I02.01") * 100);
+      quarterCompletionPct = Math.round(calculateCompletionRate(fullQuarterTarget, qActualReal, "VM1-I02.01") * 100);
     }
 
     // Yearly completion calculation
