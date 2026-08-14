@@ -1198,14 +1198,82 @@ async function syncKpisBetweenUnits(
   }
 
   if (dbOps.length > 0) {
-    const prismaOps = dbOps.map(op => {
-      if (op.type === "create") {
-        return prisma.kpiData.create({ data: op.data });
-      } else {
-        return prisma.kpiData.update({ where: { id: op.id }, data: op.data });
+    // 1. Lưu trực tiếp các bản ghi đồng bộ & rollup vào JSON dự phòng để đảm bảo tính sẵn sàng cao
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const jsonPath = path.join(process.cwd(), "lib", "all_kpi_records.json");
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        let kpiList = JSON.parse(raw);
+        let jsonUpdated = false;
+
+        for (const op of dbOps) {
+          const itemData = op.data;
+          const uCode = itemData.unitCode || (op.id ? op.id.split("-")[1] : undefined);
+          const iCode = itemData.indicatorCode || (op.id ? op.id.split("-")[2] : undefined);
+
+          if (!uCode || !iCode) continue;
+
+          let found = false;
+          kpiList = kpiList.map((r: any) => {
+            if (r.unitCode === uCode && r.indicatorCode === iCode && r.periodKey === periodKey && r.periodType === periodType && !r.productCode) {
+              found = true;
+              jsonUpdated = true;
+              return {
+                ...r,
+                targetValue: itemData.targetValue !== undefined ? itemData.targetValue : r.targetValue,
+                actualValue: itemData.actualValue !== undefined ? itemData.actualValue : r.actualValue,
+                status: itemData.status || r.status,
+                isOverridden: true
+              };
+            }
+            return r;
+          });
+
+          if (!found && itemData.indicatorCode) {
+            kpiList.push({
+              id: op.id || `${uCode}-unit-${iCode}-${periodKey}`,
+              indicatorCode: iCode,
+              unitCode: uCode,
+              productCode: null,
+              periodType,
+              periodKey,
+              targetValue: itemData.targetValue || 0,
+              actualValue: itemData.actualValue || 0,
+              weight: itemData.weight || 0,
+              explanation: itemData.explanation || "",
+              status: itemData.status || "Đang thực hiện",
+              title: itemData.title || iCode,
+              unit: itemData.unit || "",
+              isOverridden: true
+            });
+            jsonUpdated = true;
+          }
+        }
+
+        if (jsonUpdated) {
+          fs.writeFileSync(jsonPath, JSON.stringify(kpiList, null, 2), "utf-8");
+          cachedAllKpiParsed = kpiList;
+        }
       }
-    });
-    await prisma.$transaction(prismaOps);
+    } catch (jsonSyncErr) {
+      console.warn("Lỗi đồng bộ JSON dự phòng trong syncKpisBetweenUnits:", jsonSyncErr);
+    }
+
+    // 2. Thử cập nhật CSDL Prisma
+    try {
+      const prismaOps = dbOps.map(op => {
+        if (op.type === "create") {
+          return prisma.kpiData.create({ data: op.data });
+        } else {
+          return prisma.kpiData.update({ where: { id: op.id }, data: op.data });
+        }
+      });
+      await prisma.$transaction(prismaOps);
+    } catch (dbSyncErr) {
+      console.warn("Lưu CSDL Prisma thất bại trong syncKpisBetweenUnits (dùng JSON dự phòng):", dbSyncErr);
+    }
   }
 }
 
