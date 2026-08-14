@@ -628,13 +628,8 @@ export default function InputFormPage() {
           "MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD",
           ...(filters.unitCode === "SCVN" ? [
             "CM1-I02.01", "DM1-I02.01",
-            "CM7-I03.01", "CM7-I03.01-CR", "CM7-I03.02", "CM7-I03.02-CR",
-            "DM7-I03.01", "DM7-I03.01-DA01", "DM7-I03.02", "DM7-I03.02-DA01",
-            "MM7-I03.01", "MM7-I03.01-SCMU", "MM7-I03.02", "MM7-I03.02-SCMU",
-            "NM7-I03.01", "NM7-I03.01-CNGP", "NM7-I03.02", "NM7-I03.02-CNGP",
-            "SM7-I03.01", "SM7-I03.01-SCS", "SM7-I03.02", "SM7-I03.02-SCS",
-            "VM7-I03.01-WF", "VM7-I03.01-AS", "VM7-I03.01-Lego", "VM7-I03.01-NDTH",
-            "VM7-I03.02-WF", "VM7-I03.02-AS", "VM7-I03.02-Lego", "VM7-I03.02-NDTH",
+            "CM7-I03.01", "DM7-I03.01", "MM7-I03.01", "NM7-I03.01", "SM7-I03.01",
+            "CM7-I03.02", "DM7-I03.02", "MM7-I03.02", "NM7-I03.02", "SM7-I03.02",
             "VM4-I02.05-CR"
           ] : [])
         ]);
@@ -647,21 +642,32 @@ export default function InputFormPage() {
             }
             return true;
           })
-          .map((d: any) => ({
-          id: d.id || `${d.indicatorCode}_${filters.unitCode}`,
-          code: d.indicatorCode,
-          title: d.title || d.indicatorCode,
-          unit: d.unit || "",
-          formula: d.formula || "",
-          target: d.targetValue,
-          actual: d.actualValue,
-          weight: d.weight || 0,
-          status: d.status || "Chờ duyệt",
-          pic: d.pic || "",
-          group: d.group || "Chỉ số bổ sung",
-          frequency: d.frequency || "",
-          parentCode: d.parentCode || ""
-        }));
+          .map((d: any) => {
+            let parentCode = d.parentCode || "";
+            const code = (d.indicatorCode || "").trim();
+            if (!parentCode) {
+              if (/^(VM7|CM7|DM7|MM7|NM7|SM7)-I01\.01-/i.test(code)) {
+                parentCode = "VM7-I01.01";
+              } else if (/^(VM7|CM7|DM7|MM7|NM7|SM7)-I03\.02-/i.test(code)) {
+                parentCode = "VM7-I03.02";
+              }
+            }
+            return {
+              id: d.id || `${d.indicatorCode}_${filters.unitCode}`,
+              code: d.indicatorCode,
+              title: d.title || d.indicatorCode,
+              unit: d.unit || "",
+              formula: d.formula || "",
+              target: d.targetValue,
+              actual: d.actualValue,
+              weight: d.weight || 0,
+              status: d.status || "Chờ duyệt",
+              pic: d.pic || "",
+              group: d.group || "Chỉ số bổ sung",
+              frequency: d.frequency || "",
+              parentCode: parentCode
+            };
+          });
         setKpis(mapped);
         kpisRef.current = mapped;
 
@@ -1421,13 +1427,8 @@ export default function InputFormPage() {
   const EXCLUDED_ORDER_SET = new Set([
     "MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD",
     "CM1-I02.01", "DM1-I02.01",
-    "CM7-I03.01", "CM7-I03.01-CR", "CM7-I03.02", "CM7-I03.02-CR",
-    "DM7-I03.01", "DM7-I03.01-DA01", "DM7-I03.02", "DM7-I03.02-DA01",
-    "MM7-I03.01", "MM7-I03.01-SCMU", "MM7-I03.02", "MM7-I03.02-SCMU",
-    "NM7-I03.01", "NM7-I03.01-CNGP", "NM7-I03.02", "NM7-I03.02-CNGP",
-    "SM7-I03.01", "SM7-I03.01-SCS", "SM7-I03.02", "SM7-I03.02-SCS",
-    "VM7-I03.01-WF", "VM7-I03.01-AS", "VM7-I03.01-Lego", "VM7-I03.01-NDTH",
-    "VM7-I03.02-WF", "VM7-I03.02-AS", "VM7-I03.02-Lego", "VM7-I03.02-NDTH",
+    "CM7-I03.01", "DM7-I03.01", "MM7-I03.01", "NM7-I03.01", "SM7-I03.01",
+    "CM7-I03.02", "DM7-I03.02", "MM7-I03.02", "NM7-I03.02", "SM7-I03.02",
     "VM4-I02.05-CR"
   ]);
   const scvnOrder = scvnOrderRaw.filter(c => !EXCLUDED_ORDER_SET.has(c));
@@ -1532,16 +1533,7 @@ export default function InputFormPage() {
       const code = (k.code || "").trim();
       if (grp.includes("bổ sung") || code === "VM4-I02.05-CR") return false;
       if (code === "CM1-I02.01" || code === "DM1-I02.01") return false;
-      if (
-        code.startsWith("CM7-") ||
-        code.startsWith("DM7-") ||
-        code.startsWith("MM7-") ||
-        code.startsWith("NM7-") ||
-        code.startsWith("SM7-") ||
-        /^(VM7-I03\.01|VM7-I03\.02)-(WF|AS|Lego|NDTH|DA01|SCS|SCMU|CNGP|CR)$/i.test(code)
-      ) {
-        return false;
-      }
+      if (["CM7-I03.01", "DM7-I03.01", "MM7-I03.01", "NM7-I03.01", "SM7-I03.01", "CM7-I03.02", "DM7-I03.02", "MM7-I03.02", "NM7-I03.02", "SM7-I03.02"].includes(code)) return false;
     }
     return true;
   });
