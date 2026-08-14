@@ -15,7 +15,11 @@ import {
   LabelList
 } from "recharts";
 
-export default function MonthlyRevenueProgressChart() {
+interface MonthlyRevenueProgressChartProps {
+  kpiDataList?: any[];
+}
+
+export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyRevenueProgressChartProps = {}) {
   const { filters, theme } = useApp();
   const isLight = theme === "light";
   const month = Number(filters.month) || 7;
@@ -40,25 +44,62 @@ export default function MonthlyRevenueProgressChart() {
     return `${(val / 1e6).toFixed(0)} Triệu`;
   };
 
-  const data = unitList.map(u => {
-    const uData = MASTER_KPI_DATA[u.code] || {};
-    const keys = Object.keys(uData);
-    const kpiKey = keys.find(k => k.endsWith("M1-I02.01")) || "2.1";
-    const kpiItem = uData[kpiKey] || Object.values(uData).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
-    const periods = kpiItem?.periods || {};
+  const getRecordVal = (uCode: string, pKey: string) => {
+    const candidateCodes: string[] = [];
+    if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
+    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
+    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
+    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");
+    else if (uCode === "DA01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
+    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
+    else if (uCode === "CR") candidateCodes.push("CM1-I02.01-CR", "CM1-I02.01");
+    else if (uCode === "CN") candidateCodes.push("NM1-I02.01-CNGP", "NM1-I02.01");
+    else if (uCode === "SCS") candidateCodes.push("SM1-I02.01-SCS", "SM1-I02.01");
+    else if (uCode === "Music") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU");
+    candidateCodes.push("VM1-I02.01");
 
-    // 1. Cộng tổng thực tế các tuần trong tháng
-    let sumActual = 0;
-    for (let w = 1; w <= 5; w++) {
-      const wKey = `weekly_${month}_${w}`;
-      if (periods[wKey]) {
-        sumActual += periods[wKey].actual ?? 0;
+    if (kpiDataList && kpiDataList.length > 0) {
+      for (const cCode of candidateCodes) {
+        const match = kpiDataList.find(k => 
+          (k.code === cCode || k.displayCode === cCode || k.indicatorCode === cCode) && 
+          (!k.periodKey || k.periodKey === pKey)
+        );
+        if (match) {
+          let target = match.targetWeek ?? match.targetMonth ?? match.targetValue ?? 0;
+          let actual = match.actualWeek ?? match.actualMonth ?? match.actualValue ?? 0;
+          if (pKey.startsWith("monthly_")) {
+            target = match.targetMonth ?? match.targetValue ?? 0;
+            actual = match.actualMonth ?? match.actualValue ?? 0;
+          }
+          return { target, actual };
+        }
       }
     }
 
-    // 2. Lấy kế hoạch tháng
-    const mKey = `monthly_${month}`;
-    const target = periods[mKey]?.target ?? 0;
+    // fallback to MASTER_KPI_DATA
+    const uData = MASTER_KPI_DATA[uCode] || MASTER_KPI_DATA["SCVN"] || {};
+    for (const cCode of candidateCodes) {
+      if (uData[cCode] && uData[cCode].periods && uData[cCode].periods[pKey]) {
+        const p = uData[cCode].periods[pKey];
+        return { target: p.target || 0, actual: p.actual || 0 };
+      }
+    }
+    return null;
+  };
+
+  const data = unitList.map(u => {
+    // 1. Kế hoạch tháng
+    const mRec = getRecordVal(u.code, `monthly_${month}`);
+    let target = mRec?.target || 0;
+
+    // 2. Lũy kế doanh thu thực tế các tuần trong tháng
+    let sumActual = 0;
+    for (let w = 1; w <= 5; w++) {
+      const wRec = getRecordVal(u.code, `weekly_${month}_${w}`);
+      if (wRec && (wRec.actual !== undefined || wRec.target !== undefined)) {
+        sumActual += wRec.actual || 0;
+      }
+    }
 
     // 3. Tính % tiến độ
     const pct = target > 0 ? Math.round((sumActual / target) * 100) : 0;

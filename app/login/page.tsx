@@ -14,9 +14,10 @@ export default function LoginPage() {
   const [googleClientId, setGoogleClientId] = useState("");
 
   const [step, setStep] = useState(1); // 1: Email check, 2: Password setup/input
-  const [passwordMode, setPasswordMode] = useState<"login" | "register">("login");
+  const [passwordMode, setPasswordMode] = useState<"login" | "register" | "must_change">("login");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [tempPassSaved, setTempPassSaved] = useState("");
   const [deviceId, setDeviceId] = useState("");
 
   // States cho Modal Quên mật khẩu
@@ -153,7 +154,7 @@ export default function LoginPage() {
       return;
     }
 
-    if (passwordMode === "register") {
+    if (passwordMode === "register" || passwordMode === "must_change") {
       if (password.length < 6) {
         setErrorMsg("Mật khẩu bảo vệ phải từ 6 ký tự trở lên!");
         return;
@@ -170,21 +171,38 @@ export default function LoginPage() {
     const email = emailInput.trim().toLowerCase();
 
     try {
+      const payload: any = {
+        email,
+        deviceId: localStorage.getItem("sconnect_device_id") || "default-device",
+        userAgent: navigator.userAgent
+      };
+
+      if (passwordMode === "must_change") {
+        payload.password = tempPassSaved;
+        payload.newPassword = password;
+      } else {
+        payload.password = password;
+      }
+
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          email, 
-          password,
-          deviceId: localStorage.getItem("sconnect_device_id") || "default-device",
-          userAgent: navigator.userAgent
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setCurrentLoggedUser(data.user);
-        router.push("/");
+        if (data.mustChangePassword) {
+          // Bắt buộc đổi mật khẩu cá nhân mới
+          setTempPassSaved(password);
+          setPasswordMode("must_change");
+          setPassword("");
+          setConfirmPassword("");
+          setErrorMsg("");
+        } else {
+          setCurrentLoggedUser(data.user);
+          router.push("/");
+        }
       } else {
         setErrorMsg(data.error || "Mật khẩu không chính xác.");
       }
@@ -382,7 +400,39 @@ export default function LoginPage() {
               </button>
             </div>
 
-            {passwordMode === "register" ? (
+            {passwordMode === "must_change" ? (
+              <div className="space-y-3">
+                <div className="bg-amber-500/10 border border-amber-500/30 text-amber-300 p-3.5 rounded-xl text-[11px] leading-relaxed font-bold">
+                  🔑 Bạn đang sử dụng mật khẩu tạm thời do Admin cấp. Vì lý do bảo mật, vui lòng thiết lập mật khẩu cá nhân mới để hoàn tất đăng nhập.
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
+                    Mật khẩu cá nhân mới *
+                  </label>
+                  <input
+                    type="password"
+                    disabled={loading}
+                    placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/80 transition-all font-semibold"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black tracking-widest text-slate-400 uppercase block">
+                    Xác nhận mật khẩu mới *
+                  </label>
+                  <input
+                    type="password"
+                    disabled={loading}
+                    placeholder="Nhập lại mật khẩu mới để xác nhận"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/80 transition-all font-semibold"
+                  />
+                </div>
+              </div>
+            ) : passwordMode === "register" ? (
               <div className="space-y-3">
                 <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-3 rounded-xl text-[11px] leading-relaxed font-bold">
                   🔒 Tài khoản của bạn chưa được thiết lập mật khẩu bảo vệ. Vui lòng thiết lập mật khẩu mới (tối thiểu 6 ký tự).
@@ -445,10 +495,20 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-10 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-emerald-500/15 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
+              className={`w-full h-10 font-black rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 ${
+                passwordMode === "must_change"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-amber-500/15"
+                  : "bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-400 hover:to-lime-400 text-slate-950 shadow-emerald-500/15"
+              }`}
             >
               <ShieldCheck size={15} />
-              {loading ? "ĐANG XÁC THỰC..." : passwordMode === "register" ? "KÍCH HOẠT & ĐĂNG NHẬP" : "ĐĂNG NHẬP HỆ THỐNG"}
+              {loading
+                ? "ĐANG XÁC THỰC..."
+                : passwordMode === "must_change"
+                ? "LƯU MẬT KHẨU MỚI & ĐĂNG NHẬP"
+                : passwordMode === "register"
+                ? "KÍCH HOẠT & ĐĂNG NHẬP"
+                : "ĐĂNG NHẬP HỆ THỐNG"}
             </button>
           </form>
         )}

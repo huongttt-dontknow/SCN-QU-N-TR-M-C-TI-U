@@ -56,10 +56,20 @@ export async function POST(request: Request) {
       });
 
       if (targetUser) {
-        updatedUser = await prisma.user.update({
-          where: { id: targetUser.id },
-          data: { password: newPassword },
-        });
+        const mustChangePassword = resetMode !== "clear";
+        try {
+          updatedUser = await prisma.user.update({
+            where: { id: targetUser.id },
+            data: { password: newPassword, mustChangePassword } as any,
+          });
+        } catch (updateErr) {
+          // Fallback nếu schema DB cũ chưa có cột mustChangePassword
+          updatedUser = await prisma.user.update({
+            where: { id: targetUser.id },
+            data: { password: newPassword },
+          });
+          (updatedUser as any).mustChangePassword = mustChangePassword;
+        }
 
         await createAuditLog(
           operator,

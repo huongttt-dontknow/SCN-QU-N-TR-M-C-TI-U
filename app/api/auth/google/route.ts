@@ -4,7 +4,7 @@ import { createAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   try {
-    const { idToken, email: mockEmail, password, deviceId, userAgent } = await request.json();
+    const { idToken, email: mockEmail, password, newPassword, deviceId, userAgent } = await request.json();
 
     let email = "";
     let fullname = "";
@@ -48,7 +48,8 @@ export async function POST(request: Request) {
         fullname: fullname || (email.split("@")[0].toUpperCase() === "HUONGTTT" ? "Trần Thị Thu Hương" : email.split("@")[0]),
         role: email.includes("admin") || email === "huongttt@s-connect.net" ? "ADMIN" : (email.includes("gdbu") ? "GĐBU" : "TĐV"),
         unitCode: "SCVN",
-        password: password || null
+        password: password || null,
+        mustChangePassword: false
       };
     }
 
@@ -66,11 +67,51 @@ export async function POST(request: Request) {
         try {
           await prisma.user.update({
             where: { id: user.id },
-            data: { password }
+            data: { password, mustChangePassword: false } as any
           });
         } catch (e) {
           console.warn("DB update password skipped in fallback mode");
         }
+      } else if (user.mustChangePassword) {
+        // Tài khoản yêu cầu phải đổi mật khẩu do Admin vừa reset
+        if (!newPassword) {
+          return NextResponse.json({
+            success: true,
+            mustChangePassword: true,
+            message: "🔑 Mật khẩu bạn vừa nhập là mật khẩu tạm thời do Admin cấp. Vui lòng đặt mật khẩu mới để tiếp tục.",
+            user: {
+              email: user.email,
+              fullname: user.fullname,
+              employeeCode: user.employeeCode,
+            }
+          });
+        }
+
+        // Người dùng gửi newPassword -> Đổi sang mật khẩu mới
+        if (newPassword.length < 6) {
+          return NextResponse.json({ error: "Mật khẩu mới phải từ 6 ký tự trở lên!" }, { status: 400 });
+        }
+
+        try {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { password: newPassword, mustChangePassword: false } as any
+          });
+        } catch (e) {
+          try {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { password: newPassword }
+            });
+          } catch (e2) {}
+        }
+
+        await createAuditLog(
+          email,
+          "CHANGE_PASSWORD",
+          "system",
+          `${user.fullname} (${user.email}) đã thiết lập thành công mật khẩu mới sau khi Admin reset`
+        );
       }
     }
 

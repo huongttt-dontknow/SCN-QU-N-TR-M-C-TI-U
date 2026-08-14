@@ -1450,7 +1450,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-[var(--text-muted)] mt-1.5 font-semibold">
                   Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng
                 </p>
-                <MonthlyRevenueProgressChart />
+                <MonthlyRevenueProgressChart kpiDataList={scvnKpis.length > 0 ? scvnKpis : dbKpis} />
               </div>
               <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
                 Biểu đồ thể hiện mức độ hoàn thành tiến độ doanh thu của SCVN và các đơn vị thành viên
