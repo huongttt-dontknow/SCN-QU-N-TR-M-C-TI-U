@@ -630,6 +630,7 @@ export default function InputFormPage() {
             "CM1-I02.01", "DM1-I02.01",
             "CM7-I03.01", "DM7-I03.01", "MM7-I03.01", "NM7-I03.01", "SM7-I03.01",
             "CM7-I03.02", "DM7-I03.02", "MM7-I03.02", "NM7-I03.02", "SM7-I03.02",
+            "DM4-I02.01", "DM4-I02.02", "DM4-I02.04", "NM4-I02.04", "SM4-I02.06", "SM4-I02.06-SCMU",
             "VM4-I02.05-CR"
           ] : [])
         ]);
@@ -1429,6 +1430,7 @@ export default function InputFormPage() {
     "CM1-I02.01", "DM1-I02.01",
     "CM7-I03.01", "DM7-I03.01", "MM7-I03.01", "NM7-I03.01", "SM7-I03.01",
     "CM7-I03.02", "DM7-I03.02", "MM7-I03.02", "NM7-I03.02", "SM7-I03.02",
+    "DM4-I02.01", "DM4-I02.02", "DM4-I02.04", "NM4-I02.04", "SM4-I02.06", "SM4-I02.06-SCMU",
     "VM4-I02.05-CR"
   ]);
   const scvnOrder = scvnOrderRaw.filter(c => !EXCLUDED_ORDER_SET.has(c));
@@ -1534,6 +1536,7 @@ export default function InputFormPage() {
       if (grp.includes("bổ sung") || code === "VM4-I02.05-CR") return false;
       if (code === "CM1-I02.01" || code === "DM1-I02.01") return false;
       if (["CM7-I03.01", "DM7-I03.01", "MM7-I03.01", "NM7-I03.01", "SM7-I03.01", "CM7-I03.02", "DM7-I03.02", "MM7-I03.02", "NM7-I03.02", "SM7-I03.02"].includes(code)) return false;
+      if (["DM4-I02.01", "DM4-I02.02", "DM4-I02.04", "NM4-I02.04", "SM4-I02.06", "SM4-I02.06-SCMU"].includes(code)) return false;
     }
     return true;
   });
