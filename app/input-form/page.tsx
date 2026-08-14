@@ -2922,17 +2922,25 @@ export default function InputFormPage() {
             </table>
           </div>
 
-          <div className="mt-4 bg-slate-950/50 p-4 rounded-xl border border-white/5 text-xs text-slate-400 leading-relaxed">
-            <h4 className="font-bold text-white mb-1.5">💡 Quy định và Hướng dẫn sử dụng:</h4>
-            <ul className="list-disc pl-4 space-y-1">
+          <div className={`mt-4 p-4 rounded-xl border-2 transition-all text-xs leading-relaxed shadow-sm ${
+            theme === "light"
+              ? "bg-[#FFFBEB] border-amber-400 text-slate-800"
+              : "bg-amber-950/20 border-amber-500/40 text-slate-200"
+          }`}>
+            <h4 className={`font-black mb-1.5 text-xs uppercase tracking-wider flex items-center gap-1.5 ${
+              theme === "light" ? "text-amber-900" : "text-amber-300"
+            }`}>
+              💡 Quy định và Hướng dẫn sử dụng:
+            </h4>
+            <ul className="list-disc pl-4 space-y-1 font-medium">
               <li>
-                <strong>Kết quả tạm tính (%)</strong>: Được hệ thống tính toán bằng tổng điểm hoàn thành của các chỉ tiêu con nhân tỷ trọng tương ứng đã lưu ở Tab <strong>Báo cáo theo đơn vị</strong>.
+                <strong className={theme === "light" ? "text-amber-950" : "text-amber-200"}>Kết quả tạm tính (%)</strong>: Được hệ thống tính toán bằng tổng điểm hoàn thành của các chỉ tiêu con nhân tỷ trọng tương ứng đã lưu ở Tab <strong>Báo cáo theo đơn vị</strong>.
               </li>
               <li>
-                <strong>Kết quả (%)</strong>: Điểm số chính thức. Mặc định hệ thống tự động gán kết quả tạm tính sang ô này. Nếu bạn muốn điều chỉnh/ghi đè điểm số cho mục tiêu lớn, chỉ cần chỉnh sửa trực tiếp tại đây.
+                <strong className={theme === "light" ? "text-amber-950" : "text-amber-200"}>Kết quả (%)</strong>: Điểm số chính thức. Mặc định hệ thống tự động gán kết quả tạm tính sang ô này. Nếu bạn muốn điều chỉnh/ghi đè điểm số cho mục tiêu lớn, chỉ cần chỉnh sửa trực tiếp tại đây.
               </li>
               <li>
-                Dữ liệu ở cột <strong>Kết quả (%)</strong> và cột <strong>Ghi chú / Giải trình</strong> sau khi được lưu sẽ được cập nhật đồng bộ sang <strong>Biểu đồ Radar</strong> và bảng <strong>Chi tiết biến động 7 mặt mục tiêu</strong> ở trang Dashboard.
+                Dữ liệu ở cột <strong className={theme === "light" ? "text-amber-950" : "text-amber-200"}>Kết quả (%)</strong> và cột <strong className={theme === "light" ? "text-amber-950" : "text-amber-200"}>Ghi chú / Giải trình</strong> sau khi được lưu sẽ được cập nhật đồng bộ sang <strong>Biểu đồ Radar</strong> và bảng <strong>Chi tiết biến động 7 mặt mục tiêu</strong> ở trang Dashboard.
               </li>
             </ul>
           </div>
