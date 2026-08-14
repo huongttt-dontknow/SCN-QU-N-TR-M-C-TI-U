@@ -398,7 +398,10 @@ export default function DashboardPage() {
     const findInList = (list: any[]) => {
       if (!list || list.length === 0) return null;
       for (const cCode of candidateCodes) {
-        const match = list.find(k => (k.code === cCode || k.indicatorCode === cCode) && (k.targetValue > 0 || k.actualValue > 0 || (k.periods && k.periods[pKey])));
+        const match = list.find(k => 
+          (k.code === cCode || k.displayCode === cCode || k.indicatorCode === cCode) && 
+          ((k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
+        );
         if (match) {
           if (match.periods && match.periods[pKey]) {
             const target = match.periods[pKey].target || 0;
@@ -641,6 +644,12 @@ export default function DashboardPage() {
           hasWeek = true;
           break;
         }
+      }
+      if (!hasWeek && dbKpis.length > 0) {
+        hasWeek = true;
+      }
+      if (!hasWeek && w <= Number(filters.week || 1)) {
+        hasWeek = true;
       }
       if (!hasWeek) continue;
 

@@ -586,9 +586,9 @@ export default function ProductDataPage() {
     return { target: 100, actual: 0, unit: "" };
   };
 
-  const revenueMetrics = getWidgetMetrics("M1", ["TM1-I02.01", "VM1-I02.01"], ["Tổng doanh thu", "Doanh thu kênh"]);
-  const productionMetrics = getWidgetMetrics("M2", ["TM2-I01.01", "VM2-I01.01"], ["Số lượng video hoàn thành", "video hoàn thành sản xuất"]);
-  const trafficMetrics = getWidgetMetrics("M3", ["TM3-I01.02", "VM3-I01.02"], ["Tổng traffic", "Số lượt view Youtube", "view youtube"]);
+  const revenueMetrics = getWidgetMetrics("M1", ["TM1-I02.01", "VM1-I02.01"], ["Tổng doanh thu", "Doanh thu kênh", "Doanh thu"]);
+  const productionMetrics = getWidgetMetrics("M2", ["TM2-I01.01", "VM2-I01.01", "VM2-I01.02", "TM2-I01", "VM2-I01"], ["Số lượng video hoàn thành", "video hoàn thành sản xuất", "sản lượng", "nội dung sản xuất", "video", "sản phẩm"]);
+  const trafficMetrics = getWidgetMetrics("M3", ["TM3-I01.02", "VM3-I01.02", "VM3-I01.01", "TM3-I01.03", "TM3-I01"], ["Tổng traffic", "Số lượt view Youtube", "view youtube", "traffic", "lượt xem", "views"]);
 
   // Group products dynamically by unit
   const groupedProducts: Record<string, Product[]> = {};

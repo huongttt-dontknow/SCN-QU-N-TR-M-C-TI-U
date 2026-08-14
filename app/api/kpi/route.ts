@@ -482,8 +482,17 @@ export async function GET(request: Request) {
         const pKey = periodKey || "";
         
         const filtered = kpiList.filter((r: any) => {
-          if (productCode) {
+          if (productCode && productCode !== "all") {
             return r.productCode === productCode && r.periodKey === pKey && r.periodType === pType;
+          } else if (productCode === "all") {
+            let targetProductCodes: string[] = [];
+            if (unitCode === "SCVN" || unitCode === "TCT") {
+              targetProductCodes = PRODUCTS_CATALOG.map(p => p.id);
+            } else {
+              const prodUnitName = unitToProductUnitMap[unitCode] || unitCode;
+              targetProductCodes = PRODUCTS_CATALOG.filter(p => p.unit === prodUnitName).map(p => p.id);
+            }
+            return targetProductCodes.includes(r.productCode) && r.periodKey === pKey && r.periodType === pType;
           } else {
             return r.unitCode === unitCode && (!r.productCode) && r.periodKey === pKey && r.periodType === pType;
           }
@@ -624,6 +633,73 @@ export async function POST(request: Request) {
       await calculateAndSaveRadarScores(unitCode, periodKey, periodType);
     } catch (radarErr) {
       console.error("Lỗi tự động tính toán điểm radar:", radarErr);
+    }
+
+    // Cập nhật lưu trực tiếp vào JSON dự phòng để đảm bảo tính sẵn sàng cao (High Availability) kể cả khi DB connection bận
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const filename = (productCode && productCode !== "all") ? "product_kpi_records.json" : "all_kpi_records.json";
+      const jsonPath = path.join(process.cwd(), "lib", filename);
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        let kpiList = JSON.parse(raw);
+        let updatedCount = 0;
+
+        for (const u of kpiUpdates) {
+          if (["M1", "M2", "M3", "M4", "M5", "M6", "M7"].includes(u.indicatorCode)) continue;
+          const targetVal = u.targetValue !== undefined ? parseFloat(u.targetValue) : undefined;
+          const actualVal = parseFloat(u.actualValue) || 0;
+          const weightVal = u.weight !== undefined ? parseFloat(u.weight) : undefined;
+
+          let found = false;
+          kpiList = kpiList.map((r: any) => {
+            const matchesProd = (productCode && productCode !== "all") ? r.productCode === productCode : (!r.productCode && r.unitCode === unitCode);
+            if (matchesProd && r.indicatorCode === u.indicatorCode && r.periodKey === periodKey && r.periodType === periodType) {
+              found = true;
+              updatedCount++;
+              return {
+                ...r,
+                targetValue: targetVal !== undefined ? targetVal : r.targetValue,
+                actualValue: actualVal,
+                weight: weightVal !== undefined ? weightVal : r.weight,
+                explanation: u.explanation || r.explanation,
+                status: u.status || r.status || "Đang thực hiện",
+                isOverridden: true
+              };
+            }
+            return r;
+          });
+
+          if (!found && u.indicatorCode) {
+            kpiList.push({
+              id: `${unitCode}-${productCode || "unit"}-${u.indicatorCode}-${periodKey}`,
+              indicatorCode: u.indicatorCode,
+              unitCode,
+              productCode: (productCode && productCode !== "all") ? productCode : null,
+              periodType,
+              periodKey,
+              targetValue: targetVal !== undefined ? targetVal : 0,
+              actualValue: actualVal,
+              weight: weightVal !== undefined ? weightVal : 0,
+              explanation: u.explanation || "",
+              status: u.status || "Đang thực hiện",
+              title: u.title || u.indicatorCode,
+              unit: u.unit || "",
+              isOverridden: true
+            });
+            updatedCount++;
+          }
+        }
+
+        if (updatedCount > 0) {
+          fs.writeFileSync(jsonPath, JSON.stringify(kpiList, null, 2), "utf-8");
+          if (productCode && productCode !== "all") cachedProductKpiParsed = kpiList;
+          else cachedAllKpiParsed = kpiList;
+        }
+      }
+    } catch (jsonSaveErr) {
+      console.warn("Lỗi cập nhật JSON dự phòng khi POST:", jsonSaveErr);
     }
 
     cachedAllKpiParsed = null;
