@@ -569,24 +569,66 @@ export default function DashboardPage() {
     const qActual = qRec?.actual || 0;
 
     let sumMonthAct = 0;
+    let sumMonthTarget = 0;
     const startM = (currentQuarterNum - 1) * 3 + 1;
-    for (let mIdx = startM; mIdx < startM + 3; mIdx++) {
-      let mAct = getKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${mIdx}`)?.actual || 0;
+    for (let mIdx = startM; mIdx <= (filters.periodType === "monthly" ? currentM : startM + 2); mIdx++) {
+      const mRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${mIdx}`);
+      let mAct = mRec?.actual || 0;
+      let mTgt = mRec?.target || 0;
       if (mAct === 0) {
         for (let w = 1; w <= 5; w++) {
-          mAct += uPeriods[`weekly_${mIdx}_${w}`]?.actual || 0;
+          const wRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `weekly_${mIdx}_${w}`);
+          if (wRec && wRec.actual) {
+            mAct += wRec.actual;
+          } else if (uPeriods[`weekly_${mIdx}_${w}`]?.actual) {
+            mAct += uPeriods[`weekly_${mIdx}_${w}`].actual;
+          }
         }
       }
       sumMonthAct += mAct;
+      sumMonthTarget += mTgt;
     }
     const qActualReal = qActual > 0 ? qActual : sumMonthAct;
-    quarterCompletionPct = qRec ? Math.round(qRec.pct * 100) : Math.round(calculateCompletionRate(qTarget, qActualReal, "VM1-I02.01") * 100);
+    const realQTarget = qTarget > 0 ? qTarget : sumMonthTarget;
+
+    if (filters.periodType === "monthly") {
+      quarterCompletionPct = Math.round(calculateCompletionRate(realQTarget, sumMonthAct, "VM1-I02.01") * 100);
+    } else if (qRec && qRec.pct > 0) {
+      quarterCompletionPct = Math.round(qRec.pct * 100);
+    } else {
+      quarterCompletionPct = Math.round(calculateCompletionRate(realQTarget, qActualReal, "VM1-I02.01") * 100);
+    }
 
     // Yearly completion calculation
     const yRec = getKpiRecord(filters.unitCode, "VM1-I02.01", "yearly_2026");
     const yTarget = yRec?.target || 0;
     const yActual = yRec?.actual || 0;
-    yearCompletionPct = yRec ? Math.round(yRec.pct * 100) : Math.round(calculateCompletionRate(yTarget, yActual, "VM1-I02.01") * 100);
+
+    let sumYearMonthAct = 0;
+    for (let mIdx = 1; mIdx <= (filters.periodType === "monthly" || filters.periodType === "weekly" ? currentM : 12); mIdx++) {
+      const mRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${mIdx}`);
+      let mAct = mRec?.actual || 0;
+      if (mAct === 0) {
+        for (let w = 1; w <= 5; w++) {
+          const wRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `weekly_${mIdx}_${w}`);
+          if (wRec && wRec.actual) {
+            mAct += wRec.actual;
+          } else if (uPeriods[`weekly_${mIdx}_${w}`]?.actual) {
+            mAct += uPeriods[`weekly_${mIdx}_${w}`].actual;
+          }
+        }
+      }
+      sumYearMonthAct += mAct;
+    }
+    const realYActual = yActual > 0 ? yActual : sumYearMonthAct;
+
+    if (filters.periodType === "yearly") {
+      yearCompletionPct = Math.round(calculateCompletionRate(yTarget, realYActual, "VM1-I02.01") * 100);
+    } else if (yRec && yRec.pct > 0) {
+      yearCompletionPct = Math.round(yRec.pct * 100);
+    } else {
+      yearCompletionPct = Math.round(calculateCompletionRate(yTarget, realYActual, "VM1-I02.01") * 100);
+    }
   }
 
   // Card 1: Doanh thu & Tiến độ hoàn thành SCVN
