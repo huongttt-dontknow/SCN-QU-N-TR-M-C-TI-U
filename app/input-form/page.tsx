@@ -624,9 +624,29 @@ export default function InputFormPage() {
       }
 
       if (Array.isArray(currData) && currData.length > 0) {
-        const EXCLUDED_KPI_CODES = new Set(["MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD"]);
+        const EXCLUDED_KPI_CODES = new Set([
+          "MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD",
+          ...(filters.unitCode === "SCVN" ? [
+            "CM1-I02.01", "DM1-I02.01",
+            "CM7-I03.01", "CM7-I03.01-CR", "CM7-I03.02", "CM7-I03.02-CR",
+            "DM7-I03.01", "DM7-I03.01-DA01", "DM7-I03.02", "DM7-I03.02-DA01",
+            "MM7-I03.01", "MM7-I03.01-SCMU", "MM7-I03.02", "MM7-I03.02-SCMU",
+            "NM7-I03.01", "NM7-I03.01-CNGP", "NM7-I03.02", "NM7-I03.02-CNGP",
+            "SM7-I03.01", "SM7-I03.01-SCS", "SM7-I03.02", "SM7-I03.02-SCS",
+            "VM7-I03.01-WF", "VM7-I03.01-AS", "VM7-I03.01-Lego", "VM7-I03.01-NDTH",
+            "VM7-I03.02-WF", "VM7-I03.02-AS", "VM7-I03.02-Lego", "VM7-I03.02-NDTH",
+            "VM4-I02.05-CR"
+          ] : [])
+        ]);
         const mapped = currData
-          .filter((d: any) => !EXCLUDED_KPI_CODES.has(d.indicatorCode) && !EXCLUDED_KPI_CODES.has(d.code))
+          .filter((d: any) => {
+            if (EXCLUDED_KPI_CODES.has(d.indicatorCode) || EXCLUDED_KPI_CODES.has(d.code)) return false;
+            if (filters.unitCode === "SCVN") {
+              const grp = (d.group || "").toLowerCase();
+              if (grp.includes("bổ sung")) return false;
+            }
+            return true;
+          })
           .map((d: any) => ({
           id: d.id || `${d.indicatorCode}_${filters.unitCode}`,
           code: d.indicatorCode,
@@ -1398,7 +1418,18 @@ export default function InputFormPage() {
   };
 
   const scvnOrderRaw = ["TM1-I01","VM1-I01.01","VM1-I01.02","TM1-I02","VM1-I02.01","VM1-I02.01-WF","VM1-I02.01-AS","VM1-I02.01-NDTH","VM1-I02.01-Lego","DM1-I02.01-DA01","SM1-I02.01","MM1-I02.01","NM1-I02.01","CM1-I02.01-CR","VM1-I02.01-DA","VM1-I02.01-IP","VM1-I02.02","VM1-I02.02-WF","VM1-I02.02-AS","VM1-I02.02-NDTH","VM1-I02.02-Lego","DM1-I02.02-DA01","SM1-I02.01.01","MM1-I02.01.01","CM1-I02.01-CNGP","CM1-I02.02-CR","VM1-I02.03","VM1-I02.03-WF","VM1-I02.03-AS","VM1-I02.03-NDTH","VM1-I02.03-Lego","SM1-I02.01.03","MM1-I02.01.02","VM1-I02.04","VM1-I02.04-WF","VM1-I02.04-AS","VM1-I02.04-NDTH","VM1-I02.04-Lego","SM1-I02.01.04","MM1-I02.01.03","CM1-I02.03-CR","TM1-I03","VM1-I03.01","TM1-I05","VM1-I05.01","VM1-I05.02","VM1-I05.03","VM1-I05.04","TM2-I01","VM2-I01.01","VM2-I01.01-WF","VM2-I01.01-AS","VM2-I01.01-Lego","VM2-I01.02-NDTH","VM2-I02.01","DM2-I01.01-DA01","SM2-I01.01","VM2-I01.03-NDTH","CM2-I01.01-CR","MM2-I01.01","VM2-I01.3","VWM2-I01.3-WF","VAM2-I01.3-AS","VM2-I01.4","VWM2-I01.4-WF","VAM2-I01.4-AS","VM2-I01.5","VWM2-I01.5-WF","VAM2-I01.5-AS","VM2-I01.6","VWM2-I01.6-WF","VAM2-I01.6-AS","TM2-I02","TM2-I02.01","VM2-I02.01-WF","VM2-I02.01-AS","VM2-I02.01-Lego","VM2-I02.01-NDTH","TM4-I02.01-DA01","SM2-I02.01","VM2-I02.01-SCMU","VM2-I02.01-CR","TM3-I01","TM3-I01.02","VM3-I01.02-WF","VM3-I01.02-AS","VM3-I01.02-Lego","VM3-I01.02-NDTH","DM3-I01.03-DA01","SM3-I01.04-SCS","MM3-I01.01-SCMU","NM3-I01.05-CNGP","CM3-I01.01-CR","TM3-I01.03","VM2-I03.01-WF","VM2-I03.01-AS","VM2-I03.01-Lego","VM2-I03.01-NDTH","VM3-I01.04","VM3-I01.04-WF","VM3-I01.04-AS","VM3-I01.05","VM3-I01.05-WF","VM3-I01.05-AS","VM3-I01.06","TM4-I01.01","VM4-I01.01-WF","TM4-I02","TM4-I02.01","VM4-I02.01-WF","VM4-I02.01-AS","VM4-I02.01-Lego","VM4-I02.01-NDTH","DM4-I02.01-DA01","SM4-I02.01-SCS","MM4-I02.01-SCMU","NM4-I02.03-CNGP","TM4-I02.02","VM4-I02.02-WF","VM4-I02.02-AS","VM4-I02.02-Lego","VM4-I02.02-NDTH","DM4-I02.02-DA01","SM4-I02.02-SCS","MM4-I02.02-SCMU","NM4-I02.02-CNGP","CM4-I02.02-CR","TM4-I02.03","VM4-I02.04","VM4-I02.04-WF","VM4-I02.04-AS","VM4-I02.04-Lego","VM4-I02.04-NDTH","DM4-I02.04-DA01","SM4-I02.04-SCS","MM4-I02.04-SCMU","NM4-I02.04-CNGP","CM4-I02.04-CR","VM4-I02.05","VM4-I02.05-WF","VM4-I02.05-AS","VM4-I02.05-Lego","VM4-I02.05-NDTH","DM4-I02.05-DA01","SM4-I02.05-SCS","MM4-I02.05-SCMU","NM4-I02.05-CNGP","CM4-I02.05-CR","VM4-I02.06","VM4-I02.06-WF","VM4-I02.06-AS","VM4-I02.06-Lego","VM4-I02.06-NDTH","DM4-I02.06-DA01","SM4-I02.06-SCS","MM4-I02.06-SCMU","NM4-I02.06-CNGP","CM4-I02.06-CR","TM5-I01","TM5-I01.03","VM5-I02","VM5-I02.01","VM5-I02.01-WF","VM5-I02.01-AS","VM5-I02.01-Lego","VM5-I02.01-NDTH","SM5-I02.01-SCS","VM5-I02.01-CR","VM5-I02.02","VM5-I02.02-WF","VM5-I02.02-AS","VM5-I02.02-Lego","SM5-I02.02-SCS","VM5-I02.03","VM5-I02.03-WF","VM5-I02.03-AS","VM5-I02.03-Lego","VM5-I02.03-NDTH","VM5-I02.03-DA01","SM5-I02.03-SCS","MM5-I02.03-SCMU","NM5-I02.03-CNGP","VM5-I02.03-CR","VM5-I02.04","VM5-I02.04-WF","VM5-I02.04-AS","VM5-I02.04-Lego","VM5-I02.04-NDTH","VM5-I02.04-DA01","SM5-I02.04-SCS","MM5-I02.04-SCMU","NM5-I02.04-CNGP","VM5-I02.05","VM5-I02.05.01","VM5-I02.05.02","TM6-I01","TM6-I01.01","VM6-I01.01-WF","VM6-I01.01-AS","VM6-I01.01-Lego","VM6-I01.01-NDTH","DM6-I01.01-DA01","SM6-I01.01-SCS","MM6-I01.01-SCMU","NM6-I01.01-CNGP","CM6-I01.01-CR","TM6-I01.02","VM6-I01.02-WF","VM6-I01.02-AS","VM6-I01.02-Lego","VM6-I01.02-NDTH","DM6-I01.02-DA01","SM6-I01.02-SCS","MM6-I01.02-SCMU","NM6-I01.02-CNGP","CM6-I01.02-CR","VM6-I02","TM6-I03","TM6-I03.01","TM6-I03.02","TM7-I01","VM7-I01.01","VM7-I01.01-WF","VM7-I01.01-AS","VM7-I01.01-Lego","VM7-I01.01-NDTH","DM7-I01.01-DA01","SM7-I01.01-SCS","MM7-I01.01-SCMU","NM7-I01.01-CNGP","CM7-I01.01-CR","TM7-I02","VM7-I02.01","VM7-I02.01-WF","VM7-I02.01-AS","VM7-I02.01-Lego","VM7-I02.01-NDTH","DM7-I02.01-DA01","SM7-I02.01-SCS","MM7-I02.01-SCMU","NM7-I02.01-CNGP","CM7-I02.01-CR","VM7-I02.02","VM7-I02.02-WF","VM7-I02.02-AS","VM7-I02.02-Lego","VM7-I02.02-NDTH","DM7-I02.02-DA01","SM7-I02.02-SCS","MM7-I02.02-SCMU","NM7-I02.02-CNGP","CM7-I02.03-CR","TM7-I03","VM7-I03.01","VM7-I03.01-WF","VM7-I03.01-AS","VM7-I03.01-Lego","VM7-I03.01-NDTH","DM7-I03.01-DA01","SM7-I03.01-SCS","MM7-I03.01-SCMU","NM7-I03.01-CNGP","CM7-I03.01-CR","VM7-I03.02","VM7-I03.02-WF","VM7-I03.02-AS","VM7-I03.02-Lego","VM7-I03.02-NDTH","DM7-I03.02-DA01","SM7-I03.02-SCS","MM7-I03.02-SCMU","NM7-I03.02-CNGP","CM7-I03.02-CR"];
-  const EXCLUDED_ORDER_SET = new Set(["MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD"]);
+  const EXCLUDED_ORDER_SET = new Set([
+    "MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD",
+    "CM1-I02.01", "DM1-I02.01",
+    "CM7-I03.01", "CM7-I03.01-CR", "CM7-I03.02", "CM7-I03.02-CR",
+    "DM7-I03.01", "DM7-I03.01-DA01", "DM7-I03.02", "DM7-I03.02-DA01",
+    "MM7-I03.01", "MM7-I03.01-SCMU", "MM7-I03.02", "MM7-I03.02-SCMU",
+    "NM7-I03.01", "NM7-I03.01-CNGP", "NM7-I03.02", "NM7-I03.02-CNGP",
+    "SM7-I03.01", "SM7-I03.01-SCS", "SM7-I03.02", "SM7-I03.02-SCS",
+    "VM7-I03.01-WF", "VM7-I03.01-AS", "VM7-I03.01-Lego", "VM7-I03.01-NDTH",
+    "VM7-I03.02-WF", "VM7-I03.02-AS", "VM7-I03.02-Lego", "VM7-I03.02-NDTH",
+    "VM4-I02.05-CR"
+  ]);
   const scvnOrder = scvnOrderRaw.filter(c => !EXCLUDED_ORDER_SET.has(c));
   const getGroupOrder = (groupName: string) => {
     if (!groupName) return 99;
@@ -1494,7 +1525,26 @@ export default function InputFormPage() {
     return idxA - idxB;
   };
 
-  const directVisibleKpis = kpis.filter(k => shouldShowByFrequency(k.frequency, k.title, k.code));
+  const directVisibleKpis = kpis.filter(k => {
+    if (!shouldShowByFrequency(k.frequency, k.title, k.code)) return false;
+    if (filters.unitCode === "SCVN") {
+      const grp = (k.group || "").toLowerCase();
+      const code = (k.code || "").trim();
+      if (grp.includes("bổ sung") || code === "VM4-I02.05-CR") return false;
+      if (code === "CM1-I02.01" || code === "DM1-I02.01") return false;
+      if (
+        code.startsWith("CM7-") ||
+        code.startsWith("DM7-") ||
+        code.startsWith("MM7-") ||
+        code.startsWith("NM7-") ||
+        code.startsWith("SM7-") ||
+        /^(VM7-I03\.01|VM7-I03\.02)-(WF|AS|Lego|NDTH|DA01|SCS|SCMU|CNGP|CR)$/i.test(code)
+      ) {
+        return false;
+      }
+    }
+    return true;
+  });
   const visibleKpisSet = new Set<string>();
   directVisibleKpis.forEach(k => {
     visibleKpisSet.add(k.code);
