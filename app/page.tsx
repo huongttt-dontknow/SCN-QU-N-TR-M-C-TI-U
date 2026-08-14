@@ -691,7 +691,7 @@ export default function DashboardPage() {
         }
       }
 
-      if (trafAct === 0 && trafTgt === 0 && !isParentUnit && productKpis.length > 0) {
+      if (trafAct === 0 && trafTgt === 0 && !isParentUnit && productKpis.length > 0 && w === (Number(filters.week) || 1)) {
         let sumProdAct = 0;
         let sumProdTgt = 0;
         productKpis.forEach(r => {
@@ -699,7 +699,7 @@ export default function DashboardPage() {
           const title = (r.title || "").toUpperCase();
           const unit = (r.unit || "").toUpperCase();
           if (
-            (code.endsWith("VM3-I01.02") || code.endsWith("TM3-I01.02") || code.includes("M3") || title.includes("TRAFFIC") || title.includes("VIEW")) &&
+            (code.endsWith("VM3-I01.02") || code.endsWith("TM3-I01.02")) &&
             !unit.includes("CTR") && !unit.includes("TB/1")
           ) {
             sumProdAct += r.actualValue ?? r.actualWeek ?? r.actual ?? 0;
@@ -941,21 +941,44 @@ export default function DashboardPage() {
           let target = 0;
           let actual = 0;
 
-          const trafficRecord = matches.find(r => {
+          // Priority 1: Match TM3-I01.02 or VM3-I01.02 with non-zero target/actual values
+          let trafficRecord = matches.find(r => {
             const code = (r.indicatorCode || r.code || "").toUpperCase();
-            const title = (r.title || "").toUpperCase();
-            const unit = (r.unit || "").toUpperCase();
+            const targetVal = r.targetValue ?? r.targetWeek ?? r.target ?? 0;
+            const actualVal = r.actualValue ?? r.actualWeek ?? r.actual ?? 0;
             return (
+              code.endsWith("TM3-I01.02") || 
               code.endsWith("VM3-I01.02") || 
-              code.endsWith("TM3-I01.02") ||
               code.endsWith("VM3-I01.01") ||
-              code.endsWith("TM3-I01.01") ||
-              code.includes("M3") ||
-              title.includes("TRAFFIC") || 
-              title.includes("VIEW") ||
-              unit.includes("VIEWS")
-            ) && !unit.includes("CTR") && !unit.includes("TB/1");
+              code.endsWith("TM3-I01.01")
+            ) && (targetVal > 0 || actualVal > 0);
           });
+
+          // Priority 2: Match TM3-I01.02 or VM3-I01.02 regardless of value
+          if (!trafficRecord) {
+            trafficRecord = matches.find(r => {
+              const code = (r.indicatorCode || r.code || "").toUpperCase();
+              return (
+                code.endsWith("TM3-I01.02") || 
+                code.endsWith("VM3-I01.02") || 
+                code.endsWith("VM3-I01.01") ||
+                code.endsWith("TM3-I01.01")
+              );
+            });
+          }
+
+          // Priority 3: Match title/views with non-zero values (excluding CTR/TB)
+          if (!trafficRecord) {
+            trafficRecord = matches.find(r => {
+              const title = (r.title || "").toUpperCase();
+              const unit = (r.unit || "").toUpperCase();
+              const targetVal = r.targetValue ?? r.targetWeek ?? r.target ?? 0;
+              const actualVal = r.actualValue ?? r.actualWeek ?? r.actual ?? 0;
+              return (
+                title.includes("TRAFFIC") || title.includes("VIEW") || unit.includes("VIEWS")
+              ) && !unit.includes("CTR") && !unit.includes("TB/1") && (targetVal > 0 || actualVal > 0);
+            });
+          }
 
           if (trafficRecord) {
             target = trafficRecord.targetValue ?? trafficRecord.targetWeek ?? trafficRecord.target ?? 0;
