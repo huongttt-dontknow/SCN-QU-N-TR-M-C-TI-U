@@ -2825,9 +2825,9 @@ export default function InputFormPage() {
                     (filters.periodType === "quarterly" && Number(String(filters.quarter).replace("Q", "")) >= 3)
                   ))
                 )}
-                className="text-xs bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-500 hover:to-orange-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
+                className="text-xs bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-emerald-700/80 disabled:to-teal-700/80 disabled:opacity-80 text-white !text-white font-black px-4 py-2 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
               >
-                💾 Lưu số liệu bộ 7 mục tiêu
+                <span style={{ color: "#ffffff" }}>💾 LƯU SỐ LIỆU BỘ 7 MỤC TIÊU</span>
               </button>
             </div>
           </div>
