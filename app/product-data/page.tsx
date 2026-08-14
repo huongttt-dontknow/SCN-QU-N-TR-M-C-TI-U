@@ -564,11 +564,32 @@ export default function ProductDataPage() {
   };
 
   // Find metrics for widgets
-  const getWidgetMetrics = (groupCode: string, displayCodes: string[], titles: string[]) => {
-    const row = kpiRows.find(r => 
-      displayCodes.includes(r.displayCode) || 
-      titles.some(t => r.title.toLowerCase().includes(t.toLowerCase()))
+  const getWidgetMetrics = (groupCode: string, displayCodes: string[], exactTitles: string[]) => {
+    // Priority 1: Exact displayCode match with non-zero values
+    let row = kpiRows.find(r => 
+      displayCodes.includes(r.displayCode) && (getTargetValue(r) > 0 || getActualValue(r) > 0)
     );
+
+    // Priority 2: Exact displayCode match regardless of value
+    if (!row) {
+      row = kpiRows.find(r => displayCodes.includes(r.displayCode));
+    }
+
+    // Priority 3: Exact title match with non-zero values
+    if (!row) {
+      row = kpiRows.find(r => 
+        exactTitles.some(t => r.title.toLowerCase().trim() === t.toLowerCase().trim()) &&
+        (getTargetValue(r) > 0 || getActualValue(r) > 0)
+      );
+    }
+
+    // Priority 4: Partial title match with non-zero values
+    if (!row) {
+      row = kpiRows.find(r => 
+        exactTitles.some(t => r.title.toLowerCase().includes(t.toLowerCase())) &&
+        (getTargetValue(r) > 0 || getActualValue(r) > 0)
+      );
+    }
 
     if (row) {
       const target = getTargetValue(row);
@@ -576,19 +597,12 @@ export default function ProductDataPage() {
       return { target, actual, unit: row.unit || "" };
     }
 
-    const groupRow = kpiRows.find(r => r.displayCode === groupCode || r.code === groupCode);
-    if (groupRow) {
-      const target = getTargetValue(groupRow);
-      const actual = getActualValue(groupRow);
-      return { target, actual, unit: groupRow.unit || "" };
-    }
-
-    return { target: 100, actual: 0, unit: "" };
+    return { target: 0, actual: 0, unit: "" };
   };
 
-  const revenueMetrics = getWidgetMetrics("M1", ["TM1-I02.01", "VM1-I02.01"], ["Tổng doanh thu", "Doanh thu kênh", "Doanh thu"]);
-  const productionMetrics = getWidgetMetrics("M2", ["TM2-I01.01", "VM2-I01.01", "VM2-I01.02", "TM2-I01", "VM2-I01"], ["Số lượng video hoàn thành", "video hoàn thành sản xuất", "sản lượng", "nội dung sản xuất", "video", "sản phẩm"]);
-  const trafficMetrics = getWidgetMetrics("M3", ["TM3-I01.02", "VM3-I01.02", "VM3-I01.01", "TM3-I01.03", "TM3-I01"], ["Tổng traffic", "Số lượt view Youtube", "view youtube", "traffic", "lượt xem", "views"]);
+  const revenueMetrics = getWidgetMetrics("M1", ["VM1-I02.01", "TM1-I02.01"], ["Tổng doanh thu kênh", "Tổng doanh thu"]);
+  const productionMetrics = getWidgetMetrics("M2", ["VM2-I01.01", "TM2-I01.01", "VM2-I01.02"], ["Số lượng video hoàn thành sản xuất", "video hoàn thành sản xuất", "sản lượng"]);
+  const trafficMetrics = getWidgetMetrics("M3", ["TM3-I01.02", "VM3-I01.02"], ["Tổng traffic (nội dung long)", "nội dung long", "Tổng traffic"]);
 
   // Group products dynamically by unit
   const groupedProducts: Record<string, Product[]> = {};

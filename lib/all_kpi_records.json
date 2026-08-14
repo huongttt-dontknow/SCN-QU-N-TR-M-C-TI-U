@@ -186050,5 +186050,21 @@
     "target": 0,
     "actual": 0,
     "parentCode": "TM6-I03"
+  },
+  {
+    "id": "NDTH-unit-VM1-I02.01-weekly_8_1",
+    "indicatorCode": "VM1-I02.01",
+    "unitCode": "NDTH",
+    "productCode": null,
+    "periodType": "weekly",
+    "periodKey": "weekly_8_1",
+    "targetValue": 150000000,
+    "actualValue": 84318457,
+    "weight": 0,
+    "explanation": "",
+    "status": "Đang thực hiện",
+    "title": "VM1-I02.01",
+    "unit": "",
+    "isOverridden": true
   }
 ]
