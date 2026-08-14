@@ -440,8 +440,10 @@ export default function DashboardPage() {
       if (res) return res;
     }
 
-    const resSCVN = findInList(scvnKpis);
-    if (resSCVN) return resSCVN;
+    if (unitCode === "SCVN") {
+      const resSCVN = findInList(scvnKpis);
+      if (resSCVN) return resSCVN;
+    }
 
     for (const cCode of candidateCodes) {
       const mRec = getMasterKpiRecord(unitCode, cCode, pKey);
