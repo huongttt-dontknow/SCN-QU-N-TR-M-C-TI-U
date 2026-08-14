@@ -329,6 +329,7 @@ interface KpiRow {
   actualYear: number;
   isParent: boolean;
   parentCode?: string;
+  group?: string;
   pic?: string;
 }
 
@@ -1278,56 +1279,113 @@ export default function ProductDataPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {kpiRows
-                    .filter(row => !row.isParent)
-                    .map(row => {
-                      const target = getTargetValue(row);
-                      const actual = getActualValue(row);
-                      const pct = calculateCompletionPct(target, actual, row.displayCode || row.code, row.title);
-                      const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
+                  {(() => {
+                    const isPureHeaderRow = (row: KpiRow) => {
+                      const code = (row.displayCode || row.code || "").trim();
+                      return ["M1", "M2", "M3", "M4", "M5", "M6", "M7"].includes(code) || /^.+-(M[1-7])$/i.test(code);
+                    };
+
+                    const validKpiRows = kpiRows.filter(row => !row.isParent && !isPureHeaderRow(row));
+
+                    const M_SECTIONS = [
+                      { key: "M1", name: "M1. TÀI CHÍNH / KINH DOANH", icon: "💰", borderLight: "bg-blue-50/80 border-l-4 border-l-blue-600 text-blue-900", borderDark: "bg-blue-950/40 border-l-4 border-l-blue-500 text-blue-300", badgeLight: "bg-blue-100 text-blue-800 border-blue-300", badgeDark: "bg-blue-900/60 text-blue-200 border-blue-500/30" },
+                      { key: "M2", name: "M2. SẢN PHẨM / SẢN XUẤT", icon: "🎬", borderLight: "bg-lime-50/80 border-l-4 border-l-lime-600 text-lime-900", borderDark: "bg-lime-950/40 border-l-4 border-l-lime-500 text-lime-300", badgeLight: "bg-lime-100 text-lime-800 border-lime-300", badgeDark: "bg-lime-900/60 text-lime-200 border-lime-500/30" },
+                      { key: "M3", name: "M3. KHÁCH HÀNG / DỊCH VỤ", icon: "📊", borderLight: "bg-cyan-50/80 border-l-4 border-l-cyan-600 text-cyan-900", borderDark: "bg-cyan-950/40 border-l-4 border-l-cyan-500 text-cyan-300", badgeLight: "bg-cyan-100 text-cyan-800 border-cyan-300", badgeDark: "bg-cyan-900/60 text-cyan-200 border-cyan-500/30" },
+                      { key: "M4", name: "M4. THƯƠNG HIỆU / KÊNH KINH DOANH", icon: "🚀", borderLight: "bg-purple-50/80 border-l-4 border-l-purple-600 text-purple-900", borderDark: "bg-purple-950/40 border-l-4 border-l-purple-500 text-purple-300", badgeLight: "bg-purple-100 text-purple-800 border-purple-300", badgeDark: "bg-purple-900/60 text-purple-200 border-purple-500/30" },
+                      { key: "M5", name: "M5. QUẢN TRỊ VẬN HÀNH", icon: "⚙️", borderLight: "bg-amber-50/80 border-l-4 border-l-amber-600 text-amber-900", borderDark: "bg-amber-950/40 border-l-4 border-l-amber-500 text-amber-300", badgeLight: "bg-amber-100 text-amber-800 border-amber-300", badgeDark: "bg-amber-900/60 text-amber-200 border-amber-500/30" },
+                      { key: "M6", name: "M6. NHÂN SỰ TỔ CHỨC", icon: "👥", borderLight: "bg-indigo-50/80 border-l-4 border-l-indigo-600 text-indigo-900", borderDark: "bg-indigo-950/40 border-l-4 border-l-indigo-500 text-indigo-300", badgeLight: "bg-indigo-100 text-indigo-800 border-indigo-300", badgeDark: "bg-indigo-900/60 text-indigo-200 border-indigo-500/30" },
+                      { key: "M7", name: "M7. VĂN HÓA DOANH NGHIỆP", icon: "⚖️", borderLight: "bg-rose-50/80 border-l-4 border-l-rose-600 text-rose-900", borderDark: "bg-rose-950/40 border-l-4 border-l-rose-500 text-rose-300", badgeLight: "bg-rose-100 text-rose-800 border-rose-300", badgeDark: "bg-rose-900/60 text-rose-200 border-rose-500/30" },
+                    ];
+
+                    const getRowGroupKey = (row: KpiRow): string => {
+                      const code = (row.displayCode || row.code || "").toUpperCase();
+                      const groupStr = (row.group || "").toUpperCase();
+                      const pCode = (row.parentCode || "").toUpperCase();
+
+                      if (code.includes("M1") || groupStr.includes("M1") || pCode.includes("M1")) return "M1";
+                      if (code.includes("M2") || groupStr.includes("M2") || pCode.includes("M2")) return "M2";
+                      if (code.includes("M3") || groupStr.includes("M3") || pCode.includes("M3")) return "M3";
+                      if (code.includes("M4") || groupStr.includes("M4") || pCode.includes("M4")) return "M4";
+                      if (code.includes("M5") || groupStr.includes("M5") || pCode.includes("M5")) return "M5";
+                      if (code.includes("M6") || groupStr.includes("M6") || pCode.includes("M6")) return "M6";
+                      if (code.includes("M7") || groupStr.includes("M7") || pCode.includes("M7")) return "M7";
+                      return "M1";
+                    };
+
+                    return M_SECTIONS.map(sec => {
+                      const rowsForSec = validKpiRows.filter(r => getRowGroupKey(r) === sec.key);
+                      if (rowsForSec.length === 0) return null;
+
                       return (
-                        <tr key={row.code} className={`border-b ${
-                          theme === "light" 
-                            ? "border-slate-100 hover:bg-slate-50/50 text-slate-700" 
-                            : "border-white/5 hover:bg-[#1a1635]/50 text-slate-200"
-                        } text-sm transition-all`}>
-                          {!hideCodes && (
-                            <td className="p-3 text-center">
-                              <code className={`px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border ${
-                                isMGoal
-                                  ? (theme === "light" ? "bg-sky-50 text-sky-600 border-sky-300" : "bg-sky-950/20 text-sky-400 border-sky-500/20")
-                                  : (theme === "light" ? "bg-slate-100 text-sky-600 border-slate-300" : "bg-slate-800 text-sky-400 border-sky-500/20")
-                              }`}>
-                                {row.displayCode}
-                              </code>
+                        <React.Fragment key={`group-${sec.key}`}>
+                          {/* DÒNG TIÊU ĐỀ PHÂN VÙNG MỤC TIÊU M1 - M7 */}
+                          <tr className={`border-b border-t ${theme === "light" ? sec.borderLight : sec.borderDark}`}>
+                            <td colSpan={hideCodes ? 5 : 6} className="px-4 py-2.5 font-black text-xs tracking-wider">
+                              <div className="flex justify-between items-center">
+                                <span className="flex items-center gap-2 text-xs font-black uppercase">
+                                  <span className="text-sm">{sec.icon}</span> {sec.name}
+                                </span>
+                                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${theme === "light" ? sec.badgeLight : sec.badgeDark}`}>
+                                  {rowsForSec.length} chỉ tiêu
+                                </span>
+                              </div>
                             </td>
-                          )}
-                          <td className={`p-3 font-semibold ${
-                            isMGoal
-                              ? (theme === "light" ? "text-sky-600" : "text-sky-400")
-                              : (theme === "light" ? "text-slate-800" : "text-white")
-                          }`}>{row.title}</td>
-                          <td className={`p-3 text-center font-bold ${theme === "light" ? "text-slate-600" : "text-slate-300"}`}>
-                            {row.unit === "%" ? `${target}%` : target.toLocaleString()}
-                          </td>
-                          <td className={`p-3 text-center font-black ${theme === "light" ? "text-slate-900" : "text-white"}`}>
-                            {row.unit === "%" ? `${actual}%` : actual.toLocaleString()}
-                          </td>
-                          <td className="p-3 text-center font-bold text-slate-400 text-xs">{row.unit}</td>
-                          <td className="p-3 text-center">
-                            <span className={`px-2.5 py-1 rounded-lg font-black text-xs inline-block ${
-                              pct >= 100 
-                                ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" 
-                                : pct >= 80 
-                                ? "text-amber-500 bg-amber-500/10 border border-amber-500/20" 
-                                : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
-                            }`}>
-                              {pct}%
-                            </span>
-                          </td>
-                        </tr>
+                          </tr>
+
+                          {/* DANH SÁCH CÁC CHỈ TIÊU TRỰC THUỘC MỤC TIÊU */}
+                          {rowsForSec.map(row => {
+                            const target = getTargetValue(row);
+                            const actual = getActualValue(row);
+                            const pct = calculateCompletionPct(target, actual, row.displayCode || row.code, row.title);
+                            const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
+
+                            return (
+                              <tr key={row.code} className={`border-b ${
+                                theme === "light" 
+                                  ? "border-slate-100 hover:bg-slate-50/70 text-slate-700" 
+                                  : "border-white/5 hover:bg-[#1a1635]/50 text-slate-200"
+                              } text-sm transition-all`}>
+                                {!hideCodes && (
+                                  <td className="p-3 text-center">
+                                    <code className={`px-2.5 py-0.5 rounded font-mono text-xs font-extrabold border ${
+                                      isMGoal
+                                        ? (theme === "light" ? "bg-sky-50 text-sky-600 border-sky-300" : "bg-sky-950/20 text-sky-400 border-sky-500/20")
+                                        : (theme === "light" ? "bg-slate-100 text-sky-600 border-slate-300" : "bg-slate-800 text-sky-400 border-sky-500/20")
+                                    }`}>
+                                      {row.displayCode}
+                                    </code>
+                                  </td>
+                                )}
+                                <td className={`p-3 font-semibold ${
+                                  isMGoal
+                                    ? (theme === "light" ? "text-sky-600" : "text-sky-400")
+                                    : (theme === "light" ? "text-slate-800" : "text-white")
+                                }`}>{row.title}</td>
+                                <td className={`p-3 text-center font-bold ${theme === "light" ? "text-slate-600" : "text-slate-300"}`}>
+                                  {row.unit === "%" ? `${target}%` : target.toLocaleString()}
+                                </td>
+                                <td className={`p-3 text-center font-black ${theme === "light" ? "text-slate-900" : "text-white"}`}>
+                                  {row.unit === "%" ? `${actual}%` : actual.toLocaleString()}
+                                </td>
+                                <td className="p-3 text-center font-bold text-slate-400 text-xs">{row.unit}</td>
+                                <td className="p-3 text-center">
+                                  <span className={`px-2.5 py-1 rounded-lg font-black text-xs inline-block ${
+                                    pct >= 100 
+                                      ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" 
+                                      : pct >= 80 
+                                      ? "text-amber-500 bg-amber-500/10 border border-amber-500/20" 
+                                      : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
+                                  }`}>
+                                    {pct}%
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </React.Fragment>
                       );
-                    })}
+                    });
+                  })()}
                 </tbody>
               </table>
             )}

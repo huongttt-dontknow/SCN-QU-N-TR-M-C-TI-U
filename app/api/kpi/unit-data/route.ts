@@ -343,9 +343,11 @@ export async function GET(request: Request) {
     const allRows = Object.values(compiledRows);
     for (const row of allRows) {
       if (row.displayCode !== "M1" && row.displayCode !== "M2" && row.displayCode !== "M3" && row.displayCode !== "M4" && row.displayCode !== "M5" && row.displayCode !== "M6" && row.displayCode !== "M7") {
-        const hasChildren = allRows.some(r => r.parentCode === row.code);
-        if (hasChildren) {
-          row.isParent = true;
+        if (!productCode) {
+          const hasChildren = allRows.some(r => r.parentCode === row.code);
+          if (hasChildren) {
+            row.isParent = true;
+          }
         }
       }
       
