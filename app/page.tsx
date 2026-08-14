@@ -241,7 +241,7 @@ export default function DashboardPage() {
     };
 
     fetchProductKpis();
-  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
+  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   const handleSaveComment = () => {
     if (typeof window !== "undefined") {
@@ -535,13 +535,22 @@ export default function DashboardPage() {
     const uPeriods = getSelectedUnitRevenuePeriods();
     for (let w = 1; w <= currentW; w++) {
       const wKey = `weekly_${currentM}_${w}`;
-      accumulatedActual += uPeriods[wKey]?.actual || 0;
+      const wRec = getKpiRecord(filters.unitCode, "VM1-I02.01", wKey);
+      if (wRec && (wRec.actual !== undefined || wRec.target !== undefined)) {
+        accumulatedActual += wRec.actual || 0;
+      } else if (uPeriods[wKey]?.actual) {
+        accumulatedActual += uPeriods[wKey].actual || 0;
+      }
     }
 
-    if (mTargetRec) {
-      monthlyCompletionPct = Math.round(mTargetRec.pct * 100);
-    } else {
+    if (filters.periodType === "weekly") {
       monthlyCompletionPct = Math.round(calculateCompletionRate(monthlyTarget, accumulatedActual, "VM1-I02.01") * 100);
+    } else {
+      if (mTargetRec && mTargetRec.pct > 0) {
+        monthlyCompletionPct = Math.round(mTargetRec.pct * 100);
+      } else {
+        monthlyCompletionPct = Math.round(calculateCompletionRate(monthlyTarget, accumulatedActual, "VM1-I02.01") * 100);
+      }
     }
 
     // Forecast Calculation
@@ -925,12 +934,15 @@ export default function DashboardPage() {
           let actual = 0;
 
           const trafficRecord = matches.find(r => {
-            const code = (r.indicatorCode || "").toUpperCase();
+            const code = (r.indicatorCode || r.code || "").toUpperCase();
             const title = (r.title || "").toUpperCase();
             const unit = (r.unit || "").toUpperCase();
             return (
               code.endsWith("VM3-I01.02") || 
               code.endsWith("TM3-I01.02") ||
+              code.endsWith("VM3-I01.01") ||
+              code.endsWith("TM3-I01.01") ||
+              code.includes("M3") ||
               title.includes("TRAFFIC") || 
               title.includes("VIEW") ||
               unit.includes("VIEWS")
@@ -938,8 +950,8 @@ export default function DashboardPage() {
           });
 
           if (trafficRecord) {
-            target = trafficRecord.targetValue || 0;
-            actual = trafficRecord.actualValue || 0;
+            target = trafficRecord.targetValue ?? trafficRecord.targetWeek ?? trafficRecord.target ?? 0;
+            actual = trafficRecord.actualValue ?? trafficRecord.actualWeek ?? trafficRecord.actual ?? 0;
           }
 
           const tgtM = target >= 1000 ? Number((target / 1e6).toFixed(1)) : target;
