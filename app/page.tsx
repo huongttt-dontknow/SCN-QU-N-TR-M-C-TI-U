@@ -665,46 +665,50 @@ export default function DashboardPage() {
       const revAct = getKpiRecord(filters.unitCode, "VM1-I02.01", wKey)?.actual ?? 0;
       const revTgt = getKpiRecord(filters.unitCode, "VM1-I02.01", wKey)?.target ?? 0;
       
-      // Get traffic actuals
-      let trafAct = 0;
-      const uDict = MASTER_KPI_DATA[filters.unitCode] || {};
-      for (const k in uDict) {
-        const v = uDict[k];
-        const t = (v.title || "").toUpperCase();
-        const uStr = (v.unit || "").toUpperCase();
-        const kStr = k.toUpperCase();
-        if (
-          (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
-          !uStr.includes("CTR") &&
-          !uStr.includes("TB/1")
-        ) {
-          const pData = v.periods?.[wKey];
-          if (pData && pData.actual !== undefined) {
-            if (pData.actual > trafAct) {
-              trafAct = pData.actual;
+      // Get traffic actuals & targets for unit trend chart
+      const trafRec = getKpiRecord(filters.unitCode, "VM3-I01.02", wKey) || getKpiRecord(filters.unitCode, "VM3-I01.01", wKey);
+      let trafAct = trafRec?.actual ?? 0;
+      let trafTgt = trafRec?.target ?? 0;
+
+      if (trafAct === 0 && trafTgt === 0) {
+        const uDict = MASTER_KPI_DATA[filters.unitCode] || {};
+        for (const k in uDict) {
+          const v = uDict[k];
+          const t = (v.title || "").toUpperCase();
+          const uStr = (v.unit || "").toUpperCase();
+          const kStr = k.toUpperCase();
+          if (
+            (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+            !uStr.includes("CTR") &&
+            !uStr.includes("TB/1")
+          ) {
+            const pData = v.periods?.[wKey];
+            if (pData) {
+              if ((pData.actual || 0) > trafAct) trafAct = pData.actual || 0;
+              if ((pData.target || 0) > trafTgt) trafTgt = pData.target || 0;
             }
           }
         }
       }
-      
-      // Get traffic target
-      let trafTgt = 0;
-      for (const k in uDict) {
-        const v = uDict[k];
-        const t = (v.title || "").toUpperCase();
-        const uStr = (v.unit || "").toUpperCase();
-        const kStr = k.toUpperCase();
-        if (
-          (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
-          !uStr.includes("CTR") &&
-          !uStr.includes("TB/1")
-        ) {
-          const pData = v.periods?.[wKey];
-          if (pData && pData.target !== undefined) {
-            if (pData.target > trafTgt) {
-              trafTgt = pData.target;
-            }
+
+      if (trafAct === 0 && trafTgt === 0 && !isParentUnit && productKpis.length > 0) {
+        let sumProdAct = 0;
+        let sumProdTgt = 0;
+        productKpis.forEach(r => {
+          const code = (r.indicatorCode || r.code || "").toUpperCase();
+          const title = (r.title || "").toUpperCase();
+          const unit = (r.unit || "").toUpperCase();
+          if (
+            (code.endsWith("VM3-I01.02") || code.endsWith("TM3-I01.02") || code.includes("M3") || title.includes("TRAFFIC") || title.includes("VIEW")) &&
+            !unit.includes("CTR") && !unit.includes("TB/1")
+          ) {
+            sumProdAct += r.actualValue ?? r.actualWeek ?? r.actual ?? 0;
+            sumProdTgt += r.targetValue ?? r.targetWeek ?? r.target ?? 0;
           }
+        });
+        if (sumProdAct > 0 || sumProdTgt > 0) {
+          trafAct = sumProdAct;
+          trafTgt = sumProdTgt;
         }
       }
 
@@ -929,7 +933,11 @@ export default function DashboardPage() {
         const prodUnitName = unitToProductUnitMap[filters.unitCode] || filters.unitCode;
         const unitProducts = PRODUCTS_CATALOG.filter(p => p.unit === prodUnitName);
         return unitProducts.map(p => {
-          const matches = productKpis.filter(r => r.productCode === p.id);
+          const matches = productKpis.filter(r => 
+            r.productCode === p.id || 
+            (r.indicatorCode || "").startsWith(`${p.id}-`) || 
+            (r.code || "").startsWith(`${p.id}-`)
+          );
           let target = 0;
           let actual = 0;
 
