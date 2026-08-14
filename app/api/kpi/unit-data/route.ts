@@ -165,21 +165,52 @@ export async function GET(request: Request) {
         });
       }
     } catch (dbErr) {
-      console.warn("Lấy KPI từ DB thất bại (hạn mức), sử dụng dữ liệu JSON dự phòng:", dbErr);
+      console.warn("Lấy KPI từ DB thất bại (hạn mức), chuyển sang JSON dự phòng:", dbErr);
+    }
+
+    // Luôn hợp nhất với JSON dự phòng để đảm bảo tính sẵn sàng cao (High Availability)
+    try {
       const fs = require("fs");
       const path = require("path");
       const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
       const jsonPath = path.join(process.cwd(), "lib", filename);
+      const unitSuffixMap: Record<string, string> = {
+        "NDTH": "-NDTH", "DA01": "-DA01", "SCS": "-SCS",
+        "Music": "-SCMU", "SCMU": "-SCMU",
+        "CN": "-CNGP", "CNGP": "-CNGP",
+        "CR": "-CR", "Creative": "-CR"
+      };
+      const suffix = unitSuffixMap[unitCode];
+
       if (fs.existsSync(jsonPath)) {
         const raw = fs.readFileSync(jsonPath, "utf-8");
-        records = JSON.parse(raw).filter((r: any) => {
+        const jsonRecords = JSON.parse(raw).filter((r: any) => {
           if (productCode) {
             return r.productCode === productCode;
           } else {
-            return r.unitCode === unitCode && (!r.productCode);
+            const isMatch = r.unitCode === unitCode || 
+              (unitCode === "Music" && r.unitCode === "SCMU") || 
+              (unitCode === "SCMU" && r.unitCode === "Music") ||
+              (unitCode === "CN" && r.unitCode === "CNGP") ||
+              (unitCode === "CNGP" && r.unitCode === "CN") ||
+              (suffix && r.indicatorCode && r.indicatorCode.endsWith(suffix));
+            return isMatch && !r.productCode;
           }
         });
+
+        for (const jr of jsonRecords) {
+          const existingIdx = records.findIndex(r => r.indicatorCode === jr.indicatorCode && r.periodKey === jr.periodKey);
+          if (existingIdx >= 0) {
+            if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
+              records[existingIdx] = { ...records[existingIdx], ...jr };
+            }
+          } else {
+            records.push(jr);
+          }
+        }
       }
+    } catch (jsonMergeErr) {
+      console.warn("Lỗi hợp nhất JSON dự phòng:", jsonMergeErr);
     }
 
     const targetWeekKey = `weekly_${month}_${week}`;

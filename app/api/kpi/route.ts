@@ -465,6 +465,45 @@ export async function GET(request: Request) {
       };
     });
 
+    // Luôn hợp nhất các bản ghi từ JSON dự phòng để đảm bảo tính sẵn sàng cao
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
+      const jsonPath = path.join(process.cwd(), "lib", filename);
+      if (fs.existsSync(jsonPath)) {
+        const raw = fs.readFileSync(jsonPath, "utf-8");
+        const jsonRecords = JSON.parse(raw);
+        const pType = periodType || "weekly";
+        const pKey = periodKey || "";
+
+        const jsonFiltered = jsonRecords.filter((r: any) => {
+          if (productCode && productCode !== "all") {
+            return r.productCode === productCode && r.periodKey === pKey && r.periodType === pType;
+          } else {
+            const matchesUnit = r.unitCode === unitCode || (unitCode === "Music" && r.unitCode === "SCMU") || (unitCode === "SCMU" && r.unitCode === "Music") || (unitCode === "CN" && r.unitCode === "CNGP") || (unitCode === "CNGP" && r.unitCode === "CN");
+            return matchesUnit && (!r.productCode) && r.periodKey === pKey && r.periodType === pType;
+          }
+        });
+
+        for (const jr of jsonFiltered) {
+          const idx = enrichedRecords.findIndex((r: any) => r.indicatorCode === jr.indicatorCode);
+          if (idx >= 0) {
+            if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
+              enrichedRecords[idx] = { ...enrichedRecords[idx], ...jr };
+            }
+          } else {
+            enrichedRecords.push({
+              ...jr,
+              id: jr.id || `${jr.unitCode}-${jr.productCode || "unit"}-${jr.indicatorCode}-${jr.periodKey}`
+            });
+          }
+        }
+      }
+    } catch (jErr) {
+      console.warn("Lỗi hợp nhất JSON dự phòng trong GET /api/kpi:", jErr);
+    }
+
     return NextResponse.json(enrichedRecords);
   } catch (error: any) {
     console.warn("Lấy KPI thất bại (hạn mức DB), sử dụng dữ liệu JSON dự phòng:", error);
@@ -614,28 +653,7 @@ export async function POST(request: Request) {
       }
     }
 
-    if (saveOps.length > 0) {
-      await prisma.$transaction(saveOps);
-    }
-
-    const updatedRecords = await prisma.kpiData.findMany({
-      where: (productCode && productCode !== "all") ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
-    });
-
-    // Đồng bộ chéo dữ liệu và cộng dồn tự động (Record Rollup & Aggregation)
-    try {
-      await syncKpisBetweenUnits(periodKey, periodType, kpiUpdates, unitCode);
-    } catch (syncErr) {
-      console.error("Lỗi đồng bộ chéo KPI giữa các đơn vị:", syncErr);
-    }
-
-    try {
-      await calculateAndSaveRadarScores(unitCode, periodKey, periodType);
-    } catch (radarErr) {
-      console.error("Lỗi tự động tính toán điểm radar:", radarErr);
-    }
-
-    // Cập nhật lưu trực tiếp vào JSON dự phòng để đảm bảo tính sẵn sàng cao (High Availability) kể cả khi DB connection bận
+    // 1. Cập nhật lưu trực tiếp vào JSON dự phòng để đảm bảo 100% tính sẵn sàng cao (High Availability)
     try {
       const fs = require("fs");
       const path = require("path");
@@ -654,7 +672,8 @@ export async function POST(request: Request) {
 
           let found = false;
           kpiList = kpiList.map((r: any) => {
-            const matchesProd = (productCode && productCode !== "all") ? r.productCode === productCode : (!r.productCode && r.unitCode === unitCode);
+            const matchesUnit = r.unitCode === unitCode || (unitCode === "Music" && r.unitCode === "SCMU") || (unitCode === "SCMU" && r.unitCode === "Music") || (unitCode === "CN" && r.unitCode === "CNGP") || (unitCode === "CNGP" && r.unitCode === "CN");
+            const matchesProd = (productCode && productCode !== "all") ? r.productCode === productCode : (!r.productCode && matchesUnit);
             if (matchesProd && r.indicatorCode === u.indicatorCode && r.periodKey === periodKey && r.periodType === periodType) {
               found = true;
               updatedCount++;
@@ -700,6 +719,32 @@ export async function POST(request: Request) {
       }
     } catch (jsonSaveErr) {
       console.warn("Lỗi cập nhật JSON dự phòng khi POST:", jsonSaveErr);
+    }
+
+    // 2. Thử cập nhật vào CSDL Prisma (nếu khả dụng)
+    let updatedRecords: any[] = [];
+    try {
+      if (saveOps.length > 0) {
+        await prisma.$transaction(saveOps);
+      }
+      updatedRecords = await prisma.kpiData.findMany({
+        where: (productCode && productCode !== "all") ? { productCode, periodKey, periodType } : { unitCode, productCode: null, periodKey, periodType },
+      });
+    } catch (dbSaveErr) {
+      console.warn("Lưu Prisma DB thất bại (sử dụng JSON dự phòng):", dbSaveErr);
+    }
+
+    // Đồng bộ chéo dữ liệu và cộng dồn tự động (Record Rollup & Aggregation)
+    try {
+      await syncKpisBetweenUnits(periodKey, periodType, kpiUpdates, unitCode);
+    } catch (syncErr) {
+      console.error("Lỗi đồng bộ chéo KPI giữa các đơn vị:", syncErr);
+    }
+
+    try {
+      await calculateAndSaveRadarScores(unitCode, periodKey, periodType);
+    } catch (radarErr) {
+      console.error("Lỗi tự động tính toán điểm radar:", radarErr);
     }
 
     cachedAllKpiParsed = null;
