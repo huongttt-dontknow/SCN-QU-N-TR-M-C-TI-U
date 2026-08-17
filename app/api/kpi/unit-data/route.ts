@@ -292,7 +292,9 @@ export async function GET(request: Request) {
       const code = r.indicatorCode;
       
       if (unitCode === "SCVN" && !productCode) {
-        // Loại bỏ các chỉ tiêu con chi tiết của các đơn vị thành viên
+        if (r.unitCode !== "SCVN" && (code.startsWith("VM1-I02") || code.startsWith("TM1-I02") || code === "VM1-I02.01" || code === "VM1-I02.02")) {
+          continue;
+        }
         const subUnitRevenueCodes = [
           "DM1-I02.01", "SM1-I02.01", "MM1-I02.01", "NM1-I02.01", "CM1-I02.01",
           "VM1-I02.01-WF", "VM1-I02.01-AS", "VM1-I02.01-NDTH", "VM1-I02.01-Lego"

@@ -395,17 +395,27 @@ export default function DashboardPage() {
     }
     candidateCodes.push(searchCode);
 
+    const subSuffixes = ["-Lego", "-WF", "-AS", "-NDTH", "-DA01", "-CR", "-CNGP", "-SCS", "-SCMU", "-WO", "-LEGO"];
+    const isParentExactMatch = (itemCode: string | undefined, searchCode: string) => {
+      if (!itemCode || !searchCode) return false;
+      if (itemCode === searchCode) return true;
+      const searchHasSuffix = subSuffixes.some(s => searchCode.endsWith(s));
+      const itemHasSuffix = subSuffixes.some(s => itemCode.endsWith(s));
+      if (!searchHasSuffix && itemHasSuffix) return false;
+      return itemCode === searchCode;
+    };
+
     const findInList = (list: any[]) => {
       if (!list || list.length === 0) return null;
       for (const cCode of candidateCodes) {
         let match = list.find(k => 
-          (k.indicatorCode === cCode || k.code === cCode) && 
+          (isParentExactMatch(k.indicatorCode, cCode) || isParentExactMatch(k.code, cCode)) && 
           (!k.periodKey || k.periodKey === pKey) &&
           (k.isOverridden || (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
         );
         if (!match) {
           match = list.find(k => 
-            (k.displayCode === cCode) && 
+            (isParentExactMatch(k.displayCode, cCode)) && 
             (!k.periodKey || k.periodKey === pKey) &&
             (k.isOverridden || (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
           );
@@ -2023,81 +2033,147 @@ export default function DashboardPage() {
       {/* 5. CỤM 3 BẢNG XẾP HẠNG (BXH DOANH THU, SẢN XUẤT, TRAFFIC) */}
       {isParentUnit && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          
-          {/* BXH Tăng trưởng Doanh thu */}
-          <div className="glass-panel p-5">
-            <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              📝 BXH Tăng trưởng Doanh thu
-            </h3>
-            <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
-            <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
-              {bxhRevenueSorted.map(row => (
-                <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
-                  row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
-                }`}>
-                  <div className="flex items-center gap-2">
-                    <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
-                    <span className="font-extrabold text-white text-xs">{row.name}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
-                    <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {(() => {
+            const getLeaderboardItemStyle = (rankNum: number, isWarning: boolean) => {
+              if (isWarning) {
+                // Top thấp nhất cảnh báo đỏ: Giữ nguyên màu đỏ nhạt cảnh báo
+                return {
+                  icon: "",
+                  cardClass: "bg-[#FFF1F2] border-[#FECDD3]",
+                  rankClass: "text-[#E11D48] font-black text-sm min-w-[24px]",
+                  nameClass: "font-black text-slate-900 text-xs",
+                  valClass: "text-slate-700 font-bold text-xs",
+                  changeClass: "text-[#E11D48] font-black text-xs"
+                };
+              }
+              if (rankNum === 1) {
+                // Top 1: Cúp Vàng 🏆 + Màu vàng tươi kim
+                return {
+                  icon: "🏆",
+                  cardClass: "bg-[#FEF08A] border-[#FDE047] shadow-sm",
+                  rankClass: "text-[#B45309] font-black text-sm min-w-[24px]",
+                  nameClass: "font-black text-slate-900 text-xs",
+                  valClass: "text-slate-700 font-bold text-xs",
+                  changeClass: "text-[#047857] font-black text-xs"
+                };
+              }
+              if (rankNum === 2) {
+                // Top 2: Huy chương Bạc 🥈 + Màu xanh cyan sáng
+                return {
+                  icon: "🥈",
+                  cardClass: "bg-[#BAE6FD] border-[#7DD3FC] shadow-sm",
+                  rankClass: "text-[#0369A1] font-black text-sm min-w-[24px]",
+                  nameClass: "font-black text-slate-900 text-xs",
+                  valClass: "text-slate-700 font-bold text-xs",
+                  changeClass: "text-[#047857] font-black text-xs"
+                };
+              }
+              if (rankNum === 3) {
+                // Top 3: Huy chương Đồng 🥉 + Màu hồng đỏ nhạt sáng
+                return {
+                  icon: "🥉",
+                  cardClass: "bg-[#FECDD3] border-[#FDA4AF] shadow-sm",
+                  rankClass: "text-[#BE123C] font-black text-sm min-w-[24px]",
+                  nameClass: "font-black text-slate-900 text-xs",
+                  valClass: "text-slate-700 font-bold text-xs",
+                  changeClass: "text-[#047857] font-black text-xs"
+                };
+              }
+              // Các đơn vị không thuộc Top 3: Màu vàng nhạt
+              return {
+                icon: "",
+                cardClass: "bg-[#FEFCE8] border-[#FEF08A]",
+                rankClass: "text-[#D97706] font-extrabold text-sm min-w-[24px]",
+                nameClass: "font-extrabold text-slate-800 text-xs",
+                valClass: "text-slate-600 font-bold text-xs",
+                changeClass: "text-[#047857] font-bold text-xs"
+              };
+            };
 
-          {/* BXH Hoàn thành Sản xuất */}
-          <div className="glass-panel p-5">
-            <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              🎬 BXH Hoàn thành Sản xuất
-            </h3>
-            <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Mức độ hoàn thành kế hoạch số lượng video</p>
-            <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
-              {bxhProductionSorted.map(row => (
-                <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
-                  row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
-                }`}>
-                  <div className="flex items-center gap-2">
-                    <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
-                    <span className="font-extrabold text-white text-xs">{row.name}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
-                    <span className="font-black text-emerald-500 text-xs">{row.pctStr}</span>
-                  </div>
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              
+              {/* BXH Tăng trưởng Doanh thu */}
+              <div className="glass-panel p-5">
+                <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  📝 BXH Tăng trưởng Doanh thu
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng so với kỳ trước</p>
+                <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+                  {bxhRevenueSorted.map((row, idx) => {
+                    const st = getLeaderboardItemStyle(idx + 1, row.warning);
+                    return (
+                      <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${st.cardClass}`}>
+                        <div className="flex items-center gap-1.5">
+                          {st.icon && <span className="text-sm leading-none">{st.icon}</span>}
+                          <span className={st.rankClass}>{row.rank}</span>
+                          <span className={st.nameClass}>{row.name}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className={st.valClass}>{row.val}</span>
+                          <span className={row.up ? st.changeClass : "font-black text-xs text-[#E11D48]"}>{row.change}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-          {/* BXH Tăng trưởng Traffic */}
-          <div className="glass-panel p-5">
-            <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              🌐 BXH Tăng trưởng Traffic
-            </h3>
-            <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng traffic views</p>
-            <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
-              {bxhTrafficSorted.map(row => (
-                <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${
-                  row.highlight ? "bg-amber-500/10 border-amber-500/30" : row.warning ? "bg-rose-500/10 border-rose-500/30" : "bg-slate-900/40 border-white/5"
-                }`}>
-                  <div className="flex items-center gap-2">
-                    <span className="font-black text-amber-500 w-6 text-sm">{row.rank}</span>
-                    <span className="font-extrabold text-white text-xs">{row.name}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[var(--text-muted)] font-bold text-xs">{row.val}</span>
-                    <span className={`font-black text-xs ${row.up ? "text-emerald-500" : "text-rose-500"}`}>{row.change}</span>
-                  </div>
+              {/* BXH Hoàn thành Sản xuất */}
+              <div className="glass-panel p-5">
+                <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  🎬 BXH Hoàn thành Sản xuất
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Mức độ hoàn thành kế hoạch số lượng video</p>
+                <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+                  {bxhProductionSorted.map((row, idx) => {
+                    const st = getLeaderboardItemStyle(idx + 1, row.warning);
+                    return (
+                      <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${st.cardClass}`}>
+                        <div className="flex items-center gap-1.5">
+                          {st.icon && <span className="text-sm leading-none">{st.icon}</span>}
+                          <span className={st.rankClass}>{row.rank}</span>
+                          <span className={st.nameClass}>{row.name}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className={st.valClass}>{row.val}</span>
+                          <span className={st.changeClass}>{row.pctStr}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-        </div>
+              {/* BXH Tăng trưởng Traffic */}
+              <div className="glass-panel p-5">
+                <h3 className="text-xs font-black text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  🌐 BXH Tăng trưởng Traffic
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] mb-3 font-semibold">Xếp hạng theo % tăng trưởng traffic views</p>
+                <div className="space-y-2.5 text-xs max-h-[380px] overflow-y-auto pr-1">
+                  {bxhTrafficSorted.map((row, idx) => {
+                    const st = getLeaderboardItemStyle(idx + 1, row.warning);
+                    return (
+                      <div key={row.rank + row.name} className={`flex justify-between items-center p-2.5 rounded-lg border ${st.cardClass}`}>
+                        <div className="flex items-center gap-1.5">
+                          {st.icon && <span className="text-sm leading-none">{st.icon}</span>}
+                          <span className={st.rankClass}>{row.rank}</span>
+                          <span className={st.nameClass}>{row.name}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className={st.valClass}>{row.val}</span>
+                          <span className={row.up ? st.changeClass : "font-black text-xs text-[#E11D48]"}>{row.change}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              </div>
+            );
+          })()}
 
         {/* BẢNG ĐÁNH GIÁ & CHẤM ĐIỂM SỨC KHỎE PSH CÁC SẢN PHẨM */}
         {filters.periodType !== "weekly" && (

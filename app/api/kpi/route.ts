@@ -466,6 +466,8 @@ export async function GET(request: Request) {
 
       return {
         ...r,
+        code: r.indicatorCode,
+        displayCode: r.indicatorCode,
         title,
         unit,
         group,

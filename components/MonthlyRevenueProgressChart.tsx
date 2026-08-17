@@ -73,17 +73,14 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
     };
 
     if (kpiDataList && kpiDataList.length > 0) {
-      let matches = kpiDataList.filter(k => 
-        (k.unitCode === uCode || (k.unitCode === "SCVN" && candidateCodes.includes(k.code))) &&
-        (candidateCodes.includes(k.code) || candidateCodes.includes(k.displayCode) || candidateCodes.includes(k.indicatorCode))
-      );
-
-      if (matches.length === 0) {
-        matches = kpiDataList.filter(k => 
-          (k.unitCode === uCode || (!k.unitCode && k.code?.startsWith(uCode))) &&
-          (k.code?.includes("I02.01") || k.indicatorCode?.includes("I02.01"))
-        );
-      }
+      const subSuffixes = ["-Lego", "-WF", "-AS", "-NDTH", "-DA01", "-CR", "-CNGP", "-SCS", "-SCMU", "-WO", "-LEGO"];
+      let matches = kpiDataList.filter(k => {
+        const kCode = k.code || k.indicatorCode;
+        if (uCode === "SCVN") {
+          return kCode === "VM1-I02.01" && (!k.unitCode || k.unitCode === "SCVN");
+        }
+        return (k.unitCode === uCode || subSuffixes.some(s => kCode?.endsWith(s))) && candidateCodes.includes(kCode);
+      });
 
       if (matches.length > 0) {
         let maxAct = 0;
