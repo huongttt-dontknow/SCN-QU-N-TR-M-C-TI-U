@@ -519,7 +519,7 @@ export default function DashboardPage() {
   });
 
   // Số liệu thực tế đơn vị cấp Toàn hệ thống/BU
-  const scvnRevRec = getKpiRecord(filters.unitCode, "VM1-I02.01", periodKey);
+  const scvnRevRec = getKpiRecord(filters.unitCode, "VM1-I02.02", periodKey) || getKpiRecord(filters.unitCode, "VM1-I02.01", periodKey);
   const scvnVolRec = getKpiRecord(filters.unitCode, "VM2-I01.01", periodKey);
   const scvnDisciplineRec = getKpiRecord(filters.unitCode, "VM7-I03.01", periodKey);
   const scvnRoiRec = getKpiRecord(filters.unitCode, "VM1-I01.01", periodKey);

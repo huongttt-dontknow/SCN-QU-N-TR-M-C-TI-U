@@ -48,7 +48,7 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
 
   const getRecordVal = (uCode: string, pKey: string) => {
     const candidateCodes: string[] = [];
-    if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
+    if (uCode === "SCVN") candidateCodes.push("VM1-I02.02", "VM1-I02.01");
     else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
     else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
     else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");
