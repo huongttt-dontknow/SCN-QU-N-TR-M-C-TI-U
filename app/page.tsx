@@ -651,9 +651,36 @@ export default function DashboardPage() {
   }
 
   // Card 1: Doanh thu & Tiến độ hoàn thành SCVN
-  const revTargetVal = scvnRevRec?.target ? (scvnRevRec.target >= 1e9 ? `${(scvnRevRec.target / 1e9).toFixed(2)} Tỷ VNĐ` : `${(scvnRevRec.target / 1e6).toFixed(0)} Triệu VNĐ`) : "7.98 Tỷ VNĐ";
-  const revActualVal = scvnRevRec?.actual ? (scvnRevRec.actual >= 1e9 ? `${(scvnRevRec.actual / 1e9).toFixed(2)} Tỷ VNĐ` : `${(scvnRevRec.actual / 1e6).toFixed(0)} Triệu VNĐ`) : "3.76 Tỷ VNĐ";
-  const revPct = scvnRevRec?.pct ? Math.round(scvnRevRec.pct * 100) : 47;
+  const month8MasterTargets: Record<string, number> = {
+    SCVN: 6691075313,
+    Wofloo: 560000000,
+    AS: 2096797220,
+    NDTH: 600000000,
+    Lego: 750100325,
+    DA01: 761332000,
+    SCS: 758784000,
+    Music: 283961768,
+    CN: 330000000,
+    CR: 100100000,
+  };
+
+  const currentMonthTargetVal = (filters.month === "8" && month8MasterTargets[filters.unitCode]) 
+    ? month8MasterTargets[filters.unitCode] 
+    : (scvnRevRec?.target || 0);
+
+  const currentRevActualRaw = scvnRevRec?.actual || 0;
+
+  const revTargetVal = currentMonthTargetVal > 0 
+    ? (currentMonthTargetVal >= 1e9 ? `${(currentMonthTargetVal / 1e9).toFixed(2)} Tỷ VNĐ` : `${(currentMonthTargetVal / 1e6).toFixed(0)} Triệu VNĐ`) 
+    : "6.69 Tỷ VNĐ";
+
+  const revActualVal = currentRevActualRaw > 0 
+    ? (currentRevActualRaw >= 1e9 ? `${(currentRevActualRaw / 1e9).toFixed(2)} Tỷ VNĐ` : `${(currentRevActualRaw / 1e6).toFixed(0)} Triệu VNĐ`) 
+    : "0 VNĐ";
+
+  const revPct = currentMonthTargetVal > 0 
+    ? Math.round((currentRevActualRaw / currentMonthTargetVal) * 100) 
+    : (scvnRevRec?.pct ? Math.round(scvnRevRec.pct * 100) : 0);
 
   // Card 2: Sản lượng Video hoàn thành SCVN
   const volTargetVal = scvnVolRec?.target ?? 112;

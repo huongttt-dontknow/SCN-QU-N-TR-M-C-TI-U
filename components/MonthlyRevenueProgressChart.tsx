@@ -47,15 +47,15 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
   const getRecordVal = (uCode: string, pKey: string) => {
     const candidateCodes: string[] = [];
     if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
-    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
-    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
-    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");
+    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF", "VM1-I02.01");
+    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS", "VM1-I02.01");
+    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego", "VM1-I02.01");
     else if (uCode === "DA01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
-    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
-    else if (uCode === "CR") candidateCodes.push("CM1-I02.01-CR", "CM1-I02.01.01", "CM1-I02.01");
-    else if (uCode === "CN") candidateCodes.push("NM1-I02.01-CNGP", "NM1-I02.01.01", "NM1-I02.01");
-    else if (uCode === "SCS") candidateCodes.push("SM1-I02.01-SCS", "SM1-I02.01.01", "SM1-I02.01");
-    else if (uCode === "Music") candidateCodes.push("MM1-I02.01-SCMU", "MM1-I02.01.01", "MM1-I02.01");
+    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1", "VM1-I02.01");
+    else if (uCode === "CR") candidateCodes.push("CM1-I02.01", "CM1-I02.01-CR", "CM1-I02.01.01");
+    else if (uCode === "CN") candidateCodes.push("NM1-I02.01", "NM1-I02.01-CNGP", "NM1-I02.01.01");
+    else if (uCode === "SCS") candidateCodes.push("SM1-I02.01", "SM1-I02.01-SCS", "SM1-I02.01.01");
+    else if (uCode === "Music") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU", "MM1-I02.01.01");
 
     const month8MasterTargets: Record<string, number> = {
       SCVN: 6691075313,
@@ -71,51 +71,41 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
     };
 
     if (kpiDataList && kpiDataList.length > 0) {
-      // Find matches for target and actual values
-      let foundMatch: any = null;
-      for (const cCode of candidateCodes) {
-        const match = kpiDataList.find(k => 
-          (k.unitCode === uCode || !k.unitCode || k.unitCode === "SCVN") &&
-          (k.code === cCode || k.displayCode === cCode || k.indicatorCode === cCode)
-        );
-        if (match) {
-          foundMatch = match;
-          break;
-        }
-      }
+      let matches = kpiDataList.filter(k => 
+        (k.unitCode === uCode || (k.unitCode === "SCVN" && uCode !== "SCVN") || !k.unitCode) &&
+        (candidateCodes.includes(k.code) || candidateCodes.includes(k.displayCode) || candidateCodes.includes(k.indicatorCode))
+      );
 
-      if (!foundMatch) {
-        foundMatch = kpiDataList.find(k => 
+      if (matches.length === 0) {
+        matches = kpiDataList.filter(k => 
           k.unitCode === uCode && (k.code?.includes("I02.01") || k.indicatorCode?.includes("I02.01"))
         );
       }
 
-      if (foundMatch) {
-        let target = 0;
-        let actual = 0;
-
-        if (pKey.startsWith("monthly_")) {
-          if (foundMatch.periods && foundMatch.periods[pKey] && foundMatch.periods[pKey].target > 0) {
-            target = foundMatch.periods[pKey].target;
-          } else if (foundMatch.targetMonth && foundMatch.targetMonth > 0) {
-            target = foundMatch.targetMonth;
-          } else if (month === 8 && month8MasterTargets[uCode]) {
-            target = month8MasterTargets[uCode];
-          } else {
-            target = foundMatch.targetValue || 0;
+      if (matches.length > 0) {
+        let maxAct = 0;
+        let maxTgt = 0;
+        for (const m of matches) {
+          let act = 0;
+          let tgt = 0;
+          if (pKey.startsWith("monthly_")) {
+            act = m.actualMonth || (m.periods?.[pKey]?.actual) || (m.periodKey === pKey ? m.actualValue : 0) || 0;
+            tgt = m.targetMonth || (m.periods?.[pKey]?.target) || (m.periodKey === pKey ? m.targetValue : 0) || 0;
+          } else if (pKey.startsWith("weekly_")) {
+            act = m.actualWeek || (m.periods?.[pKey]?.actual) || (m.periodKey === pKey ? m.actualValue : 0) || 0;
+            tgt = m.targetWeek || (m.periods?.[pKey]?.target) || (m.periodKey === pKey ? m.targetValue : 0) || 0;
           }
-          actual = foundMatch.actualMonth || (foundMatch.periods && foundMatch.periods[pKey] ? foundMatch.periods[pKey].actual : 0) || 0;
-        } else if (pKey.startsWith("weekly_")) {
-          if (foundMatch.periods && foundMatch.periods[pKey]) {
-            target = foundMatch.periods[pKey].target || 0;
-            actual = foundMatch.periods[pKey].actual || 0;
-          } else {
-            target = foundMatch.targetWeek || foundMatch.targetValue || 0;
-            actual = foundMatch.actualWeek || foundMatch.actualValue || 0;
-          }
+          if (act > maxAct) maxAct = act;
+          if (tgt > maxTgt) maxTgt = tgt;
         }
 
-        return { target, actual };
+        let target = maxTgt;
+        if (pKey.startsWith("monthly_")) {
+          if (month === 8 && month8MasterTargets[uCode]) {
+            target = month8MasterTargets[uCode];
+          }
+        }
+        return { target, actual: maxAct };
       }
     }
 
