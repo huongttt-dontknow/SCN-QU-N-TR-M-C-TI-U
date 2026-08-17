@@ -420,17 +420,17 @@ export default function DashboardPage() {
               pct: calculateCompletionRate(target, actual, cCode, match.title)
             };
           }
-          let target = match.targetMonth ?? match.targetValue ?? 0;
-          let actual = match.actualMonth ?? match.actualValue ?? 0;
+          let target = (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue) || 0;
+          let actual = (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue) || 0;
           if (pKey.startsWith("weekly_")) {
-            target = match.targetWeek ?? match.targetValue ?? 0;
-            actual = match.actualWeek ?? match.actualValue ?? 0;
+            target = (match.targetWeek && match.targetWeek > 0 ? match.targetWeek : match.targetValue) || 0;
+            actual = (match.actualWeek && match.actualWeek > 0 ? match.actualWeek : match.actualValue) || 0;
           } else if (pKey.startsWith("quarterly_")) {
-            target = match.targetQuarter ?? match.targetValue ?? 0;
-            actual = match.actualQuarter ?? match.actualValue ?? 0;
+            target = (match.targetQuarter && match.targetQuarter > 0 ? match.targetQuarter : match.targetValue) || 0;
+            actual = (match.actualQuarter && match.actualQuarter > 0 ? match.actualQuarter : match.actualValue) || 0;
           } else if (pKey.startsWith("yearly_")) {
-            target = match.targetYear ?? match.targetValue ?? 0;
-            actual = match.actualYear ?? match.actualValue ?? 0;
+            target = (match.targetYear && match.targetYear > 0 ? match.targetYear : match.targetValue) || 0;
+            actual = (match.actualYear && match.actualYear > 0 ? match.actualYear : match.actualValue) || 0;
           }
           return {
             target,
@@ -1188,10 +1188,41 @@ export default function DashboardPage() {
 
   // 3. Tính BXH Hoàn Thành Sản Xuất (M2)
   const getUnitProductionData = (uCode: string, pKey: string) => {
+    // 1. Tìm trong scvnKpis/dbKpis từ CSDL trước
+    const m2CodeMap: Record<string, string[]> = {
+      Wofloo: ["VM2-I01.01-WF", "VM2-I01.01"],
+      Lego: ["VM2-I01.01-Lego", "VM2-I01.01"],
+      AS: ["VM2-I01.01-AS", "VM2-I01.01"],
+      DA01: ["DM2-I01.01-DA01", "DM2-I01.01"],
+      Music: ["MM2-I01.01-SCMU", "MM2-I01.01"],
+      NDTH: ["VM2-I01.02-NDTH", "VM2-I01.02"],
+      CR: ["CM2-I01.01-CR", "CM2-I01.01"],
+      CN: ["NM2-I01.01-CNGP", "NM2-I01.01"],
+      SCS: ["SM2-I01.01-SCS", "SM2-I01.01"]
+    };
+    const targetCodes = m2CodeMap[uCode] || ["VM2-I01.01"];
+    
+    if (scvnKpis && scvnKpis.length > 0) {
+      const dbMatch = scvnKpis.find(k => 
+        (k.unitCode === uCode || k.unitCode === "SCVN" || !k.unitCode) &&
+        (targetCodes.includes(k.code) || targetCodes.includes(k.indicatorCode))
+      );
+      if (dbMatch) {
+        let tgt = dbMatch.targetValue || dbMatch.targetWeek || 0;
+        let act = dbMatch.actualValue || dbMatch.actualWeek || 0;
+        if (dbMatch.periods && dbMatch.periods[pKey]) {
+          tgt = dbMatch.periods[pKey].target || tgt;
+          act = dbMatch.periods[pKey].actual || act;
+        }
+        if (tgt > 0 || act > 0) {
+          return { item: dbMatch, rec: { target: tgt, actual: act } };
+        }
+      }
+    }
+
+    // 2. Fallback sang MASTER_KPI_DATA
     const uDict = MASTER_KPI_DATA[uCode] || {};
     const candidates: { item: any; rec: any }[] = [];
-
-    // Priority keys
     const prioKeys = ["VM2-I01.01", "VM2-I01.04", "VM2-I01", "MM1-I03.01", "NM2-I01"];
     for (const pk of prioKeys) {
       if (uDict[pk]) {
@@ -1258,8 +1289,8 @@ export default function DashboardPage() {
 
   // 4. Tính BXH Tăng Trưởng Traffic (M3)
   const getUnitTrafficActual = (uCode: string, pKey: string) => {
-    // 1. Thử lấy từ database nếu là kỳ hiện tại
-    if (pKey === periodKey && scvnKpis && scvnKpis.length > 0) {
+    // 1. Thử lấy từ scvnKpis hoặc dbKpis CSDL
+    if (scvnKpis && scvnKpis.length > 0) {
       let mappedCode = "";
       if (uCode === "Wofloo") mappedCode = "VM3-I01.02-WF";
       else if (uCode === "AS") mappedCode = "VM3-I01.02-AS";
@@ -1271,19 +1302,17 @@ export default function DashboardPage() {
       else if (uCode === "CN") mappedCode = "NM3-I01.05";
       else if (uCode === "CR") mappedCode = "CM3-I01.01";
 
-      const dbMatch = scvnKpis.find(k => k.code === mappedCode);
+      const dbMatch = scvnKpis.find(k => (k.code === mappedCode || k.indicatorCode === mappedCode || (k.unitCode === uCode && (k.indicatorCode?.includes("M3-I01") || k.indicatorCode?.includes("VIEW")))));
       if (dbMatch) {
-        let actual = 0;
-        if (pKey.startsWith("weekly_")) {
-          actual = dbMatch.actualWeek || 0;
-        } else if (pKey.startsWith("monthly_")) {
-          actual = dbMatch.actualMonth || 0;
-        } else if (pKey.startsWith("quarterly_")) {
-          actual = dbMatch.actualQuarter || 0;
-        } else if (pKey.startsWith("yearly_")) {
-          actual = dbMatch.actualYear || 0;
+        if (dbMatch.periods && dbMatch.periods[pKey]) {
+          return dbMatch.periods[pKey].actual || 0;
         }
-        return actual;
+        if (dbMatch.periodKey === pKey) {
+          return dbMatch.actualValue || 0;
+        }
+        if (pKey === periodKey) {
+          return dbMatch.actualWeek || dbMatch.actualValue || 0;
+        }
       }
     }
 
@@ -1339,8 +1368,8 @@ export default function DashboardPage() {
       pctRaw = pct;
       up = pct >= 0;
     } else if (currAct > 0) {
-      change = "-";
-      pctRaw = 0;
+      change = "+100%";
+      pctRaw = 100;
       up = true;
     }
 
