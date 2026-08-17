@@ -498,7 +498,7 @@ export async function GET(request: Request) {
           const idx = enrichedRecords.findIndex((r: any) => r.indicatorCode === jr.indicatorCode);
           if (idx >= 0) {
             if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
-              enrichedRecords[idx] = { ...enrichedRecords[idx], ...jr };
+              enrichedRecords[idx] = { ...jr, ...enrichedRecords[idx] };
             }
           } else {
             enrichedRecords.push({
@@ -514,7 +514,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(enrichedRecords, {
       headers: {
-        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
       }
     });
   } catch (error: any) {
@@ -784,6 +784,9 @@ async function syncKpisBetweenUnits(
     { fromUnit: "Lego", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-Lego", title: "Doanh thu DA Lego" },
     { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01-DA01", title: "Doanh thu DA 01" },
     { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01-CR", title: "Doanh thu BP Creative" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "SCVN", toCode: "MM1-I02.01-SCMU", title: "Doanh thu SCMU" },
+    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "SCVN", toCode: "NM1-I02.01-CNGP", title: "Doanh thu CNGP" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "SCVN", toCode: "SM1-I02.01-SCS", title: "Doanh thu SCS" },
     { fromUnit: "Wofloo", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-WF", title: "Doanh thu NB BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-AS", title: "Doanh thu NB BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-NDTH", title: "Doanh thu NB BP NDTH" },

@@ -210,7 +210,7 @@ export async function GET(request: Request) {
           const existingIdx = records.findIndex(r => r.indicatorCode === jr.indicatorCode && r.periodKey === jr.periodKey);
           if (existingIdx >= 0) {
             if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
-              records[existingIdx] = { ...records[existingIdx], ...jr };
+              records[existingIdx] = { ...jr, ...records[existingIdx] };
             }
           } else {
             records.push(jr);
