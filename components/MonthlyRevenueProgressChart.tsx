@@ -56,34 +56,59 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
     else if (uCode === "CN") candidateCodes.push("NM1-I02.01-CNGP", "NM1-I02.01");
     else if (uCode === "SCS") candidateCodes.push("SM1-I02.01-SCS", "SM1-I02.01");
     else if (uCode === "Music") candidateCodes.push("MM1-I02.01-SCMU", "MM1-I02.01");
-    if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
+
+    const month8MasterTargets: Record<string, number> = {
+      SCVN: 6691075313,
+      Wofloo: 560000000,
+      AS: 2096797220,
+      NDTH: 600000000,
+      Lego: 750100325,
+      DA01: 761332000,
+      SCS: 758784000,
+      Music: 283961768,
+      CN: 330000000,
+      CR: 100100000,
+    };
 
     if (kpiDataList && kpiDataList.length > 0) {
       for (const cCode of candidateCodes) {
         const match = kpiDataList.find(k => 
-          (k.code === cCode || k.displayCode === cCode || k.indicatorCode === cCode) && 
-          (!k.periodKey || k.periodKey === pKey)
+          (k.code === cCode || k.displayCode === cCode || k.indicatorCode === cCode)
         );
         if (match) {
-          let target = match.targetWeek ?? match.targetMonth ?? match.targetValue ?? 0;
-          let actual = match.actualWeek ?? match.actualMonth ?? match.actualValue ?? 0;
+          let target = 0;
+          let actual = 0;
+
           if (pKey.startsWith("monthly_")) {
-            target = match.targetMonth ?? match.targetValue ?? 0;
-            actual = match.actualMonth ?? match.actualValue ?? 0;
+            if (match.periods && match.periods[pKey] && match.periods[pKey].target > 0) {
+              target = match.periods[pKey].target;
+            } else if (match.targetMonth && match.targetMonth > 0) {
+              target = match.targetMonth;
+            } else if (month === 8 && month8MasterTargets[uCode]) {
+              target = month8MasterTargets[uCode];
+            } else {
+              target = match.targetValue || 0;
+            }
+            actual = match.actualMonth || (match.periods && match.periods[pKey] ? match.periods[pKey].actual : 0) || 0;
+          } else if (pKey.startsWith("weekly_")) {
+            if (match.periods && match.periods[pKey]) {
+              target = match.periods[pKey].target || 0;
+              actual = match.periods[pKey].actual || 0;
+            } else {
+              target = match.targetWeek || match.targetValue || 0;
+              actual = match.actualWeek || match.actualValue || 0;
+            }
           }
+
           return { target, actual };
         }
       }
     }
 
-    // fallback to MASTER_KPI_DATA
-    const uData = MASTER_KPI_DATA[uCode] || MASTER_KPI_DATA["SCVN"] || {};
-    for (const cCode of candidateCodes) {
-      if (uData[cCode] && uData[cCode].periods && uData[cCode].periods[pKey]) {
-        const p = uData[cCode].periods[pKey];
-        return { target: p.target || 0, actual: p.actual || 0 };
-      }
+    if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+      return { target: month8MasterTargets[uCode], actual: 0 };
     }
+
     return null;
   };
 
