@@ -74,7 +74,11 @@ export async function GET(request: Request) {
       });
     }
 
-    return NextResponse.json(objectives);
+    return NextResponse.json(objectives, {
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+      }
+    });
   } catch (error: any) {
     console.warn("Lấy OKRs từ DB thất bại (hạn mức DB), sử dụng mock fallback:", error);
     if (okrData[unitCode]) {

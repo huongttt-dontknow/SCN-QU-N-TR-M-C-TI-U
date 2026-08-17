@@ -253,7 +253,11 @@ export async function GET(request: Request) {
 
       const aggregate = searchParams.get("aggregate") ?? "true";
       if (aggregate === "false") {
-        return NextResponse.json(records);
+        return NextResponse.json(records, {
+          headers: {
+            "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+          }
+        });
       }
 
       // Nhóm và gộp dữ liệu theo indicatorCode
@@ -311,7 +315,11 @@ export async function GET(request: Request) {
         };
       });
 
-      return NextResponse.json(aggregatedRecords);
+      return NextResponse.json(aggregatedRecords, {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+        }
+      });
     }
 
     // Lấy dữ liệu đã lưu
@@ -504,7 +512,11 @@ export async function GET(request: Request) {
       console.warn("Lỗi hợp nhất JSON dự phòng trong GET /api/kpi:", jErr);
     }
 
-    return NextResponse.json(enrichedRecords);
+    return NextResponse.json(enrichedRecords, {
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+      }
+    });
   } catch (error: any) {
     console.warn("Lấy KPI thất bại (hạn mức DB), sử dụng dữ liệu JSON dự phòng:", error);
     try {

@@ -534,7 +534,11 @@ export async function GET(request: Request) {
       }
     }
 
-    return NextResponse.json(allRows.map(r => ({ ...r, __test_version: "v3" })));
+    return NextResponse.json(allRows.map(r => ({ ...r, __test_version: "v3" })), {
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+      }
+    });
   } catch (error: any) {
     console.error("Lỗi xử lý dữ liệu KPI đơn vị:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

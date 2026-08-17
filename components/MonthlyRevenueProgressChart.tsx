@@ -47,16 +47,16 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
   const getRecordVal = (uCode: string, pKey: string) => {
     const candidateCodes: string[] = [];
     if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
-    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
-    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
-    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");
+    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF", "VM1-I02.01");
+    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS", "VM1-I02.01");
+    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego", "VM1-I02.01");
     else if (uCode === "DA01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
-    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
+    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1", "VM1-I02.01");
     else if (uCode === "CR") candidateCodes.push("CM1-I02.01-CR", "CM1-I02.01");
     else if (uCode === "CN") candidateCodes.push("NM1-I02.01-CNGP", "NM1-I02.01");
     else if (uCode === "SCS") candidateCodes.push("SM1-I02.01-SCS", "SM1-I02.01");
-    else if (uCode === "Music") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU");
-    candidateCodes.push("VM1-I02.01");
+    else if (uCode === "Music") candidateCodes.push("MM1-I02.01-SCMU", "MM1-I02.01");
+    if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
 
     if (kpiDataList && kpiDataList.length > 0) {
       for (const cCode of candidateCodes) {

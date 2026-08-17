@@ -138,6 +138,10 @@ export async function GET(request: Request) {
       labelCurr: staticData.labelCurr,
       labelPrev: staticData.labelPrev,
       points,
+    }, {
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+      }
     });
   } catch (error: any) {
     console.error("Lỗi lấy dữ liệu radar:", error);
