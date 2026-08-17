@@ -650,36 +650,47 @@ export default function DashboardPage() {
     }
   }
 
-  // Card 1: Doanh thu & Tiến độ hoàn thành SCVN
-  const month8MasterTargets: Record<string, number> = {
-    SCVN: 6691075313,
-    Wofloo: 560000000,
-    AS: 2096797220,
-    NDTH: 600000000,
-    Lego: 750100325,
-    DA01: 761332000,
-    SCS: 758784000,
-    Music: 283961768,
-    CN: 330000000,
-    CR: 100100000,
-  };
+  // Card 1: Doanh thu & Tiến độ hoàn thành
+  const isWeeklyView = filters.periodType === "weekly";
 
-  const currentMonthTargetVal = (filters.month === "8" && month8MasterTargets[filters.unitCode]) 
-    ? month8MasterTargets[filters.unitCode] 
-    : (scvnRevRec?.target || 0);
+  let card1TargetRaw = 0;
+  let card1ActualRaw = 0;
 
-  const currentRevActualRaw = scvnRevRec?.actual || 0;
+  if (isWeeklyView) {
+    // Xem báo cáo Tuần: Lấy Kế hoạch & Thực tế CỦA TUẦN ĐÓ
+    card1TargetRaw = scvnRevRec?.target || 0;
+    card1ActualRaw = scvnRevRec?.actual || 0;
+  } else {
+    // Xem báo cáo Tháng: Lấy Kế hoạch Tháng (Master Target 6.69 Tỷ cho SCVN) & Lũy kế Thực tế Tháng
+    const month8MasterTargets: Record<string, number> = {
+      SCVN: 6691075313,
+      Wofloo: 560000000,
+      AS: 2096797220,
+      NDTH: 600000000,
+      Lego: 750100325,
+      DA01: 761332000,
+      SCS: 758784000,
+      Music: 283961768,
+      CN: 330000000,
+      CR: 100100000,
+    };
+    card1TargetRaw = (filters.month === "8" && month8MasterTargets[filters.unitCode]) 
+      ? month8MasterTargets[filters.unitCode] 
+      : (scvnRevRec?.target || 0);
 
-  const revTargetVal = currentMonthTargetVal > 0 
-    ? (currentMonthTargetVal >= 1e9 ? `${(currentMonthTargetVal / 1e9).toFixed(2)} Tỷ VNĐ` : `${(currentMonthTargetVal / 1e6).toFixed(0)} Triệu VNĐ`) 
-    : "6.69 Tỷ VNĐ";
+    card1ActualRaw = scvnRevRec?.actual || 0;
+  }
 
-  const revActualVal = currentRevActualRaw > 0 
-    ? (currentRevActualRaw >= 1e9 ? `${(currentRevActualRaw / 1e9).toFixed(2)} Tỷ VNĐ` : `${(currentRevActualRaw / 1e6).toFixed(0)} Triệu VNĐ`) 
+  const revTargetVal = card1TargetRaw > 0 
+    ? (card1TargetRaw >= 1e9 ? `${(card1TargetRaw / 1e9).toFixed(2)} Tỷ VNĐ` : `${(card1TargetRaw / 1e6).toFixed(0)} Triệu VNĐ`) 
+    : (isWeeklyView ? "1.75 Tỷ VNĐ" : "6.69 Tỷ VNĐ");
+
+  const revActualVal = card1ActualRaw > 0 
+    ? (card1ActualRaw >= 1e9 ? `${(card1ActualRaw / 1e9).toFixed(2)} Tỷ VNĐ` : `${(card1ActualRaw / 1e6).toFixed(0)} Triệu VNĐ`) 
     : "0 VNĐ";
 
-  const revPct = currentMonthTargetVal > 0 
-    ? Math.round((currentRevActualRaw / currentMonthTargetVal) * 100) 
+  const revPct = card1TargetRaw > 0 
+    ? Math.round((card1ActualRaw / card1TargetRaw) * 100) 
     : (scvnRevRec?.pct ? Math.round(scvnRevRec.pct * 100) : 0);
 
   // Card 2: Sản lượng Video hoàn thành SCVN

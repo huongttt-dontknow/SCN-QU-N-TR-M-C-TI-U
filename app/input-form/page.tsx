@@ -422,6 +422,8 @@ export default function InputFormPage() {
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [isProdAiGenerating, setIsProdAiGenerating] = useState(false);
   const isReadOnly = currentLoggedUser?.role === "Người dùng";
+  const isAdminOrLeader = currentLoggedUser?.role === "Admin" || currentLoggedUser?.role === "GĐBU" || currentLoggedUser?.role === "Trưởng đơn vị";
+  const isInputDisabled = !isAdminOrLeader && (isReadOnly || reportStatus === "Chờ duyệt");
 
   const handleGenerateQuickReport = () => {
     setIsGeneratingQuickReport(true);
@@ -1710,7 +1712,7 @@ export default function InputFormPage() {
                 </button>
                 <button
                   onClick={handleSaveAllRows}
-                  disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                  disabled={isInputDisabled}
                   className="text-xs bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
                 >
                   💾 Lưu tổng bộ mục tiêu
@@ -1805,7 +1807,7 @@ export default function InputFormPage() {
                                   <input
                                     type="text"
                                     value={editingCell?.kpiId === kpi.id && editingCell?.field === "weight" ? editingCell.value : (kpi.weight || 0).toString()}
-                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled}
                                     onFocus={() => setEditingCell({ kpiId: kpi.id, field: "weight", value: (kpi.weight || 0).toString() })}
                                     onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "weight", value: e.target.value })}
                                     onBlur={() => {
@@ -1829,7 +1831,7 @@ export default function InputFormPage() {
                                   <input
                                     type="text"
                                     value={editingCell?.kpiId === kpi.id && editingCell?.field === "target" ? editingCell.value : formatValue(kpi.target, kpi.unit)}
-                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled}
                                     onFocus={() => setEditingCell({ kpiId: kpi.id, field: "target", value: kpi.target.toString() })}
                                     onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "target", value: e.target.value })}
                                     onBlur={() => {
@@ -1850,7 +1852,7 @@ export default function InputFormPage() {
                                   <input
                                     type="text"
                                     value={editingCell?.kpiId === kpi.id && editingCell?.field === "actual" ? editingCell.value : formatValue(kpi.actual, kpi.unit)}
-                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled}
                                     onFocus={() => setEditingCell({ kpiId: kpi.id, field: "actual", value: kpi.actual.toString() })}
                                     onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "actual", value: e.target.value })}
                                     onBlur={() => {
@@ -1881,7 +1883,7 @@ export default function InputFormPage() {
                                     type="text"
                                     value={explanations[kpi.id] || ""}
                                     placeholder="Ghi chú ngắn kết quả..."
-                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled}
                                     onChange={(e) => setExplanations(prev => ({ ...prev, [kpi.id]: e.target.value }))}
                                     className="w-full bg-slate-950 border border-[var(--glass-border)] text-white text-xs rounded-lg p-1.5 focus:outline-none focus:border-[var(--accent-cyan)] disabled:opacity-60"
                                   />
@@ -1902,7 +1904,7 @@ export default function InputFormPage() {
                                 ) : (
                                   <button
                                     onClick={() => handleSaveRow(kpi.id)}
-                                    disabled={isReadOnly || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled}
                                     className="bg-[#10b981] hover:bg-[#34d399] text-slate-950 text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
                                   >
                                     Lưu dòng
@@ -2336,7 +2338,7 @@ export default function InputFormPage() {
                   </button>
                   <button
                     onClick={handleSendReport}
-                    disabled={reportStatus === "Chờ duyệt"}
+                    disabled={!isAdminOrLeader && reportStatus === "Chờ duyệt"}
                     className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-xs font-black px-6 py-2.5 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all disabled:opacity-50"
                   >
                     <span style={{ color: "#ffffff" }}>🚀 Gửi báo cáo cho Giám đốc BU</span>
@@ -2412,7 +2414,7 @@ export default function InputFormPage() {
                 </button>
                 <button
                   onClick={handleSaveAllProductRows}
-                  disabled={isReadOnly || reportStatus === "Chờ duyệt" || activeProductId === "all"}
+                  disabled={isInputDisabled || activeProductId === "all"}
                   className="text-xs bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-slate-800 disabled:to-slate-800 disabled:opacity-60 text-white disabled:text-slate-400 font-black px-4 py-1.5 rounded-lg shadow-md transition-all flex items-center gap-1.5 uppercase"
                 >
                   💾 Lưu tổng sản phẩm
@@ -2496,7 +2498,7 @@ export default function InputFormPage() {
                                   <input
                                     type="text"
                                     value={editingCell?.kpiId === pk.id && editingCell?.field === "target" ? editingCell.value : formatValue(pk.target, pk.unit)}
-                                    disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled || activeProductId === "all"}
                                     onFocus={() => setEditingCell({ kpiId: pk.id, field: "target", value: pk.target.toString() })}
                                     onChange={(e) => setEditingCell({ kpiId: pk.id, field: "target", value: e.target.value })}
                                     onBlur={() => {
@@ -2517,7 +2519,7 @@ export default function InputFormPage() {
                                   <input
                                     type="text"
                                     value={editingCell?.kpiId === pk.id && editingCell?.field === "actual" ? editingCell.value : formatValue(pk.actual, pk.unit)}
-                                    disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled || activeProductId === "all"}
                                     onFocus={() => setEditingCell({ kpiId: pk.id, field: "actual", value: pk.actual.toString() })}
                                     onChange={(e) => setEditingCell({ kpiId: pk.id, field: "actual", value: e.target.value })}
                                     onBlur={() => {
@@ -2546,7 +2548,7 @@ export default function InputFormPage() {
                                 ) : (
                                   <button
                                     onClick={() => handleSaveProdRow(pk.id)}
-                                    disabled={isReadOnly || activeProductId === "all" || reportStatus === "Chờ duyệt"}
+                                    disabled={isInputDisabled || activeProductId === "all"}
                                     className="bg-purple-700 hover:bg-purple-600 text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg transition-all shadow-md uppercase"
                                   >
                                     Lưu dòng
@@ -2818,7 +2820,7 @@ export default function InputFormPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleSaveRadarPoints}
-                disabled={isReadOnly || reportStatus === "Chờ duyệt" || !(
+                disabled={isInputDisabled || !(
                   Number(filters.year) > 2026 ||
                   (Number(filters.year) === 2026 && (
                     filters.periodType === "yearly" ||
@@ -2875,7 +2877,7 @@ export default function InputFormPage() {
                   </tr>
                 ) : (
                   radarPoints.map((item: any) => {
-                    const isReadOnlyField = isReadOnly || reportStatus === "Chờ duyệt" || !(
+                    const isReadOnlyField = isInputDisabled || !(
                       Number(filters.year) > 2026 ||
                       (Number(filters.year) === 2026 && (
                         filters.periodType === "yearly" ||

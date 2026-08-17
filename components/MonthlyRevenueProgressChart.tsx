@@ -23,6 +23,8 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
   const { filters, theme } = useApp();
   const isLight = theme === "light";
   const month = Number(filters.month) || 7;
+  const week = Number(filters.week) || 1;
+  const periodType = filters.periodType;
 
   const unitList = [
     { code: "SCVN", name: "BU SCVN" },
@@ -47,11 +49,11 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
   const getRecordVal = (uCode: string, pKey: string) => {
     const candidateCodes: string[] = [];
     if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
-    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF", "VM1-I02.01");
-    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS", "VM1-I02.01");
-    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego", "VM1-I02.01");
+    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
+    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
+    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");
     else if (uCode === "DA01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
-    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1", "VM1-I02.01");
+    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
     else if (uCode === "CR") candidateCodes.push("CM1-I02.01", "CM1-I02.01-CR", "CM1-I02.01.01");
     else if (uCode === "CN") candidateCodes.push("NM1-I02.01", "NM1-I02.01-CNGP", "NM1-I02.01.01");
     else if (uCode === "SCS") candidateCodes.push("SM1-I02.01", "SM1-I02.01-SCS", "SM1-I02.01.01");
@@ -72,7 +74,7 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
 
     if (kpiDataList && kpiDataList.length > 0) {
       let matches = kpiDataList.filter(k => 
-        (k.unitCode === uCode || (k.unitCode === "SCVN" && uCode !== "SCVN") || !k.unitCode) &&
+        (k.unitCode === uCode || (k.unitCode === "SCVN" && candidateCodes.includes(k.indicatorCode))) &&
         (candidateCodes.includes(k.code) || candidateCodes.includes(k.displayCode) || candidateCodes.includes(k.indicatorCode))
       );
 
@@ -116,14 +118,16 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
     return null;
   };
 
+  const selectedW = periodType === "weekly" ? (Number(week) || 1) : 5;
+
   const data = unitList.map(u => {
     // 1. Kế hoạch tháng
     const mRec = getRecordVal(u.code, `monthly_${month}`);
     let target = mRec?.target || 0;
 
-    // 2. Lũy kế doanh thu thực tế các tuần trong tháng
+    // 2. Lũy kế doanh thu thực tế các tuần trong tháng từ Tuần 1 đến Tuần đang lọc (selectedW)
     let sumActual = 0;
-    for (let w = 1; w <= 5; w++) {
+    for (let w = 1; w <= selectedW; w++) {
       const wRec = getRecordVal(u.code, `weekly_${month}_${w}`);
       if (wRec && (wRec.actual !== undefined || wRec.target !== undefined)) {
         sumActual += wRec.actual || 0;
@@ -138,7 +142,7 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
       code: u.code,
       actual: sumActual,
       target,
-      pct,
+      pct
     };
   });
 
