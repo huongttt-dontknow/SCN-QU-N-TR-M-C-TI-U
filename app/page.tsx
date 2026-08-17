@@ -398,11 +398,18 @@ export default function DashboardPage() {
     const findInList = (list: any[]) => {
       if (!list || list.length === 0) return null;
       for (const cCode of candidateCodes) {
-        const match = list.find(k => 
-          (k.code === cCode || k.displayCode === cCode || k.indicatorCode === cCode) && 
+        let match = list.find(k => 
+          (k.indicatorCode === cCode || k.code === cCode) && 
           (!k.periodKey || k.periodKey === pKey) &&
           (k.isOverridden || (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
         );
+        if (!match) {
+          match = list.find(k => 
+            (k.displayCode === cCode) && 
+            (!k.periodKey || k.periodKey === pKey) &&
+            (k.isOverridden || (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
+          );
+        }
         if (match) {
           if (match.periods && match.periods[pKey]) {
             const target = match.periods[pKey].target || 0;
@@ -519,7 +526,7 @@ export default function DashboardPage() {
   });
 
   // Số liệu thực tế đơn vị cấp Toàn hệ thống/BU
-  const scvnRevRec = getKpiRecord(filters.unitCode, "VM1-I02.02", periodKey) || getKpiRecord(filters.unitCode, "VM1-I02.01", periodKey);
+  const scvnRevRec = getKpiRecord(filters.unitCode, "VM1-I02.01", periodKey);
   const scvnVolRec = getKpiRecord(filters.unitCode, "VM2-I01.01", periodKey);
   const scvnDisciplineRec = getKpiRecord(filters.unitCode, "VM7-I03.01", periodKey);
   const scvnRoiRec = getKpiRecord(filters.unitCode, "VM1-I01.01", periodKey);
