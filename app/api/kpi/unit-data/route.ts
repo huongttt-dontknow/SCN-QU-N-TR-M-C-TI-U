@@ -334,6 +334,7 @@ export async function GET(request: Request) {
           displayCode: displayCode,
           title: getFriendlyIndicatorTitle(code, title),
           unit: unit,
+          unitCode: r.unitCode,
           targetWeek: 0, actualWeek: 0,
           targetMonth: 0, actualMonth: 0,
           targetQuarter: 0, actualQuarter: 0,

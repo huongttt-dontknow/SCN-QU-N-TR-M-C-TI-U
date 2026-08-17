@@ -74,13 +74,14 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
 
     if (kpiDataList && kpiDataList.length > 0) {
       let matches = kpiDataList.filter(k => 
-        (k.unitCode === uCode || (k.unitCode === "SCVN" && candidateCodes.includes(k.indicatorCode))) &&
+        (k.unitCode === uCode || (k.unitCode === "SCVN" && candidateCodes.includes(k.code))) &&
         (candidateCodes.includes(k.code) || candidateCodes.includes(k.displayCode) || candidateCodes.includes(k.indicatorCode))
       );
 
       if (matches.length === 0) {
         matches = kpiDataList.filter(k => 
-          k.unitCode === uCode && (k.code?.includes("I02.01") || k.indicatorCode?.includes("I02.01"))
+          (k.unitCode === uCode || (!k.unitCode && k.code?.startsWith(uCode))) &&
+          (k.code?.includes("I02.01") || k.indicatorCode?.includes("I02.01"))
         );
       }
 
@@ -90,12 +91,18 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
         for (const m of matches) {
           let act = 0;
           let tgt = 0;
-          if (pKey.startsWith("monthly_")) {
-            act = m.actualMonth || (m.periods?.[pKey]?.actual) || (m.periodKey === pKey ? m.actualValue : 0) || 0;
-            tgt = m.targetMonth || (m.periods?.[pKey]?.target) || (m.periodKey === pKey ? m.targetValue : 0) || 0;
+          if (m.periods && m.periods[pKey]) {
+            act = m.periods[pKey].actual || 0;
+            tgt = m.periods[pKey].target || 0;
+          } else if (m.periodKey === pKey) {
+            act = m.actualValue || 0;
+            tgt = m.targetValue || 0;
+          } else if (pKey.startsWith("monthly_")) {
+            act = m.actualMonth || 0;
+            tgt = m.targetMonth || 0;
           } else if (pKey.startsWith("weekly_")) {
-            act = m.actualWeek || (m.periods?.[pKey]?.actual) || (m.periodKey === pKey ? m.actualValue : 0) || 0;
-            tgt = m.targetWeek || (m.periods?.[pKey]?.target) || (m.periodKey === pKey ? m.targetValue : 0) || 0;
+            act = m.actualWeek || 0;
+            tgt = m.targetWeek || 0;
           }
           if (act > maxAct) maxAct = act;
           if (tgt > maxTgt) maxTgt = tgt;
