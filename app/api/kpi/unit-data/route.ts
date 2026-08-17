@@ -142,7 +142,14 @@ export async function GET(request: Request) {
       if (productCode) {
         records = await prisma.kpiData.findMany({ where: { productCode } });
       } else if (unitCode === "SCVN") {
-        records = await prisma.kpiData.findMany({ where: { unitCode: "SCVN", productCode: null } });
+        records = await prisma.kpiData.findMany({
+          where: {
+            OR: [
+              { unitCode: "SCVN", productCode: null },
+              { unitCode: { in: ["Music", "SCS", "CN", "CR", "DA01", "Wofloo", "Lego", "AS", "NDTH", "TCT"] }, productCode: null }
+            ]
+          }
+        });
       } else {
         const unitSuffixMap: Record<string, string> = {
           "Wofloo": "-WF", "WO": "-WF", "WF": "-WF",
