@@ -514,6 +514,35 @@ export async function GET(request: Request) {
       console.warn("Lỗi hợp nhất JSON dự phòng trong GET /api/kpi:", jErr);
     }
 
+    if (unitCode === "SCVN") {
+      enrichedRecords.forEach((r: any) => {
+        const code = r.indicatorCode || r.code || "";
+        if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.01-/i.test(code)) {
+          r.parentCode = "VM1-I02.01";
+        } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.02-/i.test(code)) {
+          r.parentCode = "VM1-I02.02";
+        } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.03-/i.test(code)) {
+          r.parentCode = "VM1-I02.03";
+        } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.04-/i.test(code)) {
+          r.parentCode = "VM1-I02.04";
+        }
+      });
+
+      const children = enrichedRecords.filter((r: any) => r.parentCode === "VM1-I02.01");
+      if (children.length > 0) {
+        const sumTarget = children.reduce((sum: number, c: any) => sum + (c.targetValue || c.target || 0), 0);
+        const sumActual = children.reduce((sum: number, c: any) => sum + (c.actualValue || c.actual || 0), 0);
+
+        const parentRecord = enrichedRecords.find((r: any) => r.indicatorCode === "VM1-I02.01" || r.code === "VM1-I02.01");
+        if (parentRecord) {
+          parentRecord.targetValue = sumTarget;
+          parentRecord.actualValue = sumActual;
+          if (parentRecord.target !== undefined) parentRecord.target = sumTarget;
+          if (parentRecord.actual !== undefined) parentRecord.actual = sumActual;
+        }
+      }
+    }
+
     return NextResponse.json(enrichedRecords, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
@@ -894,9 +923,21 @@ async function syncKpisBetweenUnits(
     { fromUnit: "CR", fromCode: "CM6-I01.02", toUnit: "SCVN", toCode: "CM6-I01.02-CR", title: "BP Creative" }
   ];
 
+  const isMatchingUnit = (fromUnit: string, targetUnit?: string) => {
+    if (!targetUnit) return true;
+    if (fromUnit === targetUnit) return true;
+    const u1 = fromUnit.toUpperCase();
+    const u2 = targetUnit.toUpperCase();
+    if (u1 === u2) return true;
+    if ((u1 === "MUSIC" || u1 === "SCMU") && (u2 === "MUSIC" || u2 === "SCMU")) return true;
+    if ((u1 === "CN" || u1 === "CNGP") && (u2 === "CN" || u2 === "CNGP")) return true;
+    if ((u1 === "WOFLOO" || u1 === "WF" || u1 === "WO") && (u2 === "WOFLOO" || u2 === "WF" || u2 === "WO")) return true;
+    return false;
+  };
+
   const triggeringCodes = (kpiUpdates || []).map((u: any) => u.indicatorCode);
   const matchedMappings = syncMappings.filter(m =>
-    triggeringCodes.includes(m.fromCode) && m.fromUnit === triggeringUnitCode
+    triggeringCodes.includes(m.fromCode) && isMatchingUnit(m.fromUnit, triggeringUnitCode)
   );
 
   const isScvnOrTct = triggeringUnitCode === "SCVN" || triggeringUnitCode === "TCT";
@@ -994,6 +1035,18 @@ async function syncKpisBetweenUnits(
           existing.status = source.status;
         }
       } else {
+        let computedParentCode = map.toCode.split("-")[0];
+        if (map.toUnit === "SCVN") {
+          if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.01-/i.test(map.toCode)) {
+            computedParentCode = "VM1-I02.01";
+          } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.02-/i.test(map.toCode)) {
+            computedParentCode = "VM1-I02.02";
+          } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.03-/i.test(map.toCode)) {
+            computedParentCode = "VM1-I02.03";
+          } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.04-/i.test(map.toCode)) {
+            computedParentCode = "VM1-I02.04";
+          }
+        }
         const newRecord = {
           id: `new-${map.toUnit}-${map.toCode}`,
           unitCode: map.toUnit,
@@ -1006,7 +1059,7 @@ async function syncKpisBetweenUnits(
           unit: source.unit || "",
           status: source.status,
           isOverridden: true,
-          parentCode: map.toCode.split("-")[0]
+          parentCode: computedParentCode
         };
         targetMap.set(`${map.toUnit}_${map.toCode}`, newRecord as any);
         dbOps.push({
@@ -1022,7 +1075,7 @@ async function syncKpisBetweenUnits(
             unit: source.unit || "",
             status: source.status,
             isOverridden: true,
-            parentCode: map.toCode.split("-")[0]
+            parentCode: computedParentCode
           }
         });
       }
@@ -1033,11 +1086,33 @@ async function syncKpisBetweenUnits(
   if (shouldLoadScvnKpis) {
     const scvnRollupMap = new Map();
     for (const k of scvnKpis) {
-      scvnRollupMap.set(k.indicatorCode, { ...k });
+      const code = k.indicatorCode || "";
+      let pCode = k.parentCode;
+      if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.01-/i.test(code)) {
+        pCode = "VM1-I02.01";
+      } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.02-/i.test(code)) {
+        pCode = "VM1-I02.02";
+      } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.03-/i.test(code)) {
+        pCode = "VM1-I02.03";
+      } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.04-/i.test(code)) {
+        pCode = "VM1-I02.04";
+      }
+      scvnRollupMap.set(code, { ...k, parentCode: pCode });
     }
     targetMap.forEach((val: any, key: string) => {
       if (key.startsWith("SCVN_")) {
-        scvnRollupMap.set(val.indicatorCode, val);
+        const code = val.indicatorCode || "";
+        let pCode = val.parentCode;
+        if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.01-/i.test(code)) {
+          pCode = "VM1-I02.01";
+        } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.02-/i.test(code)) {
+          pCode = "VM1-I02.02";
+        } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.03-/i.test(code)) {
+          pCode = "VM1-I02.03";
+        } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.04-/i.test(code)) {
+          pCode = "VM1-I02.04";
+        }
+        scvnRollupMap.set(code, { ...val, parentCode: pCode });
       }
     });
 

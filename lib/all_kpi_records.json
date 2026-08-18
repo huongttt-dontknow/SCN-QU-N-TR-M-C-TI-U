@@ -188114,7 +188114,8 @@
     "title": "CM1-I02.01-CNGP",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "CM1-I02.01-CNGP"
+    "displayCode": "CM1-I02.01-CNGP",
+    "parentCode": "VM1-I02.01"
   },
   {
     "id": "SCVN-unit-CM1-I02.01-CR-weekly_7_5",
@@ -188131,7 +188132,8 @@
     "title": "CM1-I02.01-CR",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "CM1-I02.01-CR"
+    "displayCode": "CM1-I02.01-CR",
+    "parentCode": "VM1-I02.01"
   },
   {
     "id": "SCVN-unit-CM1-I02.02-CR-weekly_7_5",
@@ -188148,7 +188150,8 @@
     "title": "CM1-I02.02-CR",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "CM1-I02.02-CR"
+    "displayCode": "CM1-I02.02-CR",
+    "parentCode": "VM1-I02.02"
   },
   {
     "id": "SCVN-unit-CM1-I02.03-CR-weekly_7_5",
@@ -188165,7 +188168,8 @@
     "title": "CM1-I02.03-CR",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "CM1-I02.03-CR"
+    "displayCode": "CM1-I02.03-CR",
+    "parentCode": "VM1-I02.03"
   },
   {
     "id": "SCVN-unit-CM2-I01.01-CR-weekly_7_5",
@@ -188216,7 +188220,8 @@
     "title": "DM1-I02.01-DA01",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "DM1-I02.01-DA01"
+    "displayCode": "DM1-I02.01-DA01",
+    "parentCode": "VM1-I02.01"
   },
   {
     "id": "SCVN-unit-DM1-I02.02-DA01-weekly_7_5",
@@ -188233,7 +188238,8 @@
     "title": "DM1-I02.02-DA01",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "DM1-I02.02-DA01"
+    "displayCode": "DM1-I02.02-DA01",
+    "parentCode": "VM1-I02.02"
   },
   {
     "id": "SCVN-unit-DM2-I01.01-DA01-weekly_7_5",
@@ -188708,7 +188714,8 @@
     "title": "VM1-I02.01-AS",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.01-AS"
+    "displayCode": "VM1-I02.01-AS",
+    "parentCode": "VM1-I02.01"
   },
   {
     "id": "SCVN-unit-VM1-I02.01-Lego-weekly_7_5",
@@ -188725,7 +188732,8 @@
     "title": "VM1-I02.01-Lego",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.01-Lego"
+    "displayCode": "VM1-I02.01-Lego",
+    "parentCode": "VM1-I02.01"
   },
   {
     "id": "SCVN-unit-VM1-I02.01-NDTH-weekly_7_5",
@@ -188742,7 +188750,8 @@
     "title": "VM1-I02.01-NDTH",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.01-NDTH"
+    "displayCode": "VM1-I02.01-NDTH",
+    "parentCode": "VM1-I02.01"
   },
   {
     "id": "SCVN-unit-VM1-I02.01-WF-weekly_7_5",
@@ -188759,7 +188768,8 @@
     "title": "VM1-I02.01-WF",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.01-WF"
+    "displayCode": "VM1-I02.01-WF",
+    "parentCode": "VM1-I02.01"
   },
   {
     "id": "SCVN-unit-VM1-I02.02-weekly_7_5",
@@ -188792,7 +188802,8 @@
     "title": "VM1-I02.02-AS",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.02-AS"
+    "displayCode": "VM1-I02.02-AS",
+    "parentCode": "VM1-I02.02"
   },
   {
     "id": "SCVN-unit-VM1-I02.02-Lego-weekly_7_5",
@@ -188809,7 +188820,8 @@
     "title": "VM1-I02.02-Lego",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.02-Lego"
+    "displayCode": "VM1-I02.02-Lego",
+    "parentCode": "VM1-I02.02"
   },
   {
     "id": "SCVN-unit-VM1-I02.02-NDTH-weekly_7_5",
@@ -188826,7 +188838,8 @@
     "title": "VM1-I02.02-NDTH",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.02-NDTH"
+    "displayCode": "VM1-I02.02-NDTH",
+    "parentCode": "VM1-I02.02"
   },
   {
     "id": "SCVN-unit-VM1-I02.02-WF-weekly_7_5",
@@ -188843,7 +188856,8 @@
     "title": "VM1-I02.02-WF",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.02-WF"
+    "displayCode": "VM1-I02.02-WF",
+    "parentCode": "VM1-I02.02"
   },
   {
     "id": "SCVN-unit-VM1-I02.03-weekly_7_5",
@@ -188876,7 +188890,8 @@
     "title": "VM1-I02.03-AS",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.03-AS"
+    "displayCode": "VM1-I02.03-AS",
+    "parentCode": "VM1-I02.03"
   },
   {
     "id": "SCVN-unit-VM1-I02.03-Lego-weekly_7_5",
@@ -188893,7 +188908,8 @@
     "title": "VM1-I02.03-Lego",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.03-Lego"
+    "displayCode": "VM1-I02.03-Lego",
+    "parentCode": "VM1-I02.03"
   },
   {
     "id": "SCVN-unit-VM1-I02.03-NDTH-weekly_7_5",
@@ -188910,7 +188926,8 @@
     "title": "VM1-I02.03-NDTH",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.03-NDTH"
+    "displayCode": "VM1-I02.03-NDTH",
+    "parentCode": "VM1-I02.03"
   },
   {
     "id": "SCVN-unit-VM1-I02.03-WF-weekly_7_5",
@@ -188927,7 +188944,8 @@
     "title": "VM1-I02.03-WF",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.03-WF"
+    "displayCode": "VM1-I02.03-WF",
+    "parentCode": "VM1-I02.03"
   },
   {
     "id": "SCVN-unit-VM1-I02.04-weekly_7_5",
@@ -188960,7 +188978,8 @@
     "title": "VM1-I02.04-AS",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.04-AS"
+    "displayCode": "VM1-I02.04-AS",
+    "parentCode": "VM1-I02.04"
   },
   {
     "id": "SCVN-unit-VM1-I02.04-Lego-weekly_7_5",
@@ -188977,7 +188996,8 @@
     "title": "VM1-I02.04-Lego",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.04-Lego"
+    "displayCode": "VM1-I02.04-Lego",
+    "parentCode": "VM1-I02.04"
   },
   {
     "id": "SCVN-unit-VM1-I02.04-NDTH-weekly_7_5",
@@ -188994,7 +189014,8 @@
     "title": "VM1-I02.04-NDTH",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.04-NDTH"
+    "displayCode": "VM1-I02.04-NDTH",
+    "parentCode": "VM1-I02.04"
   },
   {
     "id": "SCVN-unit-VM1-I02.04-WF-weekly_7_5",
@@ -189011,7 +189032,8 @@
     "title": "VM1-I02.04-WF",
     "unit": "",
     "isOverridden": true,
-    "displayCode": "VM1-I02.04-WF"
+    "displayCode": "VM1-I02.04-WF",
+    "parentCode": "VM1-I02.04"
   },
   {
     "id": "SCVN-unit-VM1-I05.04-weekly_7_5",
@@ -189662,6 +189684,57 @@
     "status": "Chưa thực hiện",
     "title": "MM1-I02.01.01",
     "unit": "",
+    "isOverridden": true
+  },
+  {
+    "id": "SCVN-unit-SM1-I02.01-SCS-weekly_8_3",
+    "indicatorCode": "SM1-I02.01-SCS",
+    "unitCode": "SCVN",
+    "productCode": null,
+    "periodType": "weekly",
+    "periodKey": "weekly_8_3",
+    "targetValue": 189696000,
+    "actualValue": 0,
+    "weight": 0,
+    "explanation": "",
+    "status": "Chưa thực hiện",
+    "title": "Doanh thu BP Studio (SCS)",
+    "unit": "VNĐ",
+    "parentCode": "VM1-I02.01",
+    "isOverridden": true
+  },
+  {
+    "id": "SCVN-unit-MM1-I02.01-SCMU-weekly_8_3",
+    "indicatorCode": "MM1-I02.01-SCMU",
+    "unitCode": "SCVN",
+    "productCode": null,
+    "periodType": "weekly",
+    "periodKey": "weekly_8_3",
+    "targetValue": 60000000,
+    "actualValue": 0,
+    "weight": 0,
+    "explanation": "",
+    "status": "Chưa thực hiện",
+    "title": "Doanh thu BP Music (SCMU)",
+    "unit": "VNĐ",
+    "parentCode": "VM1-I02.01",
+    "isOverridden": true
+  },
+  {
+    "id": "SCVN-unit-NM1-I02.01-CNGP-weekly_8_3",
+    "indicatorCode": "NM1-I02.01-CNGP",
+    "unitCode": "SCVN",
+    "productCode": null,
+    "periodType": "weekly",
+    "periodKey": "weekly_8_3",
+    "targetValue": 74516129,
+    "actualValue": 0,
+    "weight": 0,
+    "explanation": "",
+    "status": "Chưa thực hiện",
+    "title": "Doanh thu CNGP (CN)",
+    "unit": "VNĐ",
+    "parentCode": "VM1-I02.01",
     "isOverridden": true
   }
 ]
