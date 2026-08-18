@@ -8,9 +8,10 @@ import { MASTER_KPI_DATA } from "@/lib/kpiMasterData";
 interface Props {
   unitCode?: string;
   periodKey?: string;
+  hideAbsoluteRevenue?: boolean;
 }
 
-export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey = "monthly_6" }: Props) {
+export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey = "monthly_6", hideAbsoluteRevenue = false }: Props) {
   const { theme } = useApp();
   const isLight = theme === "light";
 
@@ -92,6 +93,9 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
             formatter={(val: any, name: any, item: any) => {
               const num = Number(val) || 0;
               const pct = item?.payload?.sharePct || 0;
+              if (hideAbsoluteRevenue) {
+                return [`Tỷ trọng: ${pct}%`, name];
+              }
               const valStr = num >= 1000 ? `${(num / 1000).toFixed(2)} Tỷ` : `${num.toLocaleString()} Triệu`;
               return [`${valStr} VNĐ (${pct}%)`, name];
             }}

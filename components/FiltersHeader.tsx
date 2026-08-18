@@ -11,9 +11,7 @@ export interface FiltersHeaderProps {
 export default function FiltersHeader({ hideFrequency = false, children }: FiltersHeaderProps = {}) {
   const { filters, setFilters, currentLoggedUser } = useApp();
 
-  const isRestricted = 
-    currentLoggedUser?.role === "Trưởng đơn vị" || 
-    currentLoggedUser?.role === "Người dùng";
+  const isRestricted = currentLoggedUser?.role === "Người dùng";
 
   const units = [
     { code: "SCVN", name: "BU Sconnect Việt Nam" },

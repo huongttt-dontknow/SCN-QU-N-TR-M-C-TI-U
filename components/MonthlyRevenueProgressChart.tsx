@@ -17,9 +17,10 @@ import {
 
 interface MonthlyRevenueProgressChartProps {
   kpiDataList?: any[];
+  hideAbsoluteRevenue?: boolean;
 }
 
-export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyRevenueProgressChartProps = {}) {
+export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteRevenue = false }: MonthlyRevenueProgressChartProps = {}) {
   const { filters, theme } = useApp();
   const isLight = theme === "light";
   const month = Number(filters.month) || 7;
@@ -193,8 +194,12 @@ export default function MonthlyRevenueProgressChart({ kpiDataList }: MonthlyReve
               return [
                 <div key={props.payload.code} className="space-y-1 text-xs">
                   <div className="text-emerald-500 font-extrabold">Tiến độ: {pct}%</div>
-                  <div>Thực tế tích lũy: {formatRevenue(actual)}</div>
-                  <div className="text-[var(--text-muted)]">Kế hoạch tháng: {formatRevenue(target)}</div>
+                  {!hideAbsoluteRevenue && (
+                    <>
+                      <div>Thực tế tích lũy: {formatRevenue(actual)}</div>
+                      <div className="text-[var(--text-muted)]">Kế hoạch tháng: {formatRevenue(target)}</div>
+                    </>
+                  )}
                 </div>,
                 null
               ];

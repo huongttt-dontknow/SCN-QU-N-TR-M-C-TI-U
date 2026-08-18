@@ -73,7 +73,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         try {
           const parsed = JSON.parse(savedUser);
           setCurrentLoggedUserState(parsed);
-          const isRestricted = parsed.role === "Trưởng đơn vị" || parsed.role === "Người dùng";
+          const isRestricted = parsed.role === "Người dùng";
           if (isRestricted) {
             setFilters(prev => ({ ...prev, unitCode: parsed.unitCode }));
           }
@@ -129,7 +129,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       if (user) {
         localStorage.setItem("sconnect_user", JSON.stringify(user));
-        const isRestricted = user.role === "Trưởng đơn vị" || user.role === "Người dùng";
+        const isRestricted = user.role === "Người dùng";
         if (isRestricted) {
           setFilters(prev => ({
             ...prev,

@@ -64,6 +64,17 @@ export default function DashboardPage() {
     }
   };
 
+  const defaultKeyActions = [
+    { id: 1, title: "Đánh giá hiệu quả DA sản phẩm lần 1", note: "(Đã trao đổi với 1 số đơn vị có sản phẩm cần thay đổi - các sản phẩm mới <2 tháng k đánh giá)", progress: 100 },
+    { id: 2, title: "Tiếp tục DA AIVA Asset Library và DA AIVA Production", note: "Demo xong khung quản lý tài sản và phái sinh", progress: 100 },
+    { id: 3, title: "Hoàn thiện hệ thống quản trị mục tiêu", note: "Đã public test từ 13/8 - các TĐV test hết tuần 3 tháng 8 - link", progress: 100 },
+    { id: 4, title: "Tối ưu hóa quy trình báo cáo và lập kế hoạch", note: "Áp dụng biểu mẫu và tần suất chuẩn hóa theo bộ chỉ tiêu SCVN", progress: 100 },
+  ];
+
+  const [keyActions, setKeyActions] = useState<any[]>(defaultKeyActions);
+  const [isEditingKeyActions, setIsEditingKeyActions] = useState(false);
+  const [isKeyActionsSaved, setIsKeyActionsSaved] = useState(false);
+
   const [bodComment, setBodComment] = useState("");
   const [savedComment, setSavedComment] = useState("");
   const [isSaved, setIsSaved] = useState(false);
@@ -87,14 +98,72 @@ export default function DashboardPage() {
   const [isLoadingProductKpis, setIsLoadingProductKpis] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    const fetchBodComment = async () => {
       const pKey = getPeriodKey();
-      const key = `bod_comment_${filters.unitCode}_${pKey}`;
-      const saved = localStorage.getItem(key) || "";
-      setSavedComment(saved);
-      setBodComment(saved);
-    }
+      const localKey = `bod_comment_${filters.unitCode}_${pKey}`;
+      let initialComment = "";
+      if (typeof window !== "undefined") {
+        initialComment = localStorage.getItem(localKey) || "";
+      }
+      setSavedComment(initialComment);
+      setBodComment(initialComment);
+
+      try {
+        const res = await fetch(`/api/system/bod-comment?unitCode=${filters.unitCode}&periodKey=${pKey}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.comment !== undefined) {
+            setSavedComment(data.comment || "");
+            setBodComment(data.comment || "");
+            if (typeof window !== "undefined" && data.comment) {
+              localStorage.setItem(localKey, data.comment);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải chỉ đạo BOD từ CSDL đồng bộ:", err);
+      }
+    };
+
+    fetchBodComment();
     setIsSaved(false);
+  }, [filters]);
+
+  useEffect(() => {
+    const fetchKeyActions = async () => {
+      const pKey = getPeriodKey();
+      const localKey = `key_actions_${filters.unitCode}_${pKey}`;
+
+      try {
+        const res = await fetch(`/api/system/key-actions?unitCode=${filters.unitCode}&periodKey=${pKey}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.actions) && data.actions.length > 0) {
+            setKeyActions(data.actions);
+            if (typeof window !== "undefined") {
+              localStorage.setItem(localKey, JSON.stringify(data.actions));
+            }
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải hành động trọng tâm từ CSDL đồng bộ:", err);
+      }
+
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem(localKey);
+        if (saved) {
+          try {
+            setKeyActions(JSON.parse(saved));
+            return;
+          } catch (e) {}
+        }
+      }
+      setKeyActions(defaultKeyActions);
+    };
+
+    fetchKeyActions();
+    setIsKeyActionsSaved(false);
   }, [filters]);
 
   useEffect(() => {
@@ -243,15 +312,76 @@ export default function DashboardPage() {
     fetchProductKpis();
   }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
-  const handleSaveComment = () => {
+  const handleAddAction = () => {
+    if (keyActions.length >= 6) return;
+    setKeyActions(prev => [
+      ...prev,
+      {
+        id: prev.length + 1,
+        title: "",
+        note: "",
+        progress: 100
+      }
+    ]);
+  };
+
+  const handleRemoveAction = (index: number) => {
+    if (keyActions.length <= 1) return;
+    setKeyActions(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSaveKeyActions = async () => {
+    const pKey = getPeriodKey();
     if (typeof window !== "undefined") {
-      const pKey = getPeriodKey();
+      const localKey = `key_actions_${filters.unitCode}_${pKey}`;
+      localStorage.setItem(localKey, JSON.stringify(keyActions));
+    }
+    setIsKeyActionsSaved(true);
+    setIsEditingKeyActions(false);
+
+    try {
+      await fetch("/api/system/key-actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          unitCode: filters.unitCode,
+          periodKey: pKey,
+          actions: keyActions,
+          author: currentLoggedUser?.fullname || "Ban Giám Đốc",
+        }),
+      });
+    } catch (err) {
+      console.error("Lỗi khi đồng bộ hành động trọng tâm:", err);
+    }
+
+    setTimeout(() => setIsKeyActionsSaved(false), 2500);
+  };
+
+  const handleSaveComment = async () => {
+    const pKey = getPeriodKey();
+    if (typeof window !== "undefined") {
       const key = `bod_comment_${filters.unitCode}_${pKey}`;
       localStorage.setItem(key, bodComment);
       setSavedComment(bodComment);
     }
     setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
+
+    try {
+      await fetch("/api/system/bod-comment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          unitCode: filters.unitCode,
+          periodKey: pKey,
+          comment: bodComment,
+          author: currentLoggedUser?.fullname || "Ban Giám Đốc",
+        }),
+      });
+    } catch (err) {
+      console.error("Lỗi khi đồng bộ chỉ đạo BOD:", err);
+    }
+
+    setTimeout(() => setIsSaved(false), 2500);
   };
 
   const getUnitName = (code: string) => {
@@ -1150,8 +1280,36 @@ export default function DashboardPage() {
 
   const prevPeriodKey = getPrevPeriodKey(filters.periodType, filters.month, filters.week, filters.quarter, filters.year);
 
+  // Phân quyền Dashboard: Trưởng đơn vị được xem SCVN (dạng %) & đơn vị mình, Người dùng xem đơn vị mình
+  const isUnitHead = currentLoggedUser?.role === "Trưởng đơn vị";
+  const isStandardUser = currentLoggedUser?.role === "Người dùng";
+
+  const isAccessDenied = isStandardUser 
+    ? (filters.unitCode !== currentLoggedUser?.unitCode)
+    : isUnitHead 
+      ? (filters.unitCode !== currentLoggedUser?.unitCode && filters.unitCode !== "SCVN")
+      : false;
+
+  const isRestrictedRevenueView = isUnitHead && filters.unitCode === "SCVN";
+
+  const canEditKeyActions = (() => {
+    if (!currentLoggedUser) return true; // dev fallback
+    const role = currentLoggedUser.role?.toLowerCase() || "";
+    const isSuperAdmin = role === "admin" || role.includes("quản trị") || role.includes("giam doc") || role.includes("gđ bu");
+    if (isSuperAdmin) return true;
+
+    if (isUnitHead) {
+      if (filters.unitCode === "SCVN") {
+        return false;
+      }
+      return currentLoggedUser.unitCode === filters.unitCode || currentLoggedUser.unitCode === "SCVN";
+    }
+    return false;
+  })();
+
   // 2. Tính BXH Tăng Trưởng Doanh Thu
   const formatRevenueVal = (val: number) => {
+    if (isRestrictedRevenueView) return "*** VNĐ";
     if (val >= 1e9) {
       return `${(val / 1e9).toFixed(1)} Tỷ`;
     }
@@ -1480,10 +1638,6 @@ export default function DashboardPage() {
 
   const radarData = dynamicRadarData || staticRadar;
 
-  // Phân quyền Dashboard: Trưởng đơn vị / Người dùng chỉ được xem đơn vị của mình
-  const isRestrictedUser = currentLoggedUser?.role === "Trưởng đơn vị" || currentLoggedUser?.role === "Người dùng";
-  const isAccessDenied = isRestrictedUser && filters.unitCode !== currentLoggedUser?.unitCode;
-
   if (isAccessDenied) {
     return (
       <div className="flex flex-col gap-6 text-white text-sm">
@@ -1534,7 +1688,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-[var(--text-muted)] mt-1.5 font-semibold">
                   Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng
                 </p>
-                <MonthlyRevenueProgressChart kpiDataList={scvnKpis.length > 0 ? scvnKpis : dbKpis} />
+                <MonthlyRevenueProgressChart kpiDataList={scvnKpis.length > 0 ? scvnKpis : dbKpis} hideAbsoluteRevenue={isRestrictedRevenueView} />
               </div>
               <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
                 Biểu đồ thể hiện mức độ hoàn thành tiến độ doanh thu của SCVN và các đơn vị thành viên
@@ -1709,9 +1863,9 @@ export default function DashboardPage() {
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
-                {revActualVal} | Thực tế đạt được
+                {isRestrictedRevenueView ? "*** VNĐ" : revActualVal} | Thực tế đạt được
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {revTargetVal})</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {isRestrictedRevenueView ? "*** VNĐ" : revTargetVal})</span>
             </div>
 
             <div className="mt-2.5 pt-2 border-t border-white/5 space-y-1 text-[10px] font-bold text-slate-400">
@@ -1914,13 +2068,14 @@ export default function DashboardPage() {
               <YAxis 
                 yAxisId="left" 
                 tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11 }} 
-                tickFormatter={(val) => val >= 1000 ? `${(val / 1000).toFixed(1)}T` : `${val}Tr`} 
-                label={{ value: 'Triệu VNĐ', angle: -90, position: 'insideLeft', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} 
+                tickFormatter={(val) => isRestrictedRevenueView ? "" : (val >= 1000 ? `${(val / 1000).toFixed(1)}T` : `${val}Tr`)} 
+                label={{ value: isRestrictedRevenueView ? "% HT" : 'Triệu VNĐ', angle: -90, position: 'insideLeft', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} 
               />
               <YAxis yAxisId="right" orientation="right" tick={{ fill: theme === "light" ? "#0f172a" : "#94a3b8", fontSize: 11 }} label={{ value: '% HT', angle: 90, position: 'insideRight', fill: theme === "light" ? "#0f172a" : "#94a3b8" }} />
               <RechartsTooltip 
                 formatter={(value: any, name: any) => {
                   if (name === "% Hoàn thành") return [`${value}%`, name];
+                  if (isRestrictedRevenueView) return ["*** VNĐ", name];
                   const num = Number(value) || 0;
                   const str = num >= 1000 ? `${(num / 1000).toFixed(2)} Tỷ VNĐ (${num.toLocaleString()} Triệu)` : `${num.toLocaleString()} Triệu VNĐ`;
                   return [str, name];
@@ -2000,16 +2155,16 @@ export default function DashboardPage() {
               <>
                 <div>
                   <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Đơn vị</h4>
-                  <RevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
+                  <RevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} hideAbsoluteRevenue={isRestrictedRevenueView} />
                 </div>
                 <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
                   <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
-                  <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
+                  <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} hideAbsoluteRevenue={isRestrictedRevenueView} />
                 </div>
                 {filters.unitCode === "SCVN" && (
                   <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
                     <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Sản phẩm</h4>
-                    <ProductRevenueDonutChart periodKey={periodKey} periodType={filters.periodType || "weekly"} />
+                    <ProductRevenueDonutChart periodKey={periodKey} periodType={filters.periodType || "weekly"} hideAbsoluteRevenue={isRestrictedRevenueView} />
                   </div>
                 )}
               </>
@@ -2017,11 +2172,11 @@ export default function DashboardPage() {
               <>
                 <div>
                   <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Nguồn</h4>
-                  <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} />
+                  <SourceRevenueDonutChart unitCode={filters.unitCode} periodKey={periodKey} hideAbsoluteRevenue={isRestrictedRevenueView} />
                 </div>
                 <div className="border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-4">
                   <h4 className="text-xs font-extrabold text-white uppercase mb-2 text-center">Doanh thu theo Sản phẩm</h4>
-                  <ProductRevenueDonutChart periodKey={periodKey} periodType={filters.periodType || "weekly"} unitCode={filters.unitCode} />
+                  <ProductRevenueDonutChart periodKey={periodKey} periodType={filters.periodType || "weekly"} unitCode={filters.unitCode} hideAbsoluteRevenue={isRestrictedRevenueView} />
                 </div>
               </>
             )}
@@ -2268,6 +2423,166 @@ export default function DashboardPage() {
       </>
     )}
 
+      {/* 5.5. CÁC HÀNH ĐỘNG TRỌNG TÂM ĐÃ TRIỂN KHAI TRONG KỲ */}
+      <div className="glass-panel p-6 space-y-6 border-l-4 border-l-emerald-500">
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-white/10">
+          <div>
+            <h2 className="text-lg md:text-xl font-black text-emerald-500 dark:text-emerald-400 tracking-tight uppercase">
+              CÁC HÀNH ĐỘNG TRỌNG TÂM ĐÃ TRIỂN KHAI {filters.periodType === "weekly" ? `TUẦN ${filters.week} THÁNG ${filters.month}` : filters.periodType === "monthly" ? `THÁNG ${filters.month}` : filters.periodType === "quarterly" ? `QUÝ ${filters.quarter}` : "NĂM"} {filters.year}
+            </h2>
+            <p className="text-xs text-[var(--text-muted)] mt-1 font-semibold">
+              {filters.unitCode === "SCVN"
+                ? "Các nhiệm vụ, dự án trọng tâm đã thực hiện theo OKR & chỉ đạo của BU Sconnect Việt Nam"
+                : `Các nhiệm vụ, dự án trọng tâm đã thực hiện theo OKR & chỉ đạo của đơn vị ${getUnitName(filters.unitCode)}`}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {isKeyActionsSaved && (
+              <span className="text-xs text-emerald-400 font-extrabold animate-pulse">
+                ✓ Đã lưu & đồng bộ {keyActions.length} hành động trọng tâm!
+              </span>
+            )}
+            {canEditKeyActions && (
+              !isEditingKeyActions ? (
+                <button
+                  onClick={() => setIsEditingKeyActions(true)}
+                  className="px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-extrabold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+                >
+                  ✏️ Chỉnh sửa / Nhập hành động ({keyActions.length} hộp)
+                </button>
+              ) : (
+                <div className="flex flex-wrap items-center gap-2">
+                  {keyActions.length < 6 && (
+                    <button
+                      onClick={handleAddAction}
+                      className="px-3 py-1.5 rounded-lg bg-lime-500/20 hover:bg-lime-500/30 text-lime-300 border border-lime-500/40 text-xs font-black transition-all flex items-center gap-1 cursor-pointer"
+                    >
+                      ➕ Thêm hộp ({keyActions.length}/6)
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setIsEditingKeyActions(false)}
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-extrabold transition-all cursor-pointer"
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    onClick={handleSaveKeyActions}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black shadow transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    💾 Lưu hành động trọng tâm
+                  </button>
+                </div>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Chế độ Chỉnh sửa (Form Edit cho Admin / GĐ BU) */}
+        {isEditingKeyActions ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 rounded-2xl bg-slate-900 text-white border border-emerald-500/30 shadow-xl">
+            {keyActions.map((item, idx) => (
+              <div key={item.id || idx} className="p-4 rounded-xl bg-slate-950/90 border border-slate-700/80 space-y-3 shadow-md">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-lime-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-lime-400"></span>
+                      Hành động {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    {keyActions.length > 1 && (
+                      <button
+                        onClick={() => handleRemoveAction(idx)}
+                        className="text-[10px] text-rose-400 hover:text-rose-300 font-extrabold px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/20 cursor-pointer"
+                      >
+                        🗑️ Xóa
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <label className="text-[11px] font-black text-amber-300 uppercase">Hoàn thành (%):</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={item.progress ?? 100}
+                      onChange={(e) => {
+                        const val = Math.min(100, Math.max(0, Number(e.target.value) || 0));
+                        setKeyActions(prev => prev.map((a, i) => i === idx ? { ...a, progress: val } : a));
+                      }}
+                      className="w-16 bg-slate-900 border border-amber-400/60 rounded-md px-2 py-1 text-xs text-center text-amber-300 font-black focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-black text-amber-300 dark:text-yellow-300 uppercase block mb-1 tracking-wider flex items-center gap-1">
+                    📌 TÊN HÀNH ĐỘNG TRỌNG TÂM:
+                  </label>
+                  <input
+                    type="text"
+                    value={item.title || ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setKeyActions(prev => prev.map((a, i) => i === idx ? { ...a, title: val } : a));
+                    }}
+                    placeholder={`Nhập tên hành động trọng tâm ${idx + 1}...`}
+                    className="w-full bg-slate-900 text-white border border-slate-700 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400 font-bold placeholder:text-slate-500 shadow-inner"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-black text-lime-400 dark:text-lime-300 uppercase block mb-1 tracking-wider flex items-center gap-1">
+                    📝 GHI CHÚ / DIỄN GIẢI KẾT QUẢ:
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={item.note || ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setKeyActions(prev => prev.map((a, i) => i === idx ? { ...a, note: val } : a));
+                    }}
+                    placeholder={`Nhập chi tiết/diễn giải kết quả cho hành động ${idx + 1}...`}
+                    className="w-full bg-slate-900 text-slate-100 border border-slate-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-lime-400 resize-none font-semibold placeholder:text-slate-500 shadow-inner"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+            {/* Hiển thị dạng Card thông tin (matching reference design) */}
+            {keyActions.map((item, idx) => {
+              const displayTitle = item.title || defaultKeyActions[idx]?.title || `Hành động trọng tâm ${idx + 1}`;
+              const displayNote = item.note || defaultKeyActions[idx]?.note || "";
+
+              return (
+                <div key={item.id || idx} className="space-y-1.5 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-black text-emerald-600 dark:text-emerald-400 tracking-wider">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-[11px] font-black px-2.5 py-0.5 rounded border bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30">
+                      {item.progress ?? 100}% Hoàn thành
+                    </span>
+                  </div>
+                  <div className="h-0.5 w-full bg-emerald-500/40 rounded-full group-hover:bg-emerald-500 transition-all"></div>
+                  <h4 className="text-sm md:text-base font-black text-emerald-400 leading-snug tracking-tight pt-1">
+                    {displayTitle}
+                  </h4>
+                  {displayNote && (
+                    <p className="text-xs text-white font-semibold leading-relaxed whitespace-pre-wrap">
+                      {displayNote}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       {/* 6. KHU VỰC CHỈ ĐẠO CỦA BOD (BOTTOM SECTION) */}
       <div className="glass-panel p-5 space-y-4">
         <h3 className="text-sm font-black text-[var(--accent-purple)] uppercase tracking-wider flex items-center gap-2">
@@ -2284,7 +2599,7 @@ export default function DashboardPage() {
           className="w-full bg-slate-950 border border-[var(--glass-border)] rounded-xl p-3 text-sm text-white focus:outline-none focus:border-[var(--accent-purple)] resize-none"
         />
         <div className="flex justify-end gap-3 items-center">
-          {isSaved && <span className="text-sm text-emerald-500 font-extrabold">✓ Đã lưu thành công!</span>}
+          {isSaved && <span className="text-sm text-emerald-500 font-extrabold">✓ Đã lưu và đồng bộ chỉ đạo thành công cho tất cả TĐV!</span>}
           <button
             onClick={handleSaveComment}
             className="bg-purple-700 hover:bg-purple-600 text-white text-sm font-extrabold px-5 py-2.5 rounded-xl shadow transition-all"

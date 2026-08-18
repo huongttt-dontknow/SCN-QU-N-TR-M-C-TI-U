@@ -1,0 +1,176 @@
+{
+  "SCVN_weekly_8_2": {
+    "actions": [
+      {
+        "id": 1,
+        "title": "BU SCVN: Đánh giá hiệu quả DA sản phẩm",
+        "note": "Chỉ đạo toàn BU",
+        "progress": 100
+      },
+      {
+        "id": 2,
+        "title": "BU SCVN: Triển khai AIVA Production",
+        "note": "Chỉ đạo toàn BU",
+        "progress": 100
+      }
+    ],
+    "unitCode": "SCVN",
+    "periodKey": "weekly_8_2",
+    "updatedBy": "GĐ BU SCVN",
+    "updatedAt": "2026-08-18T05:29:24.855Z"
+  },
+  "SCVN_weekly_8_1": {
+    "actions": [
+      {
+        "id": 1,
+        "title": "dự án tài sản",
+        "note": "",
+        "progress": 95
+      },
+      {
+        "id": 2,
+        "title": "",
+        "note": "",
+        "progress": 96
+      },
+      {
+        "id": 3,
+        "title": "",
+        "note": "",
+        "progress": 100
+      },
+      {
+        "id": 4,
+        "title": "",
+        "note": "",
+        "progress": 100
+      }
+    ],
+    "unitCode": "SCVN",
+    "periodKey": "weekly_8_1",
+    "updatedBy": "Trần Thị Thu Hương",
+    "updatedAt": "2026-08-18T05:16:22.878Z"
+  },
+  "SCVN_weekly_7_1": {
+    "actions": [
+      {
+        "id": 1,
+        "title": "Đánh giá hiệu quả DA sản phẩm lần 1",
+        "note": "(Đã trao đổi với 1 số đơn vị có sản phẩm cần thay đổi - các sản phẩm mới <2 tháng k đánh giá)",
+        "progress": 100
+      },
+      {
+        "id": 2,
+        "title": "Tiếp tục DA AIVA Asset Library và DA AIVA Production",
+        "note": "Demo xong khung quản lý tài sản và phái sinh",
+        "progress": 100
+      }
+    ],
+    "unitCode": "SCVN",
+    "periodKey": "weekly_7_1",
+    "updatedBy": "Trần Thị Thu Hương",
+    "updatedAt": "2026-08-18T05:23:51.895Z"
+  },
+  "SCVN_weekly_8_3": {
+    "actions": [
+      {
+        "id": 1,
+        "title": "Hành động 1: Đánh giá hiệu quả DA sản phẩm",
+        "note": "Nhiệm vụ 1",
+        "progress": 100
+      },
+      {
+        "id": 2,
+        "title": "Hành động 2: Triển khai AIVA Production",
+        "note": "Nhiệm vụ 2",
+        "progress": 95
+      },
+      {
+        "id": 3,
+        "title": "Hành động 3: Hoàn thiện hệ thống OMS",
+        "note": "Nhiệm vụ 3",
+        "progress": 100
+      },
+      {
+        "id": 4,
+        "title": "Hành động 4: Tối ưu quy trình báo cáo",
+        "note": "Nhiệm vụ 4",
+        "progress": 90
+      },
+      {
+        "id": 5,
+        "title": "Hành động 5: Mở rộng đào tạo nhân sự OKR",
+        "note": "Nhiệm vụ 5 bổ sung",
+        "progress": 80
+      },
+      {
+        "id": 6,
+        "title": "Hành động 6: Kiểm thử hệ thống tự động hóa",
+        "note": "Nhiệm vụ 6 bổ sung",
+        "progress": 100
+      }
+    ],
+    "unitCode": "SCVN",
+    "periodKey": "weekly_8_3",
+    "updatedBy": "GĐ BU SCVN",
+    "updatedAt": "2026-08-18T05:23:59.350Z"
+  },
+  "Wofloo_weekly_7_1": {
+    "actions": [
+      {
+        "id": 1,
+        "title": "Đánh giá hiệu quả DA sản phẩm lần 1",
+        "note": "(Đã trao đổi với 1 số đơn vị có sản phẩm cần thay đổi - các sản phẩm mới <2 tháng k đánh giá)",
+        "progress": 100
+      },
+      {
+        "id": 2,
+        "title": "Tiếp tục DA AIVA Asset Library và DA AIVA Production",
+        "note": "Demo xong khung quản lý tài sản và phái sinh",
+        "progress": 100
+      },
+      {
+        "id": 3,
+        "title": "Hoàn thiện hệ thống quản trị mục tiêu",
+        "note": "Đã public test từ 13/8 - các TĐV test hết tuần 3 tháng 8 - link",
+        "progress": 100
+      },
+      {
+        "id": 4,
+        "title": "Tối ưu hóa quy trình báo cáo và lập kế hoạch",
+        "note": "Áp dụng biểu mẫu và tần suất chuẩn hóa theo bộ chỉ tiêu SCVN",
+        "progress": 100
+      }
+    ],
+    "unitCode": "Wofloo",
+    "periodKey": "weekly_7_1",
+    "updatedBy": "Genci",
+    "updatedAt": "2026-08-18T05:58:50.851Z"
+  },
+  "SOT_weekly_8_2": {
+    "actions": [
+      {
+        "id": 1,
+        "title": "SOT: Hoàn thành 100% KPI sản xuất Animation",
+        "note": "Trưởng đơn vị SOT đã thực hiện",
+        "progress": 95
+      },
+      {
+        "id": 2,
+        "title": "SOT: Tối ưu quy trình render 3D",
+        "note": "Trưởng đơn vị SOT đã thực hiện",
+        "progress": 100
+      },
+      {
+        "id": 3,
+        "title": "SOT: Đào tạo nhân sự kỹ thuật mới",
+        "note": "Trưởng đơn vị SOT đã thực hiện",
+        "progress": 90
+      }
+    ],
+    "unitCode": "SOT",
+    "periodKey": "weekly_8_2",
+    "updatedBy": "TĐV SOT",
+    "updatedAt": "2026-08-18T05:29:24.864Z"
+  }
+}

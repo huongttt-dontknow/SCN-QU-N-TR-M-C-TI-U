@@ -9,6 +9,7 @@ interface Props {
   periodKey?: string;
   periodType?: string;
   unitCode?: string;
+  hideAbsoluteRevenue?: boolean;
 }
 
 interface ChartItem {
@@ -17,7 +18,7 @@ interface ChartItem {
   sharePct: number;
 }
 
-export default function ProductRevenueDonutChart({ periodKey = "monthly_7", periodType = "weekly", unitCode = "SCVN" }: Props) {
+export default function ProductRevenueDonutChart({ periodKey = "monthly_7", periodType = "weekly", unitCode = "SCVN", hideAbsoluteRevenue = false }: Props) {
   const { theme } = useApp();
   const isLight = theme === "light";
   const [data, setData] = useState<ChartItem[]>([]);
@@ -137,6 +138,9 @@ export default function ProductRevenueDonutChart({ periodKey = "monthly_7", peri
             formatter={(val: any, name: any, item: any) => {
               const num = Number(val) || 0;
               const pct = item?.payload?.sharePct || 0;
+              if (hideAbsoluteRevenue) {
+                return [`Tỷ trọng: ${pct}%`, name];
+              }
               const valStr = num >= 1000 ? `${(num / 1000).toFixed(2)} Tỷ` : `${num.toLocaleString()} Triệu`;
               return [`${valStr} VNĐ (${pct}%)`, name];
             }}
