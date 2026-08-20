@@ -675,7 +675,14 @@ export async function POST(request: Request) {
         saveOps.push(
           prisma.kpiData.update({
             where: { id: record.id },
-            data: updateData
+            data: {
+              ...updateData,
+              ...(u.title ? { title: u.title } : {}),
+              ...(u.unit ? { unit: u.unit } : {}),
+              ...(u.formula ? { formula: u.formula } : {}),
+              ...(u.group ? { group: u.group } : {}),
+              ...(u.parentCode !== undefined ? { parentCode: u.parentCode } : {})
+            }
           })
         );
       } else {
@@ -695,6 +702,11 @@ export async function POST(request: Request) {
               explanation: u.explanation || "",
               status: u.status || "Đang thực hiện",
               isOverridden: true,
+              title: u.title || u.indicatorCode,
+              unit: u.unit || "",
+              formula: u.formula || "",
+              group: u.group || "",
+              parentCode: u.parentCode || ""
             }
           })
         );
@@ -732,6 +744,11 @@ export async function POST(request: Request) {
                 weight: weightVal !== undefined ? weightVal : r.weight,
                 explanation: u.explanation || r.explanation,
                 status: u.status || r.status || "Đang thực hiện",
+                title: u.title || r.title,
+                unit: u.unit || r.unit,
+                formula: u.formula || r.formula,
+                group: u.group || r.group,
+                parentCode: u.parentCode !== undefined ? u.parentCode : r.parentCode,
                 isOverridden: true
               };
             }
@@ -753,6 +770,9 @@ export async function POST(request: Request) {
               status: u.status || "Đang thực hiện",
               title: u.title || u.indicatorCode,
               unit: u.unit || "",
+              formula: u.formula || "",
+              group: u.group || "",
+              parentCode: u.parentCode || "",
               isOverridden: true
             });
             updatedCount++;

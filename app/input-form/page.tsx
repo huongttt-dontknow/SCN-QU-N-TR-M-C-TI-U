@@ -16,7 +16,10 @@ import {
   Award,
   Crown,
   Target,
-  Loader2
+  Loader2,
+  Eye,
+  EyeOff,
+  Lock
 } from "lucide-react";
 
 const PRODUCTS_CATALOG = [
@@ -356,6 +359,102 @@ interface ProductKpiItem {
   explanation?: string;
 }
 
+const MANDATORY_PRODUCT_KPIS: Record<string, string[]> = {
+  "M2": [
+    "Số lượng video hoàn thành sản xuất",
+    "Số lượng video upload",
+    "SL video đạt ngưỡng 1 triệu views (youtube)",
+    "SL video đạt ngưỡng 1 triệu views"
+  ],
+  "M3": [
+    "Tổng traffic (nội dung long)",
+    "Tỉ lệ chuyển đổi (CTR)- 24h",
+    "Tỉ lệ chuyển đổi (CTR)",
+    "Tỉ lệ giữ chân khách hàng (APV)- 24h",
+    "Tỉ lệ giữ chân khách hàng (APV)"
+  ],
+  "M4": [
+    "Số kênh đạt ngưỡng 10k $/ tháng",
+    "Số kênh đạt ngưỡng 10k $",
+    "Số vi phạm chính sách",
+    "Tổng số kênh kinh doanh",
+    "Số kênh BKT"
+  ]
+};
+
+const getObjectiveGroupCode = (groupName: string): string => {
+  if (!groupName) return "";
+  const match = groupName.match(/M([1-7])/i);
+  if (match) return `M${match[1]}`;
+  if (groupName.includes("M1")) return "M1";
+  if (groupName.includes("M2")) return "M2";
+  if (groupName.includes("M3")) return "M3";
+  if (groupName.includes("M4")) return "M4";
+  if (groupName.includes("M5")) return "M5";
+  if (groupName.includes("M6")) return "M6";
+  if (groupName.includes("M7")) return "M7";
+  return "";
+};
+
+const getNormalizedGroupTitle = (groupName: string): string => {
+  const code = getObjectiveGroupCode(groupName);
+  switch (code) {
+    case "M1": return "M1. TÀI CHÍNH";
+    case "M2": return "M2. SẢN PHẨM";
+    case "M3": return "M3. KHÁCH HÀNG";
+    case "M4": return "M4. THƯƠNG HIỆU & KÊNH";
+    case "M5": return "M5. QUẢN TRỊ VẬN HÀNH";
+    case "M6": return "M6. NHÂN SỰ";
+    case "M7": return "M7. VĂN HÓA";
+    default: return groupName;
+  }
+};
+
+const isMandatoryIndicator = (groupCode: string, title: string): boolean => {
+  const list = MANDATORY_PRODUCT_KPIS[groupCode];
+  if (!list) return false;
+  const lowerTitle = title.trim().toLowerCase();
+  return list.some(m => lowerTitle.includes(m.toLowerCase()) || m.toLowerCase().includes(lowerTitle));
+};
+
+const isMandatoryUnitIndicator = (unitCode: string, groupCode: string, title: string): boolean => {
+  const t = (title || "").trim().toLowerCase();
+  const u = (unitCode || "").trim().toUpperCase();
+
+  if (groupCode === "M2") {
+    if (t.includes("video hoàn thành sản xuất")) return true;
+    if (t.includes("số lượng video upload")) return true;
+    if (t.includes("1 triệu views")) return true;
+    if ((u.includes("MUSIC") || u.includes("SCMU")) && t.includes("sản lượng bp music")) return true;
+    if (u.includes("SCS") && t.includes("sản lượng bp studio")) return true;
+    if ((u.includes("CR") || u.includes("CREATIVE")) && t.includes("sản lượng bp creative hub")) return true;
+    if (u.includes("NDTH") && t.includes("video hoàn thành biên tập")) return true;
+  }
+
+  if (groupCode === "M3") {
+    if (t.includes("tổng traffic") || t.includes("traffic (nội dung long)") || t.includes("traffic")) return true;
+    if ((u.includes("MUSIC") || u.includes("SCMU")) && t.includes("traffic bp music")) return true;
+    if (u.includes("SCS") && t.includes("traffic bp studio")) return true;
+    if (u.includes("DA01") && t.includes("view youtube da01")) return true;
+    if ((u.includes("CR") || u.includes("CREATIVE")) && t.includes("view youtube scch")) return true;
+  }
+
+  return false;
+};
+
+const isImportantIndicator = (title: string): boolean => {
+  if (!title) return false;
+  const t = title.trim().toLowerCase();
+  return (
+    t.includes("tổng doanh thu") ||
+    t.includes("doanh thu kênh") ||
+    t.includes("video hoàn thành sản xuất") ||
+    t.includes("số lượng video hoàn thành") ||
+    t.includes("tổng traffic (nội dung long)") ||
+    t.includes("tổng traffic")
+  );
+};
+
 const isTitleOnlyRow = (title: string): boolean => {
   const t = title.trim();
   return (
@@ -417,6 +516,182 @@ export default function InputFormPage() {
   const [productActions, setProductActions] = useState<ActionItem[]>([
     { id: 101, title: "Áp dụng công cụ AI sinh phông nền tự động cho Wolfoo 2D", indicator: "SP-M2-01", impact: "Tăng 20% tốc độ sản xuất", status: "Chờ quyết định" }
   ]);
+
+  // Custom and Hidden Product KPIs state per selected product
+  const [customProductKpis, setCustomProductKpis] = useState<Record<string, ProductKpiItem[]>>({});
+  const [hiddenProductKpis, setHiddenProductKpis] = useState<Record<string, string[]>>({});
+  const [showHiddenGroupRows, setShowHiddenGroupRows] = useState<Record<string, boolean>>({});
+
+  // Custom and Hidden Unit KPIs state per unit
+  const [customUnitKpis, setCustomUnitKpis] = useState<Record<string, KpiItem[]>>({});
+  const [hiddenUnitKpis, setHiddenUnitKpis] = useState<Record<string, string[]>>({});
+  const [showHiddenUnitGroupRows, setShowHiddenUnitGroupRows] = useState<Record<string, boolean>>({});
+
+  const handleToggleHideUnitKpi = (code: string, isMandatory: boolean) => {
+    if (isMandatory) {
+      showToast("🔒 Chỉ tiêu then chốt cố định của đơn vị, không thể ẩn!", "error");
+      return;
+    }
+    const uKey = filters.unitCode || "SCVN";
+    setHiddenUnitKpis(prev => {
+      const currentList = prev[uKey] || [];
+      const isHidden = currentList.includes(code);
+      const updated = isHidden ? currentList.filter(c => c !== code) : [...currentList, code];
+      return { ...prev, [uKey]: updated };
+    });
+  };
+
+  const handleCreateCustomUnitKpi = async (groupCode: "M2" | "M3") => {
+    if (!newKpiTitle.trim()) {
+      showToast("⚠️ Vui lòng nhập tên chỉ tiêu", "error");
+      return;
+    }
+
+    const uKey = filters.unitCode || "SCVN";
+    const generatedCode = generateCustomIndicatorCode(groupCode, uKey, newKpiParentCode);
+    let groupName = "M2. SẢN PHẨM / SẢN XUẤT";
+    if (groupCode === "M3") groupName = "M3. KHÁCH HÀNG / DỊCH VỤ";
+
+    const newKpiItem: KpiItem = {
+      id: `${uKey}-${generatedCode}-${Date.now()}`,
+      code: generatedCode,
+      title: newKpiTitle.trim(),
+      unit: newKpiUnit.trim() || "Đơn vị",
+      formula: newKpiFormula.trim() || "Theo dõi thực tế",
+      target: 0,
+      actual: 0,
+      weight: 0,
+      status: "Đang thực hiện",
+      pic: currentLoggedUser?.fullname || "Trưởng đơn vị",
+      group: groupName,
+      frequency: "weekly",
+      parentCode: newKpiParentCode !== "NONE" ? newKpiParentCode : undefined
+    };
+
+    setKpis(prev => [...prev, newKpiItem]);
+    kpisRef.current = [...kpisRef.current, newKpiItem];
+
+    setCustomUnitKpis(prev => ({
+      ...prev,
+      [uKey]: [...(prev[uKey] || []), newKpiItem]
+    }));
+
+    setNewKpiTitle("");
+    setNewKpiFormula("");
+    setNewKpiParentCode("NONE");
+    setShowAddModalGroup(null);
+    showToast(`✨ Đã tạo thành công chỉ tiêu đơn vị [${generatedCode}] - ${newKpiItem.title}!`);
+
+    await saveKpisToDatabase([newKpiItem]);
+  };
+
+  const handleDeleteCustomUnitKpi = (kpiId: string, code: string) => {
+    const uKey = filters.unitCode || "SCVN";
+    setKpis(prev => prev.filter(k => k.id !== kpiId && k.code !== code));
+    kpisRef.current = kpisRef.current.filter(k => k.id !== kpiId && k.code !== code);
+    setCustomUnitKpis(prev => ({
+      ...prev,
+      [uKey]: (prev[uKey] || []).filter(k => k.id !== kpiId && k.code !== code)
+    }));
+    showToast(`🗑️ Đã xóa chỉ tiêu đơn vị [${code}]`);
+  };
+
+  // Modal for Adding Custom Product KPI
+  const [showAddModalGroup, setShowAddModalGroup] = useState<"M2" | "M3" | "M4" | null>(null);
+  const [newKpiTitle, setNewKpiTitle] = useState("");
+  const [newKpiUnit, setNewKpiUnit] = useState("Video");
+  const [newKpiFormula, setNewKpiFormula] = useState("");
+  const [newKpiParentCode, setNewKpiParentCode] = useState<string>("NONE");
+
+  const generateCustomIndicatorCode = (groupCode: string, productId: string, parentCode?: string) => {
+    let prodAlias = (productId || "PROD").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (prodAlias.length > 5) prodAlias = prodAlias.substring(0, 5);
+    if (!prodAlias) prodAlias = "PROD";
+
+    const prodKey = productId || "all";
+    const existingCustom = (customProductKpis[prodKey] || []).filter(k => k.group.includes(groupCode));
+    const seq = (existingCustom.length + 1).toString().padStart(2, "0");
+
+    if (parentCode && parentCode !== "NONE") {
+      let cleanParent = parentCode;
+      if (selectedProdId && cleanParent.startsWith(selectedProdId + "-")) {
+        cleanParent = cleanParent.substring(selectedProdId.length + 1);
+      }
+      return `${cleanParent}-C${seq}`;
+    }
+
+    const groupPrefix = `V${groupCode}`;
+    return `${groupPrefix}-${prodAlias}-C${seq}`;
+  };
+
+  const handleToggleHideProductKpi = (code: string, isMandatory: boolean) => {
+    if (isMandatory) {
+      showToast("🔒 Chỉ tiêu then chốt cố định, không thể ẩn!", "error");
+      return;
+    }
+    const prodKey = selectedProdId || "all";
+    setHiddenProductKpis(prev => {
+      const currentList = prev[prodKey] || [];
+      const isHidden = currentList.includes(code);
+      const updated = isHidden ? currentList.filter(c => c !== code) : [...currentList, code];
+      return { ...prev, [prodKey]: updated };
+    });
+  };
+
+  const handleCreateCustomProductKpi = (groupCode: "M2" | "M3" | "M4") => {
+    if (!newKpiTitle.trim()) {
+      showToast("⚠️ Vui lòng nhập tên chỉ tiêu", "error");
+      return;
+    }
+
+    const prodKey = selectedProdId || "all";
+    const generatedCode = generateCustomIndicatorCode(groupCode, prodKey, newKpiParentCode);
+    let groupName = "M2. SẢN PHẨM";
+    if (groupCode === "M3") groupName = "M3. KHÁCH HÀNG";
+    if (groupCode === "M4") groupName = "M4. THƯƠNG HIỆU & KÊNH";
+
+    const newKpiItem: ProductKpiItem = {
+      id: `${prodKey}-${generatedCode}-${Date.now()}`,
+      code: generatedCode,
+      title: newKpiTitle.trim(),
+      unit: newKpiUnit.trim() || "Đơn vị",
+      formula: newKpiFormula.trim() || "Theo dõi thực tế",
+      target: 0,
+      actual: 0,
+      group: groupName,
+      frequency: "weekly",
+      parentCode: newKpiParentCode !== "NONE" ? newKpiParentCode : undefined
+    };
+
+    setProductKpis(prev => [...prev, newKpiItem]);
+    productKpisRef.current = [...productKpisRef.current, newKpiItem];
+
+    setCustomProductKpis(prev => ({
+      ...prev,
+      [prodKey]: [...(prev[prodKey] || []), newKpiItem]
+    }));
+
+    setNewKpiTitle("");
+    setNewKpiFormula("");
+    setNewKpiParentCode("NONE");
+    setShowAddModalGroup(null);
+    showToast(`✨ Đã tạo thành công chỉ tiêu [${generatedCode}] - ${newKpiItem.title}!`);
+
+    // Đồng bộ ngay lập tức sang CSDL và file JSON dự phòng
+    saveProductKpisToDatabase([newKpiItem]);
+  };
+
+  const handleDeleteCustomProductKpi = (kpiId: string, code: string) => {
+    const prodKey = selectedProdId || "all";
+    setProductKpis(prev => prev.filter(k => k.id !== kpiId && k.code !== code));
+    productKpisRef.current = productKpisRef.current.filter(k => k.id !== kpiId && k.code !== code);
+
+    setCustomProductKpis(prev => ({
+      ...prev,
+      [prodKey]: (prev[prodKey] || []).filter(k => k.id !== kpiId && k.code !== code)
+    }));
+    showToast("🗑️ Đã gỡ bỏ chỉ tiêu tùy chỉnh!");
+  };
 
   const [directorComment, setDirectorComment] = useState("");
   const [quickReportText, setQuickReportText] = useState("");
@@ -796,7 +1071,12 @@ export default function InputFormPage() {
       actualValue: k.actual,
       weight: k.weight,
       explanation: explanations[k.id] || "",
-      status: statusOverride || k.status || "Đang thực hiện"
+      status: statusOverride || k.status || "Đang thực hiện",
+      title: k.title,
+      unit: k.unit,
+      formula: k.formula,
+      group: k.group,
+      parentCode: k.parentCode
     })).filter(k => k.id);
 
     try {
@@ -832,7 +1112,12 @@ export default function InputFormPage() {
       targetValue: k.target,
       actualValue: k.actual,
       explanation: "",
-      status: "Đang nhập"
+      status: "Đang nhập",
+      title: k.title,
+      unit: k.unit,
+      formula: k.formula,
+      group: k.group,
+      parentCode: k.parentCode
     })).filter(k => k.id);
 
     try {
@@ -1343,6 +1628,22 @@ export default function InputFormPage() {
     const periodType = filters.periodType || "weekly";
     const f = (freq || "").toLowerCase().trim();
 
+    // SPECIAL RULE FOR M4 MANDATORY INDICATORS:
+    // "Số kênh đạt ngưỡng 10k $/ tháng", "Số vi phạm chính sách", "Tổng số kênh kinh doanh", "Số kênh BKT"
+    // Must ONLY show when periodType is 'monthly', 'quarterly', or 'yearly'. Must HIDE when 'weekly'!
+    const isM4Mandatory = [
+      "Số kênh đạt ngưỡng 10k $/ tháng",
+      "Số kênh đạt ngưỡng 10k $",
+      "Số vi phạm chính sách",
+      "Tổng số kênh kinh doanh",
+      "Số kênh BKT"
+    ].some(m4Title => title.trim().toLowerCase().includes(m4Title.toLowerCase()));
+
+    if (isM4Mandatory) {
+      if (periodType === "weekly") return false;
+      return true;
+    }
+
     if (f === "") return true;
 
     if (periodType === "weekly") {
@@ -1387,15 +1688,36 @@ export default function InputFormPage() {
     return depth;
   };
 
+  const normalizeCodeForMatch = (code: string | undefined) => {
+    if (!code) return "";
+    let clean = code.trim();
+    if (selectedProdId && clean.startsWith(selectedProdId + "-")) {
+      clean = clean.substring(selectedProdId.length + 1);
+    }
+    return clean;
+  };
+
+  const isParentChildMatch = (parentCodeCandidate: string, childParentCode: string | undefined) => {
+    if (!childParentCode || !parentCodeCandidate) return false;
+    const normParent = normalizeCodeForMatch(parentCodeCandidate);
+    const normChildParent = normalizeCodeForMatch(childParentCode);
+    if (normParent === normChildParent) return true;
+    
+    // So sánh phần thân mã bỏ qua tiền tố loại T/V/D/S/M/N/C
+    const pBase = normParent.replace(/^[TVSDMN]/i, "");
+    const cBase = normChildParent.replace(/^[TVSDMN]/i, "");
+    return pBase !== "" && pBase === cBase;
+  };
+
   const isProdRowVisible = (pk: any) => {
     let curr = pk;
     const visited = new Set<string>();
     while (curr.parentCode) {
       if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
       visited.add(curr.parentCode);
-      const parent = productKpis.find(k => k.code === curr.parentCode);
+      const parent = productKpis.find(k => isParentChildMatch(k.code, curr.parentCode));
       if (!parent) break;
-      const isParentExpanded = expandedParents[parent.code] !== false;
+      const isParentExpanded = expandedParents[parent.code] !== false && expandedParents[normalizeCodeForMatch(parent.code)] !== false;
       if (!isParentExpanded) return false;
       curr = parent;
     }
@@ -1409,13 +1731,61 @@ export default function InputFormPage() {
     while (curr.parentCode) {
       if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
       visited.add(curr.parentCode);
-      const parent = productKpis.find(k => k.code === curr.parentCode);
+      const parent = productKpis.find(k => isParentChildMatch(k.code, curr.parentCode));
       if (!parent) break;
       depth++;
       curr = parent;
     }
     return depth;
   };
+
+  const sortKpisTree = (flatKpis: any[]) => {
+    const findParent = (pk: any) => {
+      if (!pk.parentCode) return null;
+      return flatKpis.find(parent => isParentChildMatch(parent.code, pk.parentCode));
+    };
+
+    const childrenMap = new Map<string, any[]>();
+    const rootItems: any[] = [];
+
+    flatKpis.forEach(pk => {
+      const parent = findParent(pk);
+      if (parent) {
+        const list = childrenMap.get(parent.code) || [];
+        list.push(pk);
+        childrenMap.set(parent.code, list);
+      } else {
+        rootItems.push(pk);
+      }
+    });
+
+    rootItems.sort(sortKpis);
+    childrenMap.forEach(list => list.sort(sortKpis));
+
+    const result: any[] = [];
+    const visited = new Set<string>();
+
+    const appendWithChildren = (pk: any) => {
+      if (visited.has(pk.code)) return;
+      visited.add(pk.code);
+      result.push(pk);
+
+      const children = childrenMap.get(pk.code) || [];
+      children.forEach(child => appendWithChildren(child));
+    };
+
+    rootItems.forEach(root => appendWithChildren(root));
+
+    flatKpis.forEach(pk => {
+      if (!visited.has(pk.code)) {
+        result.push(pk);
+      }
+    });
+
+    return result;
+  };
+
+  const sortProductKpisTree = sortKpisTree;
 
   const isRootCategoryCode = (code: string) => {
     if (!code) return false;
@@ -1568,11 +1938,28 @@ export default function InputFormPage() {
       }
     }
   });
+  const unitKeyForHidden = filters.unitCode || "SCVN";
+  const hiddenCodesForUnit = new Set(hiddenUnitKpis[unitKeyForHidden] || []);
+
   const visibleKpis = kpis
     .filter(k => visibleKpisSet.has(k.code))
+    .filter(k => {
+      const grpCode = getObjectiveGroupCode(k.group);
+      const isMandatory = isMandatoryUnitIndicator(filters.unitCode, grpCode, k.title);
+      if (isMandatory) return true;
+      const isHidden = hiddenCodesForUnit.has(k.code);
+      if (isHidden) {
+        return !!showHiddenUnitGroupRows[grpCode];
+      }
+      return true;
+    })
     .sort(sortKpis);
-  const groups = Array.from(new Set(visibleKpis.map(k => k.group).filter(Boolean)))
-    .sort((a, b) => getGroupOrder(a) - getGroupOrder(b));
+  const unitGroupCodes = Array.from(new Set(visibleKpis.map(k => getObjectiveGroupCode(k.group)).filter(Boolean)))
+    .sort((a, b) => {
+      const orderA = parseInt(a.replace("M", "")) || 99;
+      const orderB = parseInt(b.replace("M", "")) || 99;
+      return orderA - orderB;
+    });
 
   const directVisibleProductKpis = productKpis.filter(pk => shouldShowByFrequency(pk.frequency, pk.title, pk.code));
   const visibleProductKpisSet = new Set<string>();
@@ -1592,11 +1979,28 @@ export default function InputFormPage() {
       }
     }
   });
+  const prodKeyForHidden = selectedProdId || "all";
+  const hiddenCodesForSelectedProd = new Set(hiddenProductKpis[prodKeyForHidden] || []);
+
   const visibleProductKpis = productKpis
     .filter(pk => visibleProductKpisSet.has(pk.code))
+    .filter(pk => {
+      const grpCode = getObjectiveGroupCode(pk.group);
+      const isMandatory = isMandatoryIndicator(grpCode, pk.title);
+      if (isMandatory) return true;
+      const isHidden = hiddenCodesForSelectedProd.has(pk.code);
+      if (isHidden) {
+        return !!showHiddenGroupRows[grpCode];
+      }
+      return true;
+    })
     .sort(sortKpis);
-  const prodGroups = Array.from(new Set(visibleProductKpis.map(pk => pk.group).filter(Boolean)))
-    .sort((a, b) => getGroupOrder(a) - getGroupOrder(b));
+  const prodGroupCodes = Array.from(new Set(visibleProductKpis.map(pk => getObjectiveGroupCode(pk.group)).filter(Boolean)))
+    .sort((a, b) => {
+      const orderA = parseInt(a.replace("M", "")) || 99;
+      const orderB = parseInt(b.replace("M", "")) || 99;
+      return orderA - orderB;
+    });
 
   // Thuật toán PSH cho Tab 2
   const isWeekly = filters.periodType === "weekly";
@@ -1760,23 +2164,80 @@ export default function InputFormPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {groups.map(groupName => {
-                    const items = visibleKpis.filter(k => k.group === groupName && !isRootCategoryCode(k.code));
+                  {unitGroupCodes.map(objGroupCode => {
+                    const rawGroupItems = visibleKpis.filter(k => getObjectiveGroupCode(k.group) === objGroupCode && !isRootCategoryCode(k.code));
+                    const items = sortKpisTree(rawGroupItems);
                     if (items.length === 0) return null;
+                    const isCustomizableGroup = ["M2", "M3"].includes(objGroupCode);
+                    const normalizedTitle = getNormalizedGroupTitle(objGroupCode);
+                    const uKey = filters.unitCode || "SCVN";
+                    const hiddenList = hiddenUnitKpis[uKey] || [];
+
+                    const hiddenCount = kpis.filter(k => {
+                      const grp = getObjectiveGroupCode(k.group);
+                      const isMand = isMandatoryUnitIndicator(filters.unitCode, grp, k.title);
+                      return grp === objGroupCode && !isMand && hiddenList.includes(k.code);
+                    }).length;
+
                     return (
-                      <React.Fragment key={groupName}>
-                        <tr className="bg-slate-900/50 text-[#10b981] font-black border-b border-white/5 uppercase text-xs">
+                      <React.Fragment key={objGroupCode}>
+                        <tr className="bg-slate-900/80 border-b border-white/10 uppercase text-xs">
                           <td colSpan={showCodeColumn ? 11 : 10} className="p-2.5 tracking-wider">
-                            {groupName}
+                            <div className="flex flex-wrap justify-between items-center gap-2">
+                              <span className="text-white font-black text-xs tracking-wider" style={{ color: "#ffffff" }}>
+                                {normalizedTitle}
+                              </span>
+                              {isCustomizableGroup && !isReadOnly && (
+                                <div className="flex items-center gap-2 normal-case font-bold">
+                                  {hiddenCount > 0 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowHiddenUnitGroupRows(prev => ({ ...prev, [objGroupCode]: !prev[objGroupCode] }))}
+                                      className="bg-[#F3E8FF] dark:bg-purple-950/70 hover:bg-purple-200 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/50 text-[11px] font-black px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-sm transition-all"
+                                    >
+                                      {showHiddenUnitGroupRows[objGroupCode] ? (
+                                        <>
+                                          <Eye className="w-3.5 h-3.5 text-purple-700 dark:text-purple-300" />
+                                          <span className="text-purple-700 dark:text-purple-300 font-extrabold">Đang hiện {hiddenCount} chỉ tiêu ẩn</span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <EyeOff className="w-3.5 h-3.5 text-purple-700 dark:text-purple-300" />
+                                          <span className="text-purple-700 dark:text-purple-300 font-extrabold">Xem {hiddenCount} chỉ tiêu đã ẩn</span>
+                                        </>
+                                      )}
+                                    </button>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setNewKpiTitle("");
+                                      setNewKpiParentCode("NONE");
+                                      setShowAddModalGroup(objGroupCode as "M2" | "M3");
+                                    }}
+                                    className="bg-purple-800 hover:bg-purple-700 border border-purple-500/40 text-xs font-black px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-md transition-all"
+                                  >
+                                    <Plus size={14} style={{ color: "#fde047" }} />
+                                    <span style={{ color: "#fde047" }}>Thêm chỉ tiêu {objGroupCode}</span>
+                                  </button>
+                                </div>
+                              )}
+                            </div>
                           </td>
                         </tr>
                         {items.filter(isRowVisible).map(kpi => {
                           const pct = calculateCompletionPct(kpi.target, kpi.actual, kpi.code, kpi.title);
                           const depth = getDepth(kpi);
-                          const hasChildren = visibleKpis.some(k => k.parentCode === kpi.code);
+                          const hasChildren = visibleKpis.some(k => isParentChildMatch(kpi.code, k.parentCode));
                           const isExpanded = expandedParents[kpi.code] !== false;
+                          const objGrpCode = getObjectiveGroupCode(kpi.group);
+                          const isMandatory = isMandatoryUnitIndicator(filters.unitCode, objGrpCode, kpi.title);
+                          const isCustomizableGroupRow = ["M2", "M3"].includes(objGrpCode);
+                          const isHidden = (hiddenUnitKpis[uKey] || []).includes(kpi.code);
+                          const isCustom = kpi.code.includes("-C");
+
                           return (
-                            <tr key={kpi.id} className={`border-b border-white/5 hover:bg-white/5 text-sm text-slate-200 ${depth > 0 ? "bg-slate-900/10" : ""}`}>
+                            <tr key={kpi.id} className={`border-b border-white/5 hover:bg-white/5 text-sm ${isHidden ? "opacity-50 bg-slate-950/80 text-slate-400 italic" : "text-slate-200"} ${depth > 0 ? "bg-slate-900/10" : ""}`}>
                               {showCodeColumn && (
                                 <td className="p-3 w-24 text-center">
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">{kpi.code}</code>
@@ -1804,7 +2265,44 @@ export default function InputFormPage() {
                                   {!hasChildren && depth > 0 && (
                                     <span className="text-slate-500 mr-1.5 font-normal select-none">↳</span>
                                   )}
-                                  <span className="flex-1">{getFriendlyIndicatorTitle(kpi.code, kpi.title)}</span>
+                                  <div className="flex-1 flex items-center gap-2">
+                                    {isCustomizableGroupRow && !isMandatory && !isReadOnly && (
+                                      <div className="shrink-0 flex items-center gap-1">
+                                        {isCustom && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleDeleteCustomUnitKpi(kpi.id, kpi.code)}
+                                            className="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/30 text-[10px] font-extrabold p-1 rounded-md shadow-sm transition-all"
+                                            title="Xóa chỉ tiêu đơn vị tự thêm này"
+                                          >
+                                            🗑️
+                                          </button>
+                                        )}
+                                        <button
+                                          type="button"
+                                          onClick={() => handleToggleHideUnitKpi(kpi.code, false)}
+                                          className={`p-1 rounded-md border transition-all shadow-md flex items-center justify-center ${
+                                            isHidden
+                                              ? "bg-rose-500/20 hover:bg-rose-500/35 text-rose-300 border-rose-500/50"
+                                              : "bg-emerald-500/20 hover:bg-emerald-500/35 text-emerald-300 border-emerald-500/50"
+                                          }`}
+                                          title={isHidden ? "Bấm để hiện lại chỉ tiêu này" : "Bấm để ẩn chỉ tiêu này"}
+                                        >
+                                          {isHidden ? (
+                                            <EyeOff className="w-3.5 h-3.5 text-rose-400" />
+                                          ) : (
+                                            <Eye className="w-3.5 h-3.5 text-emerald-400" />
+                                          )}
+                                        </button>
+                                      </div>
+                                    )}
+                                    {isMandatory && isCustomizableGroupRow && (
+                                      <span className="shrink-0 p-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/50 flex items-center justify-center shadow-md" title="Chỉ tiêu then chốt cố định của đơn vị (không thể ẩn)">
+                                        <Lock className="w-3.5 h-3.5 text-amber-400" />
+                                      </span>
+                                    )}
+                                    <span className="flex-1">{getFriendlyIndicatorTitle(kpi.code, kpi.title)}</span>
+                                  </div>
                                 </div>
                               </td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{kpi.unit}</td>
@@ -2445,24 +2943,86 @@ export default function InputFormPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {prodGroups.map(groupName => {
-                    const items = visibleProductKpis.filter(k => k.group === groupName && !isRootCategoryCode(k.code));
+                  {prodGroupCodes.map(objGroupCode => {
+                    const rawGroupItems = visibleProductKpis.filter(k => getObjectiveGroupCode(k.group) === objGroupCode && !isRootCategoryCode(k.code));
+                    const items = sortProductKpisTree(rawGroupItems);
                     if (items.length === 0) return null;
                     return (
-                      <React.Fragment key={groupName}>
-                        <tr className="bg-slate-900/50 text-sky-400 font-black border-b border-white/5 uppercase text-xs">
-                          <td colSpan={showCodeColumn ? 8 : 7} className="p-2.5 tracking-wider">
-                            {groupName}
-                          </td>
-                        </tr>
+                      <React.Fragment key={objGroupCode}>
+                        {(() => {
+                          const isCustomizableGroup = ["M2", "M3", "M4"].includes(objGroupCode);
+                          const normalizedTitle = getNormalizedGroupTitle(objGroupCode);
+                          const prodKey = selectedProdId || "all";
+                          const hiddenList = hiddenProductKpis[prodKey] || [];
+
+                          const hiddenCount = productKpis.filter(k => {
+                            const grp = getObjectiveGroupCode(k.group);
+                            const isMand = isMandatoryIndicator(grp, k.title);
+                            return grp === objGroupCode && !isMand && hiddenList.includes(k.code);
+                          }).length;
+
+                          return (
+                            <tr className="bg-slate-900/80 border-b border-white/10 uppercase text-xs">
+                              <td colSpan={showCodeColumn ? 8 : 7} className="p-2.5 tracking-wider">
+                                <div className="flex flex-wrap justify-between items-center gap-2">
+                                  <span className="text-white font-black text-xs tracking-wider" style={{ color: "#ffffff" }}>
+                                    {normalizedTitle}
+                                  </span>
+                                  {isCustomizableGroup && !isReadOnly && activeProductId !== "all" && (
+                                    <div className="flex items-center gap-2 normal-case font-bold">
+                                      {hiddenCount > 0 && (
+                                        <button
+                                          type="button"
+                                          onClick={() => setShowHiddenGroupRows(prev => ({ ...prev, [objGroupCode]: !prev[objGroupCode] }))}
+                                          className="bg-[#F3E8FF] dark:bg-purple-950/70 hover:bg-purple-200 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/50 text-[11px] font-black px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-sm transition-all"
+                                        >
+                                          {showHiddenGroupRows[objGroupCode] ? (
+                                            <>
+                                              <Eye className="w-3.5 h-3.5 text-purple-700 dark:text-purple-300" />
+                                              <span className="text-purple-700 dark:text-purple-300 font-extrabold">Đang hiện {hiddenCount} chỉ tiêu ẩn</span>
+                                            </>
+                                          ) : (
+                                            <>
+                                              <EyeOff className="w-3.5 h-3.5 text-purple-700 dark:text-purple-300" />
+                                              <span className="text-purple-700 dark:text-purple-300 font-extrabold">Xem {hiddenCount} chỉ tiêu đã ẩn</span>
+                                            </>
+                                          )}
+                                        </button>
+                                      )}
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setNewKpiTitle("");
+                                          setNewKpiParentCode("NONE");
+                                          setShowAddModalGroup(objGroupCode as "M2" | "M3" | "M4");
+                                        }}
+                                        className="bg-purple-800 hover:bg-purple-700 border border-purple-500/40 text-xs font-black px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-md transition-all"
+                                      >
+                                        <Plus size={14} style={{ color: "#fde047" }} />
+                                        <span style={{ color: "#fde047" }}>Thêm chỉ tiêu {objGroupCode}</span>
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })()}
                         {items.filter(isProdRowVisible).map(pk => {
                           const pct = calculateCompletionPct(pk.target, pk.actual, pk.code, pk.title);
                           const displayCode = selectedProdId ? pk.code.replace(selectedProdId + "-", "") : pk.code;
                           const depth = getProdDepth(pk);
-                          const hasChildren = visibleProductKpis.some(k => k.parentCode === pk.code);
+                          const hasChildren = visibleProductKpis.some(k => isParentChildMatch(pk.code, k.parentCode));
                           const isExpanded = expandedParents[pk.code] !== false;
+                          const objGrpCode = getObjectiveGroupCode(pk.group);
+                          const isMandatory = isMandatoryIndicator(objGrpCode, pk.title);
+                          const isCustomizableGroup = ["M2", "M3", "M4"].includes(objGrpCode);
+                          const prodKey = selectedProdId || "all";
+                          const isHidden = (hiddenProductKpis[prodKey] || []).includes(pk.code);
+                          const isCustom = pk.code.includes("-C");
+
                           return (
-                            <tr key={pk.id} className={`border-b border-white/5 hover:bg-white/5 text-sm text-slate-200 ${depth > 0 ? "bg-slate-900/10" : ""}`}>
+                            <tr key={pk.id} className={`border-b border-white/5 hover:bg-white/5 text-sm ${isHidden ? "opacity-50 bg-slate-950/80 text-slate-400 italic" : "text-slate-200"} ${depth > 0 ? "bg-slate-900/10" : ""}`}>
                               {showCodeColumn && (
                                 <td className="p-3 text-center">
                                   <code className="bg-slate-800 text-sky-400 px-2 py-0.5 rounded font-mono text-xs font-bold border border-sky-500/20">
@@ -2492,7 +3052,45 @@ export default function InputFormPage() {
                                   {!hasChildren && depth > 0 && (
                                     <span className="text-slate-500 mr-1.5 font-normal select-none">↳</span>
                                   )}
-                                  <span className="flex-1">{pk.title}</span>
+                                  <div className="flex-1 flex items-center gap-2">
+                                    {/* NÚT ICON CON MẮT EYE / EYE-OFF ẨN / HIỆN ĐẶT Ở ĐẦU (TIẾT KIỆM DIỆN TÍCH) */}
+                                    {isCustomizableGroup && !isMandatory && !isReadOnly && activeProductId !== "all" && (
+                                      <div className="shrink-0 flex items-center gap-1">
+                                        {isCustom && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleDeleteCustomProductKpi(pk.id, pk.code)}
+                                            className="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/30 text-[10px] font-extrabold p-1 rounded-md shadow-sm transition-all"
+                                            title="Xóa chỉ tiêu tự thêm này"
+                                          >
+                                            🗑️
+                                          </button>
+                                        )}
+                                        <button
+                                          type="button"
+                                          onClick={() => handleToggleHideProductKpi(pk.code, false)}
+                                          className={`p-1 rounded-md border transition-all shadow-md flex items-center justify-center ${
+                                            isHidden
+                                              ? "bg-rose-500/20 hover:bg-rose-500/35 text-rose-300 border-rose-500/50"
+                                              : "bg-emerald-500/20 hover:bg-emerald-500/35 text-emerald-300 border-emerald-500/50"
+                                          }`}
+                                          title={isHidden ? "Bấm để hiện lại chỉ tiêu này" : "Bấm để ẩn chỉ tiêu này"}
+                                        >
+                                          {isHidden ? (
+                                            <EyeOff className="w-3.5 h-3.5 text-rose-400" />
+                                          ) : (
+                                            <Eye className="w-3.5 h-3.5 text-emerald-400" />
+                                          )}
+                                        </button>
+                                      </div>
+                                    )}
+                                    {isMandatory && (
+                                      <span className="shrink-0 p-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/50 flex items-center justify-center shadow-md" title="Chỉ tiêu then chốt cố định (không thể ẩn)">
+                                        <Lock className="w-3.5 h-3.5 text-amber-400" />
+                                      </span>
+                                    )}
+                                    <span className="flex-1">{pk.title}</span>
+                                  </div>
                                 </div>
                               </td>
                               <td className="p-3 text-center text-slate-400 font-bold text-xs">{pk.unit}</td>
@@ -2954,6 +3552,134 @@ export default function InputFormPage() {
                 Dữ liệu ở cột <strong className={theme === "light" ? "text-amber-950" : "text-amber-200"}>Kết quả (%)</strong> và cột <strong className={theme === "light" ? "text-amber-950" : "text-amber-200"}>Ghi chú / Giải trình</strong> sau khi được lưu sẽ được cập nhật đồng bộ sang <strong>Biểu đồ Radar</strong> và bảng <strong>Chi tiết biến động 7 mặt mục tiêu</strong> ở trang Dashboard.
               </li>
             </ul>
+          </div>
+        </div>
+      )}
+
+
+
+      {/* ==================== MODAL 2: THÊM CHỈ TIÊU MỚI TỰ ĐỘNG SINH MÃ ==================== */}
+      {showAddModalGroup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div>
+                <h3 className="text-base font-black text-purple-400 uppercase flex items-center gap-2">
+                  ➕ Thêm chỉ tiêu mới ({showAddModalGroup})
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Tự động sinh mã chỉ tiêu theo quy tắc chuẩn hóa Sconnect
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAddModalGroup(null)}
+                className="text-slate-400 hover:text-white bg-slate-800 p-1.5 rounded-lg"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="block text-slate-300 font-bold mb-1">
+                  Chỉ tiêu cha trực thuộc (Phân cấp chỉ tiêu):
+                </label>
+                <select
+                  value={newKpiParentCode}
+                  onChange={(e) => setNewKpiParentCode(e.target.value)}
+                  className="w-full bg-slate-950 border border-purple-500/40 text-white font-bold rounded-xl p-2.5 outline-none focus:border-purple-400 text-xs"
+                >
+                  <option value="NONE">📌 Chỉ tiêu cấp 1 (Trực thuộc mục tiêu {showAddModalGroup})</option>
+                  {(activeTab === "unit" ? kpis : productKpis)
+                    .filter(k => {
+                      const grpCode = getObjectiveGroupCode(k.group);
+                      return grpCode === showAddModalGroup && !isRootCategoryCode(k.code);
+                    })
+                    .map(k => (
+                      <option key={k.id} value={k.code}>
+                        ↳ [{k.code}] - {k.title}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-slate-400 font-bold mb-1">Mã chỉ tiêu (Tự động sinh):</label>
+                <input
+                  type="text"
+                  readOnly
+                  value={generateCustomIndicatorCode(showAddModalGroup, selectedProdId, newKpiParentCode)}
+                  className="w-full bg-slate-950 border border-purple-500/40 text-purple-300 font-mono font-bold rounded-xl p-2.5 outline-none cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-bold mb-1">Tên chỉ tiêu mới (*):</label>
+                <input
+                  type="text"
+                  value={newKpiTitle}
+                  onChange={(e) => setNewKpiTitle(e.target.value)}
+                  placeholder="Ví dụ: Tỷ lệ Render lỗi 24h, Lượt Share TikTok..."
+                  className="w-full bg-slate-950 border border-slate-700 focus:border-purple-400 text-white rounded-xl p-2.5 outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 font-bold mb-1">Đơn vị tính (ĐVT):</label>
+                  <select
+                    value={newKpiUnit}
+                    onChange={(e) => setNewKpiUnit(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-700 focus:border-purple-400 text-white font-bold rounded-xl p-2.5 outline-none"
+                  >
+                    <option value="Video">Video / Tập</option>
+                    <option value="Views">Views / Lượt xem</option>
+                    <option value="%">% Tỷ lệ</option>
+                    <option value="VNĐ">VNĐ / Doanh thu</option>
+                    <option value="Kênh">Kênh kinh doanh</option>
+                    <option value="Lượt">Lượt tương tác</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 font-bold mb-1">Chu kỳ mặc định:</label>
+                  <input
+                    type="text"
+                    readOnly
+                    value="Hằng tuần (Weekly)"
+                    className="w-full bg-slate-950 border border-slate-800 text-slate-400 rounded-xl p-2.5 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-bold mb-1">Cách tính / Mô tả chỉ tiêu:</label>
+                <input
+                  type="text"
+                  value={newKpiFormula}
+                  onChange={(e) => setNewKpiFormula(e.target.value)}
+                  placeholder="Ví dụ: Tổng số video upload thành công trong kỳ / Kế hoạch..."
+                  className="w-full bg-slate-950 border border-slate-700 focus:border-purple-400 text-white rounded-xl p-2.5 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-800 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowAddModalGroup(null)}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCreateCustomProductKpi(showAddModalGroup)}
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold px-5 py-2 rounded-xl shadow-lg"
+              >
+                🚀 Thêm chỉ tiêu ngay
+              </button>
+            </div>
           </div>
         </div>
       )}

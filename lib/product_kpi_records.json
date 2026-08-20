@@ -490102,5 +490102,43 @@
     "title": "ND-1899-001-VM1-I02.01",
     "unit": "",
     "isOverridden": true
+  },
+  {
+    "id": "Wofloo-WO-2026-002-TM2-I02-C01-weekly_8_1",
+    "indicatorCode": "TM2-I02-C01",
+    "unitCode": "Wofloo",
+    "productCode": "WO-2026-002",
+    "periodType": "weekly",
+    "periodKey": "weekly_8_1",
+    "targetValue": 0,
+    "actualValue": 0,
+    "weight": 0,
+    "explanation": "",
+    "status": "Đang nhập",
+    "title": "Số nội dung đạt ngưỡng 50k view",
+    "unit": "Video",
+    "formula": "Số lượng thực tế/ kế hoạch",
+    "group": "M2. SẢN PHẨM",
+    "parentCode": "WO-2026-002-TM2-I02",
+    "isOverridden": true
+  },
+  {
+    "id": "Wofloo-WO-1899-001-TM2-I02-C01-weekly_8_1",
+    "indicatorCode": "TM2-I02-C01",
+    "unitCode": "Wofloo",
+    "productCode": "WO-1899-001",
+    "periodType": "weekly",
+    "periodKey": "weekly_8_1",
+    "targetValue": 0,
+    "actualValue": 0,
+    "weight": 0,
+    "explanation": "",
+    "status": "Đang nhập",
+    "title": "Số lượng video đạt 50K view",
+    "unit": "Video",
+    "formula": "Theo dõi thực tế",
+    "group": "M2. SẢN PHẨM",
+    "parentCode": "WO-1899-001-TM2-I02",
+    "isOverridden": true
   }
 ]
