@@ -324,6 +324,7 @@ interface KpiItem {
   group: string;
   frequency?: string;
   parentCode?: string;
+  explanation?: string;
 }
 
 interface ActionItem {
@@ -352,6 +353,7 @@ interface ProductKpiItem {
   group: string;
   frequency?: string;
   parentCode?: string;
+  explanation?: string;
 }
 
 const isTitleOnlyRow = (title: string): boolean => {
@@ -1172,7 +1174,7 @@ export default function InputFormPage() {
   };
 
   const handleSkipAction = (id: number) => {
-    setActions(prev => prev.map(a => a.id === id ? { ...a, status: "Bỏ qua" } : a));
+    setActions(prev => prev.filter(a => a.id !== id));
   };
 
   const handleAiSuggestActions = async () => {
@@ -1196,13 +1198,15 @@ export default function InputFormPage() {
             title: k.title,
             targetValue: k.target,
             actualValue: k.actual,
+            explanation: k.explanation || "",
             pic: k.pic
           }))
         })
       });
       const data = await res.json();
       if (data && Array.isArray(data.suggestedActions)) {
-        const newActions = data.suggestedActions.map((act: any, idx: number) => ({
+        const rawActions = data.suggestedActions.slice(0, 5);
+        const newActions = rawActions.map((act: any, idx: number) => ({
           id: Date.now() + idx,
           title: act.title,
           indicator: act.targetIndicator || "Chỉ số liên quan",
@@ -1210,6 +1214,7 @@ export default function InputFormPage() {
           status: "Chờ quyết định"
         }));
         setActions(newActions);
+        showToast(`✨ AI Agent đã hoàn tất gợi ý ${newActions.length} hành động trọng tâm!`);
       } else {
         showToast("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.", "error");
       }
@@ -1242,13 +1247,15 @@ export default function InputFormPage() {
             title: k.title,
             targetValue: k.target,
             actualValue: k.actual,
+            explanation: k.explanation || "",
             pic: ""
           }))
         })
       });
       const data = await res.json();
       if (data && Array.isArray(data.suggestedActions)) {
-        const newActions = data.suggestedActions.map((act: any, idx: number) => ({
+        const rawActions = data.suggestedActions.slice(0, 5);
+        const newActions = rawActions.map((act: any, idx: number) => ({
           id: Date.now() + idx,
           title: act.title,
           indicator: act.targetIndicator || "Chỉ số liên quan",
@@ -1256,6 +1263,7 @@ export default function InputFormPage() {
           status: "Chờ quyết định"
         }));
         setProductActions(newActions);
+        showToast(`✨ AI Agent đã gợi ý ${newActions.length} hành động sản phẩm!`);
       } else {
         showToast("⚠️ Không nhận được gợi ý hành động hợp lệ từ AI.", "error");
       }

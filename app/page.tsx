@@ -498,30 +498,30 @@ export default function DashboardPage() {
       if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-Lego");
       if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-Lego");
     } else if (unitCode === "DA01") {
-      if (code === "VM1-I02.01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
-      if (code === "VM2-I01.01") candidateCodes.push("DM2-I01.01-DA01", "DM2-I01.01");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("DM7-I03.01-DA01", "DM7-I03.01");
-      if (code === "VM3-I01.02") candidateCodes.push("DM3-I01.03-DA01", "DM3-I01.03");
+      if (code === "VM1-I02.01") candidateCodes.push("DM1-I02.01", "DM1-I02.01-DA01");
+      if (code === "VM2-I01.01") candidateCodes.push("DM2-I01.01", "DM2-I01.01-DA01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("DM7-I03.01", "DM7-I03.01-DA01");
+      if (code === "VM3-I01.02") candidateCodes.push("DM3-I01.03", "DM3-I01.03-DA01");
     } else if (unitCode === "NDTH") {
       if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
       if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.02-NDTH");
       if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-NDTH");
       if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-NDTH");
     } else if (unitCode === "CR") {
-      if (code === "VM1-I02.01") candidateCodes.push("CM1-I02.01-CR", "CM1-I02.01");
-      if (code === "VM2-I01.01") candidateCodes.push("CM2-I01.01-CR", "CM2-I01.01");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("CM7-I03.01-CR", "CM7-I03.01");
-      if (code === "VM3-I01.02") candidateCodes.push("CM3-I01.01-CR", "CM3-I01.01");
+      if (code === "VM1-I02.01") candidateCodes.push("CM1-I02.01", "CM1-I02.01-CR");
+      if (code === "VM2-I01.01") candidateCodes.push("CM2-I01.01", "CM2-I01.01-CR");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("CM7-I03.01", "CM7-I03.01-CR");
+      if (code === "VM3-I01.02") candidateCodes.push("CM3-I01.01", "CM3-I01.01-CR");
     } else if (unitCode === "CN") {
-      if (code === "VM1-I02.01") candidateCodes.push("NM1-I02.01-CNGP", "NM1-I02.01");
-      if (code === "VM2-I01.01") candidateCodes.push("NM2-I01.01-CNGP", "NM2-I01.01");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("NM7-I03.01-CNGP", "NM7-I03.01");
-      if (code === "VM3-I01.02") candidateCodes.push("NM3-I01.05-CNGP", "NM3-I01.05");
+      if (code === "VM1-I02.01") candidateCodes.push("NM1-I02.01", "NM1-I02.01-CNGP");
+      if (code === "VM2-I01.01") candidateCodes.push("NM2-I01.01", "NM2-I01.01-CNGP");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("NM7-I03.01", "NM7-I03.01-CNGP");
+      if (code === "VM3-I01.02") candidateCodes.push("NM3-I01.05", "NM3-I01.05-CNGP");
     } else if (unitCode === "SCS") {
-      if (code === "VM1-I02.01") candidateCodes.push("SM1-I02.01-SCS", "SM1-I02.01");
-      if (code === "VM2-I01.01") candidateCodes.push("SM2-I01.01-SCS", "SM2-I01.01");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01-SCS", "SM7-I03.01");
-      if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04-SCS", "SM3-I01.04");
+      if (code === "VM1-I02.01") candidateCodes.push("SM1-I02.01", "SM1-I02.01-SCS");
+      if (code === "VM2-I01.01") candidateCodes.push("SM2-I01.01", "SM2-I01.01-SCS");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01", "SM7-I03.01-SCS");
+      if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04", "SM3-I01.04-SCS");
     }
     candidateCodes.push(searchCode);
 
@@ -551,32 +551,36 @@ export default function DashboardPage() {
           );
         }
         if (match) {
-          if (match.periods && match.periods[pKey]) {
-            const target = match.periods[pKey].target || 0;
-            const actual = match.periods[pKey].actual || 0;
+          if (match.periods) {
+            if (match.periods[pKey]) {
+              const target = match.periods[pKey].target || 0;
+              const actual = match.periods[pKey].actual || 0;
+              return {
+                target,
+                actual,
+                pct: calculateCompletionRate(target, actual, cCode, match.title)
+              };
+            }
+          } else {
+            let target = (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue) || 0;
+            let actual = (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue) || 0;
+            if (pKey.startsWith("weekly_")) {
+              target = (match.targetWeek && match.targetWeek > 0 ? match.targetWeek : match.targetValue) || 0;
+              actual = (match.actualWeek && match.actualWeek > 0 ? match.actualWeek : match.actualValue) || 0;
+            }
+            else if (pKey.startsWith("quarterly_")) {
+              target = (match.targetQuarter && match.targetQuarter > 0 ? match.targetQuarter : match.targetValue) || 0;
+              actual = (match.actualQuarter && match.actualQuarter > 0 ? match.actualQuarter : match.actualValue) || 0;
+            } else if (pKey.startsWith("yearly_")) {
+              target = (match.targetYear && match.targetYear > 0 ? match.targetYear : match.targetValue) || 0;
+              actual = (match.actualYear && match.actualYear > 0 ? match.actualYear : match.actualValue) || 0;
+            }
             return {
               target,
               actual,
               pct: calculateCompletionRate(target, actual, cCode, match.title)
             };
           }
-          let target = (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue) || 0;
-          let actual = (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue) || 0;
-          if (pKey.startsWith("weekly_")) {
-            target = (match.targetWeek && match.targetWeek > 0 ? match.targetWeek : match.targetValue) || 0;
-            actual = (match.actualWeek && match.actualWeek > 0 ? match.actualWeek : match.actualValue) || 0;
-          } else if (pKey.startsWith("quarterly_")) {
-            target = (match.targetQuarter && match.targetQuarter > 0 ? match.targetQuarter : match.targetValue) || 0;
-            actual = (match.actualQuarter && match.actualQuarter > 0 ? match.actualQuarter : match.actualValue) || 0;
-          } else if (pKey.startsWith("yearly_")) {
-            target = (match.targetYear && match.targetYear > 0 ? match.targetYear : match.targetValue) || 0;
-            actual = (match.actualYear && match.actualYear > 0 ? match.actualYear : match.actualValue) || 0;
-          }
-          return {
-            target,
-            actual,
-            pct: calculateCompletionRate(target, actual, cCode, match.title)
-          };
         }
       }
       return null;
@@ -887,35 +891,52 @@ export default function DashboardPage() {
   const getWeeklyTrendData = () => {
     const m = Number(filters.month) || 7;
     const data = [];
-    const uPeriods = getSelectedUnitRevenuePeriods();
+    const selectedW = Number(filters.week) || 1;
+
+    // First pass: inspect actual data across all 5 weeks
+    let lastWeekWithActualData = 0;
+    const rawWeeks = [];
+
     for (let w = 1; w <= 5; w++) {
       const wKey = `weekly_${m}_${w}`;
-      
-      // Check if this week has any data for the selected unit
-      let hasWeek = false;
-      const u = MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
-      for (const k in u) {
-        if (u[k].periods?.[wKey]) {
-          hasWeek = true;
-          break;
-        }
-      }
-      if (!hasWeek && dbKpis.length > 0) {
-        hasWeek = true;
-      }
-      if (!hasWeek && w <= Number(filters.week || 1)) {
-        hasWeek = true;
-      }
-      if (!hasWeek) continue;
+      const revRecCheck = getKpiRecord(filters.unitCode, "VM1-I02.01", wKey);
+      const trafRecCheck = getKpiRecord(filters.unitCode, "VM3-I01.02", wKey) || getKpiRecord(filters.unitCode, "VM3-I01.01", wKey);
+      const revAct = revRecCheck?.actual ?? 0;
+      const revTgt = revRecCheck?.target ?? 0;
+      let trafAct = trafRecCheck?.actual ?? 0;
+      let trafTgt = trafRecCheck?.target ?? 0;
 
-      const revAct = getKpiRecord(filters.unitCode, "VM1-I02.01", wKey)?.actual ?? 0;
-      const revTgt = getKpiRecord(filters.unitCode, "VM1-I02.01", wKey)?.target ?? 0;
-      
-      // Get traffic actuals & targets for unit trend chart
-      const trafRec = getKpiRecord(filters.unitCode, "VM3-I01.02", wKey) || getKpiRecord(filters.unitCode, "VM3-I01.01", wKey);
-      let trafAct = trafRec?.actual ?? 0;
-      let trafTgt = trafRec?.target ?? 0;
+      if (revAct > 0 || trafAct > 0) {
+        lastWeekWithActualData = w;
+      }
 
+      rawWeeks.push({
+        w,
+        wKey,
+        revAct,
+        revTgt,
+        trafAct,
+        trafTgt,
+        revRecCheck,
+        trafRecCheck
+      });
+    }
+
+    const maxLimitWeek = Math.max(selectedW, lastWeekWithActualData, 1);
+
+    for (const item of rawWeeks) {
+      const { w, wKey, revRecCheck, trafRecCheck } = item;
+      let { revAct, revTgt, trafAct, trafTgt } = item;
+
+      // Skip week if it's beyond the max limit week OR if it's beyond lastWeekWithActualData and has 0 actuals
+      if (w > maxLimitWeek) {
+        continue;
+      }
+      if (w > lastWeekWithActualData && revAct === 0 && trafAct === 0) {
+        continue;
+      }
+
+      // Get traffic actuals & targets for unit trend chart fallback if needed
       if (trafAct === 0 && trafTgt === 0) {
         const uDict = MASTER_KPI_DATA[filters.unitCode] || {};
         for (const k in uDict) {

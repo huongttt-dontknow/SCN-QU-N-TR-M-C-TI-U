@@ -65,143 +65,103 @@ function getMockKpiAnalysis(unitCode: string, periodKey: string, kpis: any[]) {
   let summary = `[DỰ BÁO AI DỰ PHÒNG] Đánh giá tổng hợp cho đơn vị ${parsedUnit} trong kỳ ${periodKey}: `;
   let suggestedActions: any[] = [];
 
-  // Load local context to enrich mock summary
-  let strategicContext = "";
-  try {
-    const contextPath = path.join(process.cwd(), "app", "api", "ai", "okr-strategy", "sconnect_context.txt");
-    if (fs.existsSync(contextPath)) {
-      const fullContext = fs.readFileSync(contextPath, "utf8");
-      const paragraphs = fullContext.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
-      
-      // Map unit codes to matching keywords in doc
-      let matchTerm = parsedUnit.toLowerCase();
-      if (parsedUnit === "Wolfoo" || parsedUnit === "Wofloo") matchTerm = "wolfoo";
-      else if (parsedUnit === "Music") matchTerm = "music";
-      else if (parsedUnit === "Lego") matchTerm = "lego";
-      else if (parsedUnit === "AS") matchTerm = "animated story";
-      else if (parsedUnit === "CN" || parsedUnit === "CNGP") matchTerm = "cngp";
-
-      const match = paragraphs.find(p => p.toLowerCase().includes(matchTerm));
-      if (match) {
-        const sentences = match.replace(/\|/g, "").replace(/#DIV\/0!/g, "").replace(/\s+/g, " ").split(/[.:]/);
-        const filteredSentences = sentences.map(s => s.trim()).filter(s => s.length > 10 && !s.includes("=== ") && !s.includes("SHEET"));
-        if (filteredSentences.length > 0) {
-          strategicContext = ` (Định hướng đơn vị: ${filteredSentences.slice(0, 2).join(". ").trim()})`;
-        }
-      }
-    }
-  } catch (e) {
-    console.warn("Lỗi load tri thức dự phòng cho KPI:", e);
-  }
-
-  // Parse custom explanations/notes from KPIs
-  const explanationsList: string[] = [];
-  (kpis || []).forEach(k => {
-    if (k.explanation && k.explanation.trim()) {
-      explanationsList.push(`Chỉ số ${k.indicatorCode}: "${k.explanation}"`);
-    }
+  // Parse custom explanations/notes & KPI performance
+  const evaluatedKpis = (kpis || []).map(k => {
+    const target = Number(k.targetValue) || 0;
+    const actual = Number(k.actualValue) || 0;
+    const rate = target > 0 ? Math.round((actual / target) * 100) : (actual > 0 ? 100 : 0);
+    const code = (k.indicatorCode || k.code || "").toUpperCase();
+    const title = k.title || code;
+    const exp = (k.explanation || "").trim();
+    return { ...k, code, title, target, actual, rate, exp };
   });
 
-  const notesSection = explanationsList.length > 0
-    ? ` Ghi chú/Giải trình thực tế: ${explanationsList.join("; ")}.`
-    : "";
+  const underperforming = evaluatedKpis.filter(k => k.rate < 90);
+  const targetKpis = underperforming.length > 0 ? underperforming : evaluatedKpis;
 
-  // 1. Phân tích các KPI chưa đạt kế hoạch (tiến độ < 90%)
-  const underperformingKpis = (kpis || []).filter(k => {
-    const target = k.targetValue || 0;
-    const actual = k.actualValue || 0;
-    const rate = target > 0 ? (actual / target) * 100 : 100;
-    return rate < 90;
-  });
+  const seenTitles = new Set<string>();
 
-  if (underperformingKpis.length > 0) {
-    summary += `Hệ thống ghi nhận ${underperformingKpis.length} chỉ tiêu có hiệu suất dưới 90% (gồm: ${underperformingKpis.map(k => k.indicatorCode).join(", ")}). Cần tập trung tháo gỡ rủi ro cho các chỉ số này.${strategicContext}.${notesSection}`;
-    
-    // Sinh các action động khắc phục
-    underperformingKpis.forEach(k => {
-      const target = k.targetValue || 0;
-      const actual = k.actualValue || 0;
-      const rate = target > 0 ? Math.round((actual / target) * 100) : 100;
-      
-      let title = `[AI Khắc phục] Tối ưu hóa chỉ số ${k.indicatorCode}`;
-      let impact = `Khắc phục hiệu suất hiện tại (${rate}%), đưa chỉ số đạt mục tiêu kế hoạch ${target}`;
-      
-      if (parsedUnit === "Wofloo") {
-        if (k.indicatorCode.includes("VM") || k.indicatorCode.includes("V")) {
-          title = `[Wolfoo] Khắc phục chỉ số sản xuất ${k.indicatorCode}: Chuẩn hóa thư viện asset dùng chung và đẩy nhanh tốc độ dựng thô video Wolfoo.`;
-          impact = `Tăng sản lượng và rút ngắn thời gian sản xuất nhằm bù đắp thiếu hụt (hiện đạt ${rate}%)`;
-        } else {
-          title = `[Wolfoo] Thúc đẩy doanh thu ${k.indicatorCode}: Mở rộng phân phối và khai thác thương mại các kênh phái sinh Wolfoo.`;
-          impact = `Nâng doanh thu đạt kế hoạch ${target} VNĐ (hiện đạt ${rate}%)`;
-        }
-      } else if (parsedUnit === "Music") {
-        title = `[Music] Tối ưu chỉ số ${k.indicatorCode}: Tổ chức tập huấn prompt âm nhạc AI (Suno/Udio) và tăng tốc phát hành bản quyền nhạc số SCMU.`;
-        impact = `Nâng cao hiệu suất sáng tác để cải thiện chỉ số từ ${rate}% lên 100%`;
-      } else if (parsedUnit === "Lego") {
-        title = `[Lego] Cải tiến chỉ số ${k.indicatorCode}: Tập trung sản xuất stop-motion đồ chơi ngách non-KID và xây dựng kịch bản chia phe.`;
-        impact = `Gia tăng tỷ lệ giữ chân người xem và tương tác bình luận (hiện đạt ${rate}%)`;
-      } else if (parsedUnit === "AS") {
-        title = `[Animated Story] Tháo gỡ chỉ số ${k.indicatorCode}: Chuẩn hóa kịch bản teen story/drama học đường và tối ưu định dạng Spotify.`;
-        impact = `Rút ngắn thời gian duyệt kịch bản và gia tăng lượng thính giả (hiện đạt ${rate}%)`;
-      } else if (parsedUnit === "DA01") {
-        title = `[Dự án 01] Thúc đẩy chỉ số ${k.indicatorCode}: Đóng gói và tái biên tập kho phim hoạt hình cũ của Sconnect để đưa lên các nền tảng OTT mới.`;
-        impact = `Khai thác tối đa giá trị kho nội dung gốc sẵn có nhằm đạt kế hoạch doanh thu ${target}`;
-      } else if (parsedUnit === "CN") {
-        title = `[CNGP Game] Tối ưu chỉ số ${k.indicatorCode}: Hoàn thiện tích hợp in-app purchase (IAP) và tự động hóa hệ thống kênh game app.`;
-        impact = `Cải thiện tỷ lệ chuyển đổi doanh thu người chơi game Wolfoo (hiện đạt ${rate}%)`;
+  targetKpis.forEach(k => {
+    if (suggestedActions.length >= 5) return;
+
+    const { code, title, target, actual, rate, exp } = k;
+    let actionTitle = "";
+    let impact = "";
+
+    const isRevenue = code.includes("M1-I02") || title.toUpperCase().includes("DOANH THU") || title.toUpperCase().includes("TIỀN");
+    const isProduction = code.includes("M2-I01") || code.includes("M2-I02") || title.toUpperCase().includes("SẢN XUẤT") || title.toUpperCase().includes("SẢN LƯỢNG") || title.toUpperCase().includes("VIDEO");
+    const isTraffic = code.includes("M3-I01") || title.toUpperCase().includes("VIEW") || title.toUpperCase().includes("TRAFFIC") || title.toUpperCase().includes("KÊNH") || title.toUpperCase().includes("SUBSCRIBER");
+    const isQualityDiscipline = code.includes("M4") || code.includes("M7") || title.toUpperCase().includes("KỶ LUẬT") || title.toUpperCase().includes("CHẤT LƯỢNG") || title.toUpperCase().includes("QC");
+    const isHR = code.includes("M5") || code.includes("M6") || title.toUpperCase().includes("NHÂN SỰ") || title.toUpperCase().includes("ĐÀO TẠO") || title.toUpperCase().includes("NĂNG LỰC");
+
+    const noteContext = exp ? ` (Do khó khăn: ${exp})` : "";
+
+    if (parsedUnit === "Wolfoo" || parsedUnit === "Wofloo") {
+      if (isRevenue) {
+        actionTitle = `[Wolfoo OKR-O1] Thúc đẩy doanh thu phái sinh ${code}: Mở rộng phân phối và khai thác hợp tác IP Wolfoo.`;
+        impact = `Nâng doanh thu đạt kế hoạch ${target > 0 ? target.toLocaleString('vi-VN') + ' VNĐ' : ''} (hiện đạt ${rate}%)${noteContext}`;
+      } else if (isTraffic) {
+        actionTitle = `[Wolfoo OKR-O1] Tối ưu hóa lượt xem Shorts/Reels ${code}: Đẩy mạnh thuật toán SEO và thiết kế thumbnail chuẩn Q3.`;
+        impact = `Khôi phục tăng trưởng lượt xem và mở rộng tệp khán giả (hiện đạt ${rate}%)${noteContext}`;
+      } else if (isQualityDiscipline) {
+        actionTitle = `[Wolfoo OKR-O3] Rà soát quy trình QC & kỷ luật ${code}: Siết chặt kiểm chuẩn đầu ra và tuân thủ SLA sản xuất.`;
+        impact = `Đảm bảo 100% sản phẩm đạt chuẩn chất lượng trước khi phát hành (hiện đạt ${rate}%)${noteContext}`;
+      } else if (isHR) {
+        actionTitle = `[Wolfoo OKR-O2] Tập huấn nhân sự & AIVA ${code}: Tổ chức đào tạo dựng thô và ứng dụng AI sinh phông nền.`;
+        impact = `Nâng cao năng suất nhân sự và rút ngắn thời gian chu kỳ sản xuất (hiện đạt ${rate}%)${noteContext}`;
       } else {
-        title = `[${parsedUnit}] Khắc phục chỉ số ${k.indicatorCode}: Đẩy mạnh ứng dụng AIVA và rà soát quy trình phối hợp để tháo gỡ điểm nghẽn.`;
-        impact = `Nâng cao hiệu suất thực tế từ ${rate}% đạt mức cam kết 100%`;
+        actionTitle = `[Wolfoo OKR-O1] Chuẩn hóa thư viện asset 3D/2D dùng chung ${code}: Nâng tỷ lệ tái sử dụng assets lên >=60%.`;
+        impact = `Rút ngắn thời gian dựng thô nhằm bù đắp thiếu hụt sản lượng (hiện đạt ${rate}%)${noteContext}`;
       }
+    } else if (parsedUnit === "Music" || parsedUnit === "SCMU") {
+      if (isRevenue) {
+        actionTitle = `[Music OKR-O1] Bứt phá doanh thu nhạc số phái sinh ${code}: Đẩy mạnh phân phối Spotify, Apple Music và bản quyền SCMU.`;
+        impact = `Đưa doanh thu đạt mục tiêu ${target > 0 ? target.toLocaleString('vi-VN') + ' VNĐ' : ''} (hiện đạt ${rate}%)${noteContext}`;
+      } else if (isProduction) {
+        actionTitle = `[Music OKR-O2] Tăng tốc sản xuất nhạc nền AI ${code}: Tập huấn prompt Suno/Udio đạt >1,000 bài/tháng.`;
+        impact = `Tăng sản lượng bài hát hoàn thành để bù đắp chỉ số (hiện đạt ${rate}%)${noteContext}`;
+      } else if (isTraffic) {
+        actionTitle = `[Music OKR-O1] Tối ưu hóa lượt nghe YouTube Music / Audio Drama ${code}: Đẩy mạnh truyền thông tệp teen story.`;
+        impact = `Cải thiện lưu lượng truy cập và mở rộng tệp thính giả (hiện đạt ${rate}%)${noteContext}`;
+      } else {
+        actionTitle = `[Music OKR-O3] Tối ưu chi phí sản xuất & bản quyền ${code}: Ứng dụng AIVA kiểm duyệt bản quyền nhạc tự động.`;
+        impact = `Nâng cao hiệu suất hoạt động đạt cam kết kế hoạch (hiện đạt ${rate}%)${noteContext}`;
+      }
+    } else if (parsedUnit === "Lego") {
+      actionTitle = `[Lego OKR-O1] Cải tiến stop-motion chia phe ${code}: Xây dựng kịch bản Công & Thủ thành cho tệp non-KID.`;
+      impact = `Tăng tỷ lệ tương tác bình luận lên 150% và nâng chỉ số đạt ${rate}%${noteContext}`;
+    } else if (parsedUnit === "AS") {
+      actionTitle = `[Animated Story OKR-O1] Chuẩn hóa kịch bản Teen Story ${code}: Rút ngắn thời gian duyệt và tối ưu kênh Spotify.`;
+      impact = `Đảm bảo tiến độ phát hành và gia tăng lượt thính giả (hiện đạt ${rate}%)${noteContext}`;
+    } else if (parsedUnit === "CN" || parsedUnit === "CNGP") {
+      actionTitle = `[CNGP Game OKR-O1] Tối ưu chuyển đổi IAP & Game App ${code}: Tích hợp mua hàng trong ứng dụng và tự động hóa xuất bản.`;
+      impact = `Tăng tỷ lệ chuyển đổi doanh thu người chơi (hiện đạt ${rate}%)${noteContext}`;
+    } else {
+      actionTitle = `[${parsedUnit}] Tháo gỡ khó khăn chỉ số ${code}: Đẩy mạnh ứng dụng AIVA và rà soát quy trình phối hợp nội bộ.`;
+      impact = `Nâng hiệu suất từ ${rate}% đạt mức cam kết 100%${noteContext}`;
+    }
 
+    if (!seenTitles.has(actionTitle)) {
+      seenTitles.add(actionTitle);
       suggestedActions.push({
-        title,
-        targetIndicator: k.indicatorCode,
+        title: actionTitle,
+        targetIndicator: code,
         impact
       });
-    });
-  } else {
-    // Tất cả KPI đều đạt hoặc không có dữ liệu yếu
-    summary += `Tất cả các chỉ số KPI của đơn vị ${parsedUnit} đều đạt tiến độ và nằm trong vùng an toàn (>= 90%). Khuyến nghị tiếp tục tối ưu hóa hiệu suất.${notesSection}`;
-    
-    // Sinh các action tối ưu hóa theo đơn vị
-    const firstCode = kpis[0]?.indicatorCode || "VM2-I01.01";
-    if (parsedUnit === "Wofloo") {
-      suggestedActions = [
-        { title: "[Wolfoo] Tiếp tục chuẩn hóa thư viện asset dùng chung để giữ vững đà tăng trưởng sản xuất Wolfoo 3D.", targetIndicator: firstCode, impact: "Duy trì sản lượng ổn định và nâng cao tính kế thừa" },
-        { title: "[Wolfoo] Áp dụng công cụ AI sinh phông nền tự động để giảm OPEX sản xuất phim hoạt hình.", targetIndicator: firstCode, impact: "Tiết kiệm 20% chi phí bối cảnh sản xuất" }
-      ];
-    } else if (parsedUnit === "Music") {
-      suggestedActions = [
-        { title: "[Music] Tăng cường kiểm duyệt và phân phối bản quyền nhạc số đa nền tảng toàn cầu.", targetIndicator: firstCode, impact: "Tối đa hóa doanh thu nhạc số phái sinh" },
-        { title: "[Music] Tổ chức buổi đào tạo nâng cao kỹ năng prompt âm nhạc AI thế hệ mới.", targetIndicator: firstCode, impact: "Nâng cao năng suất sáng tác bài hát nền" }
-      ];
-    } else if (parsedUnit === "Lego") {
-      suggestedActions = [
-        { title: "[Lego] Tiếp tục tối ưu hóa nội dung stop-motion chia phe chiến tuyến cho tệp non-KID.", targetIndicator: firstCode, impact: "Duy trì lượng tương tác bình luận cao hơn 150%" }
-      ];
-    } else if (parsedUnit === "AS") {
-      suggestedActions = [
-        { title: "[Animated Story] Phối hợp PnC và SAMA mở lớp đào tạo biên kịch và viết prompt kịch bản nhanh.", targetIndicator: firstCode, impact: "Đảm bảo cung cấp đủ lượng kịch bản đầu vào" }
-      ];
-    } else {
-      suggestedActions = [
-        { title: `[${parsedUnit}] Đẩy mạnh ứng dụng AIVA để tăng tốc độ tự động hóa quy trình vận hành.`, targetIndicator: firstCode, impact: "Tối ưu hóa năng suất lao động thêm 200%" },
-        { title: `[${parsedUnit}] Thực hiện đồng bộ hóa thư viện và tối ưu quy trình phối hợp nội bộ.`, targetIndicator: firstCode, impact: "Giảm thời gian chu kỳ ra quyết định xuống <24h" }
-      ];
     }
-  }
+  });
+
+  suggestedActions = suggestedActions.slice(0, 5);
 
   return {
-    summary,
+    summary: summary + `Đã tổng hợp ${suggestedActions.length} hành động trọng tâm gắn liền với OKR kỳ của đơn vị.`,
     forecasts: kpis.map(k => {
       const completionRate = k.targetValue > 0 ? (k.actualValue / k.targetValue) * 100 : 100;
       let risk = "Thấp";
       if (completionRate < 75) risk = "Rất cao";
       else if (completionRate < 90) risk = "Cao";
-      
       return {
-        indicatorCode: k.indicatorCode,
+        indicatorCode: k.indicatorCode || k.code,
         progress: Math.round(completionRate),
         forecastProgress: Math.min(100, Math.round(completionRate * 1.1)),
         riskLevel: risk,
@@ -272,7 +232,6 @@ export async function POST(request: Request) {
       console.warn("Lỗi truy vấn DB KPIs chéo, bỏ qua dữ liệu bổ sung:", dbErr);
     }
 
-    // Thiết lập Generative Model của Gemini với danh sách mô hình dự phòng tự động
     const MODEL_FALLBACK_LIST = [
       "gemini-flash-latest",
       "gemini-2.5-flash",
@@ -296,7 +255,7 @@ export async function POST(request: Request) {
     }];
 
     const kpiSummaryText = kpis.map(k => 
-      `- Chỉ số: ${k.indicatorCode} (${k.title || k.indicatorCode}), Kế hoạch: ${k.targetValue}, Thực tế: ${k.actualValue}, Giải trình/Ghi chú thực tế: ${k.explanation || "Không có"}, PIC: ${k.pic}`
+      `- Chỉ số: ${k.indicatorCode || k.code} (${k.title || k.indicatorCode || k.code}), Kế hoạch: ${k.targetValue}, Thực tế: ${k.actualValue}, Ghi chú khó khăn/Giải trình thực tế: "${k.explanation || "Không có"}", PIC: ${k.pic || "Chưa gán"}`
     ).join("\n");
 
     const prompt = `
@@ -304,37 +263,36 @@ Bạn là Trợ lý AI Quản trị Mục tiêu cao cấp tại Sconnect.
 Hãy phân tích dữ liệu hiệu suất KPI kỳ này của đơn vị ${unitCode} (chu kỳ: ${periodType}, kỳ: ${periodKey}) và gợi ý các hành động tối ưu hóa hiệu quả thực tế.
 
 ĐỂ ĐƯA RA ĐỀ XUẤT CHUẨN XÁC, BẠN CẦN:
-1. So sánh đối chiếu với TOÀN BỘ CÁC CHỈ TIÊU KHÁC trong hệ thống của đơn vị:
-=== BẮT ĐẦU TOÀN BỘ KPIS ĐƠN VỊ TRONG HỆ THỐNG ===
-${dbKpisText || "Không có thông tin bổ sung"}
-=== KẾT THÚC TOÀN BỘ KPIS ĐƠN VỊ TRONG HỆ THỐNG ===
+1. GẮN LIỀN VỚI BỘ OKR CỦA ĐƠN VỊ THUỘC KỲ NÀY trong tài liệu chiến lược Sconnect:
+=== BẮT ĐẦU CHIẾN LƯỢC SCONNECT & OKR ĐƠN VỊ ===
+${sconnectContext}
+=== KẾT THÚC CHIẾN LƯỢC SCONNECT & OKR ĐƠN VỊ ===
 
 2. Đọc kỹ GIẢI TRÌNH/GHI CHÚ THỰC TẾ và TIẾN ĐỘ (%) của từng chỉ tiêu để hiểu khó khăn thực tế của nhân sự:
 CHI TIẾT KPIS CẦN PHÂN TÍCH:
 ${kpiSummaryText}
 
-3. Phân tích bối cảnh chiến lược năm 2026 của Sconnect/SCVN:
-=== BẮT ĐẦU CHIẾN LƯỢC SCONNECT 2026 ===
-${sconnectContext}
-=== KẾT THÚC CHIẾN LƯỢC SCONNECT 2026 ===
+3. QUY TẮC ĐỀ XUẤT ACTION (BẮT BỘC):
+- GIỚI HẠN TỐI ĐA 5 ACTIONS (Không trả về nhiều hơn 5 hành động).
+- Phân hóa rõ ràng action theo từng mảng chuyên môn: Doanh thu (M1), Sản lượng (M2), Traffic (M3), Kỷ luật (M4), Nhân sự (M5). KHÔNG lặp lại cùng 1 mẫu câu sản xuất cho các chỉ số khác mảng (ví dụ: chỉ số Doanh thu/Traffic không dùng mẫu câu dựng phim/render).
+- Nội dung action vừa tháo gỡ đúng khó khăn ghi chú, vừa thể hiện rõ định hướng OKR của đơn vị.
+- Đảm bảo không có 2 action nào bị trùng lặp tiêu đề.
 
-4. SỬ DỤNG TOOL 'searchMarketTrends' để chủ động tìm kiếm thông tin thị trường/đối thủ trên Google/YouTube/Spotify liên quan đến đơn vị "${unitCode}" để đưa ra đề xuất sát sườn nhất.
-
-YÊU CẦU:
-Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau (không kèm markdown block hoặc giải thích bên ngoài):
+YÊU CẦU ĐỊNH DẠNG:
+Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau:
 {
   "summary": "Mô tả ngắn gọn khoảng 3-4 câu đánh giá tổng quan, đối chiếu tiến độ doanh thu, traffic, sản lượng của đơn vị. Nêu rõ cảnh báo dựa trên ghi chú giải trình khó khăn thực tế.",
   "forecasts": [
     {
       "indicatorCode": "mã chỉ tiêu",
-      "progress": 80, // % hoàn thành hiện tại
-      "forecastProgress": 90, // % dự báo đạt được vào cuối kỳ
-      "riskLevel": "Rất cao" // Rất cao (nếu % < 75), Cao (nếu % từ 75-85), Thấp (nếu % > 85)
+      "progress": 80,
+      "forecastProgress": 90,
+      "riskLevel": "Rất cao"
     }
   ],
   "suggestedActions": [
     {
-      "title": "Tên hành động cụ thể gợi ý khắc phục lỗi hoặc tối ưu hiệu suất, bám sát thị trường ngành",
+      "title": "Tên hành động cụ thể gợi ý khắc phục lỗi hoặc tối ưu hiệu suất, bám sát OKR đơn vị và thị trường",
       "targetIndicator": "mã chỉ tiêu bị ảnh hưởng trực tiếp",
       "impact": "Mô tả tác động định lượng kỳ vọng đạt được"
     }
@@ -401,6 +359,9 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
         
         const cleanJson = toolResponse.response.text().replace(/```json/g, "").replace(/```/g, "").trim();
         const data = JSON.parse(cleanJson);
+        if (data && Array.isArray(data.suggestedActions)) {
+          data.suggestedActions = data.suggestedActions.slice(0, 5);
+        }
         return NextResponse.json(data);
       }
     }
@@ -408,6 +369,10 @@ Trả về phản hồi định dạng JSON duy nhất, có cấu trúc như sau
     const responseText = result.response.text().trim();
     const cleanJson = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
     const data = JSON.parse(cleanJson);
+
+    if (data && Array.isArray(data.suggestedActions)) {
+      data.suggestedActions = data.suggestedActions.slice(0, 5);
+    }
 
     return NextResponse.json(data);
   } catch (error: any) {

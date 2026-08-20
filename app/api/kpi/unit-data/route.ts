@@ -201,6 +201,9 @@ export async function GET(request: Request) {
               (unitCode === "SCMU" && r.unitCode === "Music") ||
               (unitCode === "CN" && r.unitCode === "CNGP") ||
               (unitCode === "CNGP" && r.unitCode === "CN") ||
+              (unitCode === "SCS" && r.unitCode === "Studio") ||
+              (unitCode === "Studio" && r.unitCode === "SCS") ||
+              (unitCode === "Wofloo" && (r.unitCode === "WF" || r.unitCode === "WO")) ||
               (suffix && r.indicatorCode && r.indicatorCode.endsWith(suffix));
             return isMatch && !r.productCode;
           }
@@ -210,7 +213,12 @@ export async function GET(request: Request) {
           const existingIdx = records.findIndex(r => r.indicatorCode === jr.indicatorCode && r.periodKey === jr.periodKey);
           if (existingIdx >= 0) {
             if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
-              records[existingIdx] = { ...jr, ...records[existingIdx] };
+              records[existingIdx] = {
+                ...records[existingIdx],
+                ...jr,
+                targetValue: (jr.targetValue !== undefined && (jr.targetValue > 0 || jr.isOverridden)) ? jr.targetValue : (records[existingIdx].targetValue || 0),
+                actualValue: (jr.actualValue !== undefined && (jr.actualValue > 0 || jr.isOverridden)) ? jr.actualValue : (records[existingIdx].actualValue || 0)
+              };
             }
           } else {
             records.push(jr);

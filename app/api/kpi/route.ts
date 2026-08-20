@@ -500,7 +500,12 @@ export async function GET(request: Request) {
           const idx = enrichedRecords.findIndex((r: any) => r.indicatorCode === jr.indicatorCode);
           if (idx >= 0) {
             if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
-              enrichedRecords[idx] = { ...jr, ...enrichedRecords[idx] };
+              enrichedRecords[idx] = {
+                ...enrichedRecords[idx],
+                ...jr,
+                targetValue: (jr.targetValue !== undefined && (jr.targetValue > 0 || jr.isOverridden)) ? jr.targetValue : (enrichedRecords[idx].targetValue || 0),
+                actualValue: (jr.actualValue !== undefined && (jr.actualValue > 0 || jr.isOverridden)) ? jr.actualValue : (enrichedRecords[idx].actualValue || 0)
+              };
             }
           } else {
             enrichedRecords.push({
