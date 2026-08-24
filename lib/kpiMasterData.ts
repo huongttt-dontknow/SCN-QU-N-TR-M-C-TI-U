@@ -18,14 +18,29 @@ export interface MasterKpiItem {
 export const MASTER_KPI_DATA = masterKpiDataJson as unknown as Record<string, Record<string, MasterKpiItem>>;
 
 export function getMasterKpiRecord(unitCode: string, kpiCode: string, periodKey: string): PeriodKpiVal | null {
-  const u = MASTER_KPI_DATA[unitCode] || MASTER_KPI_DATA["SCVN"];
-  if (!u) return null;
-  let item = u[kpiCode];
-  if (!item && (kpiCode === "VM1-I02.01" || kpiCode === "M1-I02" || kpiCode === "CM1-I02.01")) {
-    item = u["VM1-I02.01"] || u["CM1-I02.01"] || u["2.1"] || Object.values(u).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
+  const checkDict = (dict: Record<string, MasterKpiItem> | undefined) => {
+    if (!dict) return null;
+    let item = dict[kpiCode];
+    if (!item && (kpiCode === "VM1-I02.01" || kpiCode === "M1-I02" || kpiCode === "CM1-I02.01")) {
+      item = dict["VM1-I02.01"] || dict["CM1-I02.01"] || dict["2.1"] || Object.values(dict).find(v => v.title && (v.title.toUpperCase().includes("TỔNG DOANH THU") || (v.title.toUpperCase().includes("DOANH THU") && !v.title.toUpperCase().includes("NỘI BỘ"))));
+    }
+    if (item && item.periods && item.periods[periodKey]) {
+      return item.periods[periodKey];
+    }
+    return null;
+  };
+
+  if (unitCode && MASTER_KPI_DATA[unitCode]) {
+    const res = checkDict(MASTER_KPI_DATA[unitCode]);
+    if (res) return res;
   }
-  if (!item || !item.periods) return null;
-  return item.periods[periodKey] || null;
+
+  if (MASTER_KPI_DATA["SCVN"]) {
+    const resSCVN = checkDict(MASTER_KPI_DATA["SCVN"]);
+    if (resSCVN) return resSCVN;
+  }
+
+  return null;
 }
 
 export function getMasterKpiActual(unitCode: string, kpiCode: string, periodKey: string): number | null {

@@ -73,9 +73,32 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
       CR: 100100000,
     };
 
+    // 1. Check MASTER_KPI_DATA for exact pKey
+    const scvnDict = MASTER_KPI_DATA["SCVN"] || {};
+    const uDict = MASTER_KPI_DATA[uCode] || {};
+    for (const cCode of candidateCodes) {
+      const p1 = uDict[cCode]?.periods?.[pKey];
+      if (p1 && (p1.actual !== undefined || p1.target !== undefined)) {
+        let tgt = p1.target || 0;
+        if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+          tgt = month8MasterTargets[uCode];
+        }
+        return { target: tgt, actual: p1.actual || 0 };
+      }
+      const p2 = scvnDict[cCode]?.periods?.[pKey];
+      if (p2 && (p2.actual !== undefined || p2.target !== undefined)) {
+        let tgt = p2.target || 0;
+        if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+          tgt = month8MasterTargets[uCode];
+        }
+        return { target: tgt, actual: p2.actual || 0 };
+      }
+    }
+
+    // 2. Check kpiDataList for item with exact periodKey === pKey
     if (kpiDataList && kpiDataList.length > 0) {
       const subSuffixes = ["-Lego", "-WF", "-AS", "-NDTH", "-DA01", "-CR", "-CNGP", "-SCS", "-SCMU", "-WO", "-LEGO"];
-      let matches = kpiDataList.filter(k => {
+      const matches = kpiDataList.filter(k => {
         const kCode = k.code || k.indicatorCode;
         if (uCode === "SCVN") {
           return kCode === "VM1-I02.01" && (!k.unitCode || k.unitCode === "SCVN");
@@ -83,36 +106,22 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
         return (k.unitCode === uCode || subSuffixes.some(s => kCode?.endsWith(s))) && candidateCodes.includes(kCode);
       });
 
-      if (matches.length > 0) {
-        let maxAct = 0;
-        let maxTgt = 0;
-        for (const m of matches) {
-          let act = 0;
-          let tgt = 0;
-          if (m.periods && m.periods[pKey]) {
-            act = m.periods[pKey].actual || 0;
-            tgt = m.periods[pKey].target || 0;
-          } else if (m.periodKey === pKey) {
-            act = m.actualValue || 0;
-            tgt = m.targetValue || 0;
-          } else if (pKey.startsWith("monthly_")) {
-            act = m.actualMonth || 0;
-            tgt = m.targetMonth || 0;
-          } else if (pKey.startsWith("weekly_")) {
-            act = m.actualWeek || 0;
-            tgt = m.targetWeek || 0;
+      for (const m of matches) {
+        if (m.periods && m.periods[pKey]) {
+          let tgt = m.periods[pKey].target || 0;
+          if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+            tgt = month8MasterTargets[uCode];
           }
-          if (act > maxAct) maxAct = act;
-          if (tgt > maxTgt) maxTgt = tgt;
+          return { target: tgt, actual: m.periods[pKey].actual || 0 };
         }
-
-        let target = maxTgt;
-        if (pKey.startsWith("monthly_")) {
-          if (month === 8 && month8MasterTargets[uCode]) {
-            target = month8MasterTargets[uCode];
+        if (m.periodKey === pKey) {
+          let tgt = m.targetValue ?? m.targetWeek ?? m.targetMonth ?? 0;
+          let act = m.actualValue ?? m.actualWeek ?? m.actualMonth ?? 0;
+          if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+            tgt = month8MasterTargets[uCode];
           }
+          return { target: tgt, actual: act };
         }
-        return { target, actual: maxAct };
       }
     }
 

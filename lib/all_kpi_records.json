@@ -189699,7 +189699,7 @@
     "periodType": "weekly",
     "periodKey": "weekly_8_3",
     "targetValue": 189696000,
-    "actualValue": 156000000,
+    "actualValue": 154744539,
     "weight": 0,
     "explanation": "",
     "status": "Chưa thực hiện",
@@ -189707,7 +189707,7 @@
     "unit": "VNĐ",
     "parentCode": "VM1-I02.01",
     "isOverridden": true,
-    "pct": 0.8223684210526315
+    "pct": 0.8157501423329959
   },
   {
     "id": "SCVN-unit-MM1-I02.01-SCMU-weekly_8_3",
@@ -189717,7 +189717,7 @@
     "periodType": "weekly",
     "periodKey": "weekly_8_3",
     "targetValue": 60000000,
-    "actualValue": 26500000,
+    "actualValue": 26567869,
     "weight": 0,
     "explanation": "",
     "status": "Chưa thực hiện",
@@ -189725,7 +189725,7 @@
     "unit": "VNĐ",
     "parentCode": "VM1-I02.01",
     "isOverridden": true,
-    "pct": 0.44166666666666665
+    "pct": 0.4427978166666667
   },
   {
     "id": "SCVN-unit-NM1-I02.01-CNGP-weekly_8_3",
@@ -189735,7 +189735,7 @@
     "periodType": "weekly",
     "periodKey": "weekly_8_3",
     "targetValue": 56451613,
-    "actualValue": 12238088,
+    "actualValue": 14886661,
     "weight": 0,
     "explanation": "",
     "status": "Chưa thực hiện",
@@ -189743,7 +189743,7 @@
     "unit": "VNĐ",
     "parentCode": "VM1-I02.01",
     "isOverridden": true,
-    "pct": 0.21678898705693317
+    "pct": 0.2637065658336459
   },
   {
     "id": "SCS-unit-SM1-I02.01-weekly_8_1",
@@ -189974,11 +189974,12 @@
     "indicatorCode": "VM1-I02.01-WF",
     "code": "VM1-I02.01-WF",
     "periodKey": "weekly_8_3",
-    "targetValue": 560599316,
-    "actualValue": 337940465,
-    "targetWeek": 560599316,
-    "actualWeek": 337940465,
-    "status": "Đang thực hiện"
+    "targetValue": 140149829,
+    "actualValue": 97863800,
+    "targetWeek": 140149829,
+    "actualWeek": 97863800,
+    "status": "Đang thực hiện",
+    "pct": 0.698279838785961
   },
   {
     "id": "SCVN-unit-VM1-I02.01-WF-weekly_8_2",
@@ -189986,11 +189987,12 @@
     "indicatorCode": "VM1-I02.01-WF",
     "code": "VM1-I02.01-WF",
     "periodKey": "weekly_8_2",
-    "targetValue": 560599316,
-    "actualValue": 307218604,
-    "targetWeek": 560599316,
-    "actualWeek": 307218604,
-    "status": "Đang thực hiện"
+    "targetValue": 140149829,
+    "actualValue": 95932400,
+    "targetWeek": 140149829,
+    "actualWeek": 95932400,
+    "status": "Đang thực hiện",
+    "pct": 0.6844988729882788
   },
   {
     "id": "Wofloo-unit-VM1-I02.01-weekly_8_3",
@@ -190023,10 +190025,11 @@
     "code": "VM1-I02.01-Lego",
     "periodKey": "weekly_8_3",
     "targetValue": 151669409,
-    "actualValue": 35123985,
+    "actualValue": 59920582,
     "targetWeek": 151669409,
     "actualWeek": 35123985,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.3950736169875891
   },
   {
     "id": "SCVN-unit-VM1-I02.01-Lego-weekly_8_2",
@@ -190035,10 +190038,11 @@
     "code": "VM1-I02.01-Lego",
     "periodKey": "weekly_8_2",
     "targetValue": 151669409,
-    "actualValue": 35624541,
+    "actualValue": 56793768,
     "targetWeek": 151669409,
     "actualWeek": 35624541,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.37445763370779667
   },
   {
     "id": "Lego-unit-VM1-I02.01-Lego-weekly_8_3",
@@ -190047,10 +190051,11 @@
     "code": "VM1-I02.01-Lego",
     "periodKey": "weekly_8_3",
     "targetValue": 151669409,
-    "actualValue": 35123985,
+    "actualValue": 59920582,
     "targetWeek": 151669409,
     "actualWeek": 35123985,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.3950736169875891
   },
   {
     "id": "Lego-unit-VM1-I02.01-Lego-weekly_8_2",
@@ -190059,10 +190064,11 @@
     "code": "VM1-I02.01-Lego",
     "periodKey": "weekly_8_2",
     "targetValue": 151669409,
-    "actualValue": 35624541,
+    "actualValue": 56793768,
     "targetWeek": 151669409,
     "actualWeek": 35624541,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.37445763370779667
   },
   {
     "id": "SCVN-unit-VM1-I02.01-AS-weekly_8_3",
@@ -190071,10 +190077,11 @@
     "code": "VM1-I02.01-AS",
     "periodKey": "weekly_8_3",
     "targetValue": 278772000,
-    "actualValue": 158886000,
+    "actualValue": 166088000,
     "targetWeek": 278772000,
     "actualWeek": 158886000,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.59578436858795
   },
   {
     "id": "SCVN-unit-VM1-I02.01-AS-weekly_8_2",
@@ -190083,10 +190090,11 @@
     "code": "VM1-I02.01-AS",
     "periodKey": "weekly_8_2",
     "targetValue": 281944000,
-    "actualValue": 154934000,
+    "actualValue": 151554000,
     "targetWeek": 281944000,
     "actualWeek": 154934000,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.5375322759129473
   },
   {
     "id": "AS-unit-VM1-I02.01-weekly_8_3",
@@ -190119,11 +190127,11 @@
     "code": "DM1-I02.01-DA01",
     "periodKey": "weekly_8_3",
     "targetValue": 190333000,
-    "actualValue": 140136943,
+    "actualValue": 140136942,
     "targetWeek": 190333000,
     "actualWeek": 140136943,
     "status": "Đang thực hiện",
-    "pct": 0.7363
+    "pct": 0.7362724383054962
   },
   {
     "id": "SCVN-unit-DM1-I02.01-DA01-weekly_8_2",
@@ -190131,11 +190139,12 @@
     "indicatorCode": "DM1-I02.01-DA01",
     "code": "DM1-I02.01-DA01",
     "periodKey": "weekly_8_2",
-    "targetValue": 130380000,
-    "actualValue": 158605237,
+    "targetValue": 190333000,
+    "actualValue": 131308110,
     "targetWeek": 130380000,
     "actualWeek": 158605237,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.6898861994504368
   },
   {
     "id": "DA01-unit-DM1-I02.01-weekly_8_3",
@@ -190144,11 +190153,11 @@
     "code": "DM1-I02.01",
     "periodKey": "weekly_8_3",
     "targetValue": 190333000,
-    "actualValue": 140136943,
+    "actualValue": 140136942,
     "targetWeek": 190333000,
     "actualWeek": 140136943,
     "status": "Đang thực hiện",
-    "pct": 0.7363
+    "pct": 0.7362724383054962
   },
   {
     "id": "DA01-unit-DM1-I02.01-weekly_8_2",
@@ -190156,11 +190165,12 @@
     "indicatorCode": "DM1-I02.01",
     "code": "DM1-I02.01",
     "periodKey": "weekly_8_2",
-    "targetValue": 130380000,
-    "actualValue": 158605237,
+    "targetValue": 190333000,
+    "actualValue": 131308110,
     "targetWeek": 130380000,
     "actualWeek": 158605237,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.6898861994504368
   },
   {
     "id": "Music-unit-MM1-I02.01-weekly_8_3",
@@ -190169,10 +190179,11 @@
     "code": "MM1-I02.01",
     "periodKey": "weekly_8_3",
     "targetValue": 60000000,
-    "actualValue": 26500000,
+    "actualValue": 26567869,
     "targetWeek": 60000000,
     "actualWeek": 26500000,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.4427978166666667
   },
   {
     "id": "SCVN-unit-VM1-I02.01-NDTH-weekly_8_3",
@@ -190181,10 +190192,11 @@
     "code": "VM1-I02.01-NDTH",
     "periodKey": "weekly_8_3",
     "targetValue": 137500000,
-    "actualValue": 110532786,
+    "actualValue": 80220411,
     "targetWeek": 137500000,
     "actualWeek": 110532786,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.583421170909091
   },
   {
     "id": "SCVN-unit-VM1-I02.01-NDTH-weekly_8_2",
@@ -190193,10 +190205,11 @@
     "code": "VM1-I02.01-NDTH",
     "periodKey": "weekly_8_2",
     "targetValue": 137500000,
-    "actualValue": 110425866,
+    "actualValue": 107000000,
     "targetWeek": 137500000,
     "actualWeek": 110425866,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.7781818181818182
   },
   {
     "id": "NDTH-unit-VM1-I02.01-weekly_8_3",
@@ -190232,7 +190245,8 @@
     "actualValue": 0,
     "targetWeek": 0,
     "actualWeek": 0,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0
   },
   {
     "id": "SCVN-unit-CM1-I02.01-CR-weekly_8_2",
@@ -190244,7 +190258,8 @@
     "actualValue": 0,
     "targetWeek": 0,
     "actualWeek": 0,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0
   },
   {
     "id": "CR-unit-CM1-I02.01-weekly_8_3",
@@ -190256,7 +190271,8 @@
     "actualValue": 0,
     "targetWeek": 0,
     "actualWeek": 0,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0
   },
   {
     "id": "CR-unit-CM1-I02.01-weekly_8_2",
@@ -190268,7 +190284,8 @@
     "actualValue": 0,
     "targetWeek": 0,
     "actualWeek": 0,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0
   },
   {
     "id": "SCVN-unit-NM1-I02.01-CNGP-weekly_8_2",
@@ -190277,10 +190294,11 @@
     "code": "NM1-I02.01-CNGP",
     "periodKey": "weekly_8_2",
     "targetValue": 56451613,
-    "actualValue": 13118645,
+    "actualValue": 13900213,
     "targetWeek": 56451613,
     "actualWeek": 13118645,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.24623234414931597
   },
   {
     "id": "CN-unit-NM1-I02.01-weekly_8_3",
@@ -190289,10 +190307,11 @@
     "code": "NM1-I02.01",
     "periodKey": "weekly_8_3",
     "targetValue": 56451613,
-    "actualValue": 12238088,
+    "actualValue": 14886661,
     "targetWeek": 56451613,
     "actualWeek": 12238088,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.2637065658336459
   },
   {
     "id": "CN-unit-NM1-I02.01-weekly_8_2",
@@ -190301,10 +190320,11 @@
     "code": "NM1-I02.01",
     "periodKey": "weekly_8_2",
     "targetValue": 56451613,
-    "actualValue": 13118645,
+    "actualValue": 13900213,
     "targetWeek": 56451613,
     "actualWeek": 13118645,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.24623234414931597
   },
   {
     "id": "SCVN-unit-SM1-I02.01-SCS-weekly_8_2",
@@ -190313,10 +190333,11 @@
     "code": "SM1-I02.01-SCS",
     "periodKey": "weekly_8_2",
     "targetValue": 189696000,
-    "actualValue": 120500000,
+    "actualValue": 123614393,
     "targetWeek": 189696000,
     "actualWeek": 120500000,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.6516446999409582
   },
   {
     "id": "SCS-unit-SM1-I02.01-weekly_8_3",
@@ -190325,10 +190346,11 @@
     "code": "SM1-I02.01",
     "periodKey": "weekly_8_3",
     "targetValue": 189696000,
-    "actualValue": 156000000,
+    "actualValue": 154744539,
     "targetWeek": 189696000,
     "actualWeek": 156000000,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.8157501423329959
   },
   {
     "id": "SCS-unit-SM1-I02.01-weekly_8_2",
@@ -190337,10 +190359,11 @@
     "code": "SM1-I02.01",
     "periodKey": "weekly_8_2",
     "targetValue": 189696000,
-    "actualValue": 120500000,
+    "actualValue": 123614393,
     "targetWeek": 189696000,
     "actualWeek": 120500000,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "pct": 0.6516446999409582
   },
   {
     "id": "SCVN-unit-VM1-I02.02-weekly_8_3",
@@ -190401,5 +190424,84 @@
     "targetValue": 5200000,
     "actualValue": 38000000,
     "status": "Đang thực hiện"
+  },
+  {
+    "id": "SCVN-unit-VM1-I02.01-WF-weekly_8_1",
+    "unitCode": "SCVN",
+    "indicatorCode": "VM1-I02.01-WF",
+    "code": "VM1-I02.01-WF",
+    "periodKey": "weekly_8_1",
+    "targetValue": 140149829,
+    "actualValue": 69792030,
+    "status": "Đang thực hiện",
+    "targetWeek": 140149829,
+    "actualWeek": 69792030,
+    "pct": 0.498
+  },
+  {
+    "id": "AS-unit-VM1-I02.01-AS-weekly_8_2",
+    "unitCode": "AS",
+    "indicatorCode": "VM1-I02.01-AS",
+    "code": "VM1-I02.01-AS",
+    "periodKey": "weekly_8_2",
+    "targetValue": 281944000,
+    "actualValue": 151554000,
+    "status": "Đang thực hiện",
+    "pct": 0.5375322759129473
+  },
+  {
+    "id": "AS-unit-VM1-I02.01-AS-weekly_8_3",
+    "unitCode": "AS",
+    "indicatorCode": "VM1-I02.01-AS",
+    "code": "VM1-I02.01-AS",
+    "periodKey": "weekly_8_3",
+    "targetValue": 278772000,
+    "actualValue": 166088000,
+    "status": "Đang thực hiện",
+    "pct": 0.59578436858795
+  },
+  {
+    "id": "Wofloo-unit-VM1-I02.01-WF-weekly_8_2",
+    "unitCode": "Wofloo",
+    "indicatorCode": "VM1-I02.01-WF",
+    "code": "VM1-I02.01-WF",
+    "periodKey": "weekly_8_2",
+    "targetValue": 140149829,
+    "actualValue": 95932400,
+    "status": "Đang thực hiện",
+    "pct": 0.6844988729882788
+  },
+  {
+    "id": "Wofloo-unit-VM1-I02.01-WF-weekly_8_3",
+    "unitCode": "Wofloo",
+    "indicatorCode": "VM1-I02.01-WF",
+    "code": "VM1-I02.01-WF",
+    "periodKey": "weekly_8_3",
+    "targetValue": 140149829,
+    "actualValue": 97863800,
+    "status": "Đang thực hiện",
+    "pct": 0.698279838785961
+  },
+  {
+    "id": "NDTH-unit-VM1-I02.01-NDTH-weekly_8_2",
+    "unitCode": "NDTH",
+    "indicatorCode": "VM1-I02.01-NDTH",
+    "code": "VM1-I02.01-NDTH",
+    "periodKey": "weekly_8_2",
+    "targetValue": 137500000,
+    "actualValue": 107000000,
+    "status": "Đang thực hiện",
+    "pct": 0.7781818181818182
+  },
+  {
+    "id": "NDTH-unit-VM1-I02.01-NDTH-weekly_8_3",
+    "unitCode": "NDTH",
+    "indicatorCode": "VM1-I02.01-NDTH",
+    "code": "VM1-I02.01-NDTH",
+    "periodKey": "weekly_8_3",
+    "targetValue": 137500000,
+    "actualValue": 80220411,
+    "status": "Đang thực hiện",
+    "pct": 0.583421170909091
   }
 ]
