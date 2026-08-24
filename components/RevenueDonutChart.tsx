@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
-import { getMasterKpiRecord } from "@/lib/kpiMasterData";
+import { MASTER_KPI_DATA } from "@/lib/kpiMasterData";
 
 interface Props {
   unitCode?: string;
@@ -11,35 +11,102 @@ interface Props {
   hideAbsoluteRevenue?: boolean;
 }
 
-export default function RevenueDonutChart({ unitCode = "SCVN", periodKey = "monthly_6", hideAbsoluteRevenue = false }: Props) {
+interface UnitItem {
+  code: string;
+  name: string;
+  candidates: string[];
+}
+
+export default function RevenueDonutChart({ unitCode = "SCVN", periodKey = "weekly_8_3", hideAbsoluteRevenue = false }: Props) {
   const { theme } = useApp();
   const isLight = theme === "light";
+  const [data, setData] = useState<{ name: string; value: number; sharePct: number }[]>([]);
 
-  const unitList = [
-    { code: "Wofloo", name: "Wolfoo (WO)" },
-    { code: "Lego", name: "Lego (LEGO)" },
-    { code: "AS", name: "Animated Story" },
-    { code: "DA01", name: "Dự án 01" },
-    { code: "Music", name: "Music (SCMU)" },
-    { code: "NDTH", name: "NDTH" },
-    { code: "CR", name: "Creative Hub" },
-    { code: "CN", name: "CNGP" },
-    { code: "SCS", name: "Studio" },
+  const unitList: UnitItem[] = [
+    { code: "Wofloo", name: "Wolfoo (WO)", candidates: ["VM1-I02.01-WF"] },
+    { code: "Lego", name: "Lego (LEGO)", candidates: ["VM1-I02.01-Lego"] },
+    { code: "AS", name: "Animated Story", candidates: ["VM1-I02.01-AS"] },
+    { code: "DA01", name: "Dự án 01", candidates: ["DM1-I02.01-DA01", "DM1-I02.01"] },
+    { code: "Music", name: "Music (SCMU)", candidates: ["MM1-I02.01-SCMU", "MM1-I02.01"] },
+    { code: "NDTH", name: "NDTH", candidates: ["VM1-I02.01-NDTH", "2.1"] },
+    { code: "CR", name: "Creative Hub", candidates: ["CM1-I02.01-CR", "CM1-I02.01"] },
+    { code: "CN", name: "CNGP", candidates: ["NM1-I02.01-CNGP", "NM1-I02.01"] },
+    { code: "SCS", name: "Studio", candidates: ["SM1-I02.01-SCS", "SM1-I02.01"] },
   ];
 
-  // Raw values in Triệu VNĐ
-  const rawData = unitList.map(u => {
-    const rec = getMasterKpiRecord(u.code, "VM1-I02.01", periodKey);
-    const val = rec?.actual ? Math.round(rec.actual / 1e6) : (rec?.target ? Math.round(rec.target / 1e6) : 0);
-    return { name: u.name, value: val };
-  }).filter(d => d.value > 0);
+  useEffect(() => {
+    let isMounted = true;
 
-  const totalRev = rawData.reduce((acc, curr) => acc + curr.value, 0);
+    const resolveValue = (u: UnitItem, apiList: any[]) => {
+      // 1. Search API list
+      for (const cCode of u.candidates) {
+        const match = apiList.find((r: any) => 
+          (r.indicatorCode === cCode || r.code === cCode || r.displayCode === cCode) &&
+          ((r.actualValue || 0) > 0 || (r.targetValue || 0) > 0 || (r.actual || 0) > 0 || (r.target || 0) > 0)
+        );
+        if (match) {
+          const val = match.actualValue ?? match.actual ?? match.targetValue ?? match.target ?? 0;
+          if (val > 0) return Math.round(val / 1e6);
+        }
+      }
 
-  const data = rawData.map(d => ({
-    ...d,
-    sharePct: totalRev > 0 ? Number(((d.value / totalRev) * 100).toFixed(1)) : 0
-  }));
+      // 2. Search master dict
+      const scvnDict = MASTER_KPI_DATA["SCVN"] || {};
+      const uDict = MASTER_KPI_DATA[u.code] || {};
+      for (const cCode of u.candidates) {
+        const p1 = uDict[cCode]?.periods?.[periodKey];
+        if (p1 && ((p1.actual || 0) > 0 || (p1.target || 0) > 0)) {
+          const val = p1.actual || p1.target || 0;
+          return Math.round(val / 1e6);
+        }
+        const p2 = scvnDict[cCode]?.periods?.[periodKey];
+        if (p2 && ((p2.actual || 0) > 0 || (p2.target || 0) > 0)) {
+          const val = p2.actual || p2.target || 0;
+          return Math.round(val / 1e6);
+        }
+      }
+
+      return 0;
+    };
+
+    fetch(`/api/kpi?unitCode=SCVN&periodKey=${periodKey}`)
+      .then((res) => res.json())
+      .then((apiData) => {
+        if (!isMounted) return;
+        const apiList = Array.isArray(apiData) ? apiData : [];
+        const rawData = unitList.map((u) => ({
+          name: u.name,
+          value: resolveValue(u, apiList)
+        })).filter((d) => d.value > 0);
+
+        const totalRev = rawData.reduce((acc, curr) => acc + curr.value, 0);
+        const finalData = rawData.map((d) => ({
+          ...d,
+          sharePct: totalRev > 0 ? Number(((d.value / totalRev) * 100).toFixed(1)) : 0
+        }));
+
+        setData(finalData);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        const rawData = unitList.map((u) => ({
+          name: u.name,
+          value: resolveValue(u, [])
+        })).filter((d) => d.value > 0);
+
+        const totalRev = rawData.reduce((acc, curr) => acc + curr.value, 0);
+        const finalData = rawData.map((d) => ({
+          ...d,
+          sharePct: totalRev > 0 ? Number(((d.value / totalRev) * 100).toFixed(1)) : 0
+        }));
+
+        setData(finalData);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [periodKey]);
 
   const COLORS = isLight 
     ? ["#16a34a", "#84cc16", "#0284c7", "#a855f7", "#ec4899", "#f59e0b", "#10b981", "#06b6d4", "#64748b"]

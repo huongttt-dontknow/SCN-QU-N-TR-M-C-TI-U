@@ -45,8 +45,9 @@ export const KPI_TITLE_DICTIONARY: Record<string, string> = {
   "MM1-I02.01": "Doanh thu BP Music (SCMU)",
   "CM1-I02.01": "Doanh thu BP Creative Hub (CR)",
   "CM1-I02.01-CR": "Doanh thu BP Creative Hub (CR)",
-  "NM1-I02.01": "Doanh thu CNGP (CN)",
-  "NM1-I02.01-CNGP": "Doanh thu CNGP (CN)",
+  "CM1-I02.03-CR": "Doanh thu ĐT BP Creative",
+  "NM1-I02.01": "Doanh thu CNGP",
+  "NM1-I02.01-CNGP": "Doanh thu CNGP",
 
   "TM1-I02.01": "Doanh thu sản xuất & phát hành",
   "VM1-I02.02": "Doanh thu NB",

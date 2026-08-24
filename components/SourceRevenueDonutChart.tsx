@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { MASTER_KPI_DATA } from "@/lib/kpiMasterData";
@@ -11,54 +11,114 @@ interface Props {
   hideAbsoluteRevenue?: boolean;
 }
 
-export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey = "monthly_6", hideAbsoluteRevenue = false }: Props) {
+export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey = "weekly_8_3", hideAbsoluteRevenue = false }: Props) {
   const { theme } = useApp();
   const isLight = theme === "light";
+  const [data, setData] = useState<{ name: string; value: number; sharePct: number }[]>([]);
 
-  const uDict = MASTER_KPI_DATA[unitCode] || MASTER_KPI_DATA["SCVN"] || {};
+  useEffect(() => {
+    let isMounted = true;
 
-  const getSourceVal = (kpiCode: string, keyword: string) => {
-    let rec = uDict[kpiCode];
-    if (!rec) {
-      for (const k in uDict) {
-        const v = uDict[k];
-        const t = (v.title || "").toUpperCase();
-        const u = (v.unit || "").toUpperCase();
-        if (t.includes(keyword) || u.includes(keyword)) {
-          rec = v;
-          break;
+    const resolveSourceVal = (code: string, keywords: string[], apiList: any[]) => {
+      // 1. Check API list
+      const apiMatch = apiList.find((r: any) => 
+        (r.indicatorCode === code || r.code === code || keywords.some(kw => (r.title || "").toUpperCase().includes(kw))) &&
+        ((r.actualValue || 0) > 0 || (r.targetValue || 0) > 0 || (r.actual || 0) > 0 || (r.target || 0) > 0)
+      );
+      if (apiMatch) {
+        const val = apiMatch.actualValue ?? apiMatch.actual ?? apiMatch.targetValue ?? apiMatch.target ?? 0;
+        if (val > 0) return Math.round(val / 1e6);
+      }
+
+      // 2. Check MASTER_KPI_DATA
+      const uDict = MASTER_KPI_DATA[unitCode] || MASTER_KPI_DATA["SCVN"] || {};
+      let mRec = uDict[code];
+      if (!mRec) {
+        for (const k in uDict) {
+          const v = uDict[k];
+          const t = (v.title || "").toUpperCase();
+          if (keywords.some(kw => t.includes(kw))) {
+            mRec = v;
+            break;
+          }
         }
       }
-    }
-    if (!rec || !rec.periods) return 0;
-    const p = rec.periods[periodKey];
-    return p?.actual ?? p?.target ?? 0;
-  };
+      if (mRec && mRec.periods && mRec.periods[periodKey]) {
+        const p = mRec.periods[periodKey];
+        const val = p.actual || p.target || 0;
+        if (val > 0) return Math.round(val / 1e6);
+      }
 
-  const noibo = Math.round(getSourceVal("VM1-I02.02", "NỘI BỘ") / 1e6);
-  const cheo = Math.round(getSourceVal("VM1-I02.03", "CHÉO") / 1e6);
-  const doitac = Math.round(getSourceVal("VM1-I02.04", "ĐỐI TÁC") / 1e6);
-  const khac = Math.round(getSourceVal("VM1-I05.03", "KHÁC") / 1e6);
-  const quyIp = Math.round(getSourceVal("VM1-I05.04", "QUỸ IP") / 1e6);
+      return 0;
+    };
 
-  const rawSources = [
-    { name: "Doanh thu nội bộ", value: noibo },
-    { name: "Doanh thu chéo", value: cheo },
-    { name: "Doanh thu đối tác", value: doitac },
-  ];
+    fetch(`/api/kpi?unitCode=${unitCode}&periodKey=${periodKey}`)
+      .then((res) => res.json())
+      .then((apiData) => {
+        if (!isMounted) return;
+        const apiList = Array.isArray(apiData) ? apiData : [];
 
-  if (unitCode === "SCVN" || unitCode === "TCT") {
-    rawSources.push({ name: "Doanh thu khác", value: khac });
-    rawSources.push({ name: "Quỹ IP", value: quyIp });
-  }
+        const noibo = resolveSourceVal("VM1-I02.02", ["NỘI BỘ"], apiList);
+        const cheo = resolveSourceVal("VM1-I02.03", ["CHÉO"], apiList);
+        const doitac = resolveSourceVal("VM1-I02.04", ["ĐỐI TÁC"], apiList);
+        const khac = resolveSourceVal("VM1-I05.03", ["KHÁC"], apiList);
+        const quyIp = resolveSourceVal("VM1-I05.04", ["QUỸ IP"], apiList);
 
-  const validSources = rawSources.filter(s => s.value > 0);
-  const totalVal = validSources.reduce((acc, curr) => acc + curr.value, 0);
+        const rawSources = [
+          { name: "Doanh thu nội bộ", value: noibo },
+          { name: "Doanh thu chéo", value: cheo },
+          { name: "Doanh thu đối tác", value: doitac },
+        ];
 
-  const data = validSources.map(s => ({
-    ...s,
-    sharePct: totalVal > 0 ? Number(((s.value / totalVal) * 100).toFixed(1)) : 0
-  }));
+        if (unitCode === "SCVN" || unitCode === "TCT") {
+          if (khac > 0) rawSources.push({ name: "Doanh thu khác", value: khac });
+          if (quyIp > 0) rawSources.push({ name: "Quỹ IP", value: quyIp });
+        }
+
+        const validSources = rawSources.filter((s) => s.value > 0);
+        const totalVal = validSources.reduce((acc, curr) => acc + curr.value, 0);
+
+        const finalData = validSources.map((s) => ({
+          ...s,
+          sharePct: totalVal > 0 ? Number(((s.value / totalVal) * 100).toFixed(1)) : 0
+        }));
+
+        setData(finalData);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        const noibo = resolveSourceVal("VM1-I02.02", ["NỘI BỘ"], []);
+        const cheo = resolveSourceVal("VM1-I02.03", ["CHÉO"], []);
+        const doitac = resolveSourceVal("VM1-I02.04", ["ĐỐI TÁC"], []);
+        const khac = resolveSourceVal("VM1-I05.03", ["KHÁC"], []);
+        const quyIp = resolveSourceVal("VM1-I05.04", ["QUỸ IP"], []);
+
+        const rawSources = [
+          { name: "Doanh thu nội bộ", value: noibo },
+          { name: "Doanh thu chéo", value: cheo },
+          { name: "Doanh thu đối tác", value: doitac },
+        ];
+
+        if (unitCode === "SCVN" || unitCode === "TCT") {
+          if (khac > 0) rawSources.push({ name: "Doanh thu khác", value: khac });
+          if (quyIp > 0) rawSources.push({ name: "Quỹ IP", value: quyIp });
+        }
+
+        const validSources = rawSources.filter((s) => s.value > 0);
+        const totalVal = validSources.reduce((acc, curr) => acc + curr.value, 0);
+
+        const finalData = validSources.map((s) => ({
+          ...s,
+          sharePct: totalVal > 0 ? Number(((s.value / totalVal) * 100).toFixed(1)) : 0
+        }));
+
+        setData(finalData);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [periodKey, unitCode]);
 
   const COLORS = isLight 
     ? ["#16a34a", "#84cc16", "#0284c7", "#a855f7", "#ec4899"]

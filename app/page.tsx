@@ -523,7 +523,9 @@ export default function DashboardPage() {
       if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01", "SM7-I03.01-SCS");
       if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04", "SM3-I01.04-SCS");
     }
-    candidateCodes.push(searchCode);
+    if (unitCode === "SCVN" || unitCode === "TCT" || candidateCodes.length === 0) {
+      candidateCodes.push(searchCode);
+    }
 
     const subSuffixes = ["-Lego", "-WF", "-AS", "-NDTH", "-DA01", "-CR", "-CNGP", "-SCS", "-SCMU", "-WO", "-LEGO"];
     const isParentExactMatch = (itemCode: string | undefined, searchCode: string) => {
@@ -541,13 +543,27 @@ export default function DashboardPage() {
         let match = list.find(k => 
           (isParentExactMatch(k.indicatorCode, cCode) || isParentExactMatch(k.code, cCode)) && 
           (!k.periodKey || k.periodKey === pKey) &&
-          (k.isOverridden || (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
+          (
+            k.isOverridden ||
+            (k.target || 0) > 0 || (k.actual || 0) > 0 ||
+            (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 ||
+            (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 ||
+            (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 ||
+            (k.periods && k.periods[pKey])
+          )
         );
         if (!match) {
           match = list.find(k => 
             (isParentExactMatch(k.displayCode, cCode)) && 
             (!k.periodKey || k.periodKey === pKey) &&
-            (k.isOverridden || (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 || (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 || (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 || (k.periods && k.periods[pKey]))
+            (
+              k.isOverridden ||
+              (k.target || 0) > 0 || (k.actual || 0) > 0 ||
+              (k.targetWeek || 0) > 0 || (k.actualWeek || 0) > 0 ||
+              (k.targetMonth || 0) > 0 || (k.actualMonth || 0) > 0 ||
+              (k.targetValue || 0) > 0 || (k.actualValue || 0) > 0 ||
+              (k.periods && k.periods[pKey])
+            )
           );
         }
         if (match) {
@@ -562,18 +578,18 @@ export default function DashboardPage() {
               };
             }
           } else {
-            let target = (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue) || 0;
-            let actual = (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue) || 0;
+            let target = (match.target !== undefined ? match.target : (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue)) || 0;
+            let actual = (match.actual !== undefined ? match.actual : (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue)) || 0;
             if (pKey.startsWith("weekly_")) {
-              target = (match.targetWeek && match.targetWeek > 0 ? match.targetWeek : match.targetValue) || 0;
-              actual = (match.actualWeek && match.actualWeek > 0 ? match.actualWeek : match.actualValue) || 0;
+              target = (match.target !== undefined ? match.target : (match.targetWeek && match.targetWeek > 0 ? match.targetWeek : match.targetValue)) || 0;
+              actual = (match.actual !== undefined ? match.actual : (match.actualWeek && match.actualWeek > 0 ? match.actualWeek : match.actualValue)) || 0;
             }
             else if (pKey.startsWith("quarterly_")) {
-              target = (match.targetQuarter && match.targetQuarter > 0 ? match.targetQuarter : match.targetValue) || 0;
-              actual = (match.actualQuarter && match.actualQuarter > 0 ? match.actualQuarter : match.actualValue) || 0;
+              target = (match.target !== undefined ? match.target : (match.targetQuarter && match.targetQuarter > 0 ? match.targetQuarter : match.targetValue)) || 0;
+              actual = (match.actual !== undefined ? match.actual : (match.actualQuarter && match.actualQuarter > 0 ? match.actualQuarter : match.actualValue)) || 0;
             } else if (pKey.startsWith("yearly_")) {
-              target = (match.targetYear && match.targetYear > 0 ? match.targetYear : match.targetValue) || 0;
-              actual = (match.actualYear && match.actualYear > 0 ? match.actualYear : match.actualValue) || 0;
+              target = (match.target !== undefined ? match.target : (match.targetYear && match.targetYear > 0 ? match.targetYear : match.targetValue)) || 0;
+              actual = (match.actual !== undefined ? match.actual : (match.actualYear && match.actualYear > 0 ? match.actualYear : match.actualValue)) || 0;
             }
             return {
               target,
