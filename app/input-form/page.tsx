@@ -19,7 +19,8 @@ import {
   Loader2,
   Eye,
   EyeOff,
-  Lock
+  Lock,
+  ChevronDown
 } from "lucide-react";
 
 const PRODUCTS_CATALOG = [
@@ -502,6 +503,81 @@ export default function InputFormPage() {
 
   const [productNote, setProductNote] = useState("");
   const [showCodeColumn, setShowCodeColumn] = useState(false);
+  const [showCopyMenu, setShowCopyMenu] = useState(false);
+
+  const handleCopyWeeklyTargets = async (sourceType: "prev_week" | "week_1") => {
+    const currentWeek = parseInt(filters.week || "1");
+    const m = filters.month || "8";
+    const y = filters.year || "2026";
+
+    let sourceWeek = 1;
+    if (sourceType === "prev_week") {
+      if (currentWeek <= 1) {
+        showToast("⚠️ Bạn đang ở Tuần 1, không có tuần liền trước trong tháng!", "error");
+        return;
+      }
+      sourceWeek = currentWeek - 1;
+    } else {
+      if (currentWeek === 1) {
+        showToast("⚠️ Bạn đang ở Tuần 1 của tháng!", "error");
+        return;
+      }
+      sourceWeek = 1;
+    }
+
+    try {
+      setIsTableLoading(true);
+      const res = await fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodType=weekly&month=${m}&week=${sourceWeek}&quarter=${filters.quarter || "Q3"}&year=${y}`);
+      if (!res.ok) {
+        showToast(`❌ Không thể lấy dữ liệu Kế hoạch của Tuần ${sourceWeek}`, "error");
+        setIsTableLoading(false);
+        return;
+      }
+
+      const sourceData = await res.json();
+      if (!Array.isArray(sourceData) || sourceData.length === 0) {
+        showToast(`⚠️ Không tìm thấy dữ liệu Tuần ${sourceWeek} để sao chép!`, "error");
+        setIsTableLoading(false);
+        return;
+      }
+
+      const sourceTargetMap: Record<string, number> = {};
+      for (const item of sourceData) {
+        const tgt = item.targetWeek ?? item.targetValue ?? item.target ?? 0;
+        if (item.code) sourceTargetMap[item.code] = tgt;
+        if (item.indicatorCode) sourceTargetMap[item.indicatorCode] = tgt;
+        if (item.displayCode) sourceTargetMap[item.displayCode] = tgt;
+      }
+
+      let copiedCount = 0;
+      const updatedKpis = kpis.map((k: any) => {
+        if (k.isParent) return k;
+        const codeKey = k.code || k.indicatorCode;
+        const sourceVal = sourceTargetMap[codeKey] ?? sourceTargetMap[k.displayCode || ""];
+        if (sourceVal !== undefined && sourceVal > 0) {
+          copiedCount++;
+          return {
+            ...k,
+            target: sourceVal,
+            targetValue: sourceVal,
+            targetWeek: sourceVal
+          };
+        }
+        return k;
+      });
+
+      setKpis(updatedKpis);
+      kpisRef.current = updatedKpis;
+      setIsTableLoading(false);
+
+      showToast(`✓ Đã sao chép Kế hoạch (${copiedCount} chỉ tiêu) từ Tuần ${sourceWeek} sang Tuần ${currentWeek}! Trưởng đơn vị có thể sửa trước khi Lưu.`, "success");
+    } catch (err) {
+      console.error("Lỗi sao chép kế hoạch tuần:", err);
+      setIsTableLoading(false);
+      showToast("❌ Lỗi khi thực hiện sao chép kế hoạch tuần!", "error");
+    }
+  };
+
   const [editingCell, setEditingCell] = useState<{ kpiId: string, field: "target" | "actual" | "weight", value: string } | null>(null);
   const [expandedParents, setExpandedParents] = useState<Record<string, boolean>>({});
 
@@ -1166,7 +1242,13 @@ export default function InputFormPage() {
       if (parentIndex === -1) break;
 
       const parent = list[parentIndex];
-      const children = list.filter(k => k.parentCode === parent.code);
+      let children = list.filter(k => k.parentCode === parent.code);
+      if (parent.code === "VM3-I01.02" || parent.indicatorCode === "VM3-I01.02") {
+        children = children.filter(c => {
+          const codeStr = (c.code || c.indicatorCode || "").toLowerCase();
+          return !codeStr.includes("viewshorts") && !codeStr.includes("viewspotify");
+        });
+      }
       if (children.length > 0) {
         const isAverage = parent.rollup === "AVERAGE" || 
           parent.code.startsWith("VM5-I02") || 
@@ -1813,7 +1895,7 @@ export default function InputFormPage() {
     return headers.includes(code);
   };
 
-  const scvnOrderRaw = ["TM1-I01","VM1-I01.01","VM1-I01.02","TM1-I02","VM1-I02.01","VM1-I02.01-WF","VM1-I02.01-AS","VM1-I02.01-NDTH","VM1-I02.01-Lego","DM1-I02.01-DA01","SM1-I02.01-SCS","MM1-I02.01-SCMU","NM1-I02.01-CNGP","SM1-I02.01","MM1-I02.01","NM1-I02.01","CM1-I02.01-CR","VM1-I02.01-DA","VM1-I02.01-IP","VM1-I02.02","VM1-I02.02-WF","VM1-I02.02-AS","VM1-I02.02-NDTH","VM1-I02.02-Lego","DM1-I02.02-DA01","SM1-I02.01.01","MM1-I02.01.01","CM1-I02.01-CNGP","CM1-I02.02-CR","VM1-I02.03","VM1-I02.03-WF","VM1-I02.03-AS","VM1-I02.03-NDTH","VM1-I02.03-Lego","SM1-I02.01.03","MM1-I02.01.02","VM1-I02.04","VM1-I02.04-WF","VM1-I02.04-AS","VM1-I02.04-NDTH","VM1-I02.04-Lego","SM1-I02.01.04","MM1-I02.01.03","CM1-I02.03-CR","TM1-I03","VM1-I03.01","TM1-I05","VM1-I05.01","VM1-I05.02","VM1-I05.03","VM1-I05.04","TM2-I01","VM2-I01.01","VM2-I01.01-WF","VM2-I01.01-AS","VM2-I01.01-Lego","VM2-I01.02-NDTH","VM2-I02.01","DM2-I01.01-DA01","SM2-I01.01","VM2-I01.03-NDTH","CM2-I01.01-CR","MM2-I01.01","VM2-I01.3","VWM2-I01.3-WF","VAM2-I01.3-AS","VM2-I01.4","VWM2-I01.4-WF","VAM2-I01.4-AS","VM2-I01.5","VWM2-I01.5-WF","VAM2-I01.5-AS","VM2-I01.6","VWM2-I01.6-WF","VAM2-I01.6-AS","TM2-I02","TM2-I02.01","VM2-I02.01-WF","VM2-I02.01-AS","VM2-I02.01-Lego","VM2-I02.01-NDTH","TM4-I02.01-DA01","SM2-I02.01","VM2-I02.01-SCMU","VM2-I02.01-CR","TM3-I01","TM3-I01.02","VM3-I01.02-WF","VM3-I01.02-AS","VM3-I01.02-Lego","VM3-I01.02-NDTH","DM3-I01.03-DA01","SM3-I01.04-SCS","MM3-I01.01-SCMU","NM3-I01.05-CNGP","CM3-I01.01-CR","TM3-I01.03","VM2-I03.01-WF","VM2-I03.01-AS","VM2-I03.01-Lego","VM2-I03.01-NDTH","VM3-I01.04","VM3-I01.04-WF","VM3-I01.04-AS","VM3-I01.05","VM3-I01.05-WF","VM3-I01.05-AS","VM3-I01.06","TM4-I01.01","VM4-I01.01-WF","TM4-I02","TM4-I02.01","VM4-I02.01-WF","VM4-I02.01-AS","VM4-I02.01-Lego","VM4-I02.01-NDTH","DM4-I02.01-DA01","SM4-I02.01-SCS","MM4-I02.01-SCMU","NM4-I02.03-CNGP","TM4-I02.02","VM4-I02.02-WF","VM4-I02.02-AS","VM4-I02.02-Lego","VM4-I02.02-NDTH","DM4-I02.02-DA01","SM4-I02.02-SCS","MM4-I02.02-SCMU","NM4-I02.02-CNGP","CM4-I02.02-CR","TM4-I02.03","VM4-I02.04","VM4-I02.04-WF","VM4-I02.04-AS","VM4-I02.04-Lego","VM4-I02.04-NDTH","DM4-I02.04-DA01","SM4-I02.04-SCS","MM4-I02.04-SCMU","NM4-I02.04-CNGP","CM4-I02.04-CR","VM4-I02.05","VM4-I02.05-WF","VM4-I02.05-AS","VM4-I02.05-Lego","VM4-I02.05-NDTH","DM4-I02.05-DA01","SM4-I02.05-SCS","MM4-I02.05-SCMU","NM4-I02.05-CNGP","CM4-I02.05-CR","VM4-I02.06","VM4-I02.06-WF","VM4-I02.06-AS","VM4-I02.06-Lego","VM4-I02.06-NDTH","DM4-I02.06-DA01","SM4-I02.06-SCS","MM4-I02.06-SCMU","NM4-I02.06-CNGP","CM4-I02.06-CR","TM5-I01","TM5-I01.03","VM5-I02","VM5-I02.01","VM5-I02.01-WF","VM5-I02.01-AS","VM5-I02.01-Lego","VM5-I02.01-NDTH","SM5-I02.01-SCS","VM5-I02.01-CR","VM5-I02.02","VM5-I02.02-WF","VM5-I02.02-AS","VM5-I02.02-Lego","SM5-I02.02-SCS","VM5-I02.03","VM5-I02.03-WF","VM5-I02.03-AS","VM5-I02.03-Lego","VM5-I02.03-NDTH","VM5-I02.03-DA01","SM5-I02.03-SCS","MM5-I02.03-SCMU","NM5-I02.03-CNGP","VM5-I02.03-CR","VM5-I02.04","VM5-I02.04-WF","VM5-I02.04-AS","VM5-I02.04-Lego","VM5-I02.04-NDTH","VM5-I02.04-DA01","SM5-I02.04-SCS","MM5-I02.04-SCMU","NM5-I02.04-CNGP","VM5-I02.05","VM5-I02.05.01","VM5-I02.05.02","TM6-I01","TM6-I01.01","VM6-I01.01-WF","VM6-I01.01-AS","VM6-I01.01-Lego","VM6-I01.01-NDTH","DM6-I01.01-DA01","SM6-I01.01-SCS","MM6-I01.01-SCMU","NM6-I01.01-CNGP","CM6-I01.01-CR","TM6-I01.02","VM6-I01.02-WF","VM6-I01.02-AS","VM6-I01.02-Lego","VM6-I01.02-NDTH","DM6-I01.02-DA01","SM6-I01.02-SCS","MM6-I01.02-SCMU","NM6-I01.02-CNGP","CM6-I01.02-CR","VM6-I02","TM6-I03","TM6-I03.01","TM6-I03.02","TM7-I01","VM7-I01.01","VM7-I01.01-WF","VM7-I01.01-AS","VM7-I01.01-Lego","VM7-I01.01-NDTH","DM7-I01.01-DA01","SM7-I01.01-SCS","MM7-I01.01-SCMU","NM7-I01.01-CNGP","CM7-I01.01-CR","TM7-I02","VM7-I02.01","VM7-I02.01-WF","VM7-I02.01-AS","VM7-I02.01-Lego","VM7-I02.01-NDTH","DM7-I02.01-DA01","SM7-I02.01-SCS","MM7-I02.01-SCMU","NM7-I02.01-CNGP","CM7-I02.01-CR","VM7-I02.02","VM7-I02.02-WF","VM7-I02.02-AS","VM7-I02.02-Lego","VM7-I02.02-NDTH","DM7-I02.02-DA01","SM7-I02.02-SCS","MM7-I02.02-SCMU","NM7-I02.02-CNGP","CM7-I02.03-CR","TM7-I03","VM7-I03.01","VM7-I03.01-WF","VM7-I03.01-AS","VM7-I03.01-Lego","VM7-I03.01-NDTH","DM7-I03.01-DA01","SM7-I03.01-SCS","MM7-I03.01-SCMU","NM7-I03.01-CNGP","CM7-I03.01-CR","VM7-I03.02","VM7-I03.02-WF","VM7-I03.02-AS","VM7-I03.02-Lego","VM7-I03.02-NDTH","DM7-I03.02-DA01","SM7-I03.02-SCS","MM7-I03.02-SCMU","NM7-I03.02-CNGP","CM7-I03.02-CR"];
+  const scvnOrderRaw = ["TM1-I01","VM1-I01.01","VM1-I01.02","TM1-I02","VM1-I02.01","VM1-I02.01-WF","VM1-I02.01-AS","VM1-I02.01-NDTH","VM1-I02.01-Lego","DM1-I02.01-DA01","SM1-I02.01-SCS","MM1-I02.01-SCMU","NM1-I02.01-CNGP","SM1-I02.01","MM1-I02.01","NM1-I02.01","CM1-I02.01-CR","VM1-I02.01-DA","VM1-I02.01-IP","VM1-I02.02","VM1-I02.02-WF","VM1-I02.02-AS","VM1-I02.02-NDTH","VM1-I02.02-Lego","DM1-I02.02-DA01","SM1-I02.01.01","MM1-I02.01.01","CM1-I02.01-CNGP","CM1-I02.02-CR","VM1-I02.03","VM1-I02.03-WF","VM1-I02.03-AS","VM1-I02.03-NDTH","VM1-I02.03-Lego","SM1-I02.01.03","MM1-I02.01.02","VM1-I02.04","VM1-I02.04-WF","VM1-I02.04-AS","VM1-I02.04-NDTH","VM1-I02.04-Lego","SM1-I02.01.04","MM1-I02.01.03","CM1-I02.03-CR","TM1-I03","VM1-I03.01","TM1-I05","VM1-I05.01","VM1-I05.02","VM1-I05.03","VM1-I05.04","TM2-I01","VM2-I01.01","VM2-I01.01-WF","VM2-I01.01-AS","VM2-I01.01-Lego","VM2-I01.02-NDTH","VM2-I02.01","VM2-I02.01-SCS","DM2-I01.01-DA01","SM2-I01.01","VM2-I01.03-NDTH","CM2-I01.01-CR","MM2-I01.01","VM2-I01.3","VWM2-I01.3-WF","VAM2-I01.3-AS","VM2-I01.4","VWM2-I01.4-WF","VAM2-I01.4-AS","VM2-I01.5","VWM2-I01.5-WF","VAM2-I01.5-AS","VM2-I01.6","VWM2-I01.6-WF","VAM2-I01.6-AS","TM2-I02","TM2-I02.01","VM2-I02.01-WF","VM2-I02.01-AS","VM2-I02.01-Lego","VM2-I02.01-NDTH","TM4-I02.01-DA01","SM2-I02.01","VM2-I02.01-SCMU","VM2-I02.01-CR","TM3-I01","TM3-I01.02","VM3-I01.02-WF","VM3-I01.02-AS","VM3-I01.02-Lego","VM3-I01.02-NDTH","DM3-I01.03-DA01","SM3-I01.04-SCS","MM3-I01.01-SCMU","NM3-I01.05-CNGP","CM3-I01.01-CR","TM3-I01.03","VM2-I03.01-WF","VM2-I03.01-AS","VM2-I03.01-Lego","VM2-I03.01-NDTH","VM3-I01.04","VM3-I01.04-WF","VM3-I01.04-AS","VM3-I01.05","VM3-I01.05-WF","VM3-I01.05-AS","VM3-I01.06","TM4-I01.01","VM4-I01.01-WF","TM4-I02","TM4-I02.01","VM4-I02.01-WF","VM4-I02.01-AS","VM4-I02.01-Lego","VM4-I02.01-NDTH","DM4-I02.01-DA01","SM4-I02.01-SCS","MM4-I02.01-SCMU","NM4-I02.03-CNGP","TM4-I02.02","VM4-I02.02-WF","VM4-I02.02-AS","VM4-I02.02-Lego","VM4-I02.02-NDTH","DM4-I02.02-DA01","SM4-I02.02-SCS","MM4-I02.02-SCMU","NM4-I02.02-CNGP","CM4-I02.02-CR","TM4-I02.03","VM4-I02.04","VM4-I02.04-WF","VM4-I02.04-AS","VM4-I02.04-Lego","VM4-I02.04-NDTH","DM4-I02.04-DA01","SM4-I02.04-SCS","MM4-I02.04-SCMU","NM4-I02.04-CNGP","CM4-I02.04-CR","VM4-I02.05","VM4-I02.05-WF","VM4-I02.05-AS","VM4-I02.05-Lego","VM4-I02.05-NDTH","DM4-I02.05-DA01","SM4-I02.05-SCS","MM4-I02.05-SCMU","NM4-I02.05-CNGP","CM4-I02.05-CR","VM4-I02.06","VM4-I02.06-WF","VM4-I02.06-AS","VM4-I02.06-Lego","VM4-I02.06-NDTH","DM4-I02.06-DA01","SM4-I02.06-SCS","MM4-I02.06-SCMU","NM4-I02.06-CNGP","CM4-I02.06-CR","TM5-I01","TM5-I01.03","VM5-I02","VM5-I02.01","VM5-I02.01-WF","VM5-I02.01-AS","VM5-I02.01-Lego","VM5-I02.01-NDTH","SM5-I02.01-SCS","VM5-I02.01-CR","VM5-I02.02","VM5-I02.02-WF","VM5-I02.02-AS","VM5-I02.02-Lego","SM5-I02.02-SCS","VM5-I02.03","VM5-I02.03-WF","VM5-I02.03-AS","VM5-I02.03-Lego","VM5-I02.03-NDTH","VM5-I02.03-DA01","SM5-I02.03-SCS","MM5-I02.03-SCMU","NM5-I02.03-CNGP","VM5-I02.03-CR","VM5-I02.04","VM5-I02.04-WF","VM5-I02.04-AS","VM5-I02.04-Lego","VM5-I02.04-NDTH","VM5-I02.04-DA01","SM5-I02.04-SCS","MM5-I02.04-SCMU","NM5-I02.04-CNGP","VM5-I02.05","VM5-I02.05.01","VM5-I02.05.02","TM6-I01","TM6-I01.01","VM6-I01.01-WF","VM6-I01.01-AS","VM6-I01.01-Lego","VM6-I01.01-NDTH","DM6-I01.01-DA01","SM6-I01.01-SCS","MM6-I01.01-SCMU","NM6-I01.01-CNGP","CM6-I01.01-CR","TM6-I01.02","VM6-I01.02-WF","VM6-I01.02-AS","VM6-I01.02-Lego","VM6-I01.02-NDTH","DM6-I01.02-DA01","SM6-I01.02-SCS","MM6-I01.02-SCMU","NM6-I01.02-CNGP","CM6-I01.02-CR","VM6-I02","TM6-I03","TM6-I03.01","TM6-I03.02","TM7-I01","VM7-I01.01","VM7-I01.01-WF","VM7-I01.01-AS","VM7-I01.01-Lego","VM7-I01.01-NDTH","DM7-I01.01-DA01","SM7-I01.01-SCS","MM7-I01.01-SCMU","NM7-I01.01-CNGP","CM7-I01.01-CR","TM7-I02","VM7-I02.01","VM7-I02.01-WF","VM7-I02.01-AS","VM7-I02.01-Lego","VM7-I02.01-NDTH","DM7-I02.01-DA01","SM7-I02.01-SCS","MM7-I02.01-SCMU","NM7-I02.01-CNGP","CM7-I02.01-CR","VM7-I02.02","VM7-I02.02-WF","VM7-I02.02-AS","VM7-I02.02-Lego","VM7-I02.02-NDTH","DM7-I02.02-DA01","SM7-I02.02-SCS","MM7-I02.02-SCMU","NM7-I02.02-CNGP","CM7-I02.03-CR","TM7-I03","VM7-I03.01","VM7-I03.01-WF","VM7-I03.01-AS","VM7-I03.01-Lego","VM7-I03.01-NDTH","DM7-I03.01-DA01","SM7-I03.01-SCS","MM7-I03.01-SCMU","NM7-I03.01-CNGP","CM7-I03.01-CR","VM7-I03.02","VM7-I03.02-WF","VM7-I03.02-AS","VM7-I03.02-Lego","VM7-I03.02-NDTH","DM7-I03.02-DA01","SM7-I03.02-SCS","MM7-I03.02-SCMU","NM7-I03.02-CNGP","CM7-I03.02-CR"];
   const EXCLUDED_ORDER_SET = new Set([
     "MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD",
     "CM1-I02.01", "DM1-I02.01", "CM1-I02.01-CNGP",
@@ -2125,6 +2207,39 @@ export default function InputFormPage() {
                 <Building2 size={16} /> 🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
               </h3>
               <div className="flex items-center gap-2">
+                {filters.periodType === "weekly" && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowCopyMenu(!showCopyMenu)}
+                      className="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black px-3.5 py-1.5 rounded-lg border border-blue-400/40 transition-all flex items-center gap-1.5 shadow-md hover:shadow-lg text-white"
+                    >
+                      <span className="text-white font-black">📋 Sao Chép Kế Hoạch Tuần</span> <ChevronDown size={14} className="text-white" />
+                    </button>
+
+                    {showCopyMenu && (
+                      <div className="absolute right-0 mt-2 w-64 glass-panel p-2 z-50 shadow-2xl border border-blue-500/30 rounded-xl space-y-1 bg-slate-900/95 backdrop-blur-xl">
+                        <button
+                          onClick={() => {
+                            setShowCopyMenu(false);
+                            handleCopyWeeklyTargets("prev_week");
+                          }}
+                          className="w-full text-left text-xs font-semibold px-3 py-2 rounded-lg hover:bg-blue-500/20 text-slate-200 hover:text-white transition-all flex items-center gap-2"
+                        >
+                          ◀️ Copy từ Tuần liền trước (Tuần {(parseInt(filters.week || "1") - 1) > 0 ? parseInt(filters.week || "1") - 1 : 1})
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCopyMenu(false);
+                            handleCopyWeeklyTargets("week_1");
+                          }}
+                          className="w-full text-left text-xs font-semibold px-3 py-2 rounded-lg hover:bg-blue-500/20 text-slate-200 hover:text-white transition-all flex items-center gap-2"
+                        >
+                          📌 Copy từ Tuần 1 của Tháng (Tuần 1)
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <button
                   onClick={() => setShowCodeColumn(!showCodeColumn)}
                   className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition-all flex items-center gap-1.5"

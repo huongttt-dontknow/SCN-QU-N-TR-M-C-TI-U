@@ -462,10 +462,16 @@ export async function GET(request: Request) {
           // Không tự động gộp cho bất kỳ chỉ tiêu cha trung gian nào của SCVN để giữ số kế hoạch/thực tế chính xác từ Excel
           continue;
         }
-        const subChildren = allRows.filter(r => r.parentCode === row.code);
+        let subChildren = allRows.filter(r => r.parentCode === row.code);
+        if (row.code === "VM3-I01.02" || row.displayCode === "VM3-I01.02") {
+          subChildren = subChildren.filter(c => {
+            const codeStr = (c.code || c.displayCode || c.indicatorCode || "").toLowerCase();
+            return !codeStr.includes("viewshorts") && !codeStr.includes("viewspotify");
+          });
+        }
         if (subChildren.length > 0) {
-          // Only perform rollup if the parent itself has no target or actual values set
-          if (row.targetMonth === 0 && row.actualMonth === 0 && row.targetWeek === 0 && row.actualWeek === 0) {
+          // Perform rollup for intermediate parent indicators, or forced for VM3-I01.02
+          if (row.code === "VM3-I01.02" || row.displayCode === "VM3-I01.02" || (row.targetMonth === 0 && row.actualMonth === 0 && row.targetWeek === 0 && row.actualWeek === 0)) {
             row.targetWeek = 0; row.actualWeek = 0;
             row.targetMonth = 0; row.actualMonth = 0;
             row.targetQuarter = 0; row.actualQuarter = 0;
@@ -549,6 +555,35 @@ export async function GET(request: Request) {
         m3Parent.targetMonth = m3Row.targetMonth; m3Parent.actualMonth = m3Row.actualMonth;
         m3Parent.targetQuarter = m3Row.targetQuarter; m3Parent.actualQuarter = m3Row.actualQuarter;
         m3Parent.targetYear = m3Row.targetYear; m3Parent.actualYear = m3Row.actualYear;
+      }
+
+      // Tự động liên kết dữ liệu chỉ tiêu con "Số sản phẩm BP Studio" (VM2-I02.01-SCS) thuộc chỉ tiêu VM2-I02.01 của SCVN từ BP Studio (SCS) chỉ tiêu SM2-I01.01
+      const scsStudioRec = records.find(r => r.unitCode === "SCS" && (r.indicatorCode === "SM2-I01.01" || r.code === "SM2-I01.01") && (r.periodKey === targetWeekKey || !r.periodKey));
+      if (!compiledRows["VM2-I02.01-SCS"]) {
+        compiledRows["VM2-I02.01-SCS"] = {
+          code: "VM2-I02.01-SCS",
+          displayCode: "VM2-I02.01-SCS",
+          title: "Số sản phẩm BP Studio",
+          unit: "Video",
+          unitCode: "SCVN",
+          targetWeek: 0, actualWeek: 0,
+          targetMonth: 0, actualMonth: 0,
+          targetQuarter: 0, actualQuarter: 0,
+          targetYear: 0, actualYear: 0,
+          isParent: false,
+          parentCode: "VM2-I02.01",
+          frequency: "tuần",
+          aggregationMethod: "SUM",
+          isOverriddenWeek: false,
+          isOverriddenMonth: false,
+          isOverriddenQuarter: false,
+          isOverriddenYear: false,
+          periods: {}
+        };
+      }
+      if (scsStudioRec) {
+        compiledRows["VM2-I02.01-SCS"].targetWeek = scsStudioRec.targetValue ?? scsStudioRec.targetWeek ?? 0;
+        compiledRows["VM2-I02.01-SCS"].actualWeek = scsStudioRec.actualValue ?? scsStudioRec.actualWeek ?? 0;
       }
     }
 

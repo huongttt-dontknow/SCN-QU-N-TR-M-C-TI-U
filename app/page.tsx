@@ -1540,10 +1540,27 @@ export default function DashboardPage() {
     warning: idx === bxhProductionData.length - 1
   }));
 
-  // Gán giá trị chuẩn xác cho Card 2: Sản lượng Video / Sản phẩm hoàn thành SCVN
+  // Gán giá trị chuẩn xác cho Card 2: Sản lượng Video hoàn thành SCVN từ chỉ tiêu VM2-I01.01
   if (isParentUnit) {
-    volActualVal = bxhProductionData.reduce((acc: number, item: any) => acc + (item.act || 0), 0);
-    volTargetVal = bxhProductionData.reduce((acc: number, item: any) => acc + (item.tgt || 0), 0);
+    const listToSearch = [...(scvnKpis || []), ...(dbKpis || [])];
+    const exactScvnProd = listToSearch.find(k => 
+      k.unitCode === "SCVN" && 
+      (k.indicatorCode === "VM2-I01.01" || k.code === "VM2-I01.01") &&
+      (k.periodKey === periodKey || !k.periodKey)
+    );
+    if (exactScvnProd) {
+      volTargetVal = exactScvnProd.targetValue ?? exactScvnProd.targetWeek ?? 0;
+      volActualVal = exactScvnProd.actualValue ?? exactScvnProd.actualWeek ?? 0;
+      if (exactScvnProd.periods && exactScvnProd.periods[periodKey]) {
+        volTargetVal = exactScvnProd.periods[periodKey].target ?? volTargetVal;
+        volActualVal = exactScvnProd.periods[periodKey].actual ?? volActualVal;
+      }
+    } else {
+      const scvnMaster = MASTER_KPI_DATA["SCVN"]?.["VM2-I01.01"];
+      const pData = scvnMaster?.periods?.[periodKey];
+      volTargetVal = pData?.target ?? (scvnVolRec?.target ?? 50);
+      volActualVal = pData?.actual ?? (scvnVolRec?.actual ?? 45);
+    }
   } else {
     const unitProd = getUnitProductionData(filters.unitCode, periodKey);
     volActualVal = unitProd?.rec?.actual || (scvnVolRec?.actual ?? 0);
@@ -1992,14 +2009,14 @@ export default function DashboardPage() {
                 SẢN LƯỢNG SẢN XUẤT ({getUnitName(filters.unitCode)})
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
-                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR", "SCVN", "TCT"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}</span>
+                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}</span>
               </div>
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
                 Đạt {volPct}% Kế hoạch
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR", "SCVN", "TCT"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})</span>
             </div>
           </div>
 
