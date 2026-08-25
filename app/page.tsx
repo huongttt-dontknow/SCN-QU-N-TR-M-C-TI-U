@@ -894,10 +894,10 @@ export default function DashboardPage() {
     ? Math.round((card1ActualRaw / card1TargetRaw) * 100) 
     : (scvnRevRec?.pct ? Math.round(scvnRevRec.pct * 100) : 0);
 
-  // Card 2: Sản lượng Video hoàn thành SCVN
-  const volTargetVal = scvnVolRec?.target ?? 112;
-  const volActualVal = scvnVolRec?.actual ?? 108;
-  const volPct = scvnVolRec ? Math.round(scvnVolRec.pct * 100) : Math.round(calculateCompletionRate(Number(volTargetVal), Number(volActualVal), "VM2-I01.01") * 100);
+  // Card 2: Sản lượng Video hoàn thành (sẽ được tính chuẩn xác sau bxhProductionData)
+  let volTargetVal = 0;
+  let volActualVal = 0;
+  let volPct = 0;
 
   // Card 3: Đơn vị xuất sắc nhất
   const topUnit = [...barComparisonData].sort((a, b) => b.completion - a.completion)[0] || { name: "Dự án 01", completion: 88 };
@@ -1514,7 +1514,7 @@ export default function DashboardPage() {
   const bxhProductionData = unitList.map(u => {
     const res = getUnitProductionData(u.code, periodKey);
     if (!res) {
-      return { name: u.label, val: "0 Video", pctRaw: 0, pctStr: "0%" };
+      return { name: u.label, val: "0 Video", pctRaw: 0, pctStr: "0%", tgt: 0, act: 0 };
     }
     const { item, rec } = res;
     const tgt = rec.target ?? 0;
@@ -1527,7 +1527,9 @@ export default function DashboardPage() {
       name: u.label,
       val: `${act} ${unitSuffix}`,
       pctRaw: pct,
-      pctStr: `${pct}%`
+      pctStr: `${pct}%`,
+      tgt,
+      act
     };
   }).sort((a, b) => b.pctRaw - a.pctRaw);
 
@@ -1537,6 +1539,18 @@ export default function DashboardPage() {
     highlight: idx === 0,
     warning: idx === bxhProductionData.length - 1
   }));
+
+  // Gán giá trị chuẩn xác cho Card 2: Sản lượng Video / Sản phẩm hoàn thành SCVN
+  if (isParentUnit) {
+    volActualVal = bxhProductionData.reduce((acc: number, item: any) => acc + (item.act || 0), 0);
+    volTargetVal = bxhProductionData.reduce((acc: number, item: any) => acc + (item.tgt || 0), 0);
+  } else {
+    const unitProd = getUnitProductionData(filters.unitCode, periodKey);
+    volActualVal = unitProd?.rec?.actual || (scvnVolRec?.actual ?? 0);
+    volTargetVal = unitProd?.rec?.target || (scvnVolRec?.target ?? 0);
+  }
+
+  volPct = volTargetVal > 0 ? Math.round((volActualVal / volTargetVal) * 100) : (scvnVolRec?.pct ? Math.round(scvnVolRec.pct * 100) : 0);
 
   // 4. Tính BXH Tăng Trưởng Traffic (M3)
   const getUnitTrafficActual = (uCode: string, pKey: string) => {
@@ -1978,14 +1992,14 @@ export default function DashboardPage() {
                 SẢN LƯỢNG SẢN XUẤT ({getUnitName(filters.unitCode)})
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
-                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}</span>
+                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR", "SCVN", "TCT"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}</span>
               </div>
             </div>
             <div className="my-1">
               <p className="text-sm font-extrabold text-emerald-500">
                 Đạt {volPct}% Kế hoạch
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR", "SCVN", "TCT"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})</span>
             </div>
           </div>
 
