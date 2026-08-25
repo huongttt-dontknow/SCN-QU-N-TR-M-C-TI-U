@@ -96,24 +96,13 @@
         "title": "Hành động 4: Tối ưu quy trình báo cáo",
         "note": "Nhiệm vụ 4",
         "progress": 90
-      },
-      {
-        "id": 5,
-        "title": "Hành động 5: Mở rộng đào tạo nhân sự OKR",
-        "note": "Nhiệm vụ 5 bổ sung",
-        "progress": 80
-      },
-      {
-        "id": 6,
-        "title": "Hành động 6: Kiểm thử hệ thống tự động hóa",
-        "note": "Nhiệm vụ 6 bổ sung",
-        "progress": 100
       }
     ],
     "unitCode": "SCVN",
     "periodKey": "weekly_8_3",
-    "updatedBy": "GĐ BU SCVN",
-    "updatedAt": "2026-08-18T05:23:59.350Z"
+    "updatedBy": "Trần Thị Thu Hương",
+    "updatedAt": "2026-08-25T06:55:41.215Z",
+    "isSaved": true
   },
   "Wofloo_weekly_7_1": {
     "actions": [

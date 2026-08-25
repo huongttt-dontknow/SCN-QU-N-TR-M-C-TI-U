@@ -11320,6 +11320,17 @@
           "actual": 1
         }
       }
+    },
+    "MM2-I01.01-SCMU": {
+      "title": "Sản lượng BP Music (SCMU)",
+      "unit": "sản phẩm",
+      "periods": {
+        "weekly_8_3": {
+          "target": 43,
+          "actual": 26,
+          "pct": 0.6047
+        }
+      }
     }
   },
   "Wofloo": {
@@ -31623,6 +31634,11 @@
           "target": 68,
           "actual": 1,
           "pct": 0.0147
+        },
+        "weekly_8_3": {
+          "target": 43,
+          "actual": 26,
+          "pct": 0.6047
         }
       }
     },

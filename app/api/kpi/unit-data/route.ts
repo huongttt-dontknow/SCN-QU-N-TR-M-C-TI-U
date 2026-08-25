@@ -552,9 +552,9 @@ export async function GET(request: Request) {
       }
     }
 
-    return NextResponse.json(allRows.map(r => ({ ...r, __test_version: "v3" })), {
+    return NextResponse.json(allRows.map(r => ({ ...r, __test_version: "v4" })), {
       headers: {
-        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
       }
     });
   } catch (error: any) {

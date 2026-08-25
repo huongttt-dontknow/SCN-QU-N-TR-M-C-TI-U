@@ -21,35 +21,31 @@ let cachedAllKpiParsed: any[] | null = null;
 let cachedProductKpiParsed: any[] | null = null;
 
 function getAllKpiTemplates(): any[] {
-  if (cachedAllKpiParsed) return cachedAllKpiParsed;
   try {
     const fs = require("fs");
     const path = require("path");
     const jsonPath = path.join(process.cwd(), "lib", "all_kpi_records.json");
     if (fs.existsSync(jsonPath)) {
       const raw = fs.readFileSync(jsonPath, "utf-8");
-      cachedAllKpiParsed = JSON.parse(raw);
-      return cachedAllKpiParsed || [];
+      return JSON.parse(raw) || [];
     }
   } catch (err) {
-    console.error("Lỗi cache all_kpi_records:", err);
+    console.error("Lỗi read all_kpi_records:", err);
   }
   return [];
 }
 
 function getProductKpiTemplates(): any[] {
-  if (cachedProductKpiParsed) return cachedProductKpiParsed;
   try {
     const fs = require("fs");
     const path = require("path");
     const jsonPath = path.join(process.cwd(), "lib", "product_kpi_records.json");
     if (fs.existsSync(jsonPath)) {
       const raw = fs.readFileSync(jsonPath, "utf-8");
-      cachedProductKpiParsed = JSON.parse(raw);
-      return cachedProductKpiParsed || [];
+      return JSON.parse(raw) || [];
     }
   } catch (err) {
-    console.error("Lỗi cache product_kpi_records:", err);
+    console.error("Lỗi read product_kpi_records:", err);
   }
   return [];
 }

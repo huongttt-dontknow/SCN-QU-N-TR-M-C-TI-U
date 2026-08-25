@@ -134,31 +134,39 @@ export default function DashboardPage() {
       const pKey = getPeriodKey();
       const localKey = `key_actions_${filters.unitCode}_${pKey}`;
 
+      let localSavedActions: any[] | null = null;
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem(localKey);
+        if (saved) {
+          try {
+            localSavedActions = JSON.parse(saved);
+          } catch (e) {}
+        }
+      }
+
       try {
         const res = await fetch(`/api/system/key-actions?unitCode=${filters.unitCode}&periodKey=${pKey}`);
         if (res.ok) {
           const data = await res.json();
           if (data && Array.isArray(data.actions) && data.actions.length > 0) {
-            setKeyActions(data.actions);
-            if (typeof window !== "undefined") {
-              localStorage.setItem(localKey, JSON.stringify(data.actions));
+            if (data.isSaved || !localSavedActions) {
+              setKeyActions(data.actions);
+              if (typeof window !== "undefined") {
+                localStorage.setItem(localKey, JSON.stringify(data.actions));
+              }
+              return;
             }
-            return;
           }
         }
       } catch (err) {
         console.error("Lỗi khi tải hành động trọng tâm từ CSDL đồng bộ:", err);
       }
 
-      if (typeof window !== "undefined") {
-        const saved = localStorage.getItem(localKey);
-        if (saved) {
-          try {
-            setKeyActions(JSON.parse(saved));
-            return;
-          } catch (e) {}
-        }
+      if (localSavedActions && localSavedActions.length > 0) {
+        setKeyActions(localSavedActions);
+        return;
       }
+
       setKeyActions(defaultKeyActions);
     };
 
@@ -167,6 +175,7 @@ export default function DashboardPage() {
   }, [filters]);
 
   useEffect(() => {
+    let isCancelled = false;
     const fetchDbKpis = async () => {
       setIsLoadingDb(true);
       const pType = filters.periodType;
@@ -178,47 +187,44 @@ export default function DashboardPage() {
       const y = filters.year || "2026";
 
       try {
-        const res = await fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data)) {
+        const fetchUnit = fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`);
+        const fetchSCVN = filters.unitCode !== "SCVN" 
+          ? fetch(`/api/kpi/unit-data?unitCode=SCVN&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`)
+          : null;
+
+        const [resUnit, resSCVN] = await Promise.all([fetchUnit, fetchSCVN]);
+
+        if (isCancelled) return;
+
+        if (resUnit && resUnit.ok) {
+          const data = await resUnit.json();
+          if (Array.isArray(data)) {
             setDbKpis(data);
-            if (filters.unitCode === "SCVN") {
-              setScvnKpis(data);
-            }
+            if (filters.unitCode === "SCVN") setScvnKpis(data);
           } else {
             setDbKpis([]);
-            if (filters.unitCode === "SCVN") {
-              setScvnKpis([]);
-            }
+            if (filters.unitCode === "SCVN") setScvnKpis([]);
           }
+        }
+
+        if (resSCVN && resSCVN.ok) {
+          const dataSCVN = await resSCVN.json();
+          if (Array.isArray(dataSCVN)) setScvnKpis(dataSCVN);
+          else setScvnKpis([]);
         }
       } catch (err) {
         console.error("Lỗi khi tải dữ liệu KPI từ database:", err);
+      } finally {
+        if (!isCancelled) setIsLoadingDb(false);
       }
-
-      if (filters.unitCode !== "SCVN") {
-        try {
-          const resSCVN = await fetch(`/api/kpi/unit-data?unitCode=SCVN&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`);
-          if (resSCVN.ok) {
-            const dataSCVN = await resSCVN.json();
-            if (dataSCVN && Array.isArray(dataSCVN)) {
-              setScvnKpis(dataSCVN);
-            } else {
-              setScvnKpis([]);
-            }
-          }
-        } catch (err) {
-          console.error("Lỗi khi tải dữ liệu SCVN đối sánh:", err);
-        }
-      }
-      setIsLoadingDb(false);
     };
 
     fetchDbKpis();
+    return () => { isCancelled = true; };
   }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   useEffect(() => {
+    let isCancelled = false;
     const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT" || filters.unitCode === "SCME";
     const isNotWeekly = filters.periodType !== "weekly";
     
@@ -231,18 +237,34 @@ export default function DashboardPage() {
     const pType = filters.periodType || "monthly";
     const pKey = getPeriodKey();
     
-    Promise.all(PRODUCTS_CATALOG.map(async (p) => {
-      try {
-        const res = await fetch(`/api/kpi?productCode=${p.id}&periodKey=${pKey}&periodType=${pType}`);
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          const mapped = data.map((d: any) => ({
-            code: d.indicatorCode,
+    fetch(`/api/kpi?productCode=all&unitCode=${filters.unitCode}&periodKey=${pKey}&periodType=${pType}&aggregate=false`)
+      .then(res => res.json())
+      .then(data => {
+        if (isCancelled) return;
+        if (!Array.isArray(data)) {
+          setProductHealthRankings([]);
+          setIsLoadingHealth(false);
+          return;
+        }
+
+        const byProduct: Record<string, any[]> = {};
+        for (const item of data) {
+          const pCode = item.productCode;
+          if (pCode) {
+            if (!byProduct[pCode]) byProduct[pCode] = [];
+            byProduct[pCode].push(item);
+          }
+        }
+
+        const results = PRODUCTS_CATALOG.map(p => {
+          const items = byProduct[p.id] || [];
+          const mapped = items.map((d: any) => ({
+            code: d.indicatorCode || d.code || "",
             title: d.title || "",
             target: d.targetValue || 0,
             actual: d.actualValue || 0
           }));
-          
+
           const rev = mapped.find(i => i.code.includes("M1") || i.title.toLowerCase().includes("doanh thu"));
           const vol = mapped.find(i => i.code.includes("M2") || i.title.toLowerCase().includes("video hoàn thành") || i.title.toLowerCase().includes("sản lượng"));
           const view = mapped.find(i => i.code.includes("M3") || i.title.toLowerCase().includes("traffic") || i.title.toLowerCase().includes("view"));
@@ -264,20 +286,21 @@ export default function DashboardPage() {
           }
           
           return { id: p.id, name: p.name, score: phs, unit: p.unit, status, badgeColor };
+        });
+
+        const sorted = results.sort((a, b) => b.score - a.score);
+        setProductHealthRankings(sorted);
+        setIsLoadingHealth(false);
+      })
+      .catch(err => {
+        if (!isCancelled) {
+          console.error("Lỗi khi tải điểm PSH sản phẩm gộp:", err);
+          setIsLoadingHealth(false);
         }
-      } catch (err) {
-        console.error("Lỗi khi tính điểm PSH cho sản phẩm " + p.id, err);
-      }
-      return { id: p.id, name: p.name, score: 100, unit: p.unit, status: "🟢 Khỏe mạnh", badgeColor: "bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20" };
-    })).then(results => {
-      const sorted = results.sort((a, b) => b.score - a.score);
-      setProductHealthRankings(sorted);
-      setIsLoadingHealth(false);
-    }).catch(err => {
-      console.error(err);
-      setIsLoadingHealth(false);
-    });
-  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
+      });
+
+    return () => { isCancelled = true; };
+  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
 
   useEffect(() => {
     if (isParentUnit) {
@@ -498,10 +521,10 @@ export default function DashboardPage() {
       if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-Lego");
       if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-Lego");
     } else if (unitCode === "DA01") {
-      if (code === "VM1-I02.01") candidateCodes.push("DM1-I02.01", "DM1-I02.01-DA01");
-      if (code === "VM2-I01.01") candidateCodes.push("DM2-I01.01", "DM2-I01.01-DA01");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("DM7-I03.01", "DM7-I03.01-DA01");
-      if (code === "VM3-I01.02") candidateCodes.push("DM3-I01.03", "DM3-I01.03-DA01");
+      if (code === "VM1-I02.01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("DM2-I01.01-DA01", "DM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("DM7-I03.01-DA01", "DM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("DM3-I01.03-DA01", "DM3-I01.03");
     } else if (unitCode === "NDTH") {
       if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
       if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.02-NDTH");
@@ -539,10 +562,20 @@ export default function DashboardPage() {
 
     const findInList = (list: any[]) => {
       if (!list || list.length === 0) return null;
+
+      const isUnitMatch = (k: any) => {
+        if (!k.unitCode) return true;
+        if (k.unitCode === unitCode) return true;
+        if (k.unitCode === "SCVN") return true;
+        if (unitCode === "SCVN" || unitCode === "TCT") return true;
+        return false;
+      };
+
       for (const cCode of candidateCodes) {
         let match = list.find(k => 
+          isUnitMatch(k) &&
           (isParentExactMatch(k.indicatorCode, cCode) || isParentExactMatch(k.code, cCode)) && 
-          (!k.periodKey || k.periodKey === pKey) &&
+          (k.periodKey === pKey || !k.periodKey) &&
           (
             k.isOverridden ||
             (k.target || 0) > 0 || (k.actual || 0) > 0 ||
@@ -554,8 +587,9 @@ export default function DashboardPage() {
         );
         if (!match) {
           match = list.find(k => 
+            isUnitMatch(k) &&
             (isParentExactMatch(k.displayCode, cCode)) && 
-            (!k.periodKey || k.periodKey === pKey) &&
+            (k.periodKey === pKey || !k.periodKey) &&
             (
               k.isOverridden ||
               (k.target || 0) > 0 || (k.actual || 0) > 0 ||
@@ -1078,7 +1112,12 @@ export default function DashboardPage() {
     return { name: u.label, currAct, prevAct, diff, pct };
   });
 
-  const incUnits = [...weeklyChanges].filter(x => x.diff > 0).sort((a, b) => b.pct - a.pct);
+  const incUnits = [...weeklyChanges].filter(x => x.diff > 0).sort((a, b) => {
+    if (a.prevAct > 0 && b.prevAct > 0) return b.pct - a.pct;
+    if (a.prevAct > 0) return -1;
+    if (b.prevAct > 0) return 1;
+    return b.diff - a.diff;
+  });
   const decUnits = [...weeklyChanges].filter(x => x.diff < 0).sort((a, b) => a.pct - b.pct);
 
   let weeklyTopRows: { label: string; text: string; isUp: boolean }[] = [];
@@ -1393,26 +1432,33 @@ export default function DashboardPage() {
 
   // 3. Tính BXH Hoàn Thành Sản Xuất (M2)
   const getUnitProductionData = (uCode: string, pKey: string) => {
-    // 1. Tìm trong scvnKpis/dbKpis từ CSDL trước
     const m2CodeMap: Record<string, string[]> = {
       Wofloo: ["VM2-I01.01-WF", "VM2-I01.01"],
       Lego: ["VM2-I01.01-Lego", "VM2-I01.01"],
       AS: ["VM2-I01.01-AS", "VM2-I01.01"],
-      DA01: ["DM2-I01.01-DA01", "DM2-I01.01"],
-      Music: ["MM2-I01.01-SCMU", "MM2-I01.01"],
-      NDTH: ["VM2-I01.02-NDTH", "VM2-I01.02"],
+      DA01: ["DM2-I01.01-DA01", "DM2-I01.01", "VM2-I01.01-DA01"],
+      Music: ["PM2-I01.01", "PM2-I01.01-SCMU", "MM2-I01.01-SCMU", "MM2-I01.01"],
+      NDTH: ["VM2-I01.02-NDTH", "VM2-I01.02", "VM2-I01.01-NDTH"],
       CR: ["CM2-I01.01-CR", "CM2-I01.01"],
       CN: ["NM2-I01.01-CNGP", "NM2-I01.01"],
       SCS: ["SM2-I01.01-SCS", "SM2-I01.01"]
     };
     const targetCodes = m2CodeMap[uCode] || ["VM2-I01.01"];
     
-    if (scvnKpis && scvnKpis.length > 0) {
-      const dbMatch = scvnKpis.find(k => 
+    const listToSearch = [...(dbKpis || []), ...(scvnKpis || [])];
+    if (listToSearch && listToSearch.length > 0) {
+      const matches = listToSearch.filter(k => 
         (k.unitCode === uCode || k.unitCode === "SCVN" || !k.unitCode) &&
+        k.unitCode !== "TCT" &&
         (targetCodes.includes(k.code) || targetCodes.includes(k.indicatorCode))
       );
-      if (dbMatch) {
+      if (matches.length > 0) {
+        matches.sort((a, b) => {
+          if (a.unitCode === uCode && b.unitCode !== uCode) return -1;
+          if (b.unitCode === uCode && a.unitCode !== uCode) return 1;
+          return (b.actualValue || b.actualWeek || 0) - (a.actualValue || a.actualWeek || 0);
+        });
+        const dbMatch = matches[0];
         let tgt = dbMatch.targetValue || dbMatch.targetWeek || 0;
         let act = dbMatch.actualValue || dbMatch.actualWeek || 0;
         if (dbMatch.periods && dbMatch.periods[pKey]) {

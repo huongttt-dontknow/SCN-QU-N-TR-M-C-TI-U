@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+
 const actionsFilePath = path.join(process.cwd(), "lib", "key_actions.json");
 
 function readLocalActions(): Record<string, any> {
@@ -44,19 +46,36 @@ export async function GET(request: Request) {
     const key = `${unitCode}_${periodKey}`;
 
     const actionsMap = readLocalActions();
+    const isSaved = !!actionsMap[key];
     const entry = actionsMap[key] || {
       actions: defaultActions,
       updatedAt: null,
       updatedBy: null,
+      isSaved: false,
     };
 
-    return NextResponse.json(entry);
+    return NextResponse.json(
+      { ...entry, isSaved },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        },
+      }
+    );
   } catch (error: any) {
-    return NextResponse.json({ actions: defaultActions, error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { actions: defaultActions, isSaved: false, error: error.message },
+      {
+        status: 500,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        },
+      }
+    );
   }
 }
 
-// POST /api/system/key-actions - Lưu và đồng bộ danh sách 4 hành động trọng tâm
+// POST /api/system/key-actions - Lưu và đồng bộ danh sách hành động trọng tâm
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -72,17 +91,26 @@ export async function POST(request: Request) {
       periodKey,
       updatedBy: author,
       updatedAt: timestamp,
+      isSaved: true,
     };
 
     writeLocalActions(actionsMap);
 
-    return NextResponse.json({
-      success: true,
-      key,
-      actions,
-      updatedBy: author,
-      updatedAt: timestamp,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        key,
+        actions,
+        updatedBy: author,
+        updatedAt: timestamp,
+        isSaved: true,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        },
+      }
+    );
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
