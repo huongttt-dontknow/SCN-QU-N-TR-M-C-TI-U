@@ -58,19 +58,33 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
         if (!isMounted) return;
         const apiList = Array.isArray(apiData) ? apiData : [];
 
-        const noibo = resolveSourceVal("VM1-I02.02", ["NỘI BỘ"], apiList);
-        const cheo = resolveSourceVal("VM1-I02.03", ["CHÉO"], apiList);
-        const doitac = resolveSourceVal("VM1-I02.04", ["ĐỐI TÁC"], apiList);
-        const khac = resolveSourceVal("VM1-I05.03", ["KHÁC"], apiList);
-        const quyIp = resolveSourceVal("VM1-I05.04", ["QUỸ IP"], apiList);
+        let rawSources: { name: string; value: number }[] = [];
 
-        const rawSources = [
-          { name: "Doanh thu nội bộ", value: noibo },
-          { name: "Doanh thu chéo", value: cheo },
-          { name: "Doanh thu đối tác", value: doitac },
-        ];
+        if (unitCode === "TCT") {
+          const sangTaoND = resolveSourceVal("VM1-I02.01", ["SÁNG TẠO", "SCVN"], apiList);
+          const capQuyen = resolveSourceVal("EM1-I02.01-TM", ["CẤP QUYỀN", "THƯƠNG MẠI"], apiList);
+          const mcn = resolveSourceVal("EM1-I02.01-MCN", ["MCN"], apiList);
+          const doanhThuKhac = resolveSourceVal("TM1-I02.02", ["KHÁC"], apiList);
 
-        if (unitCode === "SCVN" || unitCode === "TCT") {
+          rawSources = [
+            { name: "Sáng tạo nội dung số (SCVN)", value: sangTaoND },
+            { name: "Cấp quyền / Distribution (SCME)", value: capQuyen },
+            { name: "Kinh doanh MCN (SCME)", value: mcn },
+            { name: "Doanh thu khác (TCT)", value: doanhThuKhac },
+          ];
+        } else {
+          const noibo = resolveSourceVal("VM1-I02.02", ["NỘI BỘ"], apiList);
+          const cheo = resolveSourceVal("VM1-I02.03", ["CHÉO"], apiList);
+          const doitac = resolveSourceVal("VM1-I02.04", ["ĐỐI TÁC"], apiList);
+          const khac = resolveSourceVal("VM1-I05.03", ["KHÁC"], apiList);
+          const quyIp = resolveSourceVal("VM1-I05.04", ["QUỸ IP"], apiList);
+
+          rawSources = [
+            { name: "Doanh thu nội bộ", value: noibo },
+            { name: "Doanh thu chéo", value: cheo },
+            { name: "Doanh thu đối tác", value: doitac },
+          ];
+
           if (khac > 0) rawSources.push({ name: "Doanh thu khác", value: khac });
           if (quyIp > 0) rawSources.push({ name: "Quỹ IP", value: quyIp });
         }

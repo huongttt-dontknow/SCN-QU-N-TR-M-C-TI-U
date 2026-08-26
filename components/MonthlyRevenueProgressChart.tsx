@@ -27,7 +27,28 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
   const week = Number(filters.week) || 1;
   const periodType = filters.periodType;
 
-  const unitList = [
+  let unitList = [
+    { code: "SCVN", name: "BU SCVN" },
+    { code: "Wofloo", name: "Wolfoo (WO)" },
+    { code: "Lego", name: "Lego (LEGO)" },
+    { code: "AS", name: "Animated Story" },
+    { code: "DA01", name: "Dự án 01" },
+    { code: "Music", name: "Music (SCMU)" },
+    { code: "NDTH", name: "NDTH" },
+    { code: "CR", name: "Creative Hub" },
+    { code: "CN", name: "CNGP" },
+    { code: "SCS", name: "Studio" },
+  ];
+
+  if (filters.unitCode === "TCT") {
+    unitList = [
+      { code: "TCT", name: "Tổng Công Ty (TCT)" },
+      { code: "SCVN", name: "SCVN (Sáng Tạo ND)" },
+      { code: "SCME", name: "SCME (Kinh Doanh & TM)" },
+    ];
+  }
+
+  const dummyUnitList = [
     { code: "SCVN", name: "BU SCVN" },
     { code: "Wofloo", name: "Wolfoo (WO)" },
     { code: "Lego", name: "Lego (LEGO)" },
@@ -49,7 +70,9 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
 
   const getRecordVal = (uCode: string, pKey: string) => {
     const candidateCodes: string[] = [];
-    if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
+    if (uCode === "TCT") candidateCodes.push("TM1-I02.01");
+    else if (uCode === "SCME") candidateCodes.push("EM1-I02.01");
+    else if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
     else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
     else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
     else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");

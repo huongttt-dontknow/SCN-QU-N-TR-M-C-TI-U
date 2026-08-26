@@ -50,7 +50,7 @@ export function getMasterKpiActual(unitCode: string, kpiCode: string, periodKey:
 
 export const KPI_TITLE_DICTIONARY: Record<string, string> = {
   "TM1-I02": "Doanh thu",
-  "VM1-I02.01": "Tổng doanh thu",
+  "VM1-I02.01": "Tổng doanh thu SCVN",
   "VM1-I02.01-WF": "Doanh thu BP Wolfoo (WO)",
   "VM1-I02.01-AS": "Doanh thu BP Animated Story (AS)",
   "VM1-I02.01-NDTH": "Doanh thu BP Nội dung tổng hợp (NDTH)",
@@ -64,7 +64,7 @@ export const KPI_TITLE_DICTIONARY: Record<string, string> = {
   "NM1-I02.01": "Doanh thu CNGP",
   "NM1-I02.01-CNGP": "Doanh thu CNGP",
 
-  "TM1-I02.01": "Doanh thu sản xuất & phát hành",
+  "TM1-I02.01": "Tổng doanh thu SC",
   "VM1-I02.02": "Doanh thu NB",
   "VM1-I02.02-WF": "Doanh thu NB BP Wolfoo (WO)",
   "VM1-I02.02-AS": "Doanh thu NB BP Animated Story (AS)",

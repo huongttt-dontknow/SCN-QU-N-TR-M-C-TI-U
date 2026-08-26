@@ -680,7 +680,8 @@ export default function DashboardPage() {
   ];
 
   const barComparisonData = unitList.map(u => {
-    const rec = getKpiRecord(u.code, "VM1-I02.01", periodKey);
+    const codeToQuery = u.code === "TCT" ? "TM1-I02.01" : u.code === "SCME" ? "EM1-I02.01" : "VM1-I02.01";
+    const rec = getKpiRecord(u.code, codeToQuery, periodKey);
     let target = rec?.target ? Math.round(rec.target / 1e6) : 0;
     let revenue = rec?.actual ? Math.round(rec.actual / 1e6) : 0;
 
@@ -720,7 +721,8 @@ export default function DashboardPage() {
   });
 
   // Số liệu thực tế đơn vị cấp Toàn hệ thống/BU
-  const scvnRevRec = getKpiRecord(filters.unitCode, "VM1-I02.01", periodKey);
+  const mainRevenueCode = filters.unitCode === "TCT" ? "TM1-I02.01" : filters.unitCode === "SCME" ? "EM1-I02.01" : "VM1-I02.01";
+  const scvnRevRec = getKpiRecord(filters.unitCode, mainRevenueCode, periodKey);
   const scvnVolRec = getKpiRecord(filters.unitCode, "VM2-I01.01", periodKey);
   const scvnDisciplineRec = getKpiRecord(filters.unitCode, "VM7-I03.01", periodKey);
   const scvnRoiRec = getKpiRecord(filters.unitCode, "VM1-I01.01", periodKey);
@@ -931,7 +933,7 @@ export default function DashboardPage() {
   const isWeeklyReport = filters.periodType === "weekly";
   const prevWeeklyKey = getPrevWeeklyPeriodKey(filters.month, filters.week);
 
-  const unitPrevWeeklyRec = getKpiRecord(filters.unitCode, "VM1-I02.01", prevWeeklyKey);
+  const unitPrevWeeklyRec = getKpiRecord(filters.unitCode, mainRevenueCode, prevWeeklyKey);
   const unitCurrWeeklyAct = scvnRevRec?.actual || 0;
   const unitPrevWeeklyAct = unitPrevWeeklyRec?.actual || 0;
   const unitWeeklyDiff = unitCurrWeeklyAct - unitPrevWeeklyAct;
@@ -1121,7 +1123,26 @@ export default function DashboardPage() {
   const decUnits = [...weeklyChanges].filter(x => x.diff < 0).sort((a, b) => a.pct - b.pct);
 
   let weeklyTopRows: { label: string; text: string; isUp: boolean }[] = [];
-  if (incUnits.length > 0 && decUnits.length > 0) {
+  if (filters.unitCode === "TCT") {
+    const scvnRec = getKpiRecord("SCVN", "VM1-I02.01", periodKey);
+    const scvnPrev = getKpiRecord("SCVN", "VM1-I02.01", prevWeeklyKey);
+    const scvnAct = scvnRec?.actual || 0;
+    const scvnPrevAct = scvnPrev?.actual || 0;
+    const scvnDiff = scvnAct - scvnPrevAct;
+    const scvnPct = scvnPrevAct > 0 ? Math.round((scvnDiff / scvnPrevAct) * 100) : (scvnAct > 0 ? 100 : 0);
+
+    const scmeRec = getKpiRecord("SCME", "EM1-I02.01", periodKey);
+    const scmePrev = getKpiRecord("SCME", "EM1-I02.01", prevWeeklyKey);
+    const scmeAct = scmeRec?.actual || 0;
+    const scmePrevAct = scmePrev?.actual || 0;
+    const scmeDiff = scmeAct - scmePrevAct;
+    const scmePct = scmePrevAct > 0 ? Math.round((scmeDiff / scmePrevAct) * 100) : (scmeAct > 0 ? 100 : 0);
+
+    weeklyTopRows = [
+      { label: "Khối SCVN", text: scvnDiff >= 0 ? `▲ +${scvnPct}%` : `▼ ${scvnPct}%`, isUp: scvnDiff >= 0 },
+      { label: "Khối SCME", text: scmeDiff >= 0 ? `▲ +${scmePct}%` : `▼ ${scmePct}%`, isUp: scmeDiff >= 0 }
+    ];
+  } else if (incUnits.length > 0 && decUnits.length > 0) {
     weeklyTopRows = [
       { label: "Tăng cao nhất", text: `${incUnits[0].name} (▲ +${incUnits[0].pct}%)`, isUp: true },
       { label: "Giảm cao nhất", text: `${decUnits[0].name} (▼ ${decUnits[0].pct}%)`, isUp: false },
@@ -1675,7 +1696,7 @@ export default function DashboardPage() {
   const roiVal = scvnRoiRec?.actual ? `${(scvnRoiRec.actual * 100).toFixed(1)}%` : (scvnRoiRec?.pct ? `${(scvnRoiRec.pct * 100).toFixed(1)}%` : "16.5%");
 
   // Tính toán so sánh Doanh thu đơn vị kỳ liền trước & cùng kỳ tháng trước (cho Card 1) - Tăng trưởng của doanh thu thực tế
-  const scvnRevRecPrev = getKpiRecord(filters.unitCode, "VM1-I02.01", prevPeriodKey);
+  const scvnRevRecPrev = getKpiRecord(filters.unitCode, mainRevenueCode, prevPeriodKey);
   
   let currActVal = scvnRevRec?.actual || 0;
   if (filters.periodType === "monthly" && currActVal === 0) {
@@ -1732,7 +1753,7 @@ export default function DashboardPage() {
   const samePeriodLastMonthKey = getSamePeriodLastMonthKey(filters.periodType, filters.month, filters.week, filters.quarter, filters.year);
   let diffLastMonth: number | null = null;
   if (samePeriodLastMonthKey) {
-    const scvnRevRecSameLastMonth = getKpiRecord(filters.unitCode, "VM1-I02.01", samePeriodLastMonthKey);
+    const scvnRevRecSameLastMonth = getKpiRecord(filters.unitCode, mainRevenueCode, samePeriodLastMonthKey);
     if (scvnRevRecSameLastMonth) {
       const sameLastMonthActVal = scvnRevRecSameLastMonth.actual || 0;
       if (sameLastMonthActVal > 0) {
@@ -2016,7 +2037,7 @@ export default function DashboardPage() {
               <p className="text-sm font-extrabold text-emerald-500">
                 Đạt {volPct}% Kế hoạch
               </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">(KH: {volTargetVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})</span>
+              <span className="text-xs text-[var(--text-muted)] font-semibold">{filters.unitCode === "TCT" ? "(Dữ liệu tổng hợp từ SCVN)" : `(KH: ${volTargetVal} ${filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})`}</span>
             </div>
           </div>
 
@@ -2224,6 +2245,83 @@ export default function DashboardPage() {
           </ResponsiveContainer>
         </div>
       </div>
+      )}
+
+      {/* 4.5. KHU VỰC CHỈ SỐ B2B & AN TOÀN KỆNH (M4 & VẬN HÀNH) */}
+      {(filters.unitCode === "TCT" || filters.unitCode === "SCME" || filters.unitCode === "SCVN") && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Cụm Thẻ Khách Hàng B2B */}
+          <div className="glass-panel p-5 space-y-3 border-l-4 border-l-amber-500">
+            <h3 className="text-sm font-black text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+              🤝 CỤM CHỈ SỐ KHÁCH HÀNG B2B (SCME & SCMU)
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Thống kê số lượng đối tác B2B mới chốt deal và dự án B2B mới triển khai trong kỳ
+            </p>
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Đối tác MCN mới</span>
+                <span className="text-2xl font-black text-amber-600 dark:text-amber-400 block">
+                  {getKpiRecord("SCME", "EM3-I02.01", periodKey)?.actual ?? 0} <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Đối tác</span>
+                </span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold block">KH: {getKpiRecord("SCME", "EM3-I02.01", periodKey)?.target ?? 0}</span>
+              </div>
+
+              <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Deal Cấp quyền / Music</span>
+                <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 block">
+                  {(getKpiRecord("SCME", "EM3-I03.01", periodKey)?.actual ?? 0) + (getKpiRecord("Music", "MM3-I02.08", periodKey)?.actual ?? 0)} <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Deal</span>
+                </span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold block">Cấp quyền + SCMU</span>
+              </div>
+
+              <div className="col-span-2 bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between shadow-sm">
+                <div>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200 block">Dự án B2B mới triển khai</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium block">Số hợp đồng/dự án lớn chốt thành công</span>
+                </div>
+                <span className="text-xl font-black text-sky-600 dark:text-sky-400">
+                  {getKpiRecord("SCME", "EM2-I05.01", periodKey)?.actual ?? 0} <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Dự án</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Cụm Thẻ Vận Hành & An Toàn Kênh */}
+          <div className="glass-panel p-5 space-y-3 border-l-4 border-l-rose-500">
+            <h3 className="text-sm font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-2">
+              🛡️ AN TOÀN HỆ THỐNG NET & VẬN HÀNH (SCME)
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Biến động số lượng kênh BKT join NET, kênh rời NET và các sự cố Abuse events
+            </p>
+            <div className="grid grid-cols-3 gap-3 pt-1">
+              <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
+                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Kênh BKT Join NET</span>
+                <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 block">
+                  +{getKpiRecord("SCME", "TM2-I03.01", periodKey)?.actual ?? 0}
+                </span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block">▲ Kênh mới</span>
+              </div>
+
+              <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
+                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Kênh Rời NET</span>
+                <span className="text-2xl font-black text-rose-600 dark:text-rose-400 block">
+                  -{getKpiRecord("SCME", "TM2-I03.02", periodKey)?.actual ?? 0}
+                </span>
+                <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold block">▼ Giảm bớt</span>
+              </div>
+
+              <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
+                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Abuse / Strike</span>
+                <span className="text-2xl font-black text-amber-600 dark:text-amber-400 block">
+                  {getKpiRecord("SCME", "EM4-I07.03", periodKey)?.actual ?? 0}
+                </span>
+                <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold block">⚠️ Sự cố</span>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* 4. KHU VỰC CƠ CẤU DOANH THU & TRAFFIC */}

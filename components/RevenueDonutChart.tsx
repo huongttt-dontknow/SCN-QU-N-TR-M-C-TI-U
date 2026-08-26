@@ -22,17 +22,24 @@ export default function RevenueDonutChart({ unitCode = "SCVN", periodKey = "week
   const isLight = theme === "light";
   const [data, setData] = useState<{ name: string; value: number; sharePct: number }[]>([]);
 
-  const unitList: UnitItem[] = [
+  let unitList: UnitItem[] = [
     { code: "Wofloo", name: "Wolfoo (WO)", candidates: ["VM1-I02.01-WF"] },
     { code: "Lego", name: "Lego (LEGO)", candidates: ["VM1-I02.01-Lego"] },
     { code: "AS", name: "Animated Story", candidates: ["VM1-I02.01-AS"] },
     { code: "DA01", name: "Dự án 01", candidates: ["DM1-I02.01-DA01", "DM1-I02.01"] },
-    { code: "Music", name: "Music (SCMU)", candidates: ["MM1-I02.01-SCMU", "MM1-I02.01"] },
+    { code: "Music", name: "Music (SCMU)", candidates: ["MM1-I02.01"] },
     { code: "NDTH", name: "NDTH", candidates: ["VM1-I02.01-NDTH", "2.1"] },
-    { code: "CR", name: "Creative Hub", candidates: ["CM1-I02.01-CR", "CM1-I02.01"] },
-    { code: "CN", name: "CNGP", candidates: ["NM1-I02.01-CNGP", "NM1-I02.01"] },
-    { code: "SCS", name: "Studio", candidates: ["SM1-I02.01-SCS", "SM1-I02.01"] },
+    { code: "CR", name: "Creative Hub", candidates: ["CM1-I02.01", "CM1-I02.01-CR"] },
+    { code: "CN", name: "CNGP", candidates: ["NM1-I02.01", "NM1-I02.01-CNGP"] },
+    { code: "SCS", name: "Studio", candidates: ["SM1-I02.01"] }
   ];
+
+  if (unitCode === "TCT") {
+    unitList = [
+      { code: "SCVN", name: "Khối SCVN (Sáng tạo ND)", candidates: ["VM1-I02.01"] },
+      { code: "SCME", name: "Khối SCME (Kinh doanh & TM)", candidates: ["EM1-I02.01"] }
+    ];
+  }
 
   useEffect(() => {
     let isMounted = true;

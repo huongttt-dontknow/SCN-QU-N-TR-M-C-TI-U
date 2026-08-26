@@ -430,6 +430,7 @@ const isMandatoryUnitIndicator = (unitCode: string, groupCode: string, title: st
     if (u.includes("SCS") && t.includes("sản lượng bp studio")) return true;
     if ((u.includes("CR") || u.includes("CREATIVE")) && t.includes("sản lượng bp creative hub")) return true;
     if (u.includes("NDTH") && t.includes("video hoàn thành biên tập")) return true;
+    if ((u.includes("SCME") || u.includes("MEDIA")) && (t.includes("kênh mới bkt") || t.includes("dịch vụ khai thác"))) return true;
   }
 
   if (groupCode === "M3") {
@@ -438,6 +439,7 @@ const isMandatoryUnitIndicator = (unitCode: string, groupCode: string, title: st
     if (u.includes("SCS") && t.includes("traffic bp studio")) return true;
     if (u.includes("DA01") && t.includes("view youtube da01")) return true;
     if ((u.includes("CR") || u.includes("CREATIVE")) && t.includes("view youtube scch")) return true;
+    if ((u.includes("SCME") || u.includes("MEDIA")) && (t.includes("đối tác mới") || t.includes("traffic"))) return true;
   }
 
   return false;
@@ -448,6 +450,11 @@ const isImportantIndicator = (title: string): boolean => {
   const t = title.trim().toLowerCase();
   return (
     t.includes("tổng doanh thu") ||
+    t.includes("tổng doanh số") ||
+    t.includes("tổng thực nhận") ||
+    t.includes("doanh thu scvn") ||
+    t.includes("doanh thu scme") ||
+    t.includes("dt khối") ||
     t.includes("doanh thu kênh") ||
     t.includes("video hoàn thành sản xuất") ||
     t.includes("số lượng video hoàn thành") ||
@@ -456,13 +463,56 @@ const isImportantIndicator = (title: string): boolean => {
   );
 };
 
-const isTitleOnlyRow = (title: string): boolean => {
-  const t = title.trim();
-  return (
-    t === "Tăng trưởng doanh thu" ||
-    t === "Đảm bảo số lượng nội dung số sản xuất" ||
-    t === "Gia tăng số lượng khách hàng nền tảng"
-  );
+const parseCleanNumber = (val: string | number | undefined | null): number => {
+  if (val === undefined || val === null || val === "") return 0;
+  if (typeof val === "number") return isNaN(val) ? 0 : val;
+
+  let str = val.toString().trim();
+  if (!str) return 0;
+
+  // Loại bỏ các ký tự tiền tệ, đơn vị, khoảng trắng dư thừa như $, VNĐ, đ, %
+  // Giữ lại các chữ số, dấu trừ, dấu chấm và dấu phẩy
+  str = str.replace(/[^\d.,-]/g, "");
+  if (!str || str === "-") return 0;
+
+  // Xử lý dấu phân cách hàng nghìn và dấu phần thập phân
+  if (str.includes(".") && str.includes(",")) {
+    const lastDot = str.lastIndexOf(".");
+    const lastComma = str.lastIndexOf(",");
+    if (lastDot > lastComma) {
+      // Định dạng 1,234,567.89 (dấu phẩy là phân cách hàng nghìn, dấu chấm là thập phân)
+      str = str.replace(/,/g, "");
+    } else {
+      // Định dạng 1.234.567,89 (dấu chấm là phân cách hàng nghìn, dấu phẩy là thập phân)
+      str = str.replace(/\./g, "").replace(",", ".");
+    }
+  } else if (str.includes(",")) {
+    // Chỉ có dấu phẩy
+    const commaParts = str.split(",");
+    if (commaParts.length > 2) {
+      // Nhiều dấu phẩy ví dụ "1,234,567" -> dấu phẩy ngăn cách hàng nghìn
+      str = str.replace(/,/g, "");
+    } else if (commaParts.length === 2) {
+      const [before, after] = commaParts;
+      if (/^\d{3}$/.test(after)) {
+        // Ví dụ "1,234" hoặc "12,345" -> dấu phẩy ngăn cách hàng nghìn
+        str = before + after;
+      } else {
+        // Ví dụ "1,5" hoặc "12,50" -> dấu phẩy thập phân kiểu VN
+        str = before + "." + after;
+      }
+    }
+  } else if (str.includes(".")) {
+    // Chỉ có dấu chấm
+    const dotParts = str.split(".");
+    if (dotParts.length > 2) {
+      // Nhiều dấu chấm ví dụ "1.234.567" -> dấu chấm ngăn cách hàng nghìn
+      str = str.replace(/\./g, "");
+    }
+  }
+
+  const parsed = parseFloat(str);
+  return isNaN(parsed) ? 0 : parsed;
 };
 
 export default function InputFormPage() {
@@ -809,6 +859,7 @@ export default function InputFormPage() {
   // Helper mapping for filters.unitCode to Excel product unit field
   const unitCodeToNameMap: Record<string, string> = {
     "SCVN": "SCVN",
+    "TCT": "Tổng công ty Sconnect (TCT)",
     "Wofloo": "Wofloo",
     "Lego": "Lego",
     "AS": "Animated Story",
@@ -817,7 +868,8 @@ export default function InputFormPage() {
     "NDTH": "NDTH",
     "CR": "Creative Hub",
     "CN": "CNGP",
-    "SCS": "SCS"
+    "SCS": "SCS",
+    "SCME": "SCME"
   };
 
   // Helper tính periodKey dựa trên bộ lọc
@@ -996,6 +1048,24 @@ export default function InputFormPage() {
             if (filters.unitCode === "SCVN") {
               const grp = (d.group || "").toLowerCase();
               if (grp.includes("bổ sung")) return false;
+            }
+            if (filters.unitCode === "SCME") {
+              const c = (d.indicatorCode || d.code || "").trim();
+              if (/^[VMNSDC]/.test(c)) return false;
+              if (["TM4-I01.01", "TM4-I02.01", "TM3-I01.02", "TM3-I01.03"].includes(c)) return false;
+            }
+            if (filters.unitCode === "TCT") {
+              const c = (d.indicatorCode || d.code || "").trim();
+              const validTctCodes = new Set([
+                'TM1-I01', 'TM1-I01.01', 'TM1-I01.02', 'TM1-I02', 'TM1-I02.01', 'TM1-I02.01-STNDS', 'VM1-I02.01', 'TM1-I02.01-B2B', 'EM1-I02.01', 'TM1-I02.02', 'EM1-I02.02', 'TM1-I03', 'TM1-I03.01', 'TM1-I04', 'TM1-I04.01', 'TM1-I04.02', 'TM1-I05', 'TM1-I05.01',
+                'TM2-I01', 'TM2-I01.01', 'VM2-I01.01', 'VM2-I02.01', 'TM2-I02', 'TM2-I02.01', 'TM2-I03', 'TM2-I03.01', 'TM2-I03.02', 'TM2-I04', 'TM2-I04.01', 'TM2-I05', 'EM2-I05.01',
+                'TM3-I01', 'TM3-I01.02', 'DM3-I01.04', 'TM3-I01.05', 'NM3-I01.06', 'TM3-I02', 'EM3-I03.01', 'EM3-I03.04', 'EM3-I02.01', 'MM3-I02.08',
+                'TM4-I01', 'TM4-I01.01', 'EM4-I01', 'TM4-I01.03', 'TM4-I02', 'TM4-I02.01', 'TM4-I02.02', 'VM4-I02.05', 'VM4-I02.06', 'TM4-I02.03', 'TM4-I03', 'EM4-I07.03', 'TM4-I04', 'TM4-I04.02',
+                'TM5-I01', 'TM5-I01.01', 'TM5-I01.03', 'TM5-I02', 'TM5-I01.02', 'TM5-I01.02.01', 'TM5-I01.02.02', 'TM5-I01.02.03', 'TM5-I01.02.04', 'TM5-I02.01', 'TM5-I02.02',
+                'TM6-I01', 'TM6-I01.01', 'TM6-I01.02', 'TM6-I02', 'TM6-I02.02', 'TM6-I02.03', 'TM6-I03', 'TM6-I03.01', 'TM6-I03.02', 'TM6-I04', 'TM6-I04.01', 'TM6-I04.02', 'TM6-I04.03',
+                'TM7-I01', 'TM7-I01.01', 'TM7-I02', 'TM7-I02.01', 'TM7-I02.02', 'TM7-I03', 'TM7-I03.01', 'TM7-I03.02'
+              ]);
+              if (!validTctCodes.has(c)) return false;
             }
             return true;
           })
@@ -1292,7 +1362,7 @@ export default function InputFormPage() {
   };
 
   const handleInputChange = (id: string, val: string) => {
-    const numVal = parseFloat(val) || 0;
+    const numVal = parseCleanNumber(val);
     setKpis(prev => {
       const targetItem = prev.find(k => k.id === id);
       const updated = prev.map(k => k.id === id ? { ...k, actual: numVal } : k);
@@ -1303,7 +1373,7 @@ export default function InputFormPage() {
   };
 
   const handleTargetChange = (id: string, val: string) => {
-    const numVal = parseFloat(val) || 0;
+    const numVal = parseCleanNumber(val);
     setKpis(prev => {
       const targetItem = prev.find(k => k.id === id);
       const updated = prev.map(k => k.id === id ? { ...k, target: numVal } : k);
@@ -1314,7 +1384,7 @@ export default function InputFormPage() {
   };
 
   const handleWeightChange = (id: string, val: string) => {
-    const numVal = parseFloat(val) || 0;
+    const numVal = parseCleanNumber(val);
     setKpis(prev => prev.map(k => k.id === id ? { ...k, weight: numVal } : k));
     kpisRef.current = kpisRef.current.map(k => k.id === id ? { ...k, weight: numVal } : k);
   };
@@ -1324,11 +1394,33 @@ export default function InputFormPage() {
       if (p.code === code) {
         return {
           ...p,
-          [field === "value" ? "Kỳ này" : "explanation"]: field === "value" ? (parseFloat(newVal) || 0) : newVal
+          [field === "value" ? "Kỳ này" : "explanation"]: field === "value" ? parseCleanNumber(newVal) : newVal
         };
       }
       return p;
     }));
+  };
+
+  const handlePasteNumber = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    kpiId: string,
+    field: "target" | "actual" | "weight",
+    isProd = false
+  ) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData("text");
+    const cleanVal = parseCleanNumber(pastedText);
+    const valStr = cleanVal.toString();
+    setEditingCell({ kpiId, field, value: valStr });
+
+    if (isProd) {
+      if (field === "target") handleProdTargetChange(kpiId, valStr);
+      else if (field === "actual") handleProdInputChange(kpiId, valStr);
+    } else {
+      if (field === "target") handleTargetChange(kpiId, valStr);
+      else if (field === "actual") handleInputChange(kpiId, valStr);
+      else if (field === "weight") handleWeightChange(kpiId, valStr);
+    }
   };
 
   const handleSaveRadarPoints = async () => {
@@ -1378,13 +1470,13 @@ export default function InputFormPage() {
   };
 
   const handleProdInputChange = (id: string, val: number | string) => {
-    const numVal = typeof val === "number" ? val : (parseFloat(val) || 0);
+    const numVal = typeof val === "number" ? val : parseCleanNumber(val);
     setProductKpis(prev => prev.map(k => k.id === id ? { ...k, actual: numVal } : k));
     productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, actual: numVal } : k);
   };
 
   const handleProdTargetChange = (id: string, val: number | string) => {
-    const numVal = typeof val === "number" ? val : (parseFloat(val) || 0);
+    const numVal = typeof val === "number" ? val : parseCleanNumber(val);
     setProductKpis(prev => prev.map(k => k.id === id ? { ...k, target: numVal } : k));
     productKpisRef.current = productKpisRef.current.map(k => k.id === id ? { ...k, target: numVal } : k);
   };
@@ -1465,6 +1557,8 @@ export default function InputFormPage() {
     const t = title.toLowerCase();
     const importantKeywords = [
       "tổng doanh thu",
+      "tổng doanh số",
+      "tổng thực nhận",
       "số lượt view youtube",
       "1 triệu views",
       "hoàn thành sản xuất",
@@ -1716,11 +1810,9 @@ export default function InputFormPage() {
 
   function shouldShowByFrequency(freq: string | undefined, title: string, code: string) {
     const periodType = filters.periodType || "weekly";
-    const f = (freq || "").toLowerCase().trim();
+    let f = (freq || "").toLowerCase().trim();
 
     // SPECIAL RULE FOR M4 MANDATORY INDICATORS:
-    // "Số kênh đạt ngưỡng 10k $/ tháng", "Số vi phạm chính sách", "Tổng số kênh kinh doanh", "Số kênh BKT"
-    // Must ONLY show when periodType is 'monthly', 'quarterly', or 'yearly'. Must HIDE when 'weekly'!
     const isM4Mandatory = [
       "Số kênh đạt ngưỡng 10k $/ tháng",
       "Số kênh đạt ngưỡng 10k $",
@@ -1734,7 +1826,30 @@ export default function InputFormPage() {
       return true;
     }
 
-    if (f === "") return true;
+    if (!f) {
+      const c = (code || "").toUpperCase();
+      if (
+        c.startsWith("EM1-I01") || c.startsWith("TM1-I01") ||
+        c.startsWith("EM1-I03") || c.startsWith("TM1-I03") ||
+        c.startsWith("TM1-I04") || c.startsWith("EM4-I05") ||
+        c.startsWith("EM6-I03") || c.startsWith("TM6-I03")
+      ) {
+        f = "quarterly";
+      } else if (
+        c.startsWith("EM3-I05") || c.startsWith("EM4-") ||
+        c.startsWith("TM5-") || c.startsWith("EM5-") ||
+        c.startsWith("TM6-I01") || c.startsWith("EM6-I01") ||
+        c.startsWith("TM7-") || c.startsWith("EM7-")
+      ) {
+        f = "monthly";
+      } else if (
+        c.startsWith("TM1-I02") || c.startsWith("EM1-I02") ||
+        c.startsWith("TM2-") || c.startsWith("EM2-") ||
+        c.startsWith("TM3-") || c.startsWith("EM3-")
+      ) {
+        f = "weekly";
+      }
+    }
 
     if (periodType === "weekly") {
       return f === "weekly" || f === "tuần";
@@ -1770,6 +1885,7 @@ export default function InputFormPage() {
   };
 
   const isRowVisible = (kpi: any) => {
+    if (!shouldShowByFrequency(kpi.frequency, kpi.title, kpi.code)) return false;
     let curr = kpi;
     const visited = new Set<string>();
     while (curr.parentCode) {
@@ -2271,13 +2387,36 @@ export default function InputFormPage() {
                   </p>
                 </div>
               )}
-              <table className="w-full text-left text-sm border-collapse">
+              {(() => {
+                const totalWeightSum = visibleKpis.reduce((acc, k) => acc + (parseCleanNumber(k.weight) || 0), 0);
+                const roundedSum = Math.round(totalWeightSum * 100) / 100;
+                return (
+                  <table className="w-full text-left text-sm border-collapse">
                 <thead className="sticky top-0 z-10 bg-slate-950 shadow">
                   <tr className="border-b border-white/10 text-slate-300 font-black bg-slate-900 uppercase text-xs">
                     {showCodeColumn && <th className="p-3 w-24 text-center">Mã chỉ tiêu</th>}
                     <th className="p-3 max-w-[250px] w-[250px]">Mục tiêu / Chỉ tiêu cần báo cáo</th>
                     <th className="p-3 w-16 text-center">ĐVT</th>
-                    <th className="p-3 w-20 text-center">Tỷ trọng (%)</th>
+                    <th className="p-3 w-32 text-center select-none align-top">
+                      <div className="font-black text-xs uppercase tracking-wider">Tỷ trọng (%)</div>
+                      <div className="mt-1 flex flex-col items-center gap-0.5 text-[10px] normal-case tracking-normal">
+                        {roundedSum < 100 && (
+                          <span className="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30 font-black whitespace-nowrap" title="Số % tỷ trọng còn lại cần phân bổ cho đủ 100%">
+                            Còn lại: {Math.round((100 - roundedSum) * 100) / 100}%
+                          </span>
+                        )}
+                        {roundedSum === 100 && (
+                          <span className="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-500/30 font-black whitespace-nowrap" title="Đã phân bổ đủ 100% tỷ trọng">
+                            ✓ Đạt 100%
+                          </span>
+                        )}
+                        {roundedSum > 100 && (
+                          <span className="bg-rose-500/20 text-rose-300 px-1.5 py-0.5 rounded border border-rose-500/30 font-black whitespace-nowrap" title="Tổng tỷ trọng đã vượt quá 100%">
+                            ⚠️ Vượt: +{Math.round((roundedSum - 100) * 100) / 100}%
+                          </span>
+                        )}
+                      </div>
+                    </th>
                     <th className="p-3 w-48">Cách tính</th>
                     <th className="p-3 w-32 text-center bg-sky-950/30 text-sky-300">KH Định Kỳ</th>
                     <th className="p-3 w-36 text-center bg-purple-950/30 text-purple-300">Kết quả Thực tế</th>
@@ -2439,10 +2578,14 @@ export default function InputFormPage() {
                                     value={editingCell?.kpiId === kpi.id && editingCell?.field === "weight" ? editingCell.value : (kpi.weight || 0).toString()}
                                     disabled={isInputDisabled}
                                     onFocus={() => setEditingCell({ kpiId: kpi.id, field: "weight", value: (kpi.weight || 0).toString() })}
-                                    onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "weight", value: e.target.value })}
+                                    onPaste={(e) => handlePasteNumber(e, kpi.id, "weight", false)}
+                                    onChange={(e) => {
+                                      setEditingCell({ kpiId: kpi.id, field: "weight", value: e.target.value });
+                                      handleWeightChange(kpi.id, e.target.value);
+                                    }}
                                     onBlur={() => {
                                       if (editingCell) {
-                                        const val = parseFloat(editingCell.value) || 0;
+                                        const val = parseCleanNumber(editingCell.value);
                                         handleWeightChange(kpi.id, val.toString());
                                         setEditingCell(null);
                                       }
@@ -2463,10 +2606,14 @@ export default function InputFormPage() {
                                     value={editingCell?.kpiId === kpi.id && editingCell?.field === "target" ? editingCell.value : formatValue(kpi.target, kpi.unit)}
                                     disabled={isInputDisabled}
                                     onFocus={() => setEditingCell({ kpiId: kpi.id, field: "target", value: kpi.target.toString() })}
-                                    onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "target", value: e.target.value })}
+                                    onPaste={(e) => handlePasteNumber(e, kpi.id, "target", false)}
+                                    onChange={(e) => {
+                                      setEditingCell({ kpiId: kpi.id, field: "target", value: e.target.value });
+                                      handleTargetChange(kpi.id, e.target.value);
+                                    }}
                                     onBlur={() => {
                                       if (editingCell) {
-                                        const val = parseFloat(editingCell.value) || 0;
+                                        const val = parseCleanNumber(editingCell.value);
                                         handleTargetChange(kpi.id, val.toString());
                                         setEditingCell(null);
                                       }
@@ -2484,10 +2631,14 @@ export default function InputFormPage() {
                                     value={editingCell?.kpiId === kpi.id && editingCell?.field === "actual" ? editingCell.value : formatValue(kpi.actual, kpi.unit)}
                                     disabled={isInputDisabled}
                                     onFocus={() => setEditingCell({ kpiId: kpi.id, field: "actual", value: kpi.actual.toString() })}
-                                    onChange={(e) => setEditingCell({ kpiId: kpi.id, field: "actual", value: e.target.value })}
+                                    onPaste={(e) => handlePasteNumber(e, kpi.id, "actual", false)}
+                                    onChange={(e) => {
+                                      setEditingCell({ kpiId: kpi.id, field: "actual", value: e.target.value });
+                                      handleInputChange(kpi.id, e.target.value);
+                                    }}
                                     onBlur={() => {
                                       if (editingCell) {
-                                        const val = parseFloat(editingCell.value) || 0;
+                                        const val = parseCleanNumber(editingCell.value);
                                         handleInputChange(kpi.id, val.toString());
                                         setEditingCell(null);
                                       }
@@ -2549,6 +2700,8 @@ export default function InputFormPage() {
                   })}
                 </tbody>
               </table>
+                );
+              })()}
             </div>
           </div>
 
@@ -3177,7 +3330,6 @@ export default function InputFormPage() {
                                     <span className="text-slate-500 mr-1.5 font-normal select-none">↳</span>
                                   )}
                                   <div className="flex-1 flex items-center gap-2">
-                                    {/* NÚT ICON CON MẮT EYE / EYE-OFF ẨN / HIỆN ĐẶT Ở ĐẦU (TIẾT KIỆM DIỆN TÍCH) */}
                                     {isCustomizableGroup && !isMandatory && !isReadOnly && activeProductId !== "all" && (
                                       <div className="shrink-0 flex items-center gap-1">
                                         {isCustom && (
@@ -3233,7 +3385,7 @@ export default function InputFormPage() {
                                     onChange={(e) => setEditingCell({ kpiId: pk.id, field: "target", value: e.target.value })}
                                     onBlur={() => {
                                       if (editingCell) {
-                                        const val = parseFloat(editingCell.value) || 0;
+                                        const val = parseCleanNumber(editingCell.value);
                                         handleProdTargetChange(pk.id, val.toString());
                                         setEditingCell(null);
                                       }
@@ -3254,7 +3406,7 @@ export default function InputFormPage() {
                                     onChange={(e) => setEditingCell({ kpiId: pk.id, field: "actual", value: e.target.value })}
                                     onBlur={() => {
                                       if (editingCell) {
-                                        const val = parseFloat(editingCell.value) || 0;
+                                        const val = parseCleanNumber(editingCell.value);
                                         handleProdInputChange(pk.id, val.toString());
                                         setEditingCell(null);
                                       }
@@ -3628,11 +3780,15 @@ export default function InputFormPage() {
                         </td>
                         <td className="p-3 text-center bg-purple-950/10">
                           <input
-                            type="number"
-                            min={0}
-                            max={120}
+                            type="text"
                             disabled={isReadOnlyField}
                             value={item["Kỳ này"] !== undefined ? item["Kỳ này"] : ""}
+                            onPaste={(e) => {
+                              e.preventDefault();
+                              const pastedText = e.clipboardData.getData("text");
+                              const cleanVal = parseCleanNumber(pastedText);
+                              handleRadarPointChange(item.code, "value", cleanVal.toString());
+                            }}
                             onChange={(e) => handleRadarPointChange(item.code, "value", e.target.value)}
                             className="w-28 bg-slate-950 border border-[var(--glass-border)] text-white text-center font-bold text-xs rounded-lg p-1.5 focus:outline-none focus:border-rose-500 disabled:opacity-60"
                           />
