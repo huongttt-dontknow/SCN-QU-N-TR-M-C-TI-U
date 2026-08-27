@@ -191,13 +191,20 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
     };
   });
 
+  const isSmallSet = data.length <= 3;
+  const barThickness = isSmallSet ? 32 : 14;
+  const yWidth = isSmallSet ? 140 : 110;
+  const labelSize = isSmallSet ? 12 : 9;
+  const yLabelSize = isSmallSet ? 11 : 10;
+
   return (
     <div className="w-full h-[320px] flex flex-col justify-between mt-2">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 5, right: 40, left: 10, bottom: 5 }}
+          margin={{ top: 10, right: 45, left: 10, bottom: 10 }}
+          barCategoryGap={isSmallSet ? "25%" : "15%"}
         >
           <CartesianGrid
             strokeDasharray="3 3"
@@ -208,14 +215,14 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
             type="number"
             domain={[0, (dataMax: number) => Math.max(100, dataMax)]}
             tickFormatter={(val) => `${val}%`}
-            tick={{ fill: isLight ? "#475569" : "#64748b", fontSize: 9, fontWeight: 600 }}
+            tick={{ fill: isLight ? "#475569" : "#64748b", fontSize: 10, fontWeight: 600 }}
             stroke={isLight ? "#cbd5e1" : "rgba(255,255,255,0.1)"}
           />
           <YAxis
             type="category"
             dataKey="name"
-            width={110}
-            tick={{ fill: isLight ? "#0f172a" : "#cbd5e1", fontSize: 10, fontWeight: 700 }}
+            width={yWidth}
+            tick={{ fill: isLight ? "#0f172a" : "#cbd5e1", fontSize: yLabelSize, fontWeight: 800 }}
             stroke={isLight ? "#cbd5e1" : "rgba(255,255,255,0.1)"}
           />
           <Tooltip
@@ -247,23 +254,26 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
           />
           <Bar
             dataKey="pct"
-            radius={[0, 4, 4, 0]}
-            barSize={12}
+            radius={[0, 6, 6, 0]}
+            barSize={barThickness}
           >
             {data.map((entry, index) => {
-              const isSCVN = entry.code === "SCVN";
-              const color = isSCVN 
-                ? (isLight ? "#7c3aed" : "#a78bfa")
-                : (entry.pct >= 100 
-                    ? (isLight ? "#059669" : "#34d399") 
-                    : (entry.pct >= 50 ? (isLight ? "#0284c7" : "#38bdf8") : (isLight ? "#ea580c" : "#fb923c")));
+              let color = isLight ? "#0284c7" : "#38bdf8";
+              if (entry.code === "TCT") color = isLight ? "#0284c7" : "#38bdf8";
+              else if (entry.code === "SCVN") color = isLight ? "#7c3aed" : "#a78bfa";
+              else if (entry.code === "SCME") color = isLight ? "#059669" : "#34d399";
+              else {
+                color = entry.pct >= 100 
+                  ? (isLight ? "#059669" : "#34d399") 
+                  : (entry.pct >= 50 ? (isLight ? "#0284c7" : "#38bdf8") : (isLight ? "#ea580c" : "#fb923c"));
+              }
               return <Cell key={`cell-${index}`} fill={color} />;
             })}
             <LabelList 
               dataKey="pct" 
               position="right" 
               formatter={(val: number) => `${val}%`} 
-              style={{ fill: isLight ? "#0f172a" : "#cbd5e1", fontSize: 9, fontWeight: 700 }}
+              style={{ fill: isLight ? "#0f172a" : "#cbd5e1", fontSize: labelSize, fontWeight: 900 }}
             />
           </Bar>
         </BarChart>
