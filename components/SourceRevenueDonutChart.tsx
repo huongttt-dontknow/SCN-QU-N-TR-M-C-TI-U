@@ -52,11 +52,20 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
       return 0;
     };
 
-    fetch(`/api/kpi?unitCode=${unitCode}&periodKey=${periodKey}`)
-      .then((res) => res.json())
-      .then((apiData) => {
+    const fetches = unitCode === "TCT"
+      ? [
+          fetch(`/api/kpi?unitCode=TCT&periodKey=${periodKey}`).then(r => r.json()).catch(() => []),
+          fetch(`/api/kpi?unitCode=SCVN&periodKey=${periodKey}`).then(r => r.json()).catch(() => []),
+          fetch(`/api/kpi?unitCode=SCME&periodKey=${periodKey}`).then(r => r.json()).catch(() => [])
+        ]
+      : [
+          fetch(`/api/kpi?unitCode=${unitCode}&periodKey=${periodKey}`).then(r => r.json()).catch(() => [])
+        ];
+
+    Promise.all(fetches)
+      .then((results) => {
         if (!isMounted) return;
-        const apiList = Array.isArray(apiData) ? apiData : [];
+        const apiList = results.flat();
 
         let rawSources: { name: string; value: number }[] = [];
 

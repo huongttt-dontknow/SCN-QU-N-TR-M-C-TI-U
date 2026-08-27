@@ -81,6 +81,7 @@ export default function DashboardPage() {
 
   const [dbKpis, setDbKpis] = useState<any[]>([]);
   const [scvnKpis, setScvnKpis] = useState<any[]>([]);
+  const [scmeKpis, setScmeKpis] = useState<any[]>([]);
   const [isLoadingDb, setIsLoadingDb] = useState(false);
 
   interface ProductHealthRanking {
@@ -191,8 +192,11 @@ export default function DashboardPage() {
         const fetchSCVN = filters.unitCode !== "SCVN" 
           ? fetch(`/api/kpi/unit-data?unitCode=SCVN&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`)
           : null;
+        const fetchSCME = filters.unitCode !== "SCME" 
+          ? fetch(`/api/kpi/unit-data?unitCode=SCME&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`)
+          : null;
 
-        const [resUnit, resSCVN] = await Promise.all([fetchUnit, fetchSCVN]);
+        const [resUnit, resSCVN, resSCME] = await Promise.all([fetchUnit, fetchSCVN, fetchSCME]);
 
         if (isCancelled) return;
 
@@ -201,9 +205,11 @@ export default function DashboardPage() {
           if (Array.isArray(data)) {
             setDbKpis(data);
             if (filters.unitCode === "SCVN") setScvnKpis(data);
+            if (filters.unitCode === "SCME") setScmeKpis(data);
           } else {
             setDbKpis([]);
             if (filters.unitCode === "SCVN") setScvnKpis([]);
+            if (filters.unitCode === "SCME") setScmeKpis([]);
           }
         }
 
@@ -211,6 +217,12 @@ export default function DashboardPage() {
           const dataSCVN = await resSCVN.json();
           if (Array.isArray(dataSCVN)) setScvnKpis(dataSCVN);
           else setScvnKpis([]);
+        }
+
+        if (resSCME && resSCME.ok) {
+          const dataSCME = await resSCME.json();
+          if (Array.isArray(dataSCME)) setScmeKpis(dataSCME);
+          else setScmeKpis([]);
         }
       } catch (err) {
         console.error("Lỗi khi tải dữ liệu KPI từ database:", err);
@@ -490,11 +502,9 @@ export default function DashboardPage() {
   // Helper to fetch KPI record from DB if available, fallback to MASTER_KPI_DATA
   const getKpiRecord = (unitCode: string, code: string, pKey: string) => {
     let searchCode = code;
-    // Map discipline code for child units if viewing a child unit
     if ((code === "TM7-I01.01" || code === "VM7-I03.01") && unitCode !== "SCVN" && unitCode !== "TCT") {
       searchCode = "VM7-I03.01";
     }
-    // Map TCT total revenue code
     if (code === "VM1-I02.01" && unitCode === "TCT") {
       searchCode = "TM1-I02.01";
     }
@@ -546,7 +556,7 @@ export default function DashboardPage() {
       if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01", "SM7-I03.01-SCS");
       if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04", "SM3-I01.04-SCS");
     }
-    if (unitCode === "SCVN" || unitCode === "TCT" || candidateCodes.length === 0) {
+    if (unitCode === "SCVN" || unitCode === "SCME" || unitCode === "TCT" || candidateCodes.length === 0) {
       candidateCodes.push(searchCode);
     }
 
@@ -566,8 +576,9 @@ export default function DashboardPage() {
       const isUnitMatch = (k: any) => {
         if (!k.unitCode) return true;
         if (k.unitCode === unitCode) return true;
-        if (k.unitCode === "SCVN") return true;
-        if (unitCode === "SCVN" || unitCode === "TCT") return true;
+        if (unitCode === "SCME" && (k.unitCode === "SCME" || k.unitCode === "TCT")) return true;
+        if (unitCode === "SCVN" && (k.unitCode === "SCVN" || k.unitCode === "TCT")) return true;
+        if (unitCode === "TCT") return true;
         return false;
       };
 
@@ -601,24 +612,21 @@ export default function DashboardPage() {
           );
         }
         if (match) {
-          if (match.periods) {
-            if (match.periods[pKey]) {
-              const target = match.periods[pKey].target || 0;
-              const actual = match.periods[pKey].actual || 0;
-              return {
-                target,
-                actual,
-                pct: calculateCompletionRate(target, actual, cCode, match.title)
-              };
-            }
+          if (match.periods && match.periods[pKey]) {
+            const target = match.periods[pKey].target || 0;
+            const actual = match.periods[pKey].actual || 0;
+            return {
+              target,
+              actual,
+              pct: calculateCompletionRate(target, actual, cCode, match.title)
+            };
           } else {
             let target = (match.target !== undefined ? match.target : (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue)) || 0;
             let actual = (match.actual !== undefined ? match.actual : (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue)) || 0;
             if (pKey.startsWith("weekly_")) {
               target = (match.target !== undefined ? match.target : (match.targetWeek && match.targetWeek > 0 ? match.targetWeek : match.targetValue)) || 0;
               actual = (match.actual !== undefined ? match.actual : (match.actualWeek && match.actualWeek > 0 ? match.actualWeek : match.actualValue)) || 0;
-            }
-            else if (pKey.startsWith("quarterly_")) {
+            } else if (pKey.startsWith("quarterly_")) {
               target = (match.target !== undefined ? match.target : (match.targetQuarter && match.targetQuarter > 0 ? match.targetQuarter : match.targetValue)) || 0;
               actual = (match.actual !== undefined ? match.actual : (match.actualQuarter && match.actualQuarter > 0 ? match.actualQuarter : match.actualValue)) || 0;
             } else if (pKey.startsWith("yearly_")) {
@@ -641,9 +649,19 @@ export default function DashboardPage() {
       if (res) return res;
     }
 
+    if (unitCode === "SCME" && scmeKpis && scmeKpis.length > 0) {
+      const resSCME = findInList(scmeKpis);
+      if (resSCME) return resSCME;
+    }
+
     if (scvnKpis && scvnKpis.length > 0) {
       const resSCVN = findInList(scvnKpis);
       if (resSCVN) return resSCVN;
+    }
+
+    if (scmeKpis && scmeKpis.length > 0) {
+      const resSCME = findInList(scmeKpis);
+      if (resSCME) return resSCME;
     }
 
     if (dbKpis && dbKpis.length > 0) {
