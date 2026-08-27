@@ -84,6 +84,8 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
     else if (uCode === "Music") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU", "MM1-I02.01.01");
 
     const month8MasterTargets: Record<string, number> = {
+      TCT: 10200000000,
+      SCME: 3508924687,
       SCVN: 6691075313,
       Wofloo: 560000000,
       AS: 2096797220,
@@ -125,6 +127,12 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
         const kCode = k.code || k.indicatorCode;
         if (uCode === "SCVN") {
           return kCode === "VM1-I02.01" && (!k.unitCode || k.unitCode === "SCVN");
+        }
+        if (uCode === "SCME") {
+          return (kCode === "EM1-I02.01" || kCode === "EM1-I02") && (!k.unitCode || k.unitCode === "SCME");
+        }
+        if (uCode === "TCT") {
+          return (kCode === "TM1-I02.01" || kCode === "TM1-I02") && (!k.unitCode || k.unitCode === "TCT");
         }
         return (k.unitCode === uCode || subSuffixes.some(s => kCode?.endsWith(s))) && candidateCodes.includes(kCode);
       });
