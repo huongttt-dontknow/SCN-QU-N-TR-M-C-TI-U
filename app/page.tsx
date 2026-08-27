@@ -684,8 +684,7 @@ export default function DashboardPage() {
     return null;
   };
 
-  // Dữ liệu biểu đồ so sánh hoàn thành doanh thu 9 đơn vị THỰC TẾ từ lib/kpiMasterData.ts
-  const unitList = [
+  let unitList = [
     { code: "Wofloo", label: "Wolfoo" },
     { code: "Lego", label: "Lego" },
     { code: "AS", label: "Animated" },
@@ -696,6 +695,22 @@ export default function DashboardPage() {
     { code: "CN", label: "CNGP" },
     { code: "SCS", label: "Studio" },
   ];
+
+  if (filters.unitCode === "TCT") {
+    unitList = [
+      { code: "SCVN", label: "Khối SCVN" },
+      { code: "SCME", label: "Khối SCME" },
+      { code: "Wofloo", label: "Wolfoo" },
+      { code: "Lego", label: "Lego" },
+      { code: "AS", label: "Animated" },
+      { code: "DA01", label: "Dự án 01" },
+      { code: "Music", label: "Music" },
+      { code: "NDTH", label: "NDTH" },
+      { code: "CR", label: "Creative" },
+      { code: "CN", label: "CNGP" },
+      { code: "SCS", label: "Studio" },
+    ];
+  }
 
   const barComparisonData = unitList.map(u => {
     const codeToQuery = u.code === "TCT" ? "TM1-I02.01" : u.code === "SCME" ? "EM1-I02.01" : "VM1-I02.01";

@@ -70,9 +70,9 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
 
   const getRecordVal = (uCode: string, pKey: string) => {
     const candidateCodes: string[] = [];
-    if (uCode === "TCT") candidateCodes.push("TM1-I02.01");
-    else if (uCode === "SCME") candidateCodes.push("EM1-I02.01");
-    else if (uCode === "SCVN") candidateCodes.push("VM1-I02.01");
+    if (uCode === "TCT") candidateCodes.push("TM1-I02.01", "TM1-I02");
+    else if (uCode === "SCME") candidateCodes.push("EM1-I02.01", "EM1-I02");
+    else if (uCode === "SCVN") candidateCodes.push("VM1-I02.01", "VM1-I02");
     else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
     else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
     else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");
@@ -98,35 +98,13 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
       CR: 100100000,
     };
 
-    // 1. Check MASTER_KPI_DATA for exact pKey
-    const scvnDict = MASTER_KPI_DATA["SCVN"] || {};
-    const uDict = MASTER_KPI_DATA[uCode] || {};
-    for (const cCode of candidateCodes) {
-      const p1 = uDict[cCode]?.periods?.[pKey];
-      if (p1 && (p1.actual !== undefined || p1.target !== undefined)) {
-        let tgt = p1.target || 0;
-        if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
-          tgt = month8MasterTargets[uCode];
-        }
-        return { target: tgt, actual: p1.actual || 0 };
-      }
-      const p2 = scvnDict[cCode]?.periods?.[pKey];
-      if (p2 && (p2.actual !== undefined || p2.target !== undefined)) {
-        let tgt = p2.target || 0;
-        if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
-          tgt = month8MasterTargets[uCode];
-        }
-        return { target: tgt, actual: p2.actual || 0 };
-      }
-    }
-
-    // 2. Check kpiDataList for item with exact periodKey === pKey
+    // 1. Check kpiDataList FIRST for actual database records
     if (kpiDataList && kpiDataList.length > 0) {
       const subSuffixes = ["-Lego", "-WF", "-AS", "-NDTH", "-DA01", "-CR", "-CNGP", "-SCS", "-SCMU", "-WO", "-LEGO"];
       const matches = kpiDataList.filter(k => {
         const kCode = k.code || k.indicatorCode;
         if (uCode === "SCVN") {
-          return kCode === "VM1-I02.01" && (!k.unitCode || k.unitCode === "SCVN");
+          return (kCode === "VM1-I02.01" || kCode === "VM1-I02") && (!k.unitCode || k.unitCode === "SCVN");
         }
         if (uCode === "SCME") {
           return (kCode === "EM1-I02.01" || kCode === "EM1-I02") && (!k.unitCode || k.unitCode === "SCME");
@@ -153,6 +131,28 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
           }
           return { target: tgt, actual: act };
         }
+      }
+    }
+
+    // 2. Check MASTER_KPI_DATA fallback ONLY if actual > 0
+    const scvnDict = MASTER_KPI_DATA["SCVN"] || {};
+    const uDict = MASTER_KPI_DATA[uCode] || {};
+    for (const cCode of candidateCodes) {
+      const p1 = uDict[cCode]?.periods?.[pKey];
+      if (p1 && p1.actual !== undefined && p1.actual > 0) {
+        let tgt = p1.target || 0;
+        if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+          tgt = month8MasterTargets[uCode];
+        }
+        return { target: tgt, actual: p1.actual || 0 };
+      }
+      const p2 = scvnDict[cCode]?.periods?.[pKey];
+      if (p2 && p2.actual !== undefined && p2.actual > 0) {
+        let tgt = p2.target || 0;
+        if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+          tgt = month8MasterTargets[uCode];
+        }
+        return { target: tgt, actual: p2.actual || 0 };
       }
     }
 
