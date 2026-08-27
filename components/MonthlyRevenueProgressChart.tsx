@@ -84,8 +84,8 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
     else if (uCode === "Music") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU", "MM1-I02.01.01");
 
     const month8MasterTargets: Record<string, number> = {
-      TCT: 10200000000,
-      SCME: 3508924687,
+      TCT: 15926075313,
+      SCME: 9235000000,
       SCVN: 6691075313,
       Wofloo: 560000000,
       AS: 2096797220,

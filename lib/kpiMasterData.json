@@ -41734,13 +41734,15 @@
           "target": 25
         },
         "monthly_8": {
-          "target": 10
+          "target": 9235000000
         },
         "weekly_8_1": {
-          "target": 2.5
+          "target": 2308750000,
+          "actual": 2308750000
         },
         "weekly_8_2": {
-          "target": 2.5
+          "target": 2308750000,
+          "actual": 2541250000
         },
         "weekly_8_3": {
           "target": 2.5
