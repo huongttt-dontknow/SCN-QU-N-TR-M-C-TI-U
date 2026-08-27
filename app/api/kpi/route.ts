@@ -495,14 +495,15 @@ export async function GET(request: Request) {
         for (const jr of jsonFiltered) {
           const idx = enrichedRecords.findIndex((r: any) => r.indicatorCode === jr.indicatorCode);
           if (idx >= 0) {
-            if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
-              enrichedRecords[idx] = {
-                ...enrichedRecords[idx],
-                ...jr,
-                targetValue: (jr.targetValue !== undefined && (jr.targetValue > 0 || jr.isOverridden)) ? jr.targetValue : (enrichedRecords[idx].targetValue || 0),
-                actualValue: (jr.actualValue !== undefined && (jr.actualValue > 0 || jr.isOverridden)) ? jr.actualValue : (enrichedRecords[idx].actualValue || 0)
-              };
-            }
+            const dbItem = enrichedRecords[idx];
+            enrichedRecords[idx] = {
+              ...jr,
+              ...dbItem,
+              targetValue: (dbItem.isOverridden || dbItem.targetValue !== undefined) ? dbItem.targetValue : (jr.targetValue || 0),
+              actualValue: (dbItem.isOverridden || dbItem.actualValue !== undefined) ? dbItem.actualValue : (jr.actualValue || 0),
+              weight: (dbItem.isOverridden || dbItem.weight !== undefined) ? dbItem.weight : (jr.weight || 0),
+              isOverridden: dbItem.isOverridden || jr.isOverridden || false
+            };
           } else {
             enrichedRecords.push({
               ...jr,
@@ -513,6 +514,45 @@ export async function GET(request: Request) {
       }
     } catch (jErr) {
       console.warn("Lỗi hợp nhất JSON dự phòng trong GET /api/kpi:", jErr);
+    }
+
+    if (unitCode === "TCT") {
+      const getVal = (code: string, field: 'targetValue' | 'actualValue') => {
+        const item = enrichedRecords.find((r: any) => r.indicatorCode === code);
+        return item ? (item[field] || 0) : 0;
+      };
+
+      const setVal = (code: string, targetVal: number, actualVal: number) => {
+        const item = enrichedRecords.find((r: any) => r.indicatorCode === code);
+        if (item) {
+          item.targetValue = targetVal;
+          item.actualValue = actualVal;
+        }
+      };
+
+      const stndsTarget = getVal("TM1-I02.01-STNDS", "targetValue") || getVal("VM1-I02.01", "targetValue");
+      const stndsActual = getVal("TM1-I02.01-STNDS", "actualValue") || getVal("VM1-I02.01", "actualValue");
+      setVal("TM1-I02.01-STNDS", stndsTarget, stndsActual);
+
+      const b2bTarget = getVal("TM1-I02.01-B2B", "targetValue") || getVal("EM1-I02.01", "targetValue");
+      const b2bActual = getVal("TM1-I02.01-B2B", "actualValue") || getVal("EM1-I02.01", "actualValue");
+      setVal("TM1-I02.01-B2B", b2bTarget, b2bActual);
+
+      const scTarget = stndsTarget + b2bTarget;
+      const scActual = stndsActual + b2bActual;
+      const tctScItem = enrichedRecords.find((r: any) => r.indicatorCode === "TM1-I02.01");
+      if (tctScItem && (!tctScItem.isOverridden || tctScItem.targetValue === 0)) {
+        tctScItem.targetValue = scTarget;
+        tctScItem.actualValue = scActual;
+      }
+
+      const totalRevTarget = (tctScItem?.targetValue || scTarget) + getVal("TM1-I02.02", "targetValue") + getVal("EM1-I02.02", "targetValue");
+      const totalRevActual = (tctScItem?.actualValue || scActual) + getVal("TM1-I02.02", "actualValue") + getVal("EM1-I02.02", "actualValue");
+      const tctM1Item = enrichedRecords.find((r: any) => r.indicatorCode === "TM1-I02");
+      if (tctM1Item) {
+        tctM1Item.targetValue = totalRevTarget;
+        tctM1Item.actualValue = totalRevActual;
+      }
     }
 
     if (unitCode === "SCVN") {

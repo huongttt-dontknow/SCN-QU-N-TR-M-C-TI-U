@@ -1075,6 +1075,32 @@ export default function InputFormPage() {
             if (code === "CM1-I02.03-CR") {
               parentCode = "VM1-I02.04";
             } else if (!parentCode) {
+              if (filters.unitCode === "TCT") {
+                if (code === "VM1-I02.01") parentCode = "TM1-I02.01-STNDS";
+                else if (code === "TM1-I02.01-STNDS") parentCode = "TM1-I02.01";
+                else if (code === "EM1-I02.01") parentCode = "TM1-I02.01-B2B";
+                else if (code === "TM1-I02.01-B2B") parentCode = "TM1-I02.01";
+                else if (code === "TM1-I02.01" || code === "TM1-I02.02" || code === "EM1-I02.02") parentCode = "TM1-I02";
+                else if (code === "VM2-I01.01" || code === "VM2-I02.01") parentCode = "TM2-I01";
+                else if (code === "TM2-I03.01" || code === "TM2-I03.02") parentCode = "TM2-I03";
+                else if (code === "EM2-I05.01") parentCode = "TM2-I05";
+                else if (code === "DM3-I01.04" || code === "TM3-I01.05" || code === "NM3-I01.06") parentCode = "TM3-I01";
+                else if (code === "EM3-I03.01" || code === "EM3-I03.04" || code === "EM3-I02.01" || code === "MM3-I02.08") parentCode = "TM3-I02";
+                else if (code === "EM4-I01" || code === "TM4-I01.03") parentCode = "TM4-I01";
+                else if (code === "TM4-I02.01" || code === "TM4-I02.02" || code === "VM4-I02.05" || code === "VM4-I02.06" || code === "TM4-I02.03") parentCode = "TM4-I02";
+                else if (code === "EM4-I07.03") parentCode = "TM4-I03";
+                else if (code === "TM4-I04.02") parentCode = "TM4-I04";
+                else if (code === "TM5-I01.01" || code === "TM5-I01.03") parentCode = "TM5-I01";
+                else if (code === "TM5-I01.02.01" || code === "TM5-I01.02.02" || code === "TM5-I01.02.03" || code === "TM5-I01.02.04") parentCode = "TM5-I01.02";
+                else if (code === "TM5-I01.02" || code === "TM5-I02.01" || code === "TM5-I02.02") parentCode = "TM5-I02";
+                else if (code === "TM6-I01.01" || code === "TM6-I01.02") parentCode = "TM6-I01";
+                else if (code === "TM6-I02.02" || code === "TM6-I02.03") parentCode = "TM6-I02";
+                else if (code === "TM6-I03.01" || code === "TM6-I03.02") parentCode = "TM6-I03";
+                else if (code === "TM6-I04.01" || code === "TM6-I04.02" || code === "TM6-I04.03") parentCode = "TM6-I04";
+                else if (code === "TM7-I01.01") parentCode = "TM7-I01";
+                else if (code === "TM7-I02.01" || code === "TM7-I02.02") parentCode = "TM7-I02";
+                else if (code === "TM7-I03.01" || code === "TM7-I03.02") parentCode = "TM7-I03";
+              }
               if (/^(VM1|CM1|DM1|MM1|NM1|SM1)-I02\.01(-[A-Z0-9]+)?$/i.test(code) && code !== "VM1-I02.01" && code !== "TM1-I02") {
                 parentCode = "VM1-I02.01";
               } else if (/^(VM2|CM2|DM2|MM2|NM2|SM2)-I01\.01(-[A-Z0-9]+)?$/i.test(code) && code !== "VM2-I01.01" && code !== "TM2-I01") {

@@ -171968,16 +171968,18 @@
     "unitCode": "TCT",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 50,
-    "actualValue": 0,
+    "targetValue": 5000000000,
+    "actualValue": 2884317399,
     "pic": "TCKT",
-    "status": "Chưa thực hiện",
+    "status": "Đang thực hiện",
     "title": "Tổng doanh thu SC",
     "unit": "VNĐ",
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "TM1-I02"
+    "parentCode": "TM1-I02",
+    "explanation": "Test save TCT",
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM1-I02.01-STNDS",
