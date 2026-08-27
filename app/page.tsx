@@ -2271,7 +2271,7 @@ export default function DashboardPage() {
           {/* Cụm Thẻ Khách Hàng B2B */}
           <div className="glass-panel p-5 space-y-3 border-l-4 border-l-amber-500">
             <h3 className="text-sm font-black text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-              🤝 CỤM CHỈ SỐ KHÁCH HÀNG B2B (SCME & SCMU)
+              🤝 CỤM CHỈ SỐ KHÁCH HÀNG B2B (SCME)
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               Thống kê số lượng đối tác B2B mới chốt deal và dự án B2B mới triển khai trong kỳ
@@ -2286,11 +2286,11 @@ export default function DashboardPage() {
               </div>
 
               <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
-                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Deal Cấp quyền / Music</span>
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase block">KH B2B mảng Cấp quyền mới</span>
                 <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 block">
-                  {(getKpiRecord("SCME", "EM3-I03.01", periodKey)?.actual ?? 0) + (getKpiRecord("Music", "MM3-I02.08", periodKey)?.actual ?? 0)} <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Deal</span>
+                  {getKpiRecord("SCME", "EM3-I03.01", periodKey)?.actual ?? 0} <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">KH</span>
                 </span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold block">Cấp quyền + SCMU</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold block">KH: {getKpiRecord("SCME", "EM3-I03.01", periodKey)?.target ?? 0}</span>
               </div>
 
               <div className="col-span-2 bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between shadow-sm">
@@ -2313,7 +2313,7 @@ export default function DashboardPage() {
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               Biến động số lượng kênh BKT join NET, kênh rời NET và các sự cố Abuse events
             </p>
-            <div className="grid grid-cols-3 gap-3 pt-1">
+            <div className={`grid ${filters.periodType === "monthly" ? "grid-cols-3" : "grid-cols-2"} gap-3 pt-1`}>
               <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
                 <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Kênh BKT Join NET</span>
                 <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 block">
@@ -2330,13 +2330,16 @@ export default function DashboardPage() {
                 <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold block">▼ Giảm bớt</span>
               </div>
 
-              <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
-                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Abuse / Strike</span>
-                <span className="text-2xl font-black text-amber-600 dark:text-amber-400 block">
-                  {getKpiRecord("SCME", "EM4-I07.03", periodKey)?.actual ?? 0}
-                </span>
-                <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold block">⚠️ Sự cố</span>
-              </div>
+              {/* Abuse / Strike chỉ hiển thị ở kỳ báo cáo tháng */}
+              {filters.periodType === "monthly" && (
+                <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
+                  <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Abuse / Strike</span>
+                  <span className="text-2xl font-black text-amber-600 dark:text-amber-400 block">
+                    {getKpiRecord("SCME", "EM4-I07.04", periodKey)?.actual ?? getKpiRecord("SCME", "EM4-I07.03", periodKey)?.actual ?? 0}
+                  </span>
+                  <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold block">⚠️ Sự cố</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

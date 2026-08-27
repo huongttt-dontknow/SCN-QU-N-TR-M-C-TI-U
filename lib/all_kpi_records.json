@@ -164981,23 +164981,26 @@
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 2558750000,
+    "actualValue": 2142539478,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Tăng trưởng doanh thu",
     "unit": "VNĐ",
     "formula": "Tăng trưởng doanh thu toàn đơn vị",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "M1",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.01",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 875000000,
-    "actualValue": 920000000,
+    "targetValue": 2308750000,
+    "actualValue": 2063135478,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -165006,15 +165009,16 @@
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
     "parentCode": "TM1-I02",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM1-I02.01-MCN",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 2158750000,
+    "actualValue": 1957375503,
     "pic": "TN KD",
     "status": "Chưa thực hiện",
     "title": "Doanh thu nhóm kinh doanh MCN",
@@ -165022,15 +165026,17 @@
     "formula": "(Theo dõi doanh thu nhóm MCN)",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "EM1-I02.01"
+    "parentCode": "EM1-I02.01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.01-KT",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 25000000,
+    "actualValue": 12307100,
     "pic": "TN KD",
     "status": "Chưa thực hiện",
     "title": "Doanh thu nhóm dự án khai thác",
@@ -165038,15 +165044,17 @@
     "formula": "(Theo dõi doanh thu nhóm dự án khai thác)",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "EM1-I02.01"
+    "parentCode": "EM1-I02.01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.01-TM",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 125000000,
+    "actualValue": 93452875,
     "pic": "TN KD",
     "status": "Chưa thực hiện",
     "title": "Doanh thu nhóm thương mại (distribution)",
@@ -165054,15 +165062,17 @@
     "formula": "(Theo dõi doanh thu nhóm thương mại)",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "EM1-I02.01"
+    "parentCode": "EM1-I02.01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.02",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 125000000,
+    "actualValue": 79404000,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Tổng doanh số (distribution)",
@@ -165070,14 +165080,16 @@
     "formula": "Tổng doanh số trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "TM1-I02"
+    "parentCode": "TM1-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.03",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 125000000,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165086,7 +165098,9 @@
     "formula": "Tổng thực nhận trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "TM1-I02"
+    "parentCode": "TM1-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM1-I03",
@@ -165139,23 +165153,26 @@
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 40,
+    "actualValue": 67,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Phát triển MCN",
     "unit": "Kênh",
     "formula": "Phát triển và mở rộng hệ thống MCN",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM2-I03.01",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 10,
-    "actualValue": 8,
+    "targetValue": 25,
+    "actualValue": 27,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Số lượng kênh mới BKT",
@@ -165164,15 +165181,16 @@
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
     "parentCode": "TM2-I03",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "TM2-I03.02",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2,
-    "actualValue": 1,
+    "targetValue": 13,
+    "actualValue": 39,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Số lượng kênh rời NET",
@@ -165181,15 +165199,16 @@
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
     "parentCode": "TM2-I03",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM2-I03.03",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 2,
+    "actualValue": 1,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Số lượng kênh Affiliate",
@@ -165197,14 +165216,16 @@
     "formula": "Số lượng các kênh join NET",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
-    "parentCode": "TM2-I03"
+    "parentCode": "TM2-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM2-I05",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165212,7 +165233,10 @@
     "unit": "SL",
     "formula": "Triển khai hợp tác kinh doanh B2B",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM2-I05.01",
@@ -165229,14 +165253,15 @@
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
     "parentCode": "TM2-I05",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM2-I01",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165244,14 +165269,17 @@
     "unit": "Kênh",
     "formula": "Phát triển khai thác kho nội dung",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM2-I01.01",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165260,14 +165288,16 @@
     "formula": "Số kênh khai thác kho đang hoạt động tính đến kỳ đánh giá",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
-    "parentCode": "EM2-I01"
+    "parentCode": "EM2-I01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM3-I02",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 5,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165275,15 +165305,18 @@
     "unit": "Đối tác",
     "formula": "Mở rộng đối tác B2B nhà sáng tạo",
     "group": "M3. KHÁCH HÀNG",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I02.01",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 5,
-    "actualValue": 3,
+    "targetValue": 4,
+    "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Số lượng đối tác mới",
@@ -165292,14 +165325,15 @@
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
     "parentCode": "TM3-I02",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM3-I02.02",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 1,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165308,14 +165342,16 @@
     "formula": "Số đối tác cũ upsale",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I02"
+    "parentCode": "TM3-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I02.03",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165324,14 +165360,16 @@
     "formula": "Số lượng đối tác khai thác kho ND",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I02"
+    "parentCode": "TM3-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I02.04",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165340,30 +165378,35 @@
     "formula": "Số đối tác mới là KOLs",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I02"
+    "parentCode": "TM3-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM3-I03",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 9,
+    "actualValue": 8,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Duy trì khách hàng active, và mở mới khách hàng B2B mảng cấp quyền thương mại",
     "unit": "Đối tác",
     "formula": "Duy trì và phát triển khách hàng B2B thương mại",
     "group": "M3. KHÁCH HÀNG",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I03.01",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 5,
-    "actualValue": 4,
+    "targetValue": 1,
+    "actualValue": 1,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Khách hàng B2B mảng cấp quyền mới",
@@ -165372,15 +165415,16 @@
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
     "parentCode": "TM3-I03",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM3-I03.02",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
-    "actualValue": 0,
+    "targetValue": 7,
+    "actualValue": 7,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Khách hàng duy trì",
@@ -165388,14 +165432,16 @@
     "formula": "Số lượng khách hàng/ account tính đến diện IP/ thương hiệu và kết nối đối tác",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I03"
+    "parentCode": "TM3-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I03.03",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165404,14 +165450,16 @@
     "formula": "Số lượng biên bản ghi nhớ (MOU), hợp đồng hợp tác chiến lược được ký kết sau các sự kiện đối ngoại.",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I03"
+    "parentCode": "TM3-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I03.04",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 1,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165420,14 +165468,16 @@
     "formula": "Khách hàng tiếp cận mới",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I03"
+    "parentCode": "TM3-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I04",
     "unitCode": "SCME",
     "periodType": "weekly",
     "periodKey": "weekly_8_1",
-    "targetValue": 2.5,
+    "targetValue": 1,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -165435,7 +165485,10 @@
     "unit": "Views",
     "formula": "Tổng view các kênh kinh doanh nội bộ trong kỳ",
     "group": "M3. KHÁCH HÀNG",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I05",
@@ -168981,7 +169034,7 @@
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 10235000000,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -168989,15 +169042,18 @@
     "unit": "VNĐ",
     "formula": "Tăng trưởng doanh thu toàn đơn vị",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "M1",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 3500000000,
-    "actualValue": 3560000000,
+    "targetValue": 9235000000,
+    "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -169006,14 +169062,15 @@
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
     "parentCode": "TM1-I02",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM1-I02.01-MCN",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 8635000000,
     "actualValue": 0,
     "pic": "TN KD",
     "status": "Chưa thực hiện",
@@ -169022,14 +169079,16 @@
     "formula": "(Theo dõi doanh thu nhóm MCN)",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "EM1-I02.01"
+    "parentCode": "EM1-I02.01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.01-KT",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 100000000,
     "actualValue": 0,
     "pic": "TN KD",
     "status": "Chưa thực hiện",
@@ -169038,14 +169097,16 @@
     "formula": "(Theo dõi doanh thu nhóm dự án khai thác)",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "EM1-I02.01"
+    "parentCode": "EM1-I02.01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.01-TM",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 500000000,
     "actualValue": 0,
     "pic": "TN KD",
     "status": "Chưa thực hiện",
@@ -169054,14 +169115,16 @@
     "formula": "(Theo dõi doanh thu nhóm thương mại)",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "EM1-I02.01"
+    "parentCode": "EM1-I02.01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 500000000,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169070,14 +169133,16 @@
     "formula": "Tổng doanh số trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "TM1-I02"
+    "parentCode": "TM1-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM1-I02.03",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 500000000,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169086,7 +169151,9 @@
     "formula": "Tổng thực nhận trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "frequency": "weekly",
-    "parentCode": "TM1-I02"
+    "parentCode": "TM1-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM1-I03",
@@ -169139,22 +169206,25 @@
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
-    "actualValue": 0,
+    "targetValue": 158,
+    "actualValue": 35,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Phát triển MCN",
     "unit": "Kênh",
     "formula": "Phát triển và mở rộng hệ thống MCN",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM2-I03.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 40,
+    "targetValue": 100,
     "actualValue": 32,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169164,14 +169234,15 @@
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
     "parentCode": "TM2-I03",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "TM2-I03.02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 8,
+    "targetValue": 50,
     "actualValue": 3,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169181,14 +169252,15 @@
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
     "parentCode": "TM2-I03",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM2-I03.03",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 8,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169197,14 +169269,16 @@
     "formula": "Số lượng các kênh join NET",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
-    "parentCode": "TM2-I03"
+    "parentCode": "TM2-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM2-I05",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 2,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169212,15 +169286,18 @@
     "unit": "SL",
     "formula": "Triển khai hợp tác kinh doanh B2B",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM2-I05.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 16,
-    "actualValue": 10,
+    "targetValue": 2,
+    "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Số lượng các dự án kinh doanh B2B được triển khai",
@@ -169229,14 +169306,15 @@
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
     "parentCode": "TM2-I05",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM2-I01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 5,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169244,14 +169322,17 @@
     "unit": "Kênh",
     "formula": "Phát triển khai thác kho nội dung",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM2-I01.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 5,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169260,29 +169341,34 @@
     "formula": "Số kênh khai thác kho đang hoạt động tính đến kỳ đánh giá",
     "group": "M2. SẢN PHẨM/SẢN XUẤT",
     "frequency": "weekly",
-    "parentCode": "EM2-I01"
+    "parentCode": "EM2-I01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM3-I02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
-    "actualValue": 0,
+    "targetValue": 38,
+    "actualValue": 15,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Gia tăng số lượng đối tác, khách hàng B2B mảng DV nhà sáng tạo",
     "unit": "Đối tác",
     "formula": "Mở rộng đối tác B2B nhà sáng tạo",
     "group": "M3. KHÁCH HÀNG",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I02.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 20,
+    "targetValue": 12,
     "actualValue": 15,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169292,14 +169378,15 @@
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
     "parentCode": "TM3-I02",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM3-I02.02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 1,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169308,14 +169395,16 @@
     "formula": "Số đối tác cũ upsale",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I02"
+    "parentCode": "TM3-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I02.03",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169324,14 +169413,16 @@
     "formula": "Số lượng đối tác khai thác kho ND",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I02"
+    "parentCode": "TM3-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I02.04",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169340,29 +169431,34 @@
     "formula": "Số đối tác mới là KOLs",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I02"
+    "parentCode": "TM3-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM3-I03",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
-    "actualValue": 0,
+    "targetValue": 37,
+    "actualValue": 14,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
     "title": "Duy trì khách hàng active, và mở mới khách hàng B2B mảng cấp quyền thương mại",
     "unit": "Đối tác",
     "formula": "Duy trì và phát triển khách hàng B2B thương mại",
     "group": "M3. KHÁCH HÀNG",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I03.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 20,
+    "targetValue": 2,
     "actualValue": 14,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169372,14 +169468,15 @@
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
     "parentCode": "TM3-I03",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM3-I03.02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 30,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169388,14 +169485,16 @@
     "formula": "Số lượng khách hàng/ account tính đến diện IP/ thương hiệu và kết nối đối tác",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I03"
+    "parentCode": "TM3-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I03.03",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169404,14 +169503,16 @@
     "formula": "Số lượng biên bản ghi nhớ (MOU), hợp đồng hợp tác chiến lược được ký kết sau các sự kiện đối ngoại.",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I03"
+    "parentCode": "TM3-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I03.04",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 5,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169420,14 +169521,16 @@
     "formula": "Khách hàng tiếp cận mới",
     "group": "M3. KHÁCH HÀNG",
     "frequency": "weekly",
-    "parentCode": "TM3-I03"
+    "parentCode": "TM3-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I04",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169435,14 +169538,17 @@
     "unit": "Views",
     "formula": "Tổng view các kênh kinh doanh nội bộ trong kỳ",
     "group": "M3. KHÁCH HÀNG",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM3-I05",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 5,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169450,14 +169556,17 @@
     "unit": "Kênh",
     "formula": "SL kênh khai thác (dự án 02)",
     "group": "M3. KHÁCH HÀNG",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169465,14 +169574,17 @@
     "unit": "Sự kiện",
     "formula": "Tham gia các Expo/ Sự kiện để hiện diện IP/ thương hiệu và kết nối đối tác",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169480,7 +169592,10 @@
     "unit": "Sự kiện",
     "formula": "Số sự kiện về dịch vụ bản quyền và sáng tạo, MCN được tổ chức hoặc phối hợp tổ chức",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I03",
@@ -169495,14 +169610,17 @@
     "unit": "%",
     "formula": "Số hoạt động đạt mục tiêu / Tổng số hoạt động triển khai",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I04",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169510,7 +169628,10 @@
     "unit": "Lượt tiếp cận",
     "formula": "Tổng lượt hiển thị thương hiệu trên các kênh mục tiêu (Fanpage, LinkedIn, Website & báo chí...). Tổng hợp từ Social Listening, Media Sentiment, Brand Mention Quality",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I05",
@@ -169532,7 +169653,7 @@
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 25.98,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169540,14 +169661,17 @@
     "unit": "Kênh",
     "formula": "Phát triển và kiểm soát hệ thống MCN",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I07.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 0.98,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169556,14 +169680,16 @@
     "formula": "Số kênh không vi phạm cs / Tổng số kênh trong kỳ đánh giá",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
     "frequency": "monthly",
-    "parentCode": "EM4-I06"
+    "parentCode": "EM4-I06",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I07.02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169572,7 +169698,9 @@
     "formula": "Số lượng kênh vi phạm chính sách được phát hiện, cảnh báo/ xử lý",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
     "frequency": "monthly",
-    "parentCode": "EM4-I06"
+    "parentCode": "EM4-I06",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I07.04",
@@ -169589,14 +169717,15 @@
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
     "frequency": "monthly",
     "parentCode": "EM4-I06",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0
   },
   {
     "indicatorCode": "EM4-I07.05",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169605,14 +169734,16 @@
     "formula": "Kênh của TUBRR",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
     "frequency": "monthly",
-    "parentCode": "EM4-I06"
+    "parentCode": "EM4-I06",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM4-I07.06",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169621,14 +169752,16 @@
     "formula": "Kênh CMS của TUBRR",
     "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
     "frequency": "monthly",
-    "parentCode": "EM4-I06"
+    "parentCode": "EM4-I06",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM5-I01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169636,14 +169769,17 @@
     "unit": "Tài liệu",
     "formula": "Quản trị quy trình tài liệu vận hành",
     "group": "M5. QUẢN TRỊ VẬN HÀNH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "M5",
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM5-I01.03",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169652,7 +169788,9 @@
     "formula": "Số tài liệu vận hành/ quy trình mới được xây mới/cập nhật",
     "group": "M5. QUẢN TRỊ VẬN HÀNH",
     "frequency": "monthly",
-    "parentCode": "TM5-I01"
+    "parentCode": "TM5-I01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM5-I02",
@@ -169667,7 +169805,10 @@
     "unit": "%",
     "formula": "Tổng doanh thu / Tổng nhân sự kinh doanh",
     "group": "M5. QUẢN TRỊ VẬN HÀNH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM5-I05",
@@ -169682,7 +169823,10 @@
     "unit": "%",
     "formula": "Tổng doanh thu / Tổng nhân sự kinh doanh",
     "group": "M5. QUẢN TRỊ VẬN HÀNH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM5-I06",
@@ -169697,7 +169841,10 @@
     "unit": "%",
     "formula": "Tổng doanh thu / Tổng nhân sự kinh doanh",
     "group": "M5. QUẢN TRỊ VẬN HÀNH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM5-I03",
@@ -169712,7 +169859,10 @@
     "unit": "%",
     "formula": "Tỷ lệ dự án đảm bảo tiến độ – nghiệm thu đúng thời hạn, không công nợ / Tổng dự án triển khai",
     "group": "M5. QUẢN TRỊ VẬN HÀNH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM5-I04",
@@ -169727,14 +169877,17 @@
     "unit": "%",
     "formula": "Số lượng nhân sự sử dụng mô hình hàng ngày / Số nhân sự đơn vị",
     "group": "M5. QUẢN TRỊ VẬN HÀNH",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM6-I01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 120,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169742,14 +169895,17 @@
     "unit": "buổi",
     "formula": "Nâng cao trình độ đào tạo",
     "group": "M6. NHÂN SỰ TỔ CHỨC",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "M6",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM6-I01.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 25,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169758,14 +169914,16 @@
     "formula": "Số buổi workshop/đào tạo chuyên môn hoặc chia sẻ kinh nghiệm sử dụng AI được tổ chức theo kế hoạch",
     "group": "M6. NHÂN SỰ TỔ CHỨC",
     "frequency": "monthly",
-    "parentCode": "TM6-I01"
+    "parentCode": "TM6-I01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM6-I01.02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 95,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169774,7 +169932,9 @@
     "formula": "Số nhân sự tham gia các lớp đào tạo / Tổng số nhân sự thuộc đối tượng cần đào tạo",
     "group": "M6. NHÂN SỰ TỔ CHỨC",
     "frequency": "monthly",
-    "parentCode": "TM6-I01"
+    "parentCode": "TM6-I01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM6-I03",
@@ -169828,7 +169988,7 @@
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 95,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169836,14 +169996,17 @@
     "unit": "%",
     "formula": "Ứng dụng AI-Native toàn đơn vị",
     "group": "M7. VĂN HÓA DOANH NGHIỆP",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "M7",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM7-I01.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 95,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169852,14 +170015,16 @@
     "formula": "Số nhân sự sử dụng AI thường xuyên trong công việc chuyên môn / Tổng nhân sự của BU. Đo lường bằng Khảo sát định kỳ / Log tài khoản (các mô hình AIVA trên ChatGPT, Gemini v.v.)",
     "group": "M7. VĂN HÓA DOANH NGHIỆP",
     "frequency": "monthly",
-    "parentCode": "TM7-I01"
+    "parentCode": "TM7-I01",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM7-I02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 100,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169867,14 +170032,17 @@
     "unit": "%",
     "formula": "Sáng tạo và kết nối nhân sự",
     "group": "M7. VĂN HÓA DOANH NGHIỆP",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM7-I02.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 100,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169883,14 +170051,16 @@
     "formula": "Số nhân sự tham gia / Số nhân sự đăng ký",
     "group": "M7. VĂN HÓA DOANH NGHIỆP",
     "frequency": "monthly",
-    "parentCode": "TM7-I02"
+    "parentCode": "TM7-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM7-I02.02",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 10,
+    "targetValue": 0,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169899,14 +170069,16 @@
     "formula": "Số các đề xuất sáng tạo được ghi nhận",
     "group": "M7. VĂN HÓA DOANH NGHIỆP",
     "frequency": "monthly",
-    "parentCode": "TM7-I02"
+    "parentCode": "TM7-I02",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM7-I03",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 95,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169914,14 +170086,17 @@
     "unit": "%",
     "formula": "Kỷ luật tuân thủ nhân sự",
     "group": "M7. VĂN HÓA DOANH NGHIỆP",
-    "frequency": "monthly"
+    "frequency": "monthly",
+    "weight": 0,
+    "parentCode": "M7",
+    "isOverridden": true
   },
   {
     "indicatorCode": "EM7-I03.01",
     "unitCode": "SCME",
     "periodType": "monthly",
     "periodKey": "monthly_8",
-    "targetValue": 0.95,
+    "targetValue": 95,
     "actualValue": 0,
     "pic": "GĐ BU",
     "status": "Chưa thực hiện",
@@ -169930,7 +170105,9 @@
     "formula": "Số nhân sự không vi phạm / Tổng số nhân sự",
     "group": "M7. VĂN HÓA DOANH NGHIỆP",
     "frequency": "monthly",
-    "parentCode": "TM7-I03"
+    "parentCode": "TM7-I03",
+    "weight": 0,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM1-I01",
@@ -181694,8 +181871,12 @@
     "periodKey": "monthly_8",
     "targetValue": 0,
     "actualValue": 0,
-    "title": "EM4-I07.03",
+    "title": "Số lượng Abuse Event phát sinh",
     "unit": "Cái",
-    "isOverridden": true
+    "isOverridden": true,
+    "weight": 0,
+    "status": "Chưa thực hiện",
+    "group": "M4. THƯƠNG HIỆU/ KÊNH KINH DOANH",
+    "parentCode": "TM4-I03"
   }
 ]
