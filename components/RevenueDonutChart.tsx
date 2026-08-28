@@ -122,7 +122,7 @@ export default function RevenueDonutChart({ unitCode = "SCVN", periodKey = "week
     return () => {
       isMounted = false;
     };
-  }, [periodKey]);
+  }, [unitCode, periodKey]);
 
   const COLORS = isLight 
     ? ["#16a34a", "#84cc16", "#0284c7", "#a855f7", "#ec4899", "#f59e0b", "#10b981", "#06b6d4", "#64748b"]

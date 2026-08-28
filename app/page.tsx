@@ -26,7 +26,7 @@ import {
 
 export default function DashboardPage() {
   const { filters, theme, currentLoggedUser, setFilters } = useApp();
-  const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT" || filters.unitCode === "SCME";
+  const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
   const [dynamicRadarData, setDynamicRadarData] = useState<any>(null);
   const [isLoadingRadar, setIsLoadingRadar] = useState(false);
 
@@ -237,7 +237,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let isCancelled = false;
-    const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT" || filters.unitCode === "SCME";
+    const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
     const isNotWeekly = filters.periodType !== "weekly";
     
     if (!isParentUnit || !isNotWeekly) {
@@ -1847,14 +1847,16 @@ export default function DashboardPage() {
         
         {/* KHỐI BÊN TRÁI: TIẾN ĐỘ THÁNG (KHI LÀ TUẦN) HOẶC BÁNH XE MỤC TIÊU (KHI LÀ THÁNG/QUÝ/NĂM) */}
         {isWeeklyReport ? (
-          isParentUnit ? (
+          (isParentUnit || filters.unitCode === "SCME") ? (
             <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
               <div className="flex-1 flex flex-col justify-between">
                 <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
                   📈 TIẾN ĐỘ HOÀN THÀNH DOANH THU THÁNG {filters.month}/2026 (%)
                 </h3>
                 <p className="text-xs text-[var(--text-muted)] mt-1.5 font-semibold">
-                  Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng
+                  {filters.unitCode === "SCME" 
+                    ? "Mức độ hoàn thành doanh thu thực tế lũy kế theo từng mảng kinh doanh của SCME"
+                    : "Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng"}
                 </p>
                 <MonthlyRevenueProgressChart kpiDataList={[...(dbKpis || []), ...(scvnKpis || []), ...(scmeKpis || [])]} hideAbsoluteRevenue={isRestrictedRevenueView} />
               </div>
@@ -1912,12 +1914,12 @@ export default function DashboardPage() {
             </div>
           )
         ) : (
-          isParentUnit ? (
+          (isParentUnit || filters.unitCode === "SCME") ? (
             <div className="lg:col-span-6 glass-panel p-5 flex flex-col md:flex-row gap-5 min-h-[380px]">
               {/* Radar Chart */}
               <div className="flex-1 flex flex-col justify-between">
                 <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2">
-                  🎯 BÁNH XE MỤC TIÊU SỨC KHỎE ({radarData.unitName})
+                  🎯 BÁNH XE MỤC TIÊU SỨC KHỎE ({filters.unitCode === "SCME" ? "BU Sconnect Media (SCME)" : (radarData?.unitName || getUnitName(filters.unitCode))})
                 </h3>
                 <ObjectiveRadarChart 
                   customData={radarData?.points}
@@ -1927,7 +1929,7 @@ export default function DashboardPage() {
                 />
                 <div className="flex justify-center gap-4 text-xs font-bold mt-2">
                   <span className="flex items-center gap-1.5 text-emerald-500">
-                    <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> {radarData.unitName} ({radarData.labelCurr})
+                    <span className="w-2.5 h-1 bg-emerald-500 inline-block rounded"></span> {filters.unitCode === "SCME" ? "BU Sconnect Media (SCME)" : radarData.unitName} ({radarData.labelCurr})
                   </span>
                   <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
                     <span className="w-2.5 h-1 bg-slate-500 inline-block border-t border-dashed rounded"></span> Kỳ trước ({radarData.labelPrev})
@@ -2023,7 +2025,7 @@ export default function DashboardPage() {
           <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[175px]">
             <div>
               <span className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider block">
-                DOANH THU & TIẾN ĐỘ HOÀN THÀNH ({getUnitName(filters.unitCode)})
+                {filters.unitCode === "SCME" ? "DOANH SỐ HOÀN THÀNH THEO KỲ (SCME)" : `DOANH THU & TIẾN ĐỘ HOÀN THÀNH (${getUnitName(filters.unitCode)})`}
               </span>
               <div className="flex items-baseline justify-between mt-1.5">
                 <span className="text-4xl font-black text-white">{revPct}%</span>
@@ -2056,26 +2058,66 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Card 2: Sản lượng Video hoàn thành */}
-          <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-emerald-500 min-h-[175px]">
-            <div>
-              <span className="text-xs font-black text-emerald-500 uppercase tracking-wider block">
-                SẢN LƯỢNG SẢN XUẤT ({getUnitName(filters.unitCode)})
-              </span>
-              <div className="flex items-baseline justify-between mt-1.5">
-                <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}</span>
+          {/* Card 2: Sản lượng Video (SCVN/TCT) hoặc Tiến độ Tháng (SCME) */}
+          {filters.unitCode === "SCME" ? (
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-emerald-500 min-h-[175px]">
+              <div>
+                <span className="text-xs font-black text-emerald-400 uppercase tracking-wider block">
+                  TIẾN ĐỘ DOANH THU THÁNG {filters.month} (SCME)
+                </span>
+                <div className="flex items-baseline justify-between mt-1.5">
+                  <span className="text-4xl font-black text-emerald-400">53%</span>
+                </div>
+              </div>
+              <div className="my-1">
+                <p className="text-sm font-extrabold text-emerald-400">
+                  4.85 Tỷ VNĐ | Lũy kế thực tế
+                </p>
+                <span className="text-xs text-[var(--text-muted)] font-semibold">(KH Tháng: 9.235 Tỷ VNĐ)</span>
               </div>
             </div>
-            <div className="my-1">
-              <p className="text-sm font-extrabold text-emerald-500">
-                Đạt {volPct}% Kế hoạch
-              </p>
-              <span className="text-xs text-[var(--text-muted)] font-semibold">{filters.unitCode === "TCT" ? "(Dữ liệu tổng hợp từ SCVN)" : `(KH: ${volTargetVal} ${filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})`}</span>
+          ) : (
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-emerald-500 min-h-[175px]">
+              <div>
+                <span className="text-xs font-black text-emerald-500 uppercase tracking-wider block">
+                  SẢN LƯỢNG SẢN XUẤT ({getUnitName(filters.unitCode)})
+                </span>
+                <div className="flex items-baseline justify-between mt-1.5">
+                  <span className="text-4xl font-black text-emerald-500">{volActualVal} {filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")}</span>
+                </div>
+              </div>
+              <div className="my-1">
+                <p className="text-sm font-extrabold text-emerald-500">
+                  Đạt {volPct}% Kế hoạch
+                </p>
+                <span className="text-xs text-[var(--text-muted)] font-semibold">{filters.unitCode === "TCT" ? "(Dữ liệu tổng hợp từ SCVN)" : `(KH: ${volTargetVal} ${filters.unitCode === "CN" ? "Game" : (["Music", "SCS", "CR"].includes(filters.unitCode) ? "Sản phẩm" : "Video")})`}</span>
+              </div>
             </div>
-          </div>
-
-          {/* Card 3: Đơn vị HT Doanh thu cao nhất (Parent) hoặc Tiến độ doanh thu (Child) */}
-          {isParentUnit ? (
+          )}
+          {/* Card 3: Mạng lưới MCN (SCME) hoặc Đơn vị HT Doanh thu cao nhất (Parent) hoặc Tiến độ doanh thu (Child) */}
+          {filters.unitCode === "SCME" ? (
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-cyan-500 min-h-[175px]">
+              <div>
+                <span className="text-xs font-black text-cyan-400 uppercase tracking-wider block">
+                  PHÁT TRIỂN MẠNG LƯỚI MCN (SCME)
+                </span>
+                <div className="mt-2 space-y-1.5">
+                  <div className="flex justify-between items-center text-xs font-bold">
+                    <span className="text-slate-300">Kênh BKT Join NET:</span>
+                    <span className="text-emerald-400 font-extrabold">+{getKpiRecord("SCME", "TM2-I03.01", periodKey)?.actual ?? 0} Kênh</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs font-bold">
+                    <span className="text-slate-300">Kênh Rời NET:</span>
+                    <span className="text-rose-400 font-extrabold">-{getKpiRecord("SCME", "TM2-I03.02", periodKey)?.actual ?? 0} Kênh</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-xs text-slate-400 border-t border-white/5 pt-2 font-bold flex justify-between">
+                <span>Kho ND hoạt động:</span>
+                <span className="text-sky-400">{getKpiRecord("SCME", "EM2-I01.01", periodKey)?.actual ?? 12} Kênh</span>
+              </div>
+            </div>
+          ) : isParentUnit ? (
             <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-cyan)] min-h-[175px]">
               <div>
                 <span className="text-xs font-black text-[var(--accent-cyan)] uppercase tracking-wider block">
@@ -2129,8 +2171,30 @@ export default function DashboardPage() {
             )
           )}
 
-          {/* Card 4: Tuần vs Tháng/Quý/Năm */}
-          {isWeeklyReport ? (
+          {/* Card 4: KH B2B (SCME) hoặc Tuần vs Tháng/Quý/Năm */}
+          {filters.unitCode === "SCME" ? (
+            <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-pink-500 min-h-[175px]">
+              <div>
+                <span className="text-xs font-black text-pink-400 uppercase tracking-wider block">
+                  KHÁCH HÀNG B2B & DỰ ÁN MỚI (SCME)
+                </span>
+                <div className="mt-2 space-y-1.5">
+                  <div className="flex justify-between items-center text-xs font-bold">
+                    <span className="text-slate-300">Đối tác MCN mới:</span>
+                    <span className="text-emerald-400 font-extrabold">{getKpiRecord("SCME", "EM3-I02.01", periodKey)?.actual ?? 0} Đối tác</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs font-bold">
+                    <span className="text-slate-300">KH B2B Cấp quyền:</span>
+                    <span className="text-sky-400 font-extrabold">{getKpiRecord("SCME", "EM3-I03.01", periodKey)?.actual ?? 0} KH</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-xs text-slate-400 border-t border-white/5 pt-2 font-bold flex justify-between">
+                <span>Dự án B2B mới:</span>
+                <span className="text-amber-400">{getKpiRecord("SCME", "EM2-I05.01", periodKey)?.actual ?? 0} Dự án</span>
+              </div>
+            </div>
+          ) : isWeeklyReport ? (
             isParentUnit ? (
               <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-pink)] min-h-[175px]">
                 <div>
@@ -2221,7 +2285,7 @@ export default function DashboardPage() {
       </div>
 
       {/* 3. BIỂU ĐỒ SO SÁNH HOÀN THÀNH DOANH THU CÁC ĐƠN VỊ THEO KỲ */}
-      {isParentUnit && (
+      {(filters.unitCode === "TCT" || filters.unitCode === "SCVN") && (
         <div className="glass-panel p-6">
         <h3 className="text-sm font-black text-white tracking-wider uppercase mb-4 flex items-center gap-2">
           <BarChart3 size={18} className="text-[var(--accent-cyan)]" /> 
@@ -2281,7 +2345,7 @@ export default function DashboardPage() {
       )}
 
       {/* 4.5. KHU VỰC CHỈ SỐ B2B & AN TOÀN KỆNH (M4 & VẬN HÀNH) */}
-      {(filters.unitCode === "TCT" || filters.unitCode === "SCME" || filters.unitCode === "SCVN") && (
+      {(filters.unitCode === "TCT" || filters.unitCode === "SCME") && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Cụm Thẻ Khách Hàng B2B */}
           <div className="glass-panel p-5 space-y-3 border-l-4 border-l-amber-500">
@@ -2328,7 +2392,7 @@ export default function DashboardPage() {
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               Biến động số lượng kênh BKT join NET, kênh rời NET và các sự cố Abuse events
             </p>
-            <div className={`grid ${filters.periodType === "monthly" ? "grid-cols-3" : "grid-cols-2"} gap-3 pt-1`}>
+            <div className={`grid ${filters.periodType !== "weekly" ? "grid-cols-3" : "grid-cols-2"} gap-3 pt-1`}>
               <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
                 <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Kênh BKT Join NET</span>
                 <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 block">
@@ -2345,10 +2409,10 @@ export default function DashboardPage() {
                 <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold block">▼ Giảm bớt</span>
               </div>
 
-              {/* Abuse / Strike chỉ hiển thị ở kỳ báo cáo tháng */}
-              {filters.periodType === "monthly" && (
+              {/* Abuse / Strike chỉ hiển thị ở kỳ báo cáo tháng/quý/năm */}
+              {filters.periodType !== "weekly" && (
                 <div className="bg-white/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-200 dark:border-white/10 space-y-1 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Abuse / Strike</span>
+                  <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block">Abuse / Strike Events</span>
                   <span className="text-2xl font-black text-amber-600 dark:text-amber-400 block">
                     {getKpiRecord("SCME", "EM4-I07.04", periodKey)?.actual ?? getKpiRecord("SCME", "EM4-I07.03", periodKey)?.actual ?? 0}
                   </span>

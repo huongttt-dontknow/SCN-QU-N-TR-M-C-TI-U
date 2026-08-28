@@ -46,6 +46,13 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
       { code: "SCVN", name: "SCVN (Sáng Tạo ND)" },
       { code: "SCME", name: "SCME (Kinh Doanh & TM)" },
     ];
+  } else if (filters.unitCode === "SCME") {
+    unitList = [
+      { code: "SCME", name: "SCME (Tổng Doanh Thu)" },
+      { code: "EM1-I02.01-MCN", name: "Kinh doanh MCN" },
+      { code: "EM1-I02.01-TM", name: "Cấp quyền / Distribution" },
+      { code: "EM1-I02.01-KT", name: "Khai thác kho nội bộ" },
+    ];
   }
 
   const dummyUnitList = [

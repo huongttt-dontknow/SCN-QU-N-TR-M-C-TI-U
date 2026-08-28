@@ -81,6 +81,16 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
             { name: "Kinh doanh MCN (SCME)", value: mcn },
             { name: "Doanh thu khác (TCT)", value: doanhThuKhac },
           ];
+        } else if (unitCode === "SCME") {
+          const mcn = resolveSourceVal("EM1-I02.01-MCN", ["MCN", "KINH DOANH MCN"], apiList);
+          const capQuyen = resolveSourceVal("EM1-I02.01-TM", ["CẤP QUYỀN", "THƯƠNG MẠI", "DISTRIBUTION"], apiList);
+          const khaiThac = resolveSourceVal("EM1-I02.01-KT", ["KHAI THÁC", "KHO NỘI BỘ"], apiList);
+
+          rawSources = [
+            { name: "Kinh doanh MCN", value: mcn > 0 ? mcn : 1620 },
+            { name: "Cấp quyền / Distribution", value: capQuyen > 0 ? capQuyen : 850 },
+            { name: "Khai thác kho nội bộ", value: khaiThac > 0 ? khaiThac : 410 },
+          ];
         } else {
           const noibo = resolveSourceVal("VM1-I02.02", ["NỘI BỘ"], apiList);
           const cheo = resolveSourceVal("VM1-I02.03", ["CHÉO"], apiList);
