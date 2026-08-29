@@ -49,8 +49,11 @@ export function getMasterKpiActual(unitCode: string, kpiCode: string, periodKey:
 }
 
 export const KPI_TITLE_DICTIONARY: Record<string, string> = {
+  "TM1-I05": "Kiểm soát chi phí",
+  "VM1-I05.03": "CP Mua mới công cụ AI",
+  "VM1-I05.04": "Chi phí CTV (Cộng tác viên)",
   "TM1-I02": "Doanh thu",
-  "VM1-I02.01": "Tổng doanh thu SCVN",
+  "VM1-I02.01": "Tổng doanh thu đơn vị",
   "VM1-I02.01-WF": "Doanh thu BP Wolfoo (WO)",
   "VM1-I02.01-AS": "Doanh thu BP Animated Story (AS)",
   "VM1-I02.01-NDTH": "Doanh thu BP Nội dung tổng hợp (NDTH)",
@@ -110,9 +113,17 @@ export const KPI_TITLE_DICTIONARY: Record<string, string> = {
   "CM7-I03.01-CR": "Kỷ luật BP Creative Hub (CR)"
 };
 
-export function getFriendlyIndicatorTitle(code: string, fallbackTitle?: string): string {
+export function getFriendlyIndicatorTitle(code: string, fallbackTitle?: string, unitCode?: string): string {
   if (!code) return fallbackTitle || "";
   const cleanCode = code.trim();
+
+  if (cleanCode === "VM1-I02.01") {
+    if (unitCode === "SCVN") return "Tổng doanh thu SCVN";
+    if (unitCode === "TCT") return "Tổng doanh thu TCT";
+    if (unitCode === "SCME") return "Tổng doanh thu SCME";
+    return "Tổng doanh thu đơn vị";
+  }
+
   if (KPI_TITLE_DICTIONARY[cleanCode]) {
     return KPI_TITLE_DICTIONARY[cleanCode];
   }

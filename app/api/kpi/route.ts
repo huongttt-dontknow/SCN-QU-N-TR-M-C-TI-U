@@ -206,7 +206,7 @@ export async function GET(request: Request) {
                   formula: t.formula,
                   group: t.group,
                   parentCode: t.parentCode,
-                  frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
+                  frequency: t.frequency || ((t.indicatorCode || "").includes("1-I01") ? "quarterly" : periodType === "weekly" ? "weekly" : "monthly")
                 };
               });
               await prisma.kpiData.createMany({ data: newKpis });
@@ -301,7 +301,7 @@ export async function GET(request: Request) {
           actualValue,
           status,
           explanation: items.map(i => i.explanation).filter(Boolean).join("; "),
-          title: meta.title || first.title || indicatorCode,
+          title: (indicatorCode === "VM1-I02.01" && !["SCVN", "TCT", "SCME"].includes(unitCode)) ? "Tổng doanh thu đơn vị" : (meta.title || first.title || indicatorCode),
           unit: meta.unit || first.unit || "",
           formula: first.formula,
           group: first.group || meta.group,
@@ -373,12 +373,12 @@ export async function GET(request: Request) {
           pic: t.pic || null,
           status: "Chưa thực hiện",
           explanation: "",
-          title: t.title || "",
+          title: (t.indicatorCode === "VM1-I02.01" && !["SCVN", "TCT", "SCME"].includes(unitCode)) ? "Tổng doanh thu đơn vị" : (t.title || ""),
           unit: t.unit || "",
           formula: t.formula || "",
           group: t.group || "",
           parentCode: t.parentCode || "",
-          frequency: t.frequency || (periodType === "weekly" ? "weekly" : "monthly")
+          frequency: t.frequency || ((t.indicatorCode || "").includes("1-I01") ? "quarterly" : periodType === "weekly" ? "weekly" : "monthly")
         }));
 
         await prisma.kpiData.createMany({ data: newKpis });

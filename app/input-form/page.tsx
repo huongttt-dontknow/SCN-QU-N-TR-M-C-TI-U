@@ -828,11 +828,32 @@ export default function InputFormPage() {
   const isAdminOrLeader = currentLoggedUser?.role === "Admin" || currentLoggedUser?.role === "GĐBU" || currentLoggedUser?.role === "Trưởng đơn vị";
   const isInputDisabled = !isAdminOrLeader && (isReadOnly || reportStatus === "Chờ duyệt");
 
+  
+  const getRootMetricItem = (items: KpiItem[], exactCodes: string[]) => {
+    // 1. Try exact code match first
+    const exact = items.find(k => exactCodes.includes(k.code));
+    if (exact) return exact;
+
+    // 2. Try item starting with code prefix but excluding child sub-rows
+    const rootPrefix = items.find(k => {
+      const isPrefixMatch = exactCodes.some(c => k.code.startsWith(c));
+      if (!isPrefixMatch) return false;
+      const isSubRow = exactCodes.some(c => k.parentCode && k.parentCode.includes(c)) ||
+                       k.code.includes("-Dnnhm") || k.code.includes("-WF") || k.code.includes("-AS") ||
+                       k.code.includes("-NDTH") || k.code.includes("-Lego");
+      return !isSubRow;
+    });
+    if (rootPrefix) return rootPrefix;
+
+    // 3. Fallback to any matching item
+    return items.find(k => exactCodes.some(c => k.code.startsWith(c)));
+  };
+
   const handleGenerateQuickReport = () => {
     setIsGeneratingQuickReport(true);
-    const revItem = kpis.find(k => k.code === "VM1-I02.01" || k.code.startsWith("MM1-I02.01") || k.code.startsWith("SM1-I02.01") || k.code.startsWith("DM1-I02.01") || k.code.startsWith("NM1-I02.01") || k.code.startsWith("CM1-I02.01"));
-    const volItem = kpis.find(k => k.code === "VM2-I01.01" || k.code.startsWith("MM2-I01.01") || k.code.startsWith("SM2-I01.01") || k.code.startsWith("DM2-I01.01") || k.code.startsWith("NM2-I01.01") || k.code.startsWith("CM2-I01.01"));
-    const trafficItem = kpis.find(k => k.code === "VM3-I01.02" || k.code.startsWith("MM3-I01.01") || k.code.startsWith("SM3-I01.04") || k.code.startsWith("DM3-I01.03") || k.code.startsWith("NM3-I01.05") || k.code.startsWith("CM3-I01.01"));
+    const revItem = getRootMetricItem(kpis, ["TM1-I02.01", "VM1-I02.01", "DM1-I02.01", "MM1-I02.01", "SM1-I02.01", "NM1-I02.01", "CM1-I02.01"]);
+    const volItem = getRootMetricItem(kpis, ["TM2-I01.01", "VM2-I01.01", "DM2-I01.01", "MM2-I01.01", "SM2-I01.01", "NM2-I01.01", "CM2-I01.01"]);
+    const trafficItem = getRootMetricItem(kpis, ["TM3-I01.02", "VM3-I01.02", "DM3-I01.03", "MM3-I01.01", "SM3-I01.04", "NM3-I01.05", "CM3-I01.01"]);
 
     const revPct = revItem && revItem.target > 0 ? Math.round((revItem.actual / revItem.target) * 100) : 0;
     const volPct = volItem && volItem.target > 0 ? Math.round((volItem.actual / volItem.target) * 100) : 0;
@@ -1116,7 +1137,7 @@ export default function InputFormPage() {
             return {
               id: d.id || `${d.indicatorCode}_${filters.unitCode}`,
               code: d.indicatorCode,
-              title: d.title || d.indicatorCode,
+              title: (d.indicatorCode === "VM1-I02.01" && !["SCVN", "TCT", "SCME"].includes(filters.unitCode)) ? "Tổng doanh thu đơn vị" : (d.title || d.indicatorCode),
               unit: d.unit || "",
               formula: d.formula || "",
               target: d.targetValue,
@@ -1852,27 +1873,26 @@ export default function InputFormPage() {
       return true;
     }
 
-    if (!f) {
-      const c = (code || "").toUpperCase();
+    const c = (code || "").toUpperCase();
+    const normC = c.replace(/^[A-Z]{2}/, "TM");
+
+    // Force quarterly frequency for ROI/ROS (TM1-I01) and quarterly indicators
+    if (
+      c.startsWith("EM1-I01") || c.startsWith("TM1-I01") || normC.startsWith("TM1-I01") ||
+      c.startsWith("EM1-I03") || c.startsWith("TM1-I03") || normC.startsWith("TM1-I03") ||
+      c.startsWith("TM1-I04") || c.startsWith("EM4-I05") || normC.startsWith("TM1-I04") ||
+      c.startsWith("EM6-I03") || c.startsWith("TM6-I03") || normC.startsWith("TM6-I03")
+    ) {
+      f = "quarterly";
+    } else if (!f || f === "undefined" || f === "null") {
       if (
-        c.startsWith("EM1-I01") || c.startsWith("TM1-I01") ||
-        c.startsWith("EM1-I03") || c.startsWith("TM1-I03") ||
-        c.startsWith("TM1-I04") || c.startsWith("EM4-I05") ||
-        c.startsWith("EM6-I03") || c.startsWith("TM6-I03")
-      ) {
-        f = "quarterly";
-      } else if (
         c.startsWith("EM3-I05") || c.startsWith("EM4-") ||
-        c.startsWith("TM5-") || c.startsWith("EM5-") ||
-        c.startsWith("TM6-I01") || c.startsWith("EM6-I01") ||
-        c.startsWith("TM7-") || c.startsWith("EM7-")
+        c.startsWith("TM5-") || c.startsWith("EM5-") || normC.startsWith("TM5-") ||
+        c.startsWith("TM6-I01") || c.startsWith("EM6-I01") || normC.startsWith("TM6-I01") ||
+        c.startsWith("TM7-") || c.startsWith("EM7-") || normC.startsWith("TM7-")
       ) {
         f = "monthly";
-      } else if (
-        c.startsWith("TM1-I02") || c.startsWith("EM1-I02") ||
-        c.startsWith("TM2-") || c.startsWith("EM2-") ||
-        c.startsWith("TM3-") || c.startsWith("EM3-")
-      ) {
+      } else {
         f = "weekly";
       }
     }
@@ -2346,7 +2366,7 @@ export default function InputFormPage() {
           <div className="glass-panel p-5">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-sm font-black text-[#10b981] tracking-wider uppercase flex items-center gap-2">
-                <Building2 size={16} /> 🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ (HÀNG TUẦN) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
+                <Building2 size={16} /> 🟢 KHU VỰC 1: BẢNG NHẬP LIỆU CHỈ SỐ KPI THỰC TẾ ({filters.periodType === "weekly" ? "HÀNG TUẦN" : filters.periodType === "monthly" ? "HÀNG THÁNG" : filters.periodType === "quarterly" ? "HÀNG QUÝ" : "CẢ NĂM"}) - BỘ PHẬN: {filters.unitCode.toUpperCase()}
               </h3>
               <div className="flex items-center gap-2">
                 {filters.periodType === "weekly" && (
@@ -2590,7 +2610,7 @@ export default function InputFormPage() {
                                         <Lock className="w-3.5 h-3.5 text-amber-400" />
                                       </span>
                                     )}
-                                    <span className="flex-1">{getFriendlyIndicatorTitle(kpi.code, kpi.title)}</span>
+                                    <span className="flex-1">{getFriendlyIndicatorTitle(kpi.code, kpi.title, filters.unitCode)}</span>
                                   </div>
                                 </div>
                               </td>
@@ -2750,9 +2770,9 @@ export default function InputFormPage() {
 
             {/* A. THẺ TỔNG KẾT NHANH 3 CHỈ SỐ CHÍNH (3 VIỀN: XANH DƯƠNG - XANH LÁ - ĐỎ) */}
             {(() => {
-              const revItem = kpis.find(k => k.code === "VM1-I02.01" || k.code.startsWith("MM1-I02.01") || k.code.startsWith("SM1-I02.01") || k.code.startsWith("DM1-I02.01") || k.code.startsWith("NM1-I02.01") || k.code.startsWith("CM1-I02.01"));
-              const volItem = kpis.find(k => k.code === "VM2-I01.01" || k.code.startsWith("MM2-I01.01") || k.code.startsWith("SM2-I01.01") || k.code.startsWith("DM2-I01.01") || k.code.startsWith("NM2-I01.01") || k.code.startsWith("CM2-I01.01"));
-              const trafficItem = kpis.find(k => k.code === "VM3-I01.02" || k.code.startsWith("MM3-I01.01") || k.code.startsWith("SM3-I01.04") || k.code.startsWith("DM3-I01.03") || k.code.startsWith("NM3-I01.05") || k.code.startsWith("CM3-I01.01"));
+              const revItem = getRootMetricItem(kpis, ["TM1-I02.01", "VM1-I02.01", "DM1-I02.01", "MM1-I02.01", "SM1-I02.01", "NM1-I02.01", "CM1-I02.01"]);
+              const volItem = getRootMetricItem(kpis, ["TM2-I01.01", "VM2-I01.01", "DM2-I01.01", "MM2-I01.01", "SM2-I01.01", "NM2-I01.01", "CM2-I01.01"]);
+              const trafficItem = getRootMetricItem(kpis, ["TM3-I01.02", "VM3-I01.02", "DM3-I01.03", "MM3-I01.01", "SM3-I01.04", "NM3-I01.05", "CM3-I01.01"]);
 
               const revTarget = revItem?.target || 0;
               const revActual = revItem?.actual || 0;
