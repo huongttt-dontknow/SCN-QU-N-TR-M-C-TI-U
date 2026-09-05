@@ -136,52 +136,87 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Thiếu unitCode hoặc productCode" }, { status: 400 });
     }
 
-    // Lấy toàn bộ bản ghi KPI của đơn vị hoặc sản phẩm trong năm
+    const unitSuffixMap: Record<string, string> = {
+      "Wofloo": "-WF", "WO": "-WF", "WF": "-WF",
+      "AS": "-AS",
+      "Lego": "-Lego", "LEGO": "-Lego",
+      "NDTH": "-NDTH",
+      "DA01": "-DA01",
+      "SCS": "-SCS",
+      "Music": "-SCMU", "SCMU": "-SCMU",
+      "CN": "-CNGP", "CNGP": "-CNGP",
+      "CR": "-CR", "Creative": "-CR"
+    };
+    const suffix = unitSuffixMap[unitCode];
+
+    // Lấy toàn bộ bản ghi KPI của đơn vị hoặc sản phẩm trong năm (kèm 800ms timeout để bảo đảm tốc độ < 1s)
     let records: any[] = [];
     try {
-      if (productCode) {
-        records = await prisma.kpiData.findMany({ where: { productCode } });
-      } else if (unitCode === "SCVN") {
-        records = await prisma.kpiData.findMany({
-          where: {
-            OR: [
-              { unitCode: "SCVN", productCode: null },
-              { unitCode: { in: ["Music", "SCS", "CN", "CR", "DA01", "Wofloo", "Lego", "AS", "NDTH", "TCT"] }, productCode: null }
-            ]
-          }
-        });
-      } else {
-        const unitSuffixMap: Record<string, string> = {
-          "Wofloo": "-WF", "WO": "-WF", "WF": "-WF",
-          "AS": "-AS",
-          "Lego": "-Lego", "LEGO": "-Lego",
-          "NDTH": "-NDTH",
-          "DA01": "-DA01",
-          "SCS": "-SCS",
-          "Music": "-SCMU", "SCMU": "-SCMU",
-          "CN": "-CNGP", "CNGP": "-CNGP",
-          "CR": "-CR", "Creative": "-CR"
-        };
-        const suffix = unitSuffixMap[unitCode];
-        records = await prisma.kpiData.findMany({
-          where: {
-            OR: [
-              { unitCode, productCode: null },
-              ...(suffix ? [{ unitCode: "SCVN", indicatorCode: { endsWith: suffix }, productCode: null }] : [])
-            ]
-          }
-        });
-      }
+      const dbQueryPromise = (async () => {
+        if (productCode) {
+          return await prisma.kpiData.findMany({ where: { productCode } });
+        } else if (unitCode === "SCVN") {
+          return await prisma.kpiData.findMany({
+            where: {
+              OR: [
+                { unitCode: "SCVN", productCode: null },
+                { unitCode: { in: ["Music", "SCS", "CN", "CR", "DA01", "Wofloo", "Lego", "AS", "NDTH", "TCT"] }, productCode: null }
+              ]
+            }
+          });
+        } else {
+          const unitSuffixMap: Record<string, string> = {
+            "Wofloo": "-WF", "WO": "-WF", "WF": "-WF",
+            "AS": "-AS",
+            "Lego": "-Lego", "LEGO": "-Lego",
+            "NDTH": "-NDTH",
+            "DA01": "-DA01",
+            "SCS": "-SCS",
+            "Music": "-SCMU", "SCMU": "-SCMU",
+            "CN": "-CNGP", "CNGP": "-CNGP",
+            "CR": "-CR", "Creative": "-CR"
+          };
+          const unitAliasesMap: Record<string, string[]> = {
+            "Wofloo": ["Wofloo", "WF", "WO"],
+            "WF": ["Wofloo", "WF", "WO"],
+            "WO": ["Wofloo", "WF", "WO"],
+            "NDTH": ["NDTH"],
+            "AS": ["AS"],
+            "Lego": ["Lego", "LEGO"],
+            "LEGO": ["Lego", "LEGO"],
+            "DA01": ["DA01"],
+            "SCS": ["SCS", "Studio"],
+            "Studio": ["SCS", "Studio"],
+            "Music": ["Music", "SCMU"],
+            "SCMU": ["Music", "SCMU"],
+            "CN": ["CN", "CNGP"],
+            "CNGP": ["CN", "CNGP"],
+            "CR": ["CR", "Creative"],
+            "Creative": ["CR", "Creative"]
+          };
+          const suffix = unitSuffixMap[unitCode];
+          const unitCodes = unitAliasesMap[unitCode] || [unitCode];
+          return await prisma.kpiData.findMany({
+            where: {
+              OR: [
+                { unitCode: { in: unitCodes }, productCode: null },
+                ...(suffix ? [{ indicatorCode: { endsWith: suffix }, productCode: null }] : [])
+              ]
+            }
+          });
+        }
+      })();
+
+      const timeoutPromise = new Promise<any[]>((resolve) => setTimeout(() => resolve([]), 2500));
+      records = await Promise.race([dbQueryPromise, timeoutPromise]);
     } catch (dbErr) {
       console.warn("Lấy KPI từ DB thất bại (hạn mức), chuyển sang JSON dự phòng:", dbErr);
     }
 
-    // Luôn hợp nhất với JSON dự phòng để đảm bảo tính sẵn sàng cao (High Availability)
+    // Luôn hợp nhất với JSON dự phòng từ bộ nhớ đệm (Fast Memory Cache)
     try {
-      const fs = require("fs");
-      const path = require("path");
+      const { getOrLoadJsonRecords } = require("@/lib/jsonCache");
       const filename = productCode ? "product_kpi_records.json" : "all_kpi_records.json";
-      const jsonPath = path.join(process.cwd(), "lib", filename);
       const unitSuffixMap: Record<string, string> = {
         "NDTH": "-NDTH", "DA01": "-DA01", "SCS": "-SCS",
         "Music": "-SCMU", "SCMU": "-SCMU",
@@ -190,39 +225,42 @@ export async function GET(request: Request) {
       };
       const suffix = unitSuffixMap[unitCode];
 
-      if (fs.existsSync(jsonPath)) {
-        const raw = fs.readFileSync(jsonPath, "utf-8");
-        const jsonRecords = JSON.parse(raw).filter((r: any) => {
-          if (productCode) {
-            return r.productCode === productCode;
-          } else {
-            const isMatch = r.unitCode === unitCode || 
-              (unitCode === "Music" && r.unitCode === "SCMU") || 
-              (unitCode === "SCMU" && r.unitCode === "Music") ||
-              (unitCode === "CN" && r.unitCode === "CNGP") ||
-              (unitCode === "CNGP" && r.unitCode === "CN") ||
-              (unitCode === "SCS" && r.unitCode === "Studio") ||
-              (unitCode === "Studio" && r.unitCode === "SCS") ||
-              (unitCode === "Wofloo" && (r.unitCode === "WF" || r.unitCode === "WO")) ||
-              (suffix && r.indicatorCode && r.indicatorCode.endsWith(suffix));
-            return isMatch && !r.productCode;
-          }
-        });
+      const allRecords = getOrLoadJsonRecords(filename);
+      const jsonRecords = allRecords.filter((r: any) => {
+        if (productCode) {
+          return r.productCode === productCode;
+        } else {
+          const isMatch = r.unitCode === unitCode || 
+            (unitCode === "Music" && r.unitCode === "SCMU") || 
+            (unitCode === "SCMU" && r.unitCode === "Music") ||
+            (unitCode === "CN" && r.unitCode === "CNGP") ||
+            (unitCode === "CNGP" && r.unitCode === "CN") ||
+            (unitCode === "SCS" && r.unitCode === "Studio") ||
+            (unitCode === "Studio" && r.unitCode === "SCS") ||
+            (unitCode === "Wofloo" && (r.unitCode === "WF" || r.unitCode === "WO")) ||
+            (suffix && r.indicatorCode && r.indicatorCode.endsWith(suffix));
+          return isMatch && !r.productCode;
+        }
+      });
 
-        for (const jr of jsonRecords) {
-          const existingIdx = records.findIndex(r => r.indicatorCode === jr.indicatorCode && r.periodKey === jr.periodKey);
-          if (existingIdx >= 0) {
-            if (jr.isOverridden || (jr.actualValue !== undefined && jr.actualValue > 0) || (jr.targetValue !== undefined && jr.targetValue > 0)) {
-              records[existingIdx] = {
-                ...records[existingIdx],
-                ...jr,
-                targetValue: (jr.targetValue !== undefined && (jr.targetValue > 0 || jr.isOverridden)) ? jr.targetValue : (records[existingIdx].targetValue || 0),
-                actualValue: (jr.actualValue !== undefined && (jr.actualValue > 0 || jr.isOverridden)) ? jr.actualValue : (records[existingIdx].actualValue || 0)
-              };
-            }
-          } else {
-            records.push(jr);
-          }
+      for (const jr of jsonRecords) {
+        const existingIdx = records.findIndex(r => r.indicatorCode === jr.indicatorCode && r.periodKey === jr.periodKey);
+        if (existingIdx >= 0) {
+          const dbRec = records[existingIdx];
+          const dbAct = dbRec.actualValue || 0;
+          const dbTgt = dbRec.targetValue || 0;
+          const jrAct = jr.actualValue || 0;
+          const jrTgt = jr.targetValue || 0;
+
+          records[existingIdx] = {
+            ...dbRec,
+            ...jr,
+            targetValue: dbTgt > 0 ? dbTgt : (jrTgt > 0 ? jrTgt : dbTgt),
+            actualValue: dbAct > 0 ? dbAct : (jrAct > 0 ? jrAct : dbAct),
+            isOverridden: dbRec.isOverridden || jr.isOverridden
+          };
+        } else {
+          records.push(jr);
         }
       }
     } catch (jsonMergeErr) {
@@ -364,28 +402,122 @@ export async function GET(request: Request) {
       if (!compiledRows[code].periods) {
         compiledRows[code].periods = {};
       }
-      compiledRows[code].periods[r.periodKey] = {
-        target: r.targetValue,
-        actual: r.actualValue
-      };
+
+      const prevPeriod = compiledRows[code].periods[r.periodKey];
+      if (r.isOverridden || (r.actualValue !== undefined && r.actualValue > 0) || (r.targetValue !== undefined && r.targetValue > 0) || !prevPeriod || (prevPeriod.actual === 0 && prevPeriod.target === 0)) {
+        compiledRows[code].periods[r.periodKey] = {
+          target: (r.targetValue !== undefined && (r.targetValue > 0 || r.isOverridden)) ? r.targetValue : (prevPeriod?.target || 0),
+          actual: (r.actualValue !== undefined && (r.actualValue > 0 || r.isOverridden)) ? r.actualValue : (prevPeriod?.actual || 0)
+        };
+      }
 
       const pKey = r.periodKey;
       if (pKey === targetWeekKey) {
-        compiledRows[code].targetWeek = r.targetValue;
-        compiledRows[code].actualWeek = r.actualValue;
-        compiledRows[code].isOverriddenWeek = r.isOverridden;
+        if (r.isOverridden || (r.actualValue !== undefined && r.actualValue > 0) || (r.targetValue !== undefined && r.targetValue > 0) || compiledRows[code].actualWeek === 0) {
+          compiledRows[code].targetWeek = (r.targetValue !== undefined && (r.targetValue > 0 || r.isOverridden)) ? r.targetValue : compiledRows[code].targetWeek;
+          compiledRows[code].actualWeek = (r.actualValue !== undefined && (r.actualValue > 0 || r.isOverridden)) ? r.actualValue : compiledRows[code].actualWeek;
+          compiledRows[code].isOverriddenWeek = r.isOverridden || compiledRows[code].isOverriddenWeek;
+        }
       } else if (pKey === targetMonthKey) {
-        compiledRows[code].targetMonth = r.targetValue;
-        compiledRows[code].actualMonth = r.actualValue;
-        compiledRows[code].isOverriddenMonth = r.isOverridden;
+        if (r.isOverridden || (r.actualValue !== undefined && r.actualValue > 0) || (r.targetValue !== undefined && r.targetValue > 0) || compiledRows[code].actualMonth === 0) {
+          compiledRows[code].targetMonth = (r.targetValue !== undefined && (r.targetValue > 0 || r.isOverridden)) ? r.targetValue : compiledRows[code].targetMonth;
+          compiledRows[code].actualMonth = (r.actualValue !== undefined && (r.actualValue > 0 || r.isOverridden)) ? r.actualValue : compiledRows[code].actualMonth;
+          compiledRows[code].isOverriddenMonth = r.isOverridden || compiledRows[code].isOverriddenMonth;
+        }
       } else if (pKey === targetQuarterKey || pKey === `quarterly_${quarter}`) {
-        compiledRows[code].targetQuarter = r.targetValue;
-        compiledRows[code].actualQuarter = r.actualValue;
-        compiledRows[code].isOverriddenQuarter = r.isOverridden;
+        if (r.isOverridden || (r.actualValue !== undefined && r.actualValue > 0) || (r.targetValue !== undefined && r.targetValue > 0) || compiledRows[code].actualQuarter === 0) {
+          compiledRows[code].targetQuarter = (r.targetValue !== undefined && (r.targetValue > 0 || r.isOverridden)) ? r.targetValue : compiledRows[code].targetQuarter;
+          compiledRows[code].actualQuarter = (r.actualValue !== undefined && (r.actualValue > 0 || r.isOverridden)) ? r.actualValue : compiledRows[code].actualQuarter;
+          compiledRows[code].isOverriddenQuarter = r.isOverridden || compiledRows[code].isOverriddenQuarter;
+        }
       } else if (pKey === targetYearKey) {
-        compiledRows[code].targetYear = r.targetValue;
-        compiledRows[code].actualYear = r.actualValue;
-        compiledRows[code].isOverriddenYear = r.isOverridden;
+        if (r.isOverridden || (r.actualValue !== undefined && r.actualValue > 0) || (r.targetValue !== undefined && r.targetValue > 0) || compiledRows[code].actualYear === 0) {
+          compiledRows[code].targetYear = (r.targetValue !== undefined && (r.targetValue > 0 || r.isOverridden)) ? r.targetValue : compiledRows[code].targetYear;
+          compiledRows[code].actualYear = (r.actualValue !== undefined && (r.actualValue > 0 || r.isOverridden)) ? r.actualValue : compiledRows[code].actualYear;
+          compiledRows[code].isOverriddenYear = r.isOverridden || compiledRows[code].isOverriddenYear;
+        }
+      }
+
+      const isSubChannelCode = (c: string) => {
+        const lower = (c || "").toLowerCase();
+        return lower.includes("viewspotify") || lower.includes("viewshorts") || lower.includes("funny") || lower.includes("ktkd") || lower.includes("dollcraft") || lower.includes("wf01") || lower.includes("kinhdoanhtraffi") || lower.includes("trafficshort") || lower.includes("mda") || lower.includes("es");
+      };
+
+      if (unitCode !== "SCVN" && !isSubChannelCode(code)) {
+        let baseCode: string | null = null;
+        if (suffix && code.endsWith(suffix)) {
+          baseCode = code.slice(0, -suffix.length);
+        } else if (code.startsWith("VM1-I02.02") || code.startsWith("TM1-I02.02")) {
+          baseCode = "VM1-I02.01";
+        } else if (code === "VM3-I01.02" || code === "TM3-I01.02" || code === "DM3-I01.03" || code === "SM3-I01.04" || code === "MM3-I01.01" || code === "NM3-I01.05" || code === "CM3-I01.01") {
+          baseCode = code;
+        } else if (code === "VM2-I01.01" || code === "DM2-I01.01" || code === "SM2-I01.01" || code === "MM2-I01.01" || code === "NM2-I01.01" || code === "CM2-I01.01") {
+          baseCode = code;
+        }
+        
+        if (baseCode) {
+          if (!compiledRows[baseCode]) {
+            const meta = metadataMap[baseCode] || metadataMap[code] || {};
+            let title = meta.title || r.title || baseCode;
+            let unit = meta.unit || r.unit || "";
+            compiledRows[baseCode] = {
+              code: baseCode,
+              displayCode: baseCode,
+              title: getFriendlyIndicatorTitle(baseCode, title),
+              unit: unit,
+              unitCode: r.unitCode,
+              targetWeek: 0, actualWeek: 0,
+              targetMonth: 0, actualMonth: 0,
+              targetQuarter: 0, actualQuarter: 0,
+              targetYear: 0, actualYear: 0,
+              isParent: false,
+              parentCode: r.parentCode || meta.parentCode || "M1",
+              frequency: detectFrequency(r.frequency, title, baseCode),
+              aggregationMethod: r.aggregationMethod || "SUM",
+              periods: {}
+            };
+          }
+          if (!compiledRows[baseCode].periods) compiledRows[baseCode].periods = {};
+          const currPerAct = compiledRows[baseCode].periods[pKey]?.actual || 0;
+          if (r.isOverridden || r.actualValue > currPerAct || !compiledRows[baseCode].periods[pKey]?.actual) {
+            compiledRows[baseCode].periods[pKey] = {
+              target: (r.targetValue && r.targetValue > 0) ? r.targetValue : (compiledRows[baseCode].periods[pKey]?.target || 0),
+              actual: r.actualValue
+            };
+          }
+          if (pKey === targetWeekKey && (r.isOverridden || r.actualValue > compiledRows[baseCode].actualWeek || compiledRows[baseCode].actualWeek === 0)) {
+            compiledRows[baseCode].targetWeek = (r.targetValue && r.targetValue > 0) ? r.targetValue : compiledRows[baseCode].targetWeek;
+            compiledRows[baseCode].actualWeek = r.actualValue;
+            compiledRows[baseCode].isOverriddenWeek = r.isOverridden;
+          }
+        }
+      }
+    }
+
+    // Đồng bộ hóa periods giữa baseCode (e.g. VM1-I02.01) và suffix rows (e.g. VM1-I02.01-WF)
+    if (unitCode !== "SCVN" && suffix) {
+      for (const rowKey of Object.keys(compiledRows)) {
+        if (rowKey.endsWith(suffix)) {
+          const baseKey = rowKey.slice(0, -suffix.length);
+          const baseRow = compiledRows[baseKey];
+          const suffixRow = compiledRows[rowKey];
+          if (baseRow && suffixRow) {
+            const allPeriodKeys = Array.from(new Set([
+              ...Object.keys(baseRow.periods || {}),
+              ...Object.keys(suffixRow.periods || {})
+            ]));
+            for (const pk of allPeriodKeys) {
+              const baseP = baseRow.periods?.[pk];
+              const suffixP = suffixRow.periods?.[pk];
+              const bestTarget = Math.max(baseP?.target || 0, suffixP?.target || 0);
+              const bestActual = Math.max(baseP?.actual || 0, suffixP?.actual || 0);
+              if (!baseRow.periods) baseRow.periods = {};
+              if (!suffixRow.periods) suffixRow.periods = {};
+              baseRow.periods[pk] = { target: bestTarget, actual: bestActual };
+              suffixRow.periods[pk] = { target: bestTarget, actual: bestActual };
+            }
+          }
+        }
       }
     }
 

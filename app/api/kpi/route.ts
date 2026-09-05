@@ -227,21 +227,16 @@ export async function GET(request: Request) {
 
       if (records.length === 0) {
         try {
-          const fs = require("fs");
-          const path = require("path");
-          const jsonPath = path.join(process.cwd(), "lib", "product_kpi_records.json");
-          if (fs.existsSync(jsonPath)) {
-            const raw = fs.readFileSync(jsonPath, "utf-8");
-            const kpiList = JSON.parse(raw);
-            records = kpiList.filter((r: any) => 
-              targetProductCodes.includes(r.productCode) && 
-              r.periodKey === periodKey && 
-              r.periodType === periodType
-            ).map((r: any) => ({
-              ...r,
-              id: r.id || `${r.unitCode}-${r.productCode}-${r.indicatorCode}-${r.periodKey}`
-            }));
-          }
+          const { getOrLoadJsonRecords } = require("@/lib/jsonCache");
+          const kpiList = getOrLoadJsonRecords("product_kpi_records.json");
+          records = kpiList.filter((r: any) => 
+            targetProductCodes.includes(r.productCode) && 
+            r.periodKey === periodKey && 
+            r.periodType === periodType
+          ).map((r: any) => ({
+            ...r,
+            id: r.id || `${r.unitCode}-${r.productCode}-${r.indicatorCode}-${r.periodKey}`
+          }));
         } catch (err) {
           console.error("Lỗi đọc JSON dự phòng cho sản phẩm:", err);
         }
@@ -499,9 +494,9 @@ export async function GET(request: Request) {
             enrichedRecords[idx] = {
               ...jr,
               ...dbItem,
-              targetValue: (dbItem.isOverridden || dbItem.targetValue !== undefined) ? dbItem.targetValue : (jr.targetValue || 0),
-              actualValue: (dbItem.isOverridden || dbItem.actualValue !== undefined) ? dbItem.actualValue : (jr.actualValue || 0),
-              weight: (dbItem.isOverridden || dbItem.weight !== undefined) ? dbItem.weight : (jr.weight || 0),
+              targetValue: (dbItem.isOverridden || (dbItem.targetValue !== undefined && dbItem.targetValue > 0)) ? dbItem.targetValue : (jr.targetValue || 0),
+              actualValue: (dbItem.isOverridden || (dbItem.actualValue !== undefined && dbItem.actualValue > 0)) ? dbItem.actualValue : (jr.actualValue || 0),
+              weight: (dbItem.isOverridden || (dbItem.weight !== undefined && dbItem.weight > 0)) ? dbItem.weight : (jr.weight || 0),
               isOverridden: dbItem.isOverridden || jr.isOverridden || false
             };
           } else {

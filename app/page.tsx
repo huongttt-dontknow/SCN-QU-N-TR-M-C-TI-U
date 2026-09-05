@@ -11,7 +11,7 @@ import ProductRevenueDonutChart from "@/components/ProductRevenueDonutChart";
 import { getMasterKpiRecord, MASTER_KPI_DATA } from "@/lib/kpiMasterData";
 import { getRadarScores } from "@/lib/radarMasterData";
 import { PRODUCTS_CATALOG } from "@/lib/products_catalog";
-import { BarChart3, AlertTriangle, Award, AlertOctagon } from "lucide-react";
+import { BarChart3, AlertTriangle, Award, AlertOctagon, Loader2 } from "lucide-react";
 import { 
   ComposedChart, 
   Bar, 
@@ -192,7 +192,7 @@ export default function DashboardPage() {
         const fetchSCVN = filters.unitCode !== "SCVN" 
           ? fetch(`/api/kpi/unit-data?unitCode=SCVN&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`)
           : null;
-        const fetchSCME = filters.unitCode !== "SCME" 
+        const fetchSCME = (filters.unitCode === "SCME" || filters.unitCode === "TCT")
           ? fetch(`/api/kpi/unit-data?unitCode=SCME&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`)
           : null;
 
@@ -510,63 +510,67 @@ export default function DashboardPage() {
     }
 
     const candidateCodes: string[] = [];
-    if (unitCode === "Music") {
-      if (code === "VM1-I02.01") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU");
-      if (code === "VM2-I01.01") candidateCodes.push("MM2-I01.01", "MM2-I01.01-SCMU");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("MM7-I03.01", "MM7-I03.01-SCMU");
-      if (code === "VM3-I01.02") candidateCodes.push("MM3-I01.01", "MM3-I01.01-SCMU");
-    } else if (unitCode === "Wofloo") {
-      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-WF");
-      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-WF");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-WF");
-      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-WF");
+    const isWofloo = unitCode === "Wofloo" || unitCode === "WF" || unitCode === "WO";
+    const isMusic = unitCode === "Music" || unitCode === "SCMU";
+    const isLego = unitCode === "Lego" || unitCode === "LEGO";
+    const isCN = unitCode === "CN" || unitCode === "CNGP";
+    const isSCS = unitCode === "SCS" || unitCode === "Studio";
+    const isCR = unitCode === "CR" || unitCode === "Creative";
+
+    if (isMusic) {
+      if (code === "VM1-I02.01") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU", "VM1-I02.01-SCMU", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("MM2-I01.01", "MM2-I01.01-SCMU", "VM2-I01.01-SCMU", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("MM7-I03.01", "MM7-I03.01-SCMU", "VM7-I03.01-SCMU", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("MM3-I01.01", "MM3-I01.01-SCMU", "VM3-I01.02-SCMU", "VM3-I01.02");
+    } else if (isWofloo) {
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-WF", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-WF", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-WF", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-WF", "VM3-I01.02");
     } else if (unitCode === "AS") {
-      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-AS");
-      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-AS");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-AS");
-      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-AS");
-    } else if (unitCode === "Lego") {
-      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-Lego");
-      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-Lego");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-Lego");
-      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-Lego");
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-AS", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-AS", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-AS", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-AS", "VM3-I01.02");
+    } else if (isLego) {
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-Lego", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.01-Lego", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-Lego", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-Lego", "VM3-I01.02");
     } else if (unitCode === "DA01") {
-      if (code === "VM1-I02.01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
-      if (code === "VM2-I01.01") candidateCodes.push("DM2-I01.01-DA01", "DM2-I01.01");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("DM7-I03.01-DA01", "DM7-I03.01");
-      if (code === "VM3-I01.02") candidateCodes.push("DM3-I01.03-DA01", "DM3-I01.03");
+      if (code === "VM1-I02.01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01", "VM1-I02.01-DA01", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("DM2-I01.01-DA01", "DM2-I01.01", "VM2-I01.01-DA01", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("DM7-I03.01-DA01", "DM7-I03.01", "VM7-I03.01-DA01", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("DM3-I01.03-DA01", "DM3-I01.03", "VM3-I01.02-DA01", "VM3-I01.02");
     } else if (unitCode === "NDTH") {
-      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
-      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.02-NDTH");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-NDTH");
-      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-NDTH");
-    } else if (unitCode === "CR") {
-      if (code === "VM1-I02.01") candidateCodes.push("CM1-I02.01", "CM1-I02.01-CR");
-      if (code === "VM2-I01.01") candidateCodes.push("CM2-I01.01", "CM2-I01.01-CR");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("CM7-I03.01", "CM7-I03.01-CR");
-      if (code === "VM3-I01.02") candidateCodes.push("CM3-I01.01", "CM3-I01.01-CR");
-    } else if (unitCode === "CN") {
-      if (code === "VM1-I02.01") candidateCodes.push("NM1-I02.01", "NM1-I02.01-CNGP");
-      if (code === "VM2-I01.01") candidateCodes.push("NM2-I01.01", "NM2-I01.01-CNGP");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("NM7-I03.01", "NM7-I03.01-CNGP");
-      if (code === "VM3-I01.02") candidateCodes.push("NM3-I01.05", "NM3-I01.05-CNGP");
-    } else if (unitCode === "SCS") {
-      if (code === "VM1-I02.01") candidateCodes.push("SM1-I02.01", "SM1-I02.01-SCS");
-      if (code === "VM2-I01.01") candidateCodes.push("SM2-I01.01", "SM2-I01.01-SCS");
-      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01", "SM7-I03.01-SCS");
-      if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04", "SM3-I01.04-SCS");
+      if (code === "VM1-I02.01") candidateCodes.push("VM1-I02.01-NDTH", "VM1-I02.01", "2.1");
+      if (code === "VM2-I01.01") candidateCodes.push("VM2-I01.02-NDTH", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("VM7-I03.01-NDTH", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("VM3-I01.02-NDTH", "VM3-I01.02");
+    } else if (isCR) {
+      if (code === "VM1-I02.01") candidateCodes.push("CM1-I02.01", "CM1-I02.01-CR", "VM1-I02.01-CR", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("CM2-I01.01", "CM2-I01.01-CR", "VM2-I01.01-CR", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("CM7-I03.01", "CM7-I03.01-CR", "VM7-I03.01-CR", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("CM3-I01.01", "CM3-I01.01-CR", "VM3-I01.02-CR", "VM3-I01.02");
+    } else if (isCN) {
+      if (code === "VM1-I02.01") candidateCodes.push("NM1-I02.01", "NM1-I02.01-CNGP", "VM1-I02.01-CNGP", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("NM2-I01.01", "NM2-I01.01-CNGP", "VM2-I01.01-CNGP", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("NM7-I03.01", "NM7-I03.01-CNGP", "VM7-I03.01-CNGP", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("NM3-I01.05", "NM3-I01.05-CNGP", "VM3-I01.02-CNGP", "VM3-I01.02");
+    } else if (isSCS) {
+      if (code === "VM1-I02.01") candidateCodes.push("SM1-I02.01", "SM1-I02.01-SCS", "VM1-I02.01-SCS", "VM1-I02.01");
+      if (code === "VM2-I01.01") candidateCodes.push("SM2-I01.01", "SM2-I01.01-SCS", "VM2-I01.01-SCS", "VM2-I01.01");
+      if (code === "VM7-I03.01" || code === "TM7-I01.01") candidateCodes.push("SM7-I03.01", "SM7-I03.01-SCS", "VM7-I03.01-SCS", "VM7-I03.01");
+      if (code === "VM3-I01.02") candidateCodes.push("SM3-I01.04", "SM3-I01.04-SCS", "VM3-I01.02-SCS", "VM3-I01.02");
     }
-    if (unitCode === "SCVN" || unitCode === "SCME" || unitCode === "TCT" || candidateCodes.length === 0) {
+    if (!candidateCodes.includes(searchCode)) {
       candidateCodes.push(searchCode);
     }
 
-    const subSuffixes = ["-Lego", "-WF", "-AS", "-NDTH", "-DA01", "-CR", "-CNGP", "-SCS", "-SCMU", "-WO", "-LEGO"];
     const isParentExactMatch = (itemCode: string | undefined, searchCode: string) => {
       if (!itemCode || !searchCode) return false;
       if (itemCode === searchCode) return true;
-      const searchHasSuffix = subSuffixes.some(s => searchCode.endsWith(s));
-      const itemHasSuffix = subSuffixes.some(s => itemCode.endsWith(s));
-      if (!searchHasSuffix && itemHasSuffix) return false;
+      if (itemCode.startsWith(searchCode + "-") && itemCode !== searchCode) return false;
       return itemCode === searchCode;
     };
 
@@ -576,6 +580,15 @@ export default function DashboardPage() {
       const isUnitMatch = (k: any) => {
         if (!k.unitCode) return true;
         if (k.unitCode === unitCode) return true;
+        if ((unitCode === "WF" || unitCode === "Wofloo" || unitCode === "WO") && (k.unitCode === "Wofloo" || k.unitCode === "WF" || k.unitCode === "WO" || k.unitCode === "SCVN")) return true;
+        if ((unitCode === "Music" || unitCode === "SCMU") && (k.unitCode === "Music" || k.unitCode === "SCMU" || k.unitCode === "SCVN")) return true;
+        if ((unitCode === "CN" || unitCode === "CNGP") && (k.unitCode === "CN" || k.unitCode === "CNGP" || k.unitCode === "SCVN")) return true;
+        if ((unitCode === "SCS" || unitCode === "Studio") && (k.unitCode === "SCS" || k.unitCode === "Studio" || k.unitCode === "SCVN")) return true;
+        if ((unitCode === "CR" || unitCode === "Creative") && (k.unitCode === "CR" || k.unitCode === "Creative" || k.unitCode === "SCVN")) return true;
+        if ((unitCode === "Lego" || unitCode === "LEGO") && (k.unitCode === "Lego" || k.unitCode === "LEGO" || k.unitCode === "SCVN")) return true;
+        if (unitCode === "NDTH" && (k.unitCode === "NDTH" || k.unitCode === "SCVN")) return true;
+        if (unitCode === "AS" && (k.unitCode === "AS" || k.unitCode === "SCVN")) return true;
+        if (unitCode === "DA01" && (k.unitCode === "DA01" || k.unitCode === "SCVN")) return true;
         if (unitCode === "SCME" && (k.unitCode === "SCME" || k.unitCode === "TCT")) return true;
         if (unitCode === "SCVN" && (k.unitCode === "SCVN" || k.unitCode === "TCT")) return true;
         if (unitCode === "TCT") return true;
@@ -644,7 +657,15 @@ export default function DashboardPage() {
       return null;
     };
 
-    if (unitCode === filters.unitCode) {
+    const isSameUnit = unitCode === filters.unitCode ||
+      ((unitCode === "Wofloo" || unitCode === "WF" || unitCode === "WO") && (filters.unitCode === "Wofloo" || filters.unitCode === "WF" || filters.unitCode === "WO")) ||
+      ((unitCode === "Music" || unitCode === "SCMU") && (filters.unitCode === "Music" || filters.unitCode === "SCMU")) ||
+      ((unitCode === "CN" || unitCode === "CNGP") && (filters.unitCode === "CN" || filters.unitCode === "CNGP")) ||
+      ((unitCode === "SCS" || unitCode === "Studio") && (filters.unitCode === "SCS" || filters.unitCode === "Studio")) ||
+      ((unitCode === "CR" || unitCode === "Creative") && (filters.unitCode === "CR" || filters.unitCode === "Creative")) ||
+      ((unitCode === "Lego" || unitCode === "LEGO") && (filters.unitCode === "Lego" || filters.unitCode === "LEGO"));
+
+    if (isSameUnit) {
       const res = findInList(dbKpis);
       if (res) return res;
     }
@@ -900,15 +921,15 @@ export default function DashboardPage() {
     // Xem báo cáo Tháng: Lấy Kế hoạch Tháng (Master Target 6.69 Tỷ cho SCVN) & Lũy kế Thực tế Tháng
     const month8MasterTargets: Record<string, number> = {
       SCVN: 6691075313,
-      Wofloo: 560000000,
+      Wofloo: 560000000, WF: 560000000, WO: 560000000,
       AS: 2096797220,
       NDTH: 600000000,
-      Lego: 750100325,
+      Lego: 750100325, LEGO: 750100325,
       DA01: 761332000,
-      SCS: 758784000,
-      Music: 283961768,
-      CN: 330000000,
-      CR: 100100000,
+      SCS: 758784000, Studio: 758784000,
+      Music: 283961768, SCMU: 283961768,
+      CN: 330000000, CNGP: 330000000,
+      CR: 100100000, Creative: 100100000,
     };
     card1TargetRaw = (filters.month === "8" && month8MasterTargets[filters.unitCode]) 
       ? month8MasterTargets[filters.unitCode] 
@@ -1022,8 +1043,10 @@ export default function DashboardPage() {
       }
 
       // Get traffic actuals & targets for unit trend chart fallback if needed
+      // Get traffic actuals & targets for unit trend chart fallback if needed
       if (trafAct === 0 && trafTgt === 0) {
-        const uDict = MASTER_KPI_DATA[filters.unitCode] || {};
+        const normUnit = (filters.unitCode === "WF" || filters.unitCode === "WO") ? "Wofloo" : (filters.unitCode === "SCMU") ? "Music" : (filters.unitCode === "CNGP") ? "CN" : (filters.unitCode === "Studio") ? "SCS" : (filters.unitCode === "Creative") ? "CR" : (filters.unitCode === "LEGO") ? "Lego" : filters.unitCode;
+        const uDict = MASTER_KPI_DATA[normUnit] || MASTER_KPI_DATA[filters.unitCode] || {};
         for (const k in uDict) {
           const v = uDict[k];
           const t = (v.title || "").toUpperCase();
@@ -1080,12 +1103,13 @@ export default function DashboardPage() {
   // Helper function to build monthly trend data for child units (from Month 1 to Month 12)
   const getMonthlyTrendData = () => {
     const data = [];
+    const normUnit = (filters.unitCode === "WF" || filters.unitCode === "WO") ? "Wofloo" : (filters.unitCode === "SCMU") ? "Music" : (filters.unitCode === "CNGP") ? "CN" : (filters.unitCode === "Studio") ? "SCS" : (filters.unitCode === "Creative") ? "CR" : (filters.unitCode === "LEGO") ? "Lego" : filters.unitCode;
     for (let m = 1; m <= 12; m++) {
       const mKey = `monthly_${m}`;
       
       // Check if this month has any data for the selected unit
       let hasMonth = false;
-      const u = MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
+      const u = MASTER_KPI_DATA[normUnit] || MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
       for (const k in u) {
         if (u[k].periods?.[mKey]) {
           hasMonth = true;
@@ -1099,7 +1123,7 @@ export default function DashboardPage() {
       
       // Get traffic actuals
       let trafAct = 0;
-      const uDict = MASTER_KPI_DATA[filters.unitCode] || {};
+      const uDict = MASTER_KPI_DATA[normUnit] || MASTER_KPI_DATA[filters.unitCode] || {};
       for (const k in uDict) {
         const v = uDict[k];
         const t = (v.title || "").toUpperCase();
@@ -1199,14 +1223,21 @@ export default function DashboardPage() {
 
   const unitToProductUnitMap: Record<string, string> = {
     "Wofloo": "Wofloo",
+    "WF": "Wofloo",
+    "WO": "Wofloo",
     "Lego": "Lego",
+    "LEGO": "Lego",
     "AS": "Animated Story",
     "DA01": "DA01",
     "Music": "Music",
+    "SCMU": "Music",
     "NDTH": "NDTH",
     "CR": "Creative Hub",
+    "Creative": "Creative Hub",
     "CN": "CNGP",
-    "SCS": "SCS"
+    "CNGP": "CNGP",
+    "SCS": "SCS",
+    "Studio": "SCS"
   };
 
   // Dữ liệu M3 Traffic (Số lượt view youtube) theo kỳ:
@@ -1488,14 +1519,21 @@ export default function DashboardPage() {
   const getUnitProductionData = (uCode: string, pKey: string) => {
     const m2CodeMap: Record<string, string[]> = {
       Wofloo: ["VM2-I01.01-WF", "VM2-I01.01"],
+      WF: ["VM2-I01.01-WF", "VM2-I01.01"],
+      WO: ["VM2-I01.01-WF", "VM2-I01.01"],
       Lego: ["VM2-I01.01-Lego", "VM2-I01.01"],
+      LEGO: ["VM2-I01.01-Lego", "VM2-I01.01"],
       AS: ["VM2-I01.01-AS", "VM2-I01.01"],
       DA01: ["DM2-I01.01-DA01", "DM2-I01.01", "VM2-I01.01-DA01"],
       Music: ["PM2-I01.01", "PM2-I01.01-SCMU", "MM2-I01.01-SCMU", "MM2-I01.01"],
+      SCMU: ["PM2-I01.01", "PM2-I01.01-SCMU", "MM2-I01.01-SCMU", "MM2-I01.01"],
       NDTH: ["VM2-I01.02-NDTH", "VM2-I01.02", "VM2-I01.01-NDTH"],
       CR: ["CM2-I01.01-CR", "CM2-I01.01"],
+      Creative: ["CM2-I01.01-CR", "CM2-I01.01"],
       CN: ["NM2-I01.01-CNGP", "NM2-I01.01"],
-      SCS: ["SM2-I01.01-SCS", "SM2-I01.01"]
+      CNGP: ["NM2-I01.01-CNGP", "NM2-I01.01"],
+      SCS: ["SM2-I01.01-SCS", "SM2-I01.01"],
+      Studio: ["SM2-I01.01-SCS", "SM2-I01.01"]
     };
     const targetCodes = m2CodeMap[uCode] || ["VM2-I01.01"];
     
@@ -1628,17 +1666,17 @@ export default function DashboardPage() {
     // 1. Thử lấy từ scvnKpis hoặc dbKpis CSDL
     if (scvnKpis && scvnKpis.length > 0) {
       let mappedCode = "";
-      if (uCode === "Wofloo") mappedCode = "VM3-I01.02-WF";
+      if (uCode === "Wofloo" || uCode === "WF" || uCode === "WO") mappedCode = "VM3-I01.02-WF";
       else if (uCode === "AS") mappedCode = "VM3-I01.02-AS";
       else if (uCode === "NDTH") mappedCode = "VM3-I01.02-NDTH";
-      else if (uCode === "Lego") mappedCode = "VM3-I01.02-Lego";
+      else if (uCode === "Lego" || uCode === "LEGO") mappedCode = "VM3-I01.02-Lego";
       else if (uCode === "DA01") mappedCode = "DM3-I01.03";
-      else if (uCode === "SCS") mappedCode = "SM3-I01.04";
-      else if (uCode === "Music") mappedCode = "MM3-I01.01";
-      else if (uCode === "CN") mappedCode = "NM3-I01.05";
-      else if (uCode === "CR") mappedCode = "CM3-I01.01";
+      else if (uCode === "SCS" || uCode === "Studio") mappedCode = "SM3-I01.04";
+      else if (uCode === "Music" || uCode === "SCMU") mappedCode = "MM3-I01.01";
+      else if (uCode === "CN" || uCode === "CNGP") mappedCode = "NM3-I01.05";
+      else if (uCode === "CR" || uCode === "Creative") mappedCode = "CM3-I01.01";
 
-      const dbMatch = scvnKpis.find(k => (k.code === mappedCode || k.indicatorCode === mappedCode || (k.unitCode === uCode && (k.indicatorCode?.includes("M3-I01") || k.indicatorCode?.includes("VIEW")))));
+      const dbMatch = scvnKpis.find(k => (k.code === mappedCode || k.indicatorCode === mappedCode || ((k.unitCode === uCode || (uCode === "WF" || uCode === "WO") && k.unitCode === "Wofloo") && (k.indicatorCode?.includes("M3-I01") || k.indicatorCode?.includes("VIEW")))));
       if (dbMatch) {
         if (dbMatch.periods && dbMatch.periods[pKey]) {
           return dbMatch.periods[pKey].actual || 0;
@@ -1653,7 +1691,8 @@ export default function DashboardPage() {
     }
 
     // 2. Fallback sang MASTER_KPI_DATA
-    const uDict = MASTER_KPI_DATA[uCode] || {};
+    const normUnitCode = (uCode === "WF" || uCode === "WO") ? "Wofloo" : (uCode === "SCMU") ? "Music" : (uCode === "CNGP") ? "CN" : (uCode === "Studio") ? "SCS" : (uCode === "Creative") ? "CR" : (uCode === "LEGO") ? "Lego" : uCode;
+    const uDict = MASTER_KPI_DATA[normUnitCode] || MASTER_KPI_DATA[uCode] || {};
     const candidates: { item: any; rec: any }[] = [];
 
     for (const k in uDict) {
@@ -1858,14 +1897,20 @@ export default function DashboardPage() {
                     ? "Mức độ hoàn thành doanh thu thực tế lũy kế theo từng mảng kinh doanh của SCME"
                     : "Lũy kế doanh thu thực tế các tuần chia cho mục tiêu doanh thu cả tháng"}
                 </p>
-                <MonthlyRevenueProgressChart kpiDataList={[...(dbKpis || []), ...(scvnKpis || []), ...(scmeKpis || [])]} hideAbsoluteRevenue={isRestrictedRevenueView} />
+                <MonthlyRevenueProgressChart kpiDataList={[...(dbKpis || []), ...(scvnKpis || []), ...(scmeKpis || [])]} hideAbsoluteRevenue={isRestrictedRevenueView} isLoading={isLoadingDb} />
               </div>
               <div className="text-[10px] text-[var(--text-muted)] pt-3 border-t border-white/5 font-semibold mt-3">
                 Biểu đồ thể hiện mức độ hoàn thành tiến độ doanh thu của SCVN và các đơn vị thành viên
               </div>
             </div>
           ) : (
-            <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
+            <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px] relative">
+              {isLoadingDb && (
+                <div className="absolute inset-0 z-10 bg-slate-950/40 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center gap-2">
+                  <Loader2 className="w-7 h-7 text-sky-400 animate-spin" />
+                  <span className="text-xs font-bold text-sky-200 tracking-wide">Đang tải xu hướng tuần...</span>
+                </div>
+              )}
               <div className="flex-1 flex flex-col">
                 <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2 mb-4">
                   📊 XU HƯỚNG TUẦN ĐƠN VỊ: {getUnitName(filters.unitCode).toUpperCase()} (THÁNG {filters.month})
@@ -1926,6 +1971,7 @@ export default function DashboardPage() {
                   labelCurr={radarData?.labelCurr}
                   labelPrev={radarData?.labelPrev}
                   unitName={radarData?.unitName}
+                  isLoading={isLoadingRadar || isLoadingDb}
                 />
                 <div className="flex justify-center gap-4 text-xs font-bold mt-2">
                   <span className="flex items-center gap-1.5 text-emerald-500">
@@ -1968,7 +2014,13 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px]">
+            <div className="lg:col-span-6 glass-panel p-5 flex flex-col justify-between min-h-[380px] relative">
+              {isLoadingDb && (
+                <div className="absolute inset-0 z-10 bg-slate-950/40 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center gap-2">
+                  <Loader2 className="w-7 h-7 text-sky-400 animate-spin" />
+                  <span className="text-xs font-bold text-sky-200 tracking-wide">Đang tải xu hướng tháng...</span>
+                </div>
+              )}
               <div className="flex-1 flex flex-col">
                 <h3 className="text-sm font-black text-white tracking-wider uppercase border-b border-white/10 pb-2.5 flex items-center gap-2 mb-4">
                   📊 XU HƯỚNG THÁNG ĐƠN VỊ: {getUnitName(filters.unitCode).toUpperCase()} (NĂM 2026)
@@ -2019,7 +2071,13 @@ export default function DashboardPage() {
         )}
 
         {/* CỤM KPI CARDS (COL-SPAN-6 CỐ ĐỊNH CÂN ĐỐI) */}
-        <div className="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-4 relative">
+          {isLoadingDb && (
+            <div className="absolute inset-0 z-10 bg-slate-950/40 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center gap-2 pointer-events-none">
+              <Loader2 className="w-6 h-6 text-sky-400 animate-spin" />
+              <span className="text-[11px] font-bold text-sky-200 tracking-wide">Đang cập nhật chỉ số...</span>
+            </div>
+          )}
           
           {/* Card 1: Doanh thu & Tiến độ hoàn thành */}
           <div className="glass-panel p-5 flex flex-col justify-between border-l-4 border-l-[var(--accent-purple)] min-h-[175px]">

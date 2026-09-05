@@ -15,12 +15,15 @@ import {
   LabelList
 } from "recharts";
 
+import { Loader2 } from "lucide-react";
+
 interface MonthlyRevenueProgressChartProps {
   kpiDataList?: any[];
   hideAbsoluteRevenue?: boolean;
+  isLoading?: boolean;
 }
 
-export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteRevenue = false }: MonthlyRevenueProgressChartProps = {}) {
+export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteRevenue = false, isLoading = false }: MonthlyRevenueProgressChartProps = {}) {
   const { filters, theme } = useApp();
   const isLight = theme === "light";
   const month = Number(filters.month) || 7;
@@ -77,18 +80,25 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
 
   const getRecordVal = (uCode: string, pKey: string) => {
     const candidateCodes: string[] = [];
+    const isWofloo = uCode === "Wofloo" || uCode === "WF" || uCode === "WO";
+    const isMusic = uCode === "Music" || uCode === "SCMU";
+    const isLego = uCode === "Lego" || uCode === "LEGO";
+    const isCN = uCode === "CN" || uCode === "CNGP";
+    const isSCS = uCode === "SCS" || uCode === "Studio";
+    const isCR = uCode === "CR" || uCode === "Creative";
+
     if (uCode === "TCT") candidateCodes.push("TM1-I02.01", "TM1-I02");
     else if (uCode === "SCME") candidateCodes.push("EM1-I02.01", "EM1-I02");
     else if (uCode === "SCVN") candidateCodes.push("VM1-I02.01", "VM1-I02");
-    else if (uCode === "Wofloo") candidateCodes.push("VM1-I02.01-WF");
-    else if (uCode === "AS") candidateCodes.push("VM1-I02.01-AS");
-    else if (uCode === "Lego") candidateCodes.push("VM1-I02.01-Lego");
-    else if (uCode === "DA01") candidateCodes.push("DM1-I02.01-DA01", "DM1-I02.01");
-    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01-NDTH", "2.1");
-    else if (uCode === "CR") candidateCodes.push("CM1-I02.01", "CM1-I02.01-CR", "CM1-I02.01.01");
-    else if (uCode === "CN") candidateCodes.push("NM1-I02.01", "NM1-I02.01-CNGP", "NM1-I02.01.01");
-    else if (uCode === "SCS") candidateCodes.push("SM1-I02.01", "SM1-I02.01-SCS", "SM1-I02.01.01");
-    else if (uCode === "Music") candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU", "MM1-I02.01.01");
+    else if (isWofloo) candidateCodes.push("VM1-I02.01", "VM1-I02.01-WF");
+    else if (uCode === "AS") candidateCodes.push("VM1-I02.01", "VM1-I02.01-AS");
+    else if (isLego) candidateCodes.push("VM1-I02.01", "VM1-I02.01-Lego");
+    else if (uCode === "DA01") candidateCodes.push("DM1-I02.01", "DM1-I02.01-DA01", "VM1-I02.01");
+    else if (uCode === "NDTH") candidateCodes.push("VM1-I02.01", "2.1", "VM1-I02.01-NDTH");
+    else if (isCR) candidateCodes.push("CM1-I02.01", "CM1-I02.01-CR", "CM1-I02.01.01", "VM1-I02.01");
+    else if (isCN) candidateCodes.push("NM1-I02.01", "NM1-I02.01-CNGP", "NM1-I02.01.01", "VM1-I02.01");
+    else if (isSCS) candidateCodes.push("SM1-I02.01", "SM1-I02.01-SCS", "SM1-I02.01.01", "VM1-I02.01");
+    else if (isMusic) candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU", "MM1-I02.01.01", "VM1-I02.01");
 
     const month8MasterTargets: Record<string, number> = {
       TCT: 15926075313,
@@ -119,8 +129,22 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
         if (uCode === "TCT") {
           return (kCode === "TM1-I02.01" || kCode === "TM1-I02") && (!k.unitCode || k.unitCode === "TCT");
         }
-        return (k.unitCode === uCode || subSuffixes.some(s => kCode?.endsWith(s))) && candidateCodes.includes(kCode);
+        return (k.unitCode === uCode || isWofloo || isMusic || isLego || isCN || isSCS || isCR || subSuffixes.some(s => kCode?.endsWith(s))) && candidateCodes.includes(kCode);
       });
+
+      // Prioritize match with non-zero actual for pKey
+      for (const m of matches) {
+        if (m.periods && m.periods[pKey]) {
+          const act = m.periods[pKey].actual || 0;
+          if (act > 0) {
+            let tgt = m.periods[pKey].target || 0;
+            if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
+              tgt = month8MasterTargets[uCode];
+            }
+            return { target: tgt, actual: act };
+          }
+        }
+      }
 
       for (const m of matches) {
         if (m.periods && m.periods[pKey]) {
@@ -203,10 +227,17 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
   const yWidth = isSmallSet ? 140 : 110;
   const labelSize = isSmallSet ? 12 : 9;
   const yLabelSize = isSmallSet ? 11 : 10;
+  const chartHeight = 320;
 
   return (
-    <div className="w-full h-[320px] flex flex-col justify-between mt-2">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full h-full min-h-[220px] relative">
+      {isLoading && (
+        <div className="absolute inset-0 z-10 bg-slate-950/40 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center gap-2">
+          <Loader2 className="w-6 h-6 text-sky-400 animate-spin" />
+          <span className="text-[11px] font-bold text-sky-200 tracking-wide">Đang tải tiến độ...</span>
+        </div>
+      )}
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <BarChart
           data={data}
           layout="vertical"

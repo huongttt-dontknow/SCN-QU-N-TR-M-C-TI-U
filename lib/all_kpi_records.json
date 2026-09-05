@@ -164427,8 +164427,8 @@
     "indicatorCode": "VM1-I02.01",
     "code": "VM1-I02.01",
     "periodKey": "weekly_8_3",
-    "targetValue": 560599316,
-    "actualValue": 337940465,
+    "targetValue": 140149829,
+    "actualValue": 97863800,
     "targetWeek": 560599316,
     "actualWeek": 337940465,
     "status": "Đang thực hiện"
@@ -164439,8 +164439,8 @@
     "indicatorCode": "VM1-I02.01",
     "code": "VM1-I02.01",
     "periodKey": "weekly_8_2",
-    "targetValue": 560599316,
-    "actualValue": 307218604,
+    "targetValue": 140149829,
+    "actualValue": 95932400,
     "targetWeek": 560599316,
     "actualWeek": 307218604,
     "status": "Đang thực hiện"
@@ -164623,7 +164623,8 @@
     "targetWeek": 137500000,
     "actualWeek": 110532786,
     "status": "Đang thực hiện",
-    "pct": 0.583421170909091
+    "pct": 0.583421170909091,
+    "isOverridden": true
   },
   {
     "id": "SCVN-unit-VM1-I02.01-NDTH-weekly_8_2",
@@ -164645,10 +164646,11 @@
     "code": "VM1-I02.01",
     "periodKey": "weekly_8_3",
     "targetValue": 137500000,
-    "actualValue": 110532786,
+    "actualValue": 80220411,
     "targetWeek": 137500000,
     "actualWeek": 110532786,
-    "status": "Đang thực hiện"
+    "status": "Đang thực hiện",
+    "isOverridden": true
   },
   {
     "id": "NDTH-unit-VM1-I02.01-weekly_8_2",
@@ -164929,7 +164931,8 @@
     "targetValue": 137500000,
     "actualValue": 80220411,
     "status": "Đang thực hiện",
-    "pct": 0.583421170909091
+    "pct": 0.583421170909091,
+    "isOverridden": true
   },
   {
     "indicatorCode": "TM1-I01",
@@ -188545,5 +188548,29 @@
     "actualValue": 0,
     "status": "Chưa thực hiện",
     "explanation": ""
+  },
+  {
+    "indicatorCode": "VM3-I01.02-NDTH",
+    "unitCode": "SCVN",
+    "periodType": "weekly",
+    "periodKey": "weekly_8_4",
+    "targetValue": 15000000,
+    "actualValue": 17856729,
+    "isOverridden": true,
+    "title": "Traffic BP Nội dung tổng hợp (NDTH)",
+    "unit": "Views",
+    "group": "M3. KHÁCH HÀNG / DỊCH VỤ"
+  },
+  {
+    "indicatorCode": "VM3-I01.02",
+    "unitCode": "NDTH",
+    "periodType": "weekly",
+    "periodKey": "weekly_8_4",
+    "targetValue": 15000000,
+    "actualValue": 17856729,
+    "isOverridden": true,
+    "title": "Tổng traffic (nội dung long)",
+    "unit": "Views",
+    "group": "M3. KHÁCH HÀNG / DỊCH VỤ"
   }
 ]

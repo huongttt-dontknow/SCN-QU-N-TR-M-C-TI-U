@@ -18,6 +18,14 @@ export interface MasterKpiItem {
 export const MASTER_KPI_DATA = masterKpiDataJson as unknown as Record<string, Record<string, MasterKpiItem>>;
 
 export function getMasterKpiRecord(unitCode: string, kpiCode: string, periodKey: string): PeriodKpiVal | null {
+  const normalizedUnit = (unitCode === "WF" || unitCode === "WO") ? "Wofloo"
+    : (unitCode === "SCMU") ? "Music"
+    : (unitCode === "CNGP") ? "CN"
+    : (unitCode === "Studio") ? "SCS"
+    : (unitCode === "Creative") ? "CR"
+    : (unitCode === "LEGO") ? "Lego"
+    : unitCode;
+
   const checkDict = (dict: Record<string, MasterKpiItem> | undefined) => {
     if (!dict) return null;
     let item = dict[kpiCode];
@@ -30,8 +38,8 @@ export function getMasterKpiRecord(unitCode: string, kpiCode: string, periodKey:
     return null;
   };
 
-  if (unitCode && MASTER_KPI_DATA[unitCode]) {
-    const res = checkDict(MASTER_KPI_DATA[unitCode]);
+  if (normalizedUnit && MASTER_KPI_DATA[normalizedUnit]) {
+    const res = checkDict(MASTER_KPI_DATA[normalizedUnit]);
     if (res) return res;
   }
 

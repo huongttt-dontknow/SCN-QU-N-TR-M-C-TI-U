@@ -14,18 +14,22 @@ import {
   Tooltip
 } from "recharts";
 
+import { Loader2 } from "lucide-react";
+
 interface ObjectiveRadarChartProps {
   customData?: any[];
   labelCurr?: string;
   labelPrev?: string;
   unitName?: string;
+  isLoading?: boolean;
 }
 
 export default function ObjectiveRadarChart({ 
   customData,
   labelCurr: propLabelCurr,
   labelPrev: propLabelPrev,
-  unitName: propUnitName
+  unitName: propUnitName,
+  isLoading = false
 }: ObjectiveRadarChartProps) {
   const { filters, theme } = useApp();
   const isLight = theme === "light";
@@ -44,7 +48,13 @@ export default function ObjectiveRadarChart({
   const unitName = propUnitName || staticScores.unitName;
 
   return (
-    <div className="w-full h-[320px] flex items-center justify-center">
+    <div className="w-full h-[320px] flex items-center justify-center relative">
+      {isLoading && (
+        <div className="absolute inset-0 z-10 bg-slate-950/40 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center gap-2">
+          <Loader2 className="w-6 h-6 text-sky-400 animate-spin" />
+          <span className="text-[11px] font-bold text-sky-200 tracking-wide">Đang tải điểm Radar...</span>
+        </div>
+      )}
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart cx="50%" cy="50%" outerRadius="75%" data={chartData}>
           <PolarGrid stroke={isLight ? "#cbd5e1" : "rgba(255, 255, 255, 0.1)"} />
