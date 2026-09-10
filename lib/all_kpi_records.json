@@ -1,5 +1,581 @@
 [
   {
+    "id": "rec_monthly_8_CR_CM3-I01.01",
+    "unitCode": "CR",
+    "code": "CM3-I01.01",
+    "indicatorCode": "CM3-I01.01",
+    "title": "Traffic Creative",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 304012,
+    "targetMonth": 0,
+    "actualMonth": 304012,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 304012
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_CR_CM3-I01.01-CR",
+    "unitCode": "CR",
+    "code": "CM3-I01.01-CR",
+    "indicatorCode": "CM3-I01.01-CR",
+    "title": "Traffic Creative",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 304012,
+    "targetMonth": 0,
+    "actualMonth": 304012,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 304012
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_CR_CM3-I01.01-CR",
+    "unitCode": "CR",
+    "code": "CM3-I01.01-CR",
+    "indicatorCode": "CM3-I01.01-CR",
+    "title": "Traffic Creative",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 223879,
+    "targetMonth": 0,
+    "actualMonth": 223879,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 223879
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_Lego_VM3-I01.02-Lego",
+    "unitCode": "Lego",
+    "code": "VM3-I01.02-Lego",
+    "indicatorCode": "VM3-I01.02-Lego",
+    "title": "Traffic Lego",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 2450967,
+    "targetMonth": 0,
+    "actualMonth": 2450967,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 2450967
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_Lego_VM3-I01.02-Lego",
+    "unitCode": "Lego",
+    "code": "VM3-I01.02-Lego",
+    "indicatorCode": "VM3-I01.02-Lego",
+    "title": "Traffic Lego",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 2800000,
+    "targetMonth": 0,
+    "actualMonth": 2800000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 2800000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_CN_NM3-I01.05",
+    "unitCode": "CN",
+    "code": "NM3-I01.05",
+    "indicatorCode": "NM3-I01.05",
+    "title": "Traffic CNGP",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 2761034,
+    "targetMonth": 0,
+    "actualMonth": 2761034,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 2761034
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_CN_NM3-I01.05-CNGP",
+    "unitCode": "CN",
+    "code": "NM3-I01.05-CNGP",
+    "indicatorCode": "NM3-I01.05-CNGP",
+    "title": "Traffic CNGP",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 2761034,
+    "targetMonth": 0,
+    "actualMonth": 2761034,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 2761034
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_CN_NM3-I01.05-CNGP",
+    "unitCode": "CN",
+    "code": "NM3-I01.05-CNGP",
+    "indicatorCode": "NM3-I01.05-CNGP",
+    "title": "Traffic CNGP",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 2904900,
+    "targetMonth": 0,
+    "actualMonth": 2904900,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 2904900
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_Music_MM3-I01.01",
+    "unitCode": "Music",
+    "code": "MM3-I01.01",
+    "indicatorCode": "MM3-I01.01",
+    "title": "Traffic SCMU",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 5238732,
+    "targetMonth": 0,
+    "actualMonth": 5238732,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 5238732
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_Music_MM3-I01.01-SCMU",
+    "unitCode": "Music",
+    "code": "MM3-I01.01-SCMU",
+    "indicatorCode": "MM3-I01.01-SCMU",
+    "title": "Traffic SCMU",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 5238732,
+    "targetMonth": 0,
+    "actualMonth": 5238732,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 5238732
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_Music_MM3-I01.01-SCMU",
+    "unitCode": "Music",
+    "code": "MM3-I01.01-SCMU",
+    "indicatorCode": "MM3-I01.01-SCMU",
+    "title": "Traffic SCMU",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 6000000,
+    "targetMonth": 0,
+    "actualMonth": 6000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 6000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_AS_VM3-I01.02-AS",
+    "unitCode": "AS",
+    "code": "VM3-I01.02-AS",
+    "indicatorCode": "VM3-I01.02-AS",
+    "title": "Traffic AS",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 19505974,
+    "targetMonth": 0,
+    "actualMonth": 19505974,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 19505974
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_AS_VM3-I01.02-AS",
+    "unitCode": "AS",
+    "code": "VM3-I01.02-AS",
+    "indicatorCode": "VM3-I01.02-AS",
+    "title": "Traffic AS",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 29700000,
+    "targetMonth": 0,
+    "actualMonth": 29700000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 29700000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_SCS_SM3-I01.04-SCS",
+    "unitCode": "SCS",
+    "code": "SM3-I01.04-SCS",
+    "indicatorCode": "SM3-I01.04-SCS",
+    "title": "Traffic SCS",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 26502317,
+    "targetMonth": 0,
+    "actualMonth": 26502317,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 26502317
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_SCS_SM3-I01.04-SCS",
+    "unitCode": "SCS",
+    "code": "SM3-I01.04-SCS",
+    "indicatorCode": "SM3-I01.04-SCS",
+    "title": "Traffic SCS",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 24000000,
+    "targetMonth": 0,
+    "actualMonth": 24000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 24000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_NDTH_VM3-I01.02-NDTH",
+    "unitCode": "NDTH",
+    "code": "VM3-I01.02-NDTH",
+    "indicatorCode": "VM3-I01.02-NDTH",
+    "title": "Traffic NDTH",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 60624497,
+    "targetMonth": 0,
+    "actualMonth": 60624497,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 60624497
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_NDTH_VM3-I01.02-NDTH",
+    "unitCode": "NDTH",
+    "code": "VM3-I01.02-NDTH",
+    "indicatorCode": "VM3-I01.02-NDTH",
+    "title": "Traffic NDTH",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 58000000,
+    "targetMonth": 0,
+    "actualMonth": 58000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 58000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_Wofloo_VM3-I01.02",
+    "unitCode": "Wofloo",
+    "code": "VM3-I01.02",
+    "indicatorCode": "VM3-I01.02",
+    "title": "Traffic WF",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 131973675,
+    "targetMonth": 0,
+    "actualMonth": 131973675,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 131973675
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_Wofloo_VM3-I01.02-WF",
+    "unitCode": "Wofloo",
+    "code": "VM3-I01.02-WF",
+    "indicatorCode": "VM3-I01.02-WF",
+    "title": "Traffic WF",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 131973675,
+    "targetMonth": 0,
+    "actualMonth": 131973675,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 131973675
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_Wofloo_VM3-I01.02-WF",
+    "unitCode": "Wofloo",
+    "code": "VM3-I01.02-WF",
+    "indicatorCode": "VM3-I01.02-WF",
+    "title": "Traffic WF",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 145000000,
+    "targetMonth": 0,
+    "actualMonth": 145000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 145000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_DA01_DM3-I01.03",
+    "unitCode": "DA01",
+    "code": "DM3-I01.03",
+    "indicatorCode": "DM3-I01.03",
+    "title": "Traffic DA01",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 369863271,
+    "targetMonth": 0,
+    "actualMonth": 369863271,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 369863271
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_DA01_DM3-I01.03-DA01",
+    "unitCode": "DA01",
+    "code": "DM3-I01.03-DA01",
+    "indicatorCode": "DM3-I01.03-DA01",
+    "title": "Traffic DA01",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 369863271,
+    "targetMonth": 0,
+    "actualMonth": 369863271,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 369863271
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_DA01_DM3-I01.03-DA01",
+    "unitCode": "DA01",
+    "code": "DM3-I01.03-DA01",
+    "indicatorCode": "DM3-I01.03-DA01",
+    "title": "Traffic DA01",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 476168018,
+    "targetMonth": 0,
+    "actualMonth": 476168018,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 476168018
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_CR_CM1-I02.01-CR",
+    "unitCode": "CR",
+    "code": "CM1-I02.01-CR",
+    "indicatorCode": "CM1-I02.01-CR",
+    "title": "Doanh thu BP Creative",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 0,
+    "targetMonth": 0,
+    "actualMonth": 0,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 0
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_Wofloo_VM1-I02.01-WF",
+    "unitCode": "Wofloo",
+    "code": "VM1-I02.01-WF",
+    "indicatorCode": "VM1-I02.01-WF",
+    "title": "Doanh thu BP WF",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 1225000000,
+    "targetMonth": 0,
+    "actualMonth": 1225000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 1225000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_NDTH_VM1-I02.01-NDTH",
+    "unitCode": "NDTH",
+    "code": "VM1-I02.01-NDTH",
+    "indicatorCode": "VM1-I02.01-NDTH",
+    "title": "Doanh thu BP NDTH",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 395000000,
+    "targetMonth": 0,
+    "actualMonth": 395000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 395000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_CN_NM1-I02.01-CNGP",
+    "unitCode": "CN",
+    "code": "NM1-I02.01-CNGP",
+    "indicatorCode": "NM1-I02.01-CNGP",
+    "title": "Doanh thu CNGP",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 50000000,
+    "targetMonth": 0,
+    "actualMonth": 50000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 50000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_Music_MM1-I02.01-SCMU",
+    "unitCode": "Music",
+    "code": "MM1-I02.01-SCMU",
+    "indicatorCode": "MM1-I02.01-SCMU",
+    "title": "Doanh thu SCMU",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 200000000,
+    "targetMonth": 0,
+    "actualMonth": 200000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 200000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_AS_VM1-I02.01-AS",
+    "unitCode": "AS",
+    "code": "VM1-I02.01-AS",
+    "indicatorCode": "VM1-I02.01-AS",
+    "title": "Doanh thu BP AS",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 1109000000,
+    "targetMonth": 0,
+    "actualMonth": 1109000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 1109000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_SCS_SM1-I02.01-SCS",
+    "unitCode": "SCS",
+    "code": "SM1-I02.01-SCS",
+    "indicatorCode": "SM1-I02.01-SCS",
+    "title": "Doanh thu SCS",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 420000000,
+    "targetMonth": 0,
+    "actualMonth": 420000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 420000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_Lego_VM1-I02.01-Lego",
+    "unitCode": "Lego",
+    "code": "VM1-I02.01-Lego",
+    "indicatorCode": "VM1-I02.01-Lego",
+    "title": "Doanh thu DA Lego",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 118000000,
+    "targetMonth": 0,
+    "actualMonth": 118000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 118000000
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_7_DA01_DM1-I02.01-DA01",
+    "unitCode": "DA01",
+    "code": "DM1-I02.01-DA01",
+    "indicatorCode": "DM1-I02.01-DA01",
+    "title": "Doanh thu DA 01",
+    "periodKey": "monthly_7",
+    "targetValue": 0,
+    "actualValue": 580000000,
+    "targetMonth": 0,
+    "actualMonth": 580000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 580000000
+      }
+    }
+  },
+  {
     "id": "rec_m8_CN_NM2-I01",
     "unitCode": "CN",
     "code": "NM2-I01",
@@ -35064,14 +35640,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 650000000,
-    "actualValue": 0,
+    "actualValue": 145000000,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Traffic BP WF",
     "unit": "Views",
     "formula": "Tổng sổ views trên các kênh của đơn vị",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 145000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 145000000
+      }
+    }
   },
   {
     "indicatorCode": "VM3-I01.02",
@@ -58811,7 +59394,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 651900000,
-    "actualValue": 557371998,
+    "actualValue": 580000000,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -58819,7 +59402,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 557371998
+    "actualMonth": 580000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 580000000
+      }
+    }
   },
   {
     "indicatorCode": "DM1-I02.01",
@@ -64422,14 +65011,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 359570000,
-    "actualValue": 0,
+    "actualValue": 476168018,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Số lượt view youtube DA01",
     "unit": "Views",
     "formula": "Số lượng view trên nền tảng youtube",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 476168018,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 476168018
+      }
+    }
   },
   {
     "indicatorCode": "DM3-I01.03",
@@ -88272,7 +88868,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 332709700,
-    "actualValue": 235867557,
+    "actualValue": 200000000,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -88280,7 +88876,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 235867557
+    "actualMonth": 200000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 200000000
+      }
+    }
   },
   {
     "indicatorCode": "MM1-I02.01",
@@ -98868,14 +99470,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 5500000,
-    "actualValue": 0,
+    "actualValue": 6000000,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Số lượt view youtube",
     "unit": "Views",
     "formula": "Số lượng view trên nền tảng youtube",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 6000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 6000000
+      }
+    }
   },
   {
     "indicatorCode": "MM3-I01.01",
@@ -104868,7 +105477,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 610402000,
-    "actualValue": 351033806,
+    "actualValue": 420000000,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -104876,7 +105485,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 351033806
+    "actualMonth": 420000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 420000000
+      }
+    }
   },
   {
     "indicatorCode": "SM1-I02.01",
@@ -104954,7 +105569,13 @@
     "parentCode": "M1",
     "targetMonth": 761994240,
     "actualMonth": 474183712,
-    "completionRate": 0.6223
+    "completionRate": 0.6223,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 474183712
+      }
+    }
   },
   {
     "indicatorCode": "SM1-I02.01",
@@ -106297,14 +106918,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 75676084,
-    "actualValue": 0,
+    "actualValue": 24000000,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Số lượt view youtube SCS",
     "unit": "Views",
     "formula": "Số lượng view trên nền tảng youtube các dự án thử nghiệm",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 24000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 24000000
+      }
+    }
   },
   {
     "indicatorCode": "SM3-I01.04",
@@ -106372,14 +107000,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_8",
     "targetValue": 84967682,
-    "actualValue": 0,
+    "actualValue": 26502317,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Số lượt view youtube SCS",
     "unit": "Views",
     "formula": "Số lượng view trên nền tảng youtube các dự án thử nghiệm",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 26502317,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 26502317
+      }
+    }
   },
   {
     "indicatorCode": "SM3-I01.04",
@@ -108007,7 +108642,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 250000000,
-    "actualValue": 58067596,
+    "actualValue": 50000000,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -108015,7 +108650,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 58067596
+    "actualMonth": 50000000,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 50000000
+      }
+    }
   },
   {
     "indicatorCode": "NM1-I02.01",
@@ -109688,14 +110329,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 10300000,
-    "actualValue": 0,
+    "actualValue": 2904900,
     "pic": "PCN",
     "status": "Chưa thực hiện",
     "title": "Số lượng traffic Youtube",
     "unit": "Views",
     "formula": "Số lượng view trên nền tảng youtube",
     "group": "M3. KHÁCH HÀNG",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 2904900,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 2904900
+      }
+    }
   },
   {
     "indicatorCode": "NM3-I01.05",
@@ -131596,7 +132244,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 26223056,
+    "actualValue": 0,
     "pic": null,
     "status": "Chưa thực hiện",
     "explanation": "",
@@ -131606,7 +132254,13 @@
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "TM1-I02",
     "frequency": "weekly",
-    "actualMonth": 26223056
+    "actualMonth": 0,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 0
+      }
+    }
   },
   {
     "indicatorCode": "CM1-I02.02",
@@ -131777,7 +132431,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 0,
+    "actualValue": 223879,
     "pic": null,
     "status": "Chưa thực hiện",
     "explanation": "",
@@ -131786,7 +132440,14 @@
     "formula": "",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
     "parentCode": "TM3-I01",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "actualMonth": 223879,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 223879
+      }
+    }
   },
   {
     "indicatorCode": "CM3-I01.01.01",
@@ -164467,7 +165128,13 @@
     "isOverridden": true,
     "targetMonth": 283961768,
     "actualMonth": 210654401,
-    "completionRate": 0.7418
+    "completionRate": 0.7418,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 210654401
+      }
+    }
   },
   {
     "id": "Music-unit-MM1-I02.01.01-monthly_8",
@@ -189001,7 +189668,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 448568465
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_VM1-I02.01-WF",
@@ -189064,7 +189737,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 1168124339
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_VM1-I02.01-AS",
@@ -189127,7 +189806,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 330926266
+      }
+    }
   },
   {
     "id": "rec_m8_NDTH_2.1",
@@ -189190,7 +189875,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 216879317
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_VM1-I02.01-Lego",
@@ -189232,7 +189923,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 656604844
+      }
+    }
   },
   {
     "id": "rec_m8_DA01_DM1-I02.01-DA01",
@@ -189253,7 +189950,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 656604844
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_DM1-I02.01-DA01",
@@ -189295,7 +189998,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 474183712
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_SM1-I02.01-SCS",
@@ -189337,7 +190046,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 210654401
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_MM1-I02.01-SCMU",
@@ -189379,7 +190094,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 46814591
+      }
+    }
   },
   {
     "id": "rec_m8_CN_NM1-I02.01-CNGP",
@@ -189400,7 +190121,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 46814591
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_NM1-I02.01-CNGP",
@@ -189442,7 +190169,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 0
+      }
+    }
   },
   {
     "id": "rec_m8_CR_CM1-I02.01-CR",
@@ -189463,7 +190196,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 0
+      }
+    }
   },
   {
     "id": "rec_m8_SCVN_CM1-I02.01-CR",

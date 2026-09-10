@@ -14177,7 +14177,8 @@
           "pct": 0.5501
         },
         "monthly_7": {
-          "target": 650000000
+          "target": 650000000,
+          "actual": 145000000
         },
         "weekly_7_1": {
           "target": 162500000,
@@ -14199,8 +14200,7 @@
         },
         "monthly_8": {
           "target": 350000000,
-          "actual": 131973675,
-          "pct": 0.3771
+          "actual": 131973675
         }
       }
     },
@@ -15739,8 +15739,11 @@
         },
         "monthly_8": {
           "target": 560000000,
-          "actual": 448568465,
-          "pct": 0.801
+          "actual": 448568465
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 1225000000
         }
       }
     },
@@ -15752,6 +15755,20 @@
           "target": 120,
           "actual": 142,
           "pct": 1.1833
+        }
+      }
+    },
+    "VM3-I01.02-WF": {
+      "title": "Traffic WF",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 145000000
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 131973675
         }
       }
     }
@@ -20318,8 +20335,11 @@
         },
         "monthly_8": {
           "target": 2363216100,
-          "actual": 1168124339,
-          "pct": 0.4943
+          "actual": 1168124339
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 1109000000
         }
       }
     },
@@ -20331,6 +20351,20 @@
           "target": 36,
           "actual": 26,
           "pct": 0.7222
+        }
+      }
+    },
+    "VM3-I01.02-AS": {
+      "title": "Traffic AS",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 29700000
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 19505974
         }
       }
     }
@@ -23726,8 +23760,11 @@
         },
         "monthly_8": {
           "target": 599908060,
-          "actual": 330926266,
-          "pct": 0.5516
+          "actual": 330926266
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 395000000
         }
       }
     },
@@ -23751,6 +23788,20 @@
           "target": 410,
           "actual": 458,
           "pct": 1.1171
+        }
+      }
+    },
+    "VM3-I01.02-NDTH": {
+      "title": "Traffic NDTH",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 58000000
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 60624497
         }
       }
     }
@@ -23947,8 +23998,7 @@
         },
         "monthly_7": {
           "target": 651900000,
-          "actual": 557371998,
-          "pct": 0.855
+          "actual": 580000000
         },
         "weekly_7_1": {
           "target": 130380000,
@@ -23982,8 +24032,7 @@
         },
         "monthly_8": {
           "target": 728834540,
-          "actual": 656604844,
-          "pct": 0.9009
+          "actual": 656604844
         }
       }
     },
@@ -25745,8 +25794,7 @@
         },
         "monthly_7": {
           "target": 359570000,
-          "actual": 476168018,
-          "pct": 1.3243
+          "actual": 476168018
         },
         "weekly_7_1": {
           "target": 71914000,
@@ -25768,8 +25816,7 @@
         },
         "monthly_8": {
           "target": 490000000,
-          "actual": 369863271,
-          "pct": 0.7548
+          "actual": 369863271
         }
       }
     },
@@ -26897,8 +26944,11 @@
       "periods": {
         "monthly_8": {
           "target": 728834540,
-          "actual": 656604844,
-          "pct": 0.9009
+          "actual": 656604844
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 580000000
         }
       }
     },
@@ -26910,6 +26960,20 @@
           "target": 84,
           "actual": 89,
           "pct": 1.0595
+        }
+      }
+    },
+    "DM3-I01.03-DA01": {
+      "title": "Traffic DA01",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 476168018
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 369863271
         }
       }
     }
@@ -31459,8 +31523,11 @@
         },
         "monthly_8": {
           "target": 750100325,
-          "actual": 216879317,
-          "pct": 0.2891
+          "actual": 216879317
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 118000000
         }
       }
     },
@@ -31472,6 +31539,20 @@
           "target": 16,
           "actual": 16,
           "pct": 1
+        }
+      }
+    },
+    "VM3-I01.02-Lego": {
+      "title": "Traffic Lego",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 2800000
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 2450967
         }
       }
     }
@@ -31702,8 +31783,7 @@
         },
         "monthly_7": {
           "target": 332709700,
-          "actual": 235867557,
-          "pct": 0.7089
+          "actual": 200000000
         },
         "weekly_7_1": {
           "target": 50000000,
@@ -31737,8 +31817,7 @@
         },
         "monthly_8": {
           "target": 283961768,
-          "actual": 210654401,
-          "pct": 0.7418
+          "actual": 210654401
         }
       }
     },
@@ -33988,7 +34067,8 @@
           "pct": 0.3195
         },
         "monthly_7": {
-          "target": 5500000
+          "target": 5500000,
+          "actual": 6000000
         },
         "weekly_7_1": {
           "target": 1200000,
@@ -34010,8 +34090,7 @@
         },
         "monthly_8": {
           "target": 6000000,
-          "actual": 5238732,
-          "pct": 0.8731
+          "actual": 5238732
         }
       }
     },
@@ -35402,8 +35481,11 @@
       "periods": {
         "monthly_8": {
           "target": 283961768,
-          "actual": 210654401,
-          "pct": 0.7418
+          "actual": 210654401
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 200000000
         }
       }
     },
@@ -35415,6 +35497,20 @@
           "target": 308,
           "actual": 248,
           "pct": 0.8052
+        }
+      }
+    },
+    "MM3-I01.01-SCMU": {
+      "title": "Traffic SCMU",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 6000000
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 5238732
         }
       }
     }
@@ -35610,8 +35706,7 @@
         },
         "monthly_7": {
           "target": 610402000,
-          "actual": 351033806,
-          "pct": 0.5751
+          "actual": 420000000
         },
         "weekly_7_1": {
           "target": 152600500,
@@ -35635,8 +35730,7 @@
         },
         "monthly_8": {
           "target": 761994240,
-          "actual": 474183712,
-          "pct": 0.6223
+          "actual": 474183712
         },
         "monthly_9": {
           "target": 951756000
@@ -36843,7 +36937,8 @@
           "pct": 1.4823
         },
         "monthly_7": {
-          "target": 75676084
+          "target": 75676084,
+          "actual": 24000000
         },
         "weekly_7_1": {
           "target": 18919021,
@@ -36865,8 +36960,7 @@
         },
         "monthly_8": {
           "target": 45634349,
-          "actual": 26502317,
-          "pct": 0.5808
+          "actual": 26502317
         },
         "monthly_9": {
           "target": 95571356
@@ -37388,8 +37482,11 @@
       "periods": {
         "monthly_8": {
           "target": 761994240,
-          "actual": 474183712,
-          "pct": 0.6223
+          "actual": 474183712
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 420000000
         }
       }
     },
@@ -37401,6 +37498,20 @@
           "target": 112,
           "actual": 128,
           "pct": 1.1429
+        }
+      }
+    },
+    "SM3-I01.04-SCS": {
+      "title": "Traffic SCS",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 24000000
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 26502317
         }
       }
     }
@@ -37519,8 +37630,7 @@
         },
         "monthly_7": {
           "target": 250000000,
-          "actual": 58067596,
-          "pct": 0.2323
+          "actual": 50000000
         },
         "weekly_7_1": {
           "target": 53655914,
@@ -37554,8 +37664,7 @@
         },
         "monthly_8": {
           "target": 280000000,
-          "actual": 46814591,
-          "pct": 0.1672
+          "actual": 46814591
         }
       }
     },
@@ -38096,8 +38205,7 @@
         },
         "monthly_7": {
           "target": 10300000,
-          "actual": 2904900,
-          "pct": 0.282
+          "actual": 2904900
         },
         "weekly_7_1": {
           "target": 2194624,
@@ -38119,8 +38227,7 @@
         },
         "monthly_8": {
           "target": 12000000,
-          "actual": 2761034,
-          "pct": 0.2301
+          "actual": 2761034
         }
       }
     },
@@ -38492,8 +38599,11 @@
       "periods": {
         "monthly_8": {
           "target": 280000000,
-          "actual": 46814591,
-          "pct": 0.1672
+          "actual": 46814591
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 50000000
         }
       }
     },
@@ -38505,6 +38615,20 @@
           "target": 10,
           "actual": 10,
           "pct": 1
+        }
+      }
+    },
+    "NM3-I01.05-CNGP": {
+      "title": "Traffic CNGP",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 2904900
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 2761034
         }
       }
     }
@@ -38751,13 +38875,11 @@
         },
         "monthly_8": {
           "target": 100100000,
-          "actual": 0,
-          "pct": 0
+          "actual": 0
         },
         "monthly_7": {
           "target": 26223056,
-          "actual": 26223056,
-          "pct": 1
+          "actual": 0
         }
       }
     },
@@ -40035,8 +40157,7 @@
         },
         "monthly_7": {
           "target": 1510000,
-          "actual": 223879,
-          "pct": 0.1483
+          "actual": 223879
         },
         "weekly_7_1": {
           "target": 10000
@@ -40074,8 +40195,7 @@
         },
         "monthly_8": {
           "target": 1500000,
-          "actual": 304012,
-          "pct": 0.2027
+          "actual": 304012
         }
       }
     },
@@ -40546,8 +40666,11 @@
       "periods": {
         "monthly_8": {
           "target": 100100000,
-          "actual": 0,
-          "pct": 0
+          "actual": 0
+        },
+        "monthly_7": {
+          "target": 0,
+          "actual": 0
         }
       }
     },
@@ -40559,6 +40682,20 @@
           "target": 30,
           "actual": 34,
           "pct": 1.1333
+        }
+      }
+    },
+    "CM3-I01.01-CR": {
+      "title": "Traffic Creative",
+      "unit": "",
+      "periods": {
+        "monthly_7": {
+          "target": 0,
+          "actual": 223879
+        },
+        "monthly_8": {
+          "target": 0,
+          "actual": 304012
         }
       }
     }
