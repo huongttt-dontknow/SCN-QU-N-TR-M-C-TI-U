@@ -7,19 +7,17 @@ declare global {
 
 const databaseUrl = process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/sconnect_kpi?schema=public";
 let url = databaseUrl;
+
 if (url && !url.includes("pgbouncer=true")) {
-  if (url.includes("?")) {
-    url += "&pgbouncer=true";
-  } else {
-    url += "?pgbouncer=true";
-  }
+  url += url.includes("?") ? "&pgbouncer=true" : "?pgbouncer=true";
 }
+
 if (url && !url.includes("statement_cache_size=")) {
-  if (url.includes("?")) {
-    url += "&statement_cache_size=0";
-  } else {
-    url += "?statement_cache_size=0";
-  }
+  url += url.includes("?") ? "&statement_cache_size=0" : "?statement_cache_size=0";
+}
+
+if (url && !url.includes("connection_limit=")) {
+  url += url.includes("?") ? "&connection_limit=10&pool_timeout=10" : "?connection_limit=10&pool_timeout=10";
 }
 
 export const prisma = global.prisma || new PrismaClient({
@@ -30,6 +28,5 @@ export const prisma = global.prisma || new PrismaClient({
   }
 });
 
-if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
-}
+// Always set global.prisma so serverless warm instances reuse the connection pool
+global.prisma = prisma;

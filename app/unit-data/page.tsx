@@ -117,13 +117,16 @@ export default function UnitDataPage() {
     return true;
   };
 
-  const hasVisibleDescendants = (parentCode: string, allRows: KpiRow[]): boolean => {
-    const directChildren = allRows.filter(r => r.parentCode === parentCode);
+  const hasVisibleDescendants = (parentCode: string, allRows: KpiRow[], visited = new Set<string>()): boolean => {
+    if (visited.has(parentCode)) return false;
+    visited.add(parentCode);
+
+    const directChildren = allRows.filter(r => r.parentCode === parentCode && r.parentCode !== r.code);
     for (const child of directChildren) {
       if (!child.isParent && shouldShowByFrequency(child.frequency, child.title, child.code)) {
         return true;
       }
-      if (child.isParent && hasVisibleDescendants(child.code, allRows)) {
+      if (child.isParent && hasVisibleDescendants(child.code, allRows, visited)) {
         return true;
       }
     }
@@ -131,11 +134,15 @@ export default function UnitDataPage() {
   };
 
   const getOrderedRows = (rows: KpiRow[]) => {
-    const rootParents = rows.filter(r => r.isParent && !r.parentCode);
+    const rootParents = rows.filter(r => r.isParent && (!r.parentCode || r.parentCode === r.code));
     const result: KpiRow[] = [];
+    const visited = new Set<string>();
 
     const addChildren = (parentCode: string) => {
-      const children = rows.filter(r => r.parentCode === parentCode);
+      if (visited.has(parentCode)) return;
+      visited.add(parentCode);
+
+      const children = rows.filter(r => r.parentCode === parentCode && r.parentCode !== r.code);
       children.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true, sensitivity: 'base' }));
 
       for (const child of children) {
@@ -149,7 +156,9 @@ export default function UnitDataPage() {
     rootParents.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true, sensitivity: 'base' }));
 
     for (const parent of rootParents) {
-      result.push(parent);
+      if (!result.find(r => r.code === parent.code)) {
+        result.push(parent);
+      }
       addChildren(parent.code);
     }
 
@@ -162,26 +171,34 @@ export default function UnitDataPage() {
     return result;
   };
 
-  const isAncestorCollapsed = (row: KpiRow, rows: KpiRow[]) => {
+  const isAncestorCollapsed = (row: KpiRow, rowMap: Map<string, KpiRow>) => {
     let current = row;
-    while (current.parentCode) {
-      if (!expandedRows[current.parentCode]) {
+    const visited = new Set<string>();
+    while (current.parentCode && current.parentCode !== current.code) {
+      if (visited.has(current.code)) break;
+      visited.add(current.code);
+
+      if (expandedRows[current.parentCode] === false) {
         return true;
       }
-      const parent = rows.find(r => r.code === current.parentCode);
-      if (!parent) break;
+      const parent = rowMap.get(current.parentCode);
+      if (!parent || parent.code === current.code) break;
       current = parent;
     }
     return false;
   };
 
-  const getRowDepth = (row: KpiRow, rows: KpiRow[]) => {
+  const getRowDepth = (row: KpiRow, rowMap: Map<string, KpiRow>) => {
     let depth = 0;
     let current = row;
-    while (current.parentCode) {
+    const visited = new Set<string>();
+    while (current.parentCode && current.parentCode !== current.code) {
+      if (visited.has(current.code)) break;
+      visited.add(current.code);
+
       depth++;
-      const parent = rows.find(r => r.code === current.parentCode);
-      if (!parent) break;
+      const parent = rowMap.get(current.parentCode);
+      if (!parent || parent.code === current.code) break;
       current = parent;
     }
     return depth;
@@ -394,6 +411,7 @@ export default function UnitDataPage() {
         </tr>
     `;
 
+    const rowMap = new Map(orderedRows.map(r => [r.code, r]));
     orderedRows.forEach(row => {
       const targetPri = getTargetValue(row);
       const actualPri = getActualValue(row);
@@ -403,7 +421,7 @@ export default function UnitDataPage() {
       const actualCum = getCumulativeActual(row);
       const pctCum = calculateCompletionPct(targetCum, actualCum, row.code, row.title);
 
-      const indent = getRowDepth(row, orderedRows);
+      const indent = getRowDepth(row, rowMap);
       const titleText = "&nbsp;".repeat(indent * 4) + row.title;
 
       html += `
@@ -652,105 +670,107 @@ export default function UnitDataPage() {
               </tr>
             </thead>
             <tbody>
-              {orderedRows.map(row => {
-                const targetPri = getTargetValue(row);
-                const actualPri = getActualValue(row);
-                const pctPri = calculateCompletionPct(targetPri, actualPri, row.code, row.title);
+              {(() => {
+                const rowMap = new Map(orderedRows.map(r => [r.code, r]));
+                return orderedRows.map(row => {
+                  const targetPri = getTargetValue(row);
+                  const actualPri = getActualValue(row);
+                  const pctPri = calculateCompletionPct(targetPri, actualPri, row.code, row.title);
 
-                const targetCum = getCumulativeTarget(row);
-                const actualCum = getCumulativeActual(row);
-                const pctCum = calculateCompletionPct(targetCum, actualCum, row.code, row.title);
+                  const targetCum = getCumulativeTarget(row);
+                  const actualCum = getCumulativeActual(row);
+                  const pctCum = calculateCompletionPct(targetCum, actualCum, row.code, row.title);
 
-                const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
+                  const isMGoal = row.code === "M1" || row.code === "M2" || row.code === "M3" || row.code === "M4" || row.code === "M5" || row.code === "M6" || row.code === "M7" || row.code.endsWith("-M1") || row.code.endsWith("-M2") || row.code.endsWith("-M3") || row.code.endsWith("-M4") || row.code.endsWith("-M5") || row.code.endsWith("-M6") || row.code.endsWith("-M7");
 
-                if (row.isParent) {
-                  const isExpanded = expandedRows[row.code];
-                  const depth = getRowDepth(row, orderedRows);
-                  return (
-                    <tr 
-                      key={row.code} 
-                      onClick={() => toggleRow(row.code)}
-                      className={`${
-                        theme === "light" 
-                          ? "bg-slate-50/90 hover:bg-slate-100 text-[#0284c7] border-b border-slate-200" 
-                          : "bg-[#1f1a3e]/80 hover:bg-[#25204a] text-cyan-300 border-b border-white/5"
-                      } font-black cursor-pointer select-none transition-all text-sm`}
-                    >
-                      {showCodeColumn && (
-                        <td className="p-3 text-center">
-                          <span 
-                            className={`inline-flex items-center justify-center gap-1 font-mono ${
-                              isMGoal ? (theme === "light" ? "text-sky-600 font-bold" : "text-sky-400 font-bold") : ""
-                            }`}
-                            style={{ paddingLeft: `${depth * 1.0}rem` }}
-                          >
-                            {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                            {row.code}
-                          </span>
-                        </td>
-                      )}
-                      <td 
-                        className={`p-3 uppercase tracking-wider font-black ${
-                          isMGoal 
-                            ? (theme === "light" ? "text-sky-600" : "text-sky-400")
-                            : (theme === "light" ? "text-slate-900" : "text-white")
-                        }`} 
-                        style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
+                  if (row.isParent) {
+                    const isExpanded = expandedRows[row.code];
+                    const depth = getRowDepth(row, rowMap);
+                    return (
+                      <tr 
+                        key={row.code} 
+                        onClick={() => toggleRow(row.code)}
+                        className={`${
+                          theme === "light" 
+                            ? "bg-slate-50/90 hover:bg-slate-100 text-[#0284c7] border-b border-slate-200" 
+                            : "bg-[#1f1a3e]/80 hover:bg-[#25204a] text-cyan-300 border-b border-white/5"
+                        } font-black cursor-pointer select-none transition-all text-sm`}
                       >
-                        <div className="flex items-center gap-1.5">
-                          {!showCodeColumn && (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
-                          {row.title}
-                        </div>
-                      </td>
-                      <td className="p-3 text-center text-slate-500 dark:text-slate-400 font-extrabold text-xs"></td>
-                      
-                      {/* Cột kỳ chính */}
-                      <td className={`p-3 text-center font-black border-l ${
-                        theme === "light" ? "border-slate-200 text-slate-700 bg-slate-50/50" : "border-white/5 text-slate-200 bg-[#25204a]/30"
-                      }`}>
-                        {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
-                      </td>
-                      <td className={`p-3 text-center font-black ${
-                        theme === "light" ? "text-slate-900 bg-slate-50/50" : "text-white bg-[#25204a]/30"
-                      }`}>
-                        {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
-                      </td>
-                      <td className={`p-3 text-center font-black border-r ${
-                        theme === "light" ? "border-slate-200 bg-slate-50/50" : "border-white/5 bg-[#25204a]/30"
-                      } ${getPctColor(pctPri)}`}>
-                        {pctPri}%
-                      </td>
-
-                      {/* Cột lũy kế */}
-                      {filters.periodType !== "yearly" && (
-                        <>
-                          <td className={`p-3 text-center font-black ${
-                            theme === "light" ? "text-slate-600 bg-purple-50/20" : "text-slate-300 bg-[#2c224a]/20"
-                          }`}>
-                            {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
+                        {showCodeColumn && (
+                          <td className="p-3 text-center">
+                            <span 
+                              className={`inline-flex items-center justify-center gap-1 font-mono ${
+                                isMGoal ? (theme === "light" ? "text-sky-600 font-bold" : "text-sky-400 font-bold") : ""
+                              }`}
+                              style={{ paddingLeft: `${depth * 1.0}rem` }}
+                            >
+                              {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                              {row.code}
+                            </span>
                           </td>
-                          <td className={`p-3 text-center font-black ${
-                            theme === "light" ? "text-purple-700 bg-purple-50/20" : "text-purple-200 bg-[#2c224a]/20"
-                          }`}>
-                            {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
-                          </td>
-                          <td className={`p-3 text-center font-black ${
-                            theme === "light" ? "bg-purple-50/20" : "bg-[#2c224a]/20"
-                          } ${getPctColor(pctCum)}`}>
-                            {pctCum}%
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  );
-                }
+                        )}
+                        <td 
+                          className={`p-3 uppercase tracking-wider font-black ${
+                            isMGoal 
+                              ? (theme === "light" ? "text-sky-600" : "text-sky-400")
+                              : (theme === "light" ? "text-slate-900" : "text-white")
+                          }`} 
+                          style={{ paddingLeft: `${showCodeColumn ? (depth * 1.0 + 0.5) : (depth * 1.0 + 1.0)}rem` }}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            {!showCodeColumn && (isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
+                            {row.title}
+                          </div>
+                        </td>
+                        <td className="p-3 text-center text-slate-500 dark:text-slate-400 font-extrabold text-xs"></td>
+                        
+                        {/* Cột kỳ chính */}
+                        <td className={`p-3 text-center font-black border-l ${
+                          theme === "light" ? "border-slate-200 text-slate-700 bg-slate-50/50" : "border-white/5 text-slate-200 bg-[#25204a]/30"
+                        }`}>
+                          {row.unit === "%" ? `${targetPri}%` : targetPri.toLocaleString()}
+                        </td>
+                        <td className={`p-3 text-center font-black ${
+                          theme === "light" ? "text-slate-900 bg-slate-50/50" : "text-white bg-[#25204a]/30"
+                        }`}>
+                          {row.unit === "%" ? `${actualPri}%` : actualPri.toLocaleString()}
+                        </td>
+                        <td className={`p-3 text-center font-black border-r ${
+                          theme === "light" ? "border-slate-200 bg-slate-50/50" : "border-white/5 bg-[#25204a]/30"
+                        } ${getPctColor(pctPri)}`}>
+                          {pctPri}%
+                        </td>
 
-                // Dòng con - Ẩn nếu tổ tiên bị collapsed
-                if (row.parentCode && isAncestorCollapsed(row, orderedRows)) {
-                  return null;
-                }
+                        {/* Cột lũy kế */}
+                        {filters.periodType !== "yearly" && (
+                          <>
+                            <td className={`p-3 text-center font-black ${
+                              theme === "light" ? "text-slate-600 bg-purple-50/20" : "text-slate-300 bg-[#2c224a]/20"
+                            }`}>
+                              {row.unit === "%" ? `${targetCum}%` : targetCum.toLocaleString()}
+                            </td>
+                            <td className={`p-3 text-center font-black ${
+                              theme === "light" ? "text-purple-700 bg-purple-50/20" : "text-purple-200 bg-[#2c224a]/20"
+                            }`}>
+                              {row.unit === "%" ? `${actualCum}%` : actualCum.toLocaleString()}
+                            </td>
+                            <td className={`p-3 text-center font-black ${
+                              theme === "light" ? "bg-purple-50/20" : "bg-[#2c224a]/20"
+                            } ${getPctColor(pctCum)}`}>
+                              {pctCum}%
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    );
+                  }
 
-                const depth = getRowDepth(row, orderedRows);
+                  // Dòng con - Ẩn nếu tổ tiên bị collapsed
+                  if (row.parentCode && isAncestorCollapsed(row, rowMap)) {
+                    return null;
+                  }
+
+                  const depth = getRowDepth(row, rowMap);
                 return (
                   <tr key={row.code} className={`border-b ${
                     theme === "light" 
@@ -818,7 +838,8 @@ export default function UnitDataPage() {
                     )}
                   </tr>
                 );
-              })}
+              });
+            })()}
             </tbody>
           </table>
         </div>

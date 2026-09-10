@@ -101,18 +101,18 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
     else if (isMusic) candidateCodes.push("MM1-I02.01", "MM1-I02.01-SCMU", "MM1-I02.01.01", "VM1-I02.01");
 
     const month8MasterTargets: Record<string, number> = {
-      TCT: 15926075313,
-      SCME: 9235000000,
-      SCVN: 6691075313,
-      Wofloo: 560000000,
-      AS: 2096797220,
-      NDTH: 600000000,
-      Lego: 750100325,
-      DA01: 761332000,
-      SCS: 758784000,
-      Music: 283961768,
-      CN: 330000000,
-      CR: 100100000,
+      TCT: 16124190344,
+      SCME: 9246075311,
+      SCVN: 6878115033,
+      Wofloo: 560000000, WF: 560000000, WO: 560000000,
+      AS: 2363216100,
+      NDTH: 599908060,
+      Lego: 750100325, LEGO: 750100325,
+      DA01: 728834540,
+      SCS: 761994240, Studio: 761994240,
+      Music: 283961768, SCMU: 283961768,
+      CN: 280000000, CNGP: 280000000,
+      CR: 100100000, Creative: 100100000,
     };
 
     // 1. Check kpiDataList FIRST for actual database records
@@ -149,14 +149,49 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
       for (const m of matches) {
         if (m.periods && m.periods[pKey]) {
           let tgt = m.periods[pKey].target || 0;
+          let act = m.periods[pKey].actual || 0;
+          if (pKey.startsWith("monthly_") && act === 0) {
+            const mNum = pKey.replace("monthly_", "");
+            let wSumAct = 0;
+            for (let w = 1; w <= 5; w++) {
+              const wKey = `weekly_${mNum}_${w}`;
+              if (m.periods[wKey]) {
+                wSumAct += m.periods[wKey].actual || 0;
+              }
+            }
+            if (wSumAct === 0 && kpiDataList) {
+              const wMatches = kpiDataList.filter(k => 
+                (k.unitCode === uCode || subSuffixes.some(s => k.code?.endsWith(s) || k.indicatorCode?.endsWith(s))) &&
+                k.periodKey && k.periodKey.startsWith(`weekly_${mNum}_`)
+              );
+              for (const wm of wMatches) {
+                wSumAct += wm.actualValue || wm.actualWeek || wm.actual || 0;
+              }
+            }
+            if (wSumAct > 0) act = wSumAct;
+          }
           if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
             tgt = month8MasterTargets[uCode];
           }
-          return { target: tgt, actual: m.periods[pKey].actual || 0 };
+          return { target: tgt, actual: act };
         }
         if (m.periodKey === pKey) {
           let tgt = m.targetValue ?? m.targetWeek ?? m.targetMonth ?? 0;
           let act = m.actualValue ?? m.actualWeek ?? m.actualMonth ?? 0;
+          if (pKey.startsWith("monthly_") && act === 0) {
+            const mNum = pKey.replace("monthly_", "");
+            let wSumAct = 0;
+            if (kpiDataList) {
+              const wMatches = kpiDataList.filter(k => 
+                (k.unitCode === uCode || subSuffixes.some(s => k.code?.endsWith(s) || k.indicatorCode?.endsWith(s))) &&
+                k.periodKey && k.periodKey.startsWith(`weekly_${mNum}_`)
+              );
+              for (const wm of wMatches) {
+                wSumAct += wm.actualValue || wm.actualWeek || wm.actual || 0;
+              }
+            }
+            if (wSumAct > 0) act = wSumAct;
+          }
           if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
             tgt = month8MasterTargets[uCode];
           }
@@ -188,7 +223,19 @@ export default function MonthlyRevenueProgressChart({ kpiDataList, hideAbsoluteR
     }
 
     if (pKey.startsWith("monthly_") && month === 8 && month8MasterTargets[uCode]) {
-      return { target: month8MasterTargets[uCode], actual: 0 };
+      // Try to aggregate weekly actuals for month 8 before returning 0
+      let wSumAct = 0;
+      if (kpiDataList) {
+        const subSuffixes = ["-Lego", "-WF", "-AS", "-NDTH", "-DA01", "-CR", "-CNGP", "-SCS", "-SCMU", "-WO", "-LEGO"];
+        const wMatches = kpiDataList.filter(k => 
+          (k.unitCode === uCode || (uCode === "SCVN" && (!k.unitCode || k.unitCode === "SCVN")) || subSuffixes.some(s => k.code?.endsWith(s) || k.indicatorCode?.endsWith(s))) &&
+          k.periodKey && k.periodKey.startsWith("weekly_8_")
+        );
+        for (const wm of wMatches) {
+          wSumAct += wm.actualValue || wm.actualWeek || wm.actual || 0;
+        }
+      }
+      return { target: month8MasterTargets[uCode], actual: wSumAct };
     }
 
     return null;

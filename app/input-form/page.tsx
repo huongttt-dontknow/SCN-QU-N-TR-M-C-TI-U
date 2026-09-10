@@ -1935,7 +1935,8 @@ export default function InputFormPage() {
     let curr = kpi;
     const visited = new Set<string>();
     while (curr.parentCode) {
-      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.code);
       visited.add(curr.parentCode);
       const parent = kpis.find(k => isParentChildMatch(k.code, curr.parentCode));
       if (!parent) break;
@@ -1951,7 +1952,8 @@ export default function InputFormPage() {
     let curr = kpi;
     const visited = new Set<string>();
     while (curr.parentCode) {
-      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.code);
       visited.add(curr.parentCode);
       const parent = kpis.find(k => isParentChildMatch(k.code, curr.parentCode));
       if (!parent) break;
@@ -1965,7 +1967,8 @@ export default function InputFormPage() {
     let curr = pk;
     const visited = new Set<string>();
     while (curr.parentCode) {
-      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.code);
       visited.add(curr.parentCode);
       const parent = productKpis.find(k => isParentChildMatch(k.code, curr.parentCode));
       if (!parent) break;
@@ -1981,7 +1984,8 @@ export default function InputFormPage() {
     let curr = pk;
     const visited = new Set<string>();
     while (curr.parentCode) {
-      if (visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
+      visited.add(curr.code);
       visited.add(curr.parentCode);
       const parent = productKpis.find(k => isParentChildMatch(k.code, curr.parentCode));
       if (!parent) break;

@@ -24,6 +24,9 @@ import {
   LabelList
 } from "recharts";
 
+// Client-side in-memory cache for Dashboard KPI data
+const clientKpiCache = new Map<string, { unit: any[]; scvn: any[]; scme: any[] }>();
+
 export default function DashboardPage() {
   const { filters, theme, currentLoggedUser, setFilters } = useApp();
   const isParentUnit = filters.unitCode === "SCVN" || filters.unitCode === "TCT";
@@ -178,14 +181,23 @@ export default function DashboardPage() {
   useEffect(() => {
     let isCancelled = false;
     const fetchDbKpis = async () => {
-      setIsLoadingDb(true);
       const pType = filters.periodType;
-      const pKey = getPeriodKey();
-      
       const m = filters.month || "7";
       const w = filters.week || "1";
       const q = filters.quarter || "Q3";
       const y = filters.year || "2026";
+      const cacheKey = `${filters.unitCode}_${pType}_${m}_${w}_${q}_${y}`;
+
+      if (clientKpiCache.has(cacheKey)) {
+        const cached = clientKpiCache.get(cacheKey)!;
+        setDbKpis(cached.unit);
+        setScvnKpis(cached.scvn);
+        setScmeKpis(cached.scme);
+        setIsLoadingDb(false);
+        return;
+      }
+
+      setIsLoadingDb(true);
 
       try {
         const fetchUnit = fetch(`/api/kpi/unit-data?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}`);
@@ -200,30 +212,34 @@ export default function DashboardPage() {
 
         if (isCancelled) return;
 
+        let unitData: any[] = [];
+        let scvnData: any[] = [];
+        let scmeData: any[] = [];
+
         if (resUnit && resUnit.ok) {
           const data = await resUnit.json();
-          if (Array.isArray(data)) {
-            setDbKpis(data);
-            if (filters.unitCode === "SCVN") setScvnKpis(data);
-            if (filters.unitCode === "SCME") setScmeKpis(data);
-          } else {
-            setDbKpis([]);
-            if (filters.unitCode === "SCVN") setScvnKpis([]);
-            if (filters.unitCode === "SCME") setScmeKpis([]);
-          }
+          if (Array.isArray(data)) unitData = data;
         }
 
         if (resSCVN && resSCVN.ok) {
           const dataSCVN = await resSCVN.json();
-          if (Array.isArray(dataSCVN)) setScvnKpis(dataSCVN);
-          else setScvnKpis([]);
+          if (Array.isArray(dataSCVN)) scvnData = dataSCVN;
+        } else if (filters.unitCode === "SCVN") {
+          scvnData = unitData;
         }
 
         if (resSCME && resSCME.ok) {
           const dataSCME = await resSCME.json();
-          if (Array.isArray(dataSCME)) setScmeKpis(dataSCME);
-          else setScmeKpis([]);
+          if (Array.isArray(dataSCME)) scmeData = dataSCME;
+        } else if (filters.unitCode === "SCME") {
+          scmeData = unitData;
         }
+
+        setDbKpis(unitData);
+        setScvnKpis(scvnData);
+        setScmeKpis(scmeData);
+
+        clientKpiCache.set(cacheKey, { unit: unitData, scvn: scvnData, scme: scmeData });
       } catch (err) {
         console.error("Lỗi khi tải dữ liệu KPI từ database:", err);
       } finally {
@@ -595,6 +611,30 @@ export default function DashboardPage() {
         return false;
       };
 
+      // 1. Pass 1: Try candidateCodes for a match with non-zero actual or target for pKey
+      for (const cCode of candidateCodes) {
+        let match = list.find(k => 
+          isUnitMatch(k) &&
+          (isParentExactMatch(k.indicatorCode, cCode) || isParentExactMatch(k.code, cCode) || isParentExactMatch(k.displayCode, cCode)) && 
+          (k.periodKey === pKey || !k.periodKey) &&
+          (
+            (k.periods && k.periods[pKey] && ((k.periods[pKey].actual || 0) > 0 || (k.periods[pKey].target || 0) > 0)) ||
+            (k.actualMonth || 0) > 0 || (k.targetMonth || 0) > 0 ||
+            (k.actualValue || 0) > 0 || (k.targetValue || 0) > 0
+          )
+        );
+        if (match) {
+          let target = match.periods?.[pKey]?.target ?? (match.targetMonth || match.targetValue || 0);
+          let actual = match.periods?.[pKey]?.actual ?? (match.actualMonth || match.actualValue || 0);
+          return {
+            target,
+            actual,
+            pct: calculateCompletionRate(target, actual, cCode, match.title)
+          };
+        }
+      }
+
+      // 2. Pass 2: Fallback match
       for (const cCode of candidateCodes) {
         let match = list.find(k => 
           isUnitMatch(k) &&
@@ -625,17 +665,14 @@ export default function DashboardPage() {
           );
         }
         if (match) {
+          let target = 0;
+          let actual = 0;
           if (match.periods && match.periods[pKey]) {
-            const target = match.periods[pKey].target || 0;
-            const actual = match.periods[pKey].actual || 0;
-            return {
-              target,
-              actual,
-              pct: calculateCompletionRate(target, actual, cCode, match.title)
-            };
+            target = match.periods[pKey].target || 0;
+            actual = match.periods[pKey].actual || 0;
           } else {
-            let target = (match.target !== undefined ? match.target : (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue)) || 0;
-            let actual = (match.actual !== undefined ? match.actual : (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue)) || 0;
+            target = (match.target !== undefined ? match.target : (match.targetMonth && match.targetMonth > 0 ? match.targetMonth : match.targetValue)) || 0;
+            actual = (match.actual !== undefined ? match.actual : (match.actualMonth && match.actualMonth > 0 ? match.actualMonth : match.actualValue)) || 0;
             if (pKey.startsWith("weekly_")) {
               target = (match.target !== undefined ? match.target : (match.targetWeek && match.targetWeek > 0 ? match.targetWeek : match.targetValue)) || 0;
               actual = (match.actual !== undefined ? match.actual : (match.actualWeek && match.actualWeek > 0 ? match.actualWeek : match.actualValue)) || 0;
@@ -646,12 +683,41 @@ export default function DashboardPage() {
               target = (match.target !== undefined ? match.target : (match.targetYear && match.targetYear > 0 ? match.targetYear : match.targetValue)) || 0;
               actual = (match.actual !== undefined ? match.actual : (match.actualYear && match.actualYear > 0 ? match.actualYear : match.actualValue)) || 0;
             }
-            return {
-              target,
-              actual,
-              pct: calculateCompletionRate(target, actual, cCode, match.title)
-            };
           }
+
+          if (pKey.startsWith("monthly_") && actual === 0) {
+            const mNum = pKey.replace("monthly_", "");
+            let wSumAct = 0;
+            let wSumTgt = 0;
+            for (let w = 1; w <= 5; w++) {
+              const wKey = `weekly_${mNum}_${w}`;
+              if (match.periods && match.periods[wKey]) {
+                wSumAct += match.periods[wKey].actual || 0;
+                wSumTgt += match.periods[wKey].target || 0;
+              }
+            }
+            if (wSumAct === 0) {
+              const wMatches = list.filter(k => 
+                isUnitMatch(k) &&
+                (isParentExactMatch(k.indicatorCode, cCode) || isParentExactMatch(k.code, cCode) || isParentExactMatch(k.displayCode, cCode)) &&
+                k.periodKey && k.periodKey.startsWith(`weekly_${mNum}_`)
+              );
+              for (const wm of wMatches) {
+                wSumAct += wm.actualValue || wm.actualWeek || wm.actual || 0;
+                wSumTgt += wm.targetValue || wm.targetWeek || wm.target || 0;
+              }
+            }
+            if (wSumAct > 0) {
+              actual = wSumAct;
+              if (target === 0) target = wSumTgt;
+            }
+          }
+
+          return {
+            target,
+            actual,
+            pct: calculateCompletionRate(target, actual, cCode, match.title)
+          };
         }
       }
       return null;
@@ -733,34 +799,35 @@ export default function DashboardPage() {
     ];
   }
 
+  const month8MasterTargets: Record<string, number> = {
+    TCT: 16124190344,
+    SCME: 9246075311,
+    SCVN: 6878115033,
+    Wofloo: 560000000, WF: 560000000, WO: 560000000,
+    AS: 2363216100,
+    NDTH: 599908060,
+    Lego: 750100325, LEGO: 750100325,
+    DA01: 728834540,
+    SCS: 761994240, Studio: 761994240,
+    Music: 283961768, SCMU: 283961768,
+    CN: 280000000, CNGP: 280000000,
+    CR: 100100000, Creative: 100100000,
+  };
+
   const barComparisonData = unitList.map(u => {
     const codeToQuery = u.code === "TCT" ? "TM1-I02.01" : u.code === "SCME" ? "EM1-I02.01" : "VM1-I02.01";
     const rec = getKpiRecord(u.code, codeToQuery, periodKey);
     let target = rec?.target ? Math.round(rec.target / 1e6) : 0;
     let revenue = rec?.actual ? Math.round(rec.actual / 1e6) : 0;
 
-    // Nếu là báo cáo tháng và chưa có số liệu thực tế tháng, cộng dồn từ các tuần của tháng đó
-    if (filters.periodType === "monthly" && revenue === 0) {
-      const uDict = MASTER_KPI_DATA[u.code] || {};
-      const key = u.code === "NDTH" ? "2.1" : "VM1-I02.01";
-      const kpiItem = uDict[key];
-      if (kpiItem && kpiItem.periods) {
-        let sumAct = 0;
-        const m = Number(filters.month) || 7;
-        for (let w = 1; w <= 5; w++) {
-          const wKey = `weekly_${m}_${w}`;
-          if (kpiItem.periods[wKey]) {
-            sumAct += kpiItem.periods[wKey].actual ?? 0;
-          }
-        }
-        if (sumAct > 0) {
-          revenue = Math.round(sumAct / 1e6);
-        }
-      }
+    if (filters.periodType === "monthly" && Number(filters.month) === 8 && month8MasterTargets[u.code]) {
+      target = Math.round(month8MasterTargets[u.code] / 1e6);
     }
 
     let completion = 0;
-    if (rec) {
+    if (target > 0) {
+      completion = Math.round((revenue / target) * 100);
+    } else if (rec && rec.pct > 0) {
       completion = Math.round(rec.pct * 100);
     } else {
       completion = Math.round(calculateCompletionRate(target, revenue, "VM1-I02.01") * 100);
@@ -840,29 +907,31 @@ export default function DashboardPage() {
       const mRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${mIdx}`);
       let mAct = mRec?.actual || 0;
       let mTgt = mRec?.target || 0;
-      if (mAct === 0) {
-        for (let w = 1; w <= 5; w++) {
-          const wRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `weekly_${mIdx}_${w}`);
-          if (wRec && wRec.actual) {
-            mAct += wRec.actual;
-          } else if (uPeriods[`weekly_${mIdx}_${w}`]?.actual) {
-            mAct += uPeriods[`weekly_${mIdx}_${w}`].actual;
-          }
+      let wActSum = 0;
+      for (let w = 1; w <= 5; w++) {
+        const wRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `weekly_${mIdx}_${w}`);
+        if (wRec && wRec.actual) {
+          wActSum += wRec.actual;
+        } else if (uPeriods[`weekly_${mIdx}_${w}`]?.actual) {
+          wActSum += uPeriods[`weekly_${mIdx}_${w}`]?.actual || 0;
         }
+      }
+      if (mAct === 0 || wActSum > mAct) {
+        mAct = Math.max(mAct, wActSum);
       }
       sumMonthAct += mAct;
       sumMonthTarget += mTgt;
     }
 
-    // Sum targets for all 3 months in the quarter to form the total quarter target (e.g. 1.990.450.000 for DA01 Q2)
+    // Sum targets for all 3 months in the quarter to form the total quarter target if qTarget is zero
     let fullQuarterTarget = qTarget;
-    if (fullQuarterTarget === 0 || filters.periodType === "monthly") {
+    if (fullQuarterTarget === 0) {
       let qTargetSum = 0;
       for (let mIdx = startM; mIdx < startM + 3; mIdx++) {
         const mRec = getKpiRecord(filters.unitCode, "VM1-I02.01", `monthly_${mIdx}`);
         qTargetSum += mRec?.target || 0;
       }
-      fullQuarterTarget = qTargetSum > 0 ? qTargetSum : (qTarget > 0 ? qTarget : sumMonthTarget);
+      fullQuarterTarget = qTargetSum > 0 ? qTargetSum : sumMonthTarget;
     }
 
     const qActualReal = qActual > 0 ? qActual : sumMonthAct;
@@ -920,22 +989,33 @@ export default function DashboardPage() {
   } else {
     // Xem báo cáo Tháng: Lấy Kế hoạch Tháng (Master Target 6.69 Tỷ cho SCVN) & Lũy kế Thực tế Tháng
     const month8MasterTargets: Record<string, number> = {
-      SCVN: 6691075313,
+      TCT: 16124190344,
+      SCME: 9246075311,
+      SCVN: 6878115033,
       Wofloo: 560000000, WF: 560000000, WO: 560000000,
-      AS: 2096797220,
-      NDTH: 600000000,
+      AS: 2363216100,
+      NDTH: 599908060,
       Lego: 750100325, LEGO: 750100325,
-      DA01: 761332000,
-      SCS: 758784000, Studio: 758784000,
+      DA01: 728834540,
+      SCS: 761994240, Studio: 761994240,
       Music: 283961768, SCMU: 283961768,
-      CN: 330000000, CNGP: 330000000,
+      CN: 280000000, CNGP: 280000000,
       CR: 100100000, Creative: 100100000,
     };
     card1TargetRaw = (filters.month === "8" && month8MasterTargets[filters.unitCode]) 
       ? month8MasterTargets[filters.unitCode] 
       : (scvnRevRec?.target || 0);
 
-    card1ActualRaw = scvnRevRec?.actual || 0;
+    let scvnActRaw = scvnRevRec?.actual || 0;
+    if (scvnActRaw === 0 && (filters.unitCode === "SCVN" || filters.unitCode === "TCT")) {
+      unitList.forEach(u => {
+        const uRec = getKpiRecord(u.code, "VM1-I02.01", periodKey);
+        if (uRec && uRec.actual) {
+          scvnActRaw += uRec.actual;
+        }
+      });
+    }
+    card1ActualRaw = scvnActRaw;
   }
 
   const revTargetVal = card1TargetRaw > 0 
@@ -959,17 +1039,20 @@ export default function DashboardPage() {
   const topUnit = [...barComparisonData].sort((a, b) => b.completion - a.completion)[0] || { name: "Dự án 01", completion: 88 };
 
   // Card 4: Kỷ luật (Tháng/Quý/Năm) vs Biến động doanh thu cao nhất (Tuần)
-  let discValNum = 97.22;
+  let discValNum = 0;
+  let hasDisciplineData = false;
   if (scvnDisciplineRec && scvnDisciplineRec.actual !== undefined && scvnDisciplineRec.actual !== null && scvnDisciplineRec.actual !== 0) {
+    hasDisciplineData = true;
     if (scvnDisciplineRec.actual > 0 && scvnDisciplineRec.actual <= 1) {
       discValNum = Math.round(scvnDisciplineRec.actual * 10000) / 100;
     } else {
       discValNum = Math.round(scvnDisciplineRec.actual * 100) / 100;
     }
-  } else if (scvnDisciplineRec?.pct) {
+  } else if (scvnDisciplineRec?.pct && scvnDisciplineRec.pct > 0) {
+    hasDisciplineData = true;
     discValNum = Math.round(scvnDisciplineRec.pct * 10000) / 100;
   }
-  const disciplinePct = `${discValNum}%`;
+  const disciplinePct = hasDisciplineData ? `${discValNum}%` : "Chưa có dữ liệu";
 
   // Tính toán biến động doanh thu theo tuần cho 9 đơn vị
   const getPrevWeeklyPeriodKey = (mStr: string, wStr: string) => {
@@ -1104,10 +1187,12 @@ export default function DashboardPage() {
   const getMonthlyTrendData = () => {
     const data = [];
     const normUnit = (filters.unitCode === "WF" || filters.unitCode === "WO") ? "Wofloo" : (filters.unitCode === "SCMU") ? "Music" : (filters.unitCode === "CNGP") ? "CN" : (filters.unitCode === "Studio") ? "SCS" : (filters.unitCode === "Creative") ? "CR" : (filters.unitCode === "LEGO") ? "Lego" : filters.unitCode;
+    const currentMNum = Number(filters.month) || 8;
+
     for (let m = 1; m <= 12; m++) {
       const mKey = `monthly_${m}`;
       
-      // Check if this month has any data for the selected unit
+      // Check if this month has any data for the selected unit (in MASTER_KPI_DATA or in DB)
       let hasMonth = false;
       const u = MASTER_KPI_DATA[normUnit] || MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
       for (const k in u) {
@@ -1116,31 +1201,64 @@ export default function DashboardPage() {
           break;
         }
       }
+
+      const revRec = getKpiRecord(filters.unitCode, "VM1-I02.01", mKey);
+      const trafRec = getKpiRecord(filters.unitCode, "VM3-I01.02", mKey) || getKpiRecord(filters.unitCode, "VM3-I01.01", mKey);
+
+      if (revRec && ((revRec.actual || 0) > 0 || (revRec.target || 0) > 0)) {
+        hasMonth = true;
+      }
+      if (trafRec && ((trafRec.actual || 0) > 0 || (trafRec.target || 0) > 0)) {
+        hasMonth = true;
+      }
+      if (m <= currentMNum && m <= 8 && filters.periodType === "monthly") {
+        hasMonth = true;
+      }
+
       if (!hasMonth) continue;
 
-      const revAct = getKpiRecord(filters.unitCode, "VM1-I02.01", mKey)?.actual ?? 0;
-      const revTgt = getKpiRecord(filters.unitCode, "VM1-I02.01", mKey)?.target ?? 0;
+      const revAct = revRec?.actual ?? 0;
+      const revTgt = revRec?.target ?? 0;
       
       // Get traffic actuals
-      let trafAct = 0;
-      const uDict = MASTER_KPI_DATA[normUnit] || MASTER_KPI_DATA[filters.unitCode] || {};
-      for (const k in uDict) {
-        const v = uDict[k];
-        const t = (v.title || "").toUpperCase();
-        const uStr = (v.unit || "").toUpperCase();
-        const kStr = k.toUpperCase();
-        if (
-          (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
-          !uStr.includes("CTR") &&
-          !uStr.includes("TB/1")
-        ) {
-          const pData = v.periods?.[mKey];
-          if (pData && pData.actual !== undefined) {
-            if (pData.actual > trafAct) {
-              trafAct = pData.actual;
+      let trafAct = trafRec?.actual ?? 0;
+      let trafTgt = trafRec?.target ?? 0;
+
+      if (trafAct === 0) {
+        const uDict = MASTER_KPI_DATA[normUnit] || MASTER_KPI_DATA[filters.unitCode] || {};
+        for (const k in uDict) {
+          const v = uDict[k];
+          const t = (v.title || "").toUpperCase();
+          const uStr = (v.unit || "").toUpperCase();
+          const kStr = k.toUpperCase();
+          if (
+            (t.includes("VIEW") || t.includes("TRAFFIC") || uStr.includes("VIEWS") || kStr.includes("VIEW") || kStr.includes("3.1") || kStr.includes("TM3-I01.02") || kStr.includes("VM3-I01.02")) &&
+            !uStr.includes("CTR") &&
+            !uStr.includes("TB/1")
+          ) {
+            const pData = v.periods?.[mKey];
+            if (pData && pData.actual !== undefined) {
+              if (pData.actual > trafAct) {
+                trafAct = pData.actual;
+              }
             }
           }
         }
+      }
+
+      if (trafAct === 0 && !isParentUnit && productKpis.length > 0 && m === currentMNum) {
+        let sumProdAct = 0;
+        productKpis.forEach(r => {
+          const code = (r.indicatorCode || r.code || "").toUpperCase();
+          const unit = (r.unit || "").toUpperCase();
+          if (
+            (code.endsWith("VM3-I01.02") || code.endsWith("TM3-I01.02") || code.endsWith("MM3-I01.01")) &&
+            !unit.includes("CTR") && !unit.includes("TB/1")
+          ) {
+            sumProdAct += r.actualValue ?? r.actualMonth ?? r.actual ?? 0;
+          }
+        });
+        if (sumProdAct > 0) trafAct = sumProdAct;
       }
 
       data.push({
@@ -1250,18 +1368,18 @@ export default function DashboardPage() {
         
         let dbMatch = null;
         let mappedCode = "";
-        if (u.code === "Wofloo") mappedCode = "VM3-I01.02-WF";
+        if (u.code === "Wofloo" || u.code === "WF" || u.code === "WO") mappedCode = "VM3-I01.02-WF";
         else if (u.code === "AS") mappedCode = "VM3-I01.02-AS";
         else if (u.code === "NDTH") mappedCode = "VM3-I01.02-NDTH";
-        else if (u.code === "Lego") mappedCode = "VM3-I01.02-Lego";
-        else if (u.code === "DA01") mappedCode = "DM3-I01.03";
-        else if (u.code === "SCS") mappedCode = "SM3-I01.04";
-        else if (u.code === "Music") mappedCode = "MM3-I01.01";
-        else if (u.code === "CN") mappedCode = "NM3-I01.05";
-        else if (u.code === "CR") mappedCode = "CM3-I01.01";
+        else if (u.code === "Lego" || u.code === "LEGO") mappedCode = "VM3-I01.02-Lego";
+        else if (u.code === "DA01") mappedCode = "DM3-I01.03-DA01";
+        else if (u.code === "SCS" || u.code === "Studio") mappedCode = "SM3-I01.04-SCS";
+        else if (u.code === "Music" || u.code === "SCMU") mappedCode = "MM3-I01.01-SCMU";
+        else if (u.code === "CN" || u.code === "CNGP") mappedCode = "NM3-I01.05-CNGP";
+        else if (u.code === "CR" || u.code === "Creative") mappedCode = "CM3-I01.01-CR";
 
         if (scvnKpis && scvnKpis.length > 0) {
-          dbMatch = scvnKpis.find(k => k.code === mappedCode);
+          dbMatch = scvnKpis.find(k => k.code === mappedCode || k.indicatorCode === mappedCode);
         }
 
         if (dbMatch) {
@@ -1277,6 +1395,10 @@ export default function DashboardPage() {
           } else if (periodKey.startsWith("yearly_")) {
             target = dbMatch.targetYear || 0;
             actual = dbMatch.actualYear || 0;
+          }
+          if (dbMatch.periods && dbMatch.periods[periodKey]) {
+            target = dbMatch.periods[periodKey].target ?? target;
+            actual = dbMatch.periods[periodKey].actual ?? actual;
           }
         } else {
           const uDict = MASTER_KPI_DATA[u.code] || {};
@@ -1518,45 +1640,58 @@ export default function DashboardPage() {
   // 3. Tính BXH Hoàn Thành Sản Xuất (M2)
   const getUnitProductionData = (uCode: string, pKey: string) => {
     const m2CodeMap: Record<string, string[]> = {
-      Wofloo: ["VM2-I01.01-WF", "VM2-I01.01"],
-      WF: ["VM2-I01.01-WF", "VM2-I01.01"],
-      WO: ["VM2-I01.01-WF", "VM2-I01.01"],
-      Lego: ["VM2-I01.01-Lego", "VM2-I01.01"],
-      LEGO: ["VM2-I01.01-Lego", "VM2-I01.01"],
-      AS: ["VM2-I01.01-AS", "VM2-I01.01"],
+      Wofloo: ["VM2-I01.01-WF"],
+      WF: ["VM2-I01.01-WF"],
+      WO: ["VM2-I01.01-WF"],
+      Lego: ["VM2-I01.01-Lego", "VM2-I01.04"],
+      LEGO: ["VM2-I01.01-Lego", "VM2-I01.04"],
+      AS: ["VM2-I01.01-AS"],
       DA01: ["DM2-I01.01-DA01", "DM2-I01.01", "VM2-I01.01-DA01"],
-      Music: ["PM2-I01.01", "PM2-I01.01-SCMU", "MM2-I01.01-SCMU", "MM2-I01.01"],
-      SCMU: ["PM2-I01.01", "PM2-I01.01-SCMU", "MM2-I01.01-SCMU", "MM2-I01.01"],
+      Music: ["MM2-I01.01-SCMU", "PM2-I01.01-SCMU", "MM2-I01.01", "PM2-I01.01"],
+      SCMU: ["MM2-I01.01-SCMU", "PM2-I01.01-SCMU", "MM2-I01.01", "PM2-I01.01"],
       NDTH: ["VM2-I01.02-NDTH", "VM2-I01.02", "VM2-I01.01-NDTH"],
       CR: ["CM2-I01.01-CR", "CM2-I01.01"],
       Creative: ["CM2-I01.01-CR", "CM2-I01.01"],
-      CN: ["NM2-I01.01-CNGP", "NM2-I01.01"],
-      CNGP: ["NM2-I01.01-CNGP", "NM2-I01.01"],
+      CN: ["NM2-I01.01-CNGP", "NM2-I01.01", "NM2-I01"],
+      CNGP: ["NM2-I01.01-CNGP", "NM2-I01.01", "NM2-I01"],
       SCS: ["SM2-I01.01-SCS", "SM2-I01.01"],
-      Studio: ["SM2-I01.01-SCS", "SM2-I01.01"]
+      Studio: ["SM2-I01.01-SCS", "SM2-I01.01"],
+      SCVN: ["VM2-I01.01"],
+      TCT: ["TM2-I01.01", "VM2-I01.01"]
     };
-    const targetCodes = m2CodeMap[uCode] || ["VM2-I01.01"];
+    const targetCodes = m2CodeMap[uCode] || [];
     
     const listToSearch = [...(dbKpis || []), ...(scvnKpis || [])];
     if (listToSearch && listToSearch.length > 0) {
       const matches = listToSearch.filter(k => 
+        (targetCodes.includes(k.code) || targetCodes.includes(k.indicatorCode)) &&
         (k.unitCode === uCode || k.unitCode === "SCVN" || !k.unitCode) &&
-        k.unitCode !== "TCT" &&
-        (targetCodes.includes(k.code) || targetCodes.includes(k.indicatorCode))
+        (uCode === "TCT" || k.unitCode !== "TCT")
       );
+
       if (matches.length > 0) {
+        // Prioritize exact period matches
         matches.sort((a, b) => {
+          const aPeriodMatch = (a.periodKey === pKey || (a.periods && a.periods[pKey])) ? 1 : 0;
+          const bPeriodMatch = (b.periodKey === pKey || (b.periods && b.periods[pKey])) ? 1 : 0;
+          if (aPeriodMatch !== bPeriodMatch) return bPeriodMatch - aPeriodMatch;
           if (a.unitCode === uCode && b.unitCode !== uCode) return -1;
           if (b.unitCode === uCode && a.unitCode !== uCode) return 1;
-          return (b.actualValue || b.actualWeek || 0) - (a.actualValue || a.actualWeek || 0);
+          return (b.actualValue || b.actualMonth || 0) - (a.actualValue || a.actualMonth || 0);
         });
+
         const dbMatch = matches[0];
-        let tgt = dbMatch.targetValue || dbMatch.targetWeek || 0;
-        let act = dbMatch.actualValue || dbMatch.actualWeek || 0;
+        let tgt = 0;
+        let act = 0;
+
         if (dbMatch.periods && dbMatch.periods[pKey]) {
-          tgt = dbMatch.periods[pKey].target || tgt;
-          act = dbMatch.periods[pKey].actual || act;
+          tgt = dbMatch.periods[pKey].target ?? 0;
+          act = dbMatch.periods[pKey].actual ?? 0;
+        } else if (dbMatch.periodKey === pKey || !dbMatch.periodKey) {
+          tgt = dbMatch.targetValue ?? dbMatch.targetMonth ?? dbMatch.targetWeek ?? dbMatch.targetQuarter ?? dbMatch.targetYear ?? 0;
+          act = dbMatch.actualValue ?? dbMatch.actualMonth ?? dbMatch.actualWeek ?? dbMatch.actualQuarter ?? dbMatch.actualYear ?? 0;
         }
+
         if (tgt > 0 || act > 0) {
           return { item: dbMatch, rec: { target: tgt, actual: act } };
         }
@@ -1564,14 +1699,26 @@ export default function DashboardPage() {
     }
 
     // 2. Fallback sang MASTER_KPI_DATA
-    const uDict = MASTER_KPI_DATA[uCode] || {};
+    const uDict = MASTER_KPI_DATA[uCode] || MASTER_KPI_DATA[uCode === "WF" || uCode === "WO" ? "Wofloo" : uCode === "SCMU" ? "Music" : uCode === "CNGP" ? "CN" : uCode === "Studio" ? "SCS" : uCode === "Creative" ? "CR" : uCode === "LEGO" ? "Lego" : uCode] || {};
     const candidates: { item: any; rec: any }[] = [];
-    const prioKeys = ["VM2-I01.01", "VM2-I01.04", "VM2-I01", "MM1-I03.01", "NM2-I01"];
-    for (const pk of prioKeys) {
+    
+    for (const pk of targetCodes) {
       if (uDict[pk]) {
         const pData = uDict[pk].periods?.[pKey];
         if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
           candidates.push({ item: uDict[pk], rec: pData });
+        }
+      }
+    }
+
+    const prioKeys = ["VM2-I01.01-WF", "VM2-I01.01-AS", "VM2-I01.01-Lego", "VM2-I01.02-NDTH", "DM2-I01.01-DA01", "MM2-I01.01-SCMU", "SM2-I01.01-SCS", "NM2-I01.01-CNGP", "CM2-I01.01-CR", "VM2-I01.04", "MM1-I03.01", "NM2-I01"];
+    if (candidates.length === 0) {
+      for (const pk of prioKeys) {
+        if (uDict[pk]) {
+          const pData = uDict[pk].periods?.[pKey];
+          if (pData && (pData.actual !== undefined || pData.target !== undefined)) {
+            candidates.push({ item: uDict[pk], rec: pData });
+          }
         }
       }
     }
@@ -1603,7 +1750,9 @@ export default function DashboardPage() {
     return candidates[0];
   };
 
-  const bxhProductionData = unitList.map(u => {
+  const bxhProductionData = unitList
+    .filter(u => u.code !== "CN" && u.code !== "CNGP" && u.code !== "SCVN" && u.code !== "TCT")
+    .map(u => {
     const res = getUnitProductionData(u.code, periodKey);
     if (!res) {
       return { name: u.label, val: "0 Video", pctRaw: 0, pctStr: "0%", tgt: 0, act: 0 };
@@ -1636,13 +1785,23 @@ export default function DashboardPage() {
   if (isParentUnit) {
     const listToSearch = [...(scvnKpis || []), ...(dbKpis || [])];
     const exactScvnProd = listToSearch.find(k => 
-      k.unitCode === "SCVN" && 
+      (k.unitCode === "SCVN" || !k.unitCode) && 
       (k.indicatorCode === "VM2-I01.01" || k.code === "VM2-I01.01") &&
       (k.periodKey === periodKey || !k.periodKey)
     );
     if (exactScvnProd) {
-      volTargetVal = exactScvnProd.targetValue ?? exactScvnProd.targetWeek ?? 0;
-      volActualVal = exactScvnProd.actualValue ?? exactScvnProd.actualWeek ?? 0;
+      const pTarget = filters.periodType === "monthly" ? exactScvnProd.targetMonth 
+        : filters.periodType === "quarterly" ? exactScvnProd.targetQuarter 
+        : filters.periodType === "yearly" ? exactScvnProd.targetYear 
+        : exactScvnProd.targetWeek;
+
+      const pActual = filters.periodType === "monthly" ? exactScvnProd.actualMonth 
+        : filters.periodType === "quarterly" ? exactScvnProd.actualQuarter 
+        : filters.periodType === "yearly" ? exactScvnProd.actualYear 
+        : exactScvnProd.actualWeek;
+
+      volTargetVal = exactScvnProd.targetValue ?? pTarget ?? exactScvnProd.targetWeek ?? 0;
+      volActualVal = exactScvnProd.actualValue ?? pActual ?? exactScvnProd.actualWeek ?? 0;
       if (exactScvnProd.periods && exactScvnProd.periods[periodKey]) {
         volTargetVal = exactScvnProd.periods[periodKey].target ?? volTargetVal;
         volActualVal = exactScvnProd.periods[periodKey].actual ?? volActualVal;
@@ -1650,8 +1809,8 @@ export default function DashboardPage() {
     } else {
       const scvnMaster = MASTER_KPI_DATA["SCVN"]?.["VM2-I01.01"];
       const pData = scvnMaster?.periods?.[periodKey];
-      volTargetVal = pData?.target ?? (scvnVolRec?.target ?? 50);
-      volActualVal = pData?.actual ?? (scvnVolRec?.actual ?? 45);
+      volTargetVal = pData?.target ?? (scvnVolRec?.target ?? 0);
+      volActualVal = pData?.actual ?? (scvnVolRec?.actual ?? 0);
     }
   } else {
     const unitProd = getUnitProductionData(filters.unitCode, periodKey);
@@ -1670,11 +1829,11 @@ export default function DashboardPage() {
       else if (uCode === "AS") mappedCode = "VM3-I01.02-AS";
       else if (uCode === "NDTH") mappedCode = "VM3-I01.02-NDTH";
       else if (uCode === "Lego" || uCode === "LEGO") mappedCode = "VM3-I01.02-Lego";
-      else if (uCode === "DA01") mappedCode = "DM3-I01.03";
-      else if (uCode === "SCS" || uCode === "Studio") mappedCode = "SM3-I01.04";
-      else if (uCode === "Music" || uCode === "SCMU") mappedCode = "MM3-I01.01";
-      else if (uCode === "CN" || uCode === "CNGP") mappedCode = "NM3-I01.05";
-      else if (uCode === "CR" || uCode === "Creative") mappedCode = "CM3-I01.01";
+      else if (uCode === "DA01") mappedCode = "DM3-I01.03-DA01";
+      else if (uCode === "SCS" || uCode === "Studio") mappedCode = "SM3-I01.04-SCS";
+      else if (uCode === "Music" || uCode === "SCMU") mappedCode = "MM3-I01.01-SCMU";
+      else if (uCode === "CN" || uCode === "CNGP") mappedCode = "NM3-I01.05-CNGP";
+      else if (uCode === "CR" || uCode === "Creative") mappedCode = "CM3-I01.01-CR";
 
       const dbMatch = scvnKpis.find(k => (k.code === mappedCode || k.indicatorCode === mappedCode || ((k.unitCode === uCode || (uCode === "WF" || uCode === "WO") && k.unitCode === "Wofloo") && (k.indicatorCode?.includes("M3-I01") || k.indicatorCode?.includes("VIEW")))));
       if (dbMatch) {

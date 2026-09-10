@@ -25,7 +25,11 @@ export async function GET(request: Request) {
 
     if (!isCurrDynamic) {
       // Trả về dữ liệu tĩnh cho các kỳ trước Tháng 7/2026
-      return NextResponse.json(staticData);
+      return NextResponse.json(staticData, {
+        headers: {
+          "Cache-Control": "public, s-maxage=10, stale-while-revalidate=59"
+        }
+      });
     }
 
     // 3. Kỳ này là kỳ động -> Cần đọc từ DB

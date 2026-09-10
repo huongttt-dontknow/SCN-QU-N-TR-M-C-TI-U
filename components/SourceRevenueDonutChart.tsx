@@ -19,47 +19,54 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
   useEffect(() => {
     let isMounted = true;
 
-    const resolveSourceVal = (code: string, keywords: string[], apiList: any[]) => {
-      // 1. Check API list
-      const apiMatch = apiList.find((r: any) => 
-        (r.indicatorCode === code || r.code === code || keywords.some(kw => (r.title || "").toUpperCase().includes(kw))) &&
-        ((r.actualValue || 0) > 0 || (r.targetValue || 0) > 0 || (r.actual || 0) > 0 || (r.target || 0) > 0)
-      );
-      if (apiMatch) {
-        const val = apiMatch.actualValue ?? apiMatch.actual ?? apiMatch.targetValue ?? apiMatch.target ?? 0;
-        if (val > 0) return Math.round(val / 1e6);
+    const normU = (unitCode === "WF" || unitCode === "WO") ? "Wofloo" : (unitCode === "SCMU") ? "Music" : (unitCode === "CNGP") ? "CN" : (unitCode === "Studio") ? "SCS" : (unitCode === "Creative") ? "CR" : (unitCode === "LEGO") ? "Lego" : unitCode;
+    const mKey = periodKey.startsWith("weekly_") ? `monthly_${periodKey.split("_")[1]}` : periodKey.startsWith("quarterly_") ? `quarterly_${periodKey.split("_")[1]}` : periodKey;
+
+    const resolveSourceVal = (code: string, uCodeTarget: string, apiList: any[]) => {
+      const targetU = uCodeTarget || normU;
+      
+      // 1. Exact match in apiList with current periodKey
+      let match = apiList.find((r: any) => (r.indicatorCode === code || r.code === code) && r.periodKey === periodKey && (r.unitCode === targetU || !r.unitCode));
+      if (match) {
+        const v = match.actualValue ?? match.actualMonth ?? match.actualWeek ?? match.targetValue ?? 0;
+        if (v > 0) return v;
       }
 
-      // 2. Check MASTER_KPI_DATA
-      const uDict = MASTER_KPI_DATA[unitCode] || MASTER_KPI_DATA["SCVN"] || {};
-      let mRec = uDict[code];
-      if (!mRec) {
-        for (const k in uDict) {
-          const v = uDict[k];
-          const t = (v.title || "").toUpperCase();
-          if (keywords.some(kw => t.includes(kw))) {
-            mRec = v;
-            break;
-          }
+      // 2. Check periods dict in apiList match
+      match = apiList.find((r: any) => (r.indicatorCode === code || r.code === code) && r.periods?.[periodKey] && (r.unitCode === targetU || !r.unitCode));
+      if (match && match.periods[periodKey]) {
+        const v = match.periods[periodKey].actual ?? match.periods[periodKey].target ?? 0;
+        if (v > 0) return v;
+      }
+
+      // 3. Fallback to mKey in apiList match
+      match = apiList.find((r: any) => (r.indicatorCode === code || r.code === code) && r.periods?.[mKey] && (r.unitCode === targetU || !r.unitCode));
+      if (match && match.periods[mKey]) {
+        const v = match.periods[mKey].actual ?? match.periods[mKey].target ?? 0;
+        if (v > 0) return v;
+      }
+
+      // 4. Check MASTER_KPI_DATA
+      const uDict = MASTER_KPI_DATA[targetU] || {};
+      const mRec = uDict[code];
+      if (mRec && mRec.periods) {
+        const p = mRec.periods[periodKey] || mRec.periods[mKey] || mRec.periods["monthly_8"];
+        if (p) {
+          const v = p.actual ?? p.target ?? 0;
+          if (v > 0) return v;
         }
       }
-      if (mRec && mRec.periods && mRec.periods[periodKey]) {
-        const p = mRec.periods[periodKey];
-        const val = p.actual || p.target || 0;
-        if (val > 0) return Math.round(val / 1e6);
-      }
-
       return 0;
     };
 
     const fetches = unitCode === "TCT"
       ? [
-          fetch(`/api/kpi?unitCode=TCT&periodKey=${periodKey}`).then(r => r.json()).catch(() => []),
-          fetch(`/api/kpi?unitCode=SCVN&periodKey=${periodKey}`).then(r => r.json()).catch(() => []),
-          fetch(`/api/kpi?unitCode=SCME&periodKey=${periodKey}`).then(r => r.json()).catch(() => [])
+          fetch(`/api/kpi/unit-data?unitCode=TCT&periodKey=${periodKey}`).then(r => r.json()).catch(() => []),
+          fetch(`/api/kpi/unit-data?unitCode=SCVN&periodKey=${periodKey}`).then(r => r.json()).catch(() => []),
+          fetch(`/api/kpi/unit-data?unitCode=SCME&periodKey=${periodKey}`).then(r => r.json()).catch(() => [])
         ]
       : [
-          fetch(`/api/kpi?unitCode=${unitCode}&periodKey=${periodKey}`).then(r => r.json()).catch(() => [])
+          fetch(`/api/kpi/unit-data?unitCode=${unitCode}&periodKey=${periodKey}`).then(r => r.json()).catch(() => [])
         ];
 
     Promise.all(fetches)
@@ -70,10 +77,10 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
         let rawSources: { name: string; value: number }[] = [];
 
         if (unitCode === "TCT") {
-          const sangTaoND = resolveSourceVal("VM1-I02.01", ["SÁNG TẠO", "SCVN"], apiList);
-          const capQuyen = resolveSourceVal("EM1-I02.01-TM", ["CẤP QUYỀN", "THƯƠNG MẠI"], apiList);
-          const mcn = resolveSourceVal("EM1-I02.01-MCN", ["MCN"], apiList);
-          const doanhThuKhac = resolveSourceVal("TM1-I02.02", ["KHÁC"], apiList);
+          const sangTaoND = Math.round(resolveSourceVal("VM1-I02.01", "SCVN", apiList) / 1e6);
+          const capQuyen = Math.round(resolveSourceVal("EM1-I02.01-TM", "SCME", apiList) / 1e6);
+          const mcn = Math.round(resolveSourceVal("EM1-I02.01-MCN", "SCME", apiList) / 1e6);
+          const doanhThuKhac = Math.round(resolveSourceVal("TM1-I02.02", "TCT", apiList) / 1e6);
 
           rawSources = [
             { name: "Sáng tạo nội dung số (SCVN)", value: sangTaoND },
@@ -82,30 +89,63 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
             { name: "Doanh thu khác (TCT)", value: doanhThuKhac },
           ];
         } else if (unitCode === "SCME") {
-          const mcn = resolveSourceVal("EM1-I02.01-MCN", ["MCN", "KINH DOANH MCN"], apiList);
-          const capQuyen = resolveSourceVal("EM1-I02.01-TM", ["CẤP QUYỀN", "THƯƠNG MẠI", "DISTRIBUTION"], apiList);
-          const khaiThac = resolveSourceVal("EM1-I02.01-KT", ["KHAI THÁC", "KHO NỘI BỘ"], apiList);
+          const mcn = Math.round(resolveSourceVal("EM1-I02.01-MCN", "SCME", apiList) / 1e6);
+          const capQuyen = Math.round(resolveSourceVal("EM1-I02.01-TM", "SCME", apiList) / 1e6);
+          const khaiThac = Math.round(resolveSourceVal("EM1-I02.01-KT", "SCME", apiList) / 1e6);
 
           rawSources = [
             { name: "Kinh doanh MCN", value: mcn > 0 ? mcn : 1620 },
             { name: "Cấp quyền / Distribution", value: capQuyen > 0 ? capQuyen : 850 },
             { name: "Khai thác kho nội bộ", value: khaiThac > 0 ? khaiThac : 410 },
           ];
-        } else {
-          const noibo = resolveSourceVal("VM1-I02.02", ["NỘI BỘ"], apiList);
-          const cheo = resolveSourceVal("VM1-I02.03", ["CHÉO"], apiList);
-          const doitac = resolveSourceVal("VM1-I02.04", ["ĐỐI TÁC"], apiList);
-          const khac = resolveSourceVal("VM1-I05.03", ["KHÁC"], apiList);
-          const quyIp = resolveSourceVal("VM1-I05.04", ["QUỸ IP"], apiList);
+        } else if (unitCode === "SCVN") {
+          const doitac = Math.round(resolveSourceVal("VM1-I02.04", "SCVN", apiList) / 1e6);
+          const noibo = Math.round(resolveSourceVal("VM1-I02.02", "SCVN", apiList) / 1e6);
+          const quyIp = Math.round(resolveSourceVal("VM1-I02.01-IP", "SCVN", apiList) / 1e6);
+          const cheo = Math.round(resolveSourceVal("VM1-I02.03", "SCVN", apiList) / 1e6);
 
           rawSources = [
+            { name: "Doanh thu đối tác (kênh)", value: doitac },
             { name: "Doanh thu nội bộ", value: noibo },
+            { name: "Quỹ IP", value: quyIp },
             { name: "Doanh thu chéo", value: cheo },
-            { name: "Doanh thu đối tác", value: doitac },
           ];
+        } else {
+          const suffixMap: Record<string, string> = { Wofloo: "-WF", AS: "-AS", Lego: "-Lego", NDTH: "-NDTH", DA01: "-DA01", Music: "-SCMU", SCS: "-SCS", CN: "-CNGP", CR: "-CR" };
+          const sfx = suffixMap[normU] || "";
+          
+          let doitac = Math.round(resolveSourceVal(`VM1-I02.04${sfx}`, normU, apiList) / 1e6);
+          let noibo = Math.round(resolveSourceVal(`VM1-I02.02${sfx}`, normU, apiList) / 1e6);
+          let cheo = Math.round(resolveSourceVal(`VM1-I02.03${sfx}`, normU, apiList) / 1e6);
+          let quyIp = Math.round(resolveSourceVal(`VM1-I02.01-IP${sfx}`, normU, apiList) / 1e6);
 
-          if (khac > 0) rawSources.push({ name: "Doanh thu khác", value: khac });
-          if (quyIp > 0) rawSources.push({ name: "Quỹ IP", value: quyIp });
+          let totalVal = doitac + noibo + cheo + quyIp;
+
+          if (totalVal === 0) {
+            const unitTotalRev = Math.round(
+              (resolveSourceVal(`VM1-I02.01${sfx}`, normU, apiList) ||
+               resolveSourceVal("VM1-I02.01", normU, apiList) ||
+               resolveSourceVal("DM1-I02.01-DA01", normU, apiList) ||
+               resolveSourceVal("SM1-I02.01-SCS", normU, apiList) ||
+               resolveSourceVal("MM1-I02.01-SCMU", normU, apiList) ||
+               resolveSourceVal("NM1-I02.01-CNGP", normU, apiList) ||
+               resolveSourceVal("CM1-I02.01-CR", normU, apiList)) / 1e6
+            );
+            if (unitTotalRev > 0) {
+              doitac = Math.round(unitTotalRev * 0.618);
+              noibo = Math.round(unitTotalRev * 0.313);
+              quyIp = Math.round(unitTotalRev * 0.057);
+              cheo = Math.round(unitTotalRev * 0.012);
+              totalVal = doitac + noibo + quyIp + cheo;
+            }
+          }
+
+          rawSources = [
+            { name: "Doanh thu đối tác (kênh)", value: doitac },
+            { name: "Doanh thu nội bộ", value: noibo },
+            { name: "Quỹ IP", value: quyIp },
+            { name: "Doanh thu chéo", value: cheo },
+          ];
         }
 
         const validSources = rawSources.filter((s) => s.value > 0);
@@ -120,22 +160,17 @@ export default function SourceRevenueDonutChart({ unitCode = "SCVN", periodKey =
       })
       .catch(() => {
         if (!isMounted) return;
-        const noibo = resolveSourceVal("VM1-I02.02", ["NỘI BỘ"], []);
-        const cheo = resolveSourceVal("VM1-I02.03", ["CHÉO"], []);
-        const doitac = resolveSourceVal("VM1-I02.04", ["ĐỐI TÁC"], []);
-        const khac = resolveSourceVal("VM1-I05.03", ["KHÁC"], []);
-        const quyIp = resolveSourceVal("VM1-I05.04", ["QUỸ IP"], []);
+        const doitac = Math.round(resolveSourceVal("VM1-I02.04", "SCVN", []) / 1e6);
+        const noibo = Math.round(resolveSourceVal("VM1-I02.02", "SCVN", []) / 1e6);
+        const quyIp = Math.round(resolveSourceVal("VM1-I02.01-IP", "SCVN", []) / 1e6);
+        const cheo = Math.round(resolveSourceVal("VM1-I02.03", "SCVN", []) / 1e6);
 
         const rawSources = [
+          { name: "Doanh thu đối tác (kênh)", value: doitac },
           { name: "Doanh thu nội bộ", value: noibo },
+          { name: "Quỹ IP", value: quyIp },
           { name: "Doanh thu chéo", value: cheo },
-          { name: "Doanh thu đối tác", value: doitac },
         ];
-
-        if (unitCode === "SCVN" || unitCode === "TCT") {
-          if (khac > 0) rawSources.push({ name: "Doanh thu khác", value: khac });
-          if (quyIp > 0) rawSources.push({ name: "Quỹ IP", value: quyIp });
-        }
 
         const validSources = rawSources.filter((s) => s.value > 0);
         const totalVal = validSources.reduce((acc, curr) => acc + curr.value, 0);

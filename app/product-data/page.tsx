@@ -468,15 +468,23 @@ export default function ProductDataPage() {
   // Cảnh báo từ chối truy cập nếu bộ lọc đơn vị không khớp với đơn vị của người dùng bị hạn chế
   const isAccessDenied = isRestrictedUser && filters.unitCode !== currentLoggedUser?.unitCode;
 
-  // Đồng bộ selectedProductId khi danh sách sản phẩm thay đổi hoặc khi khởi động
+  // Đồng bộ selectedProductId khi danh sách sản phẩm hoặc filters.unitCode thay đổi
   useEffect(() => {
+    if (filters.unitCode && filters.unitCode !== "SCVN" && filters.unitCode !== "TCT") {
+      const prodUnit = mapUnitCodeToProductUnit(filters.unitCode);
+      const unitProducts = PRODUCTS_CATALOG.filter(p => p.unit === prodUnit || p.unit === filters.unitCode);
+      if (unitProducts.length > 0 && !unitProducts.some(p => p.id === selectedProductId)) {
+        setSelectedProductId(unitProducts[0].id);
+        return;
+      }
+    }
     if (filteredProductsList.length > 0) {
       const isAllowed = filteredProductsList.some(p => p.id === selectedProductId);
       if (!isAllowed) {
         setSelectedProductId(filteredProductsList[0].id);
       }
     }
-  }, [filteredProductsList, selectedProductId]);
+  }, [filteredProductsList, selectedProductId, filters.unitCode]);
 
   // Fetch KPI data for the selected product and period filters
   useEffect(() => {

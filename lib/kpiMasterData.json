@@ -349,8 +349,8 @@
         },
         "monthly_7": {
           "target": 8106194227,
-          "actual": 2752630485,
-          "pct": 0.3396
+          "actual": 4261337120,
+          "pct": 0.5257
         },
         "weekly_7_1": {
           "target": 1239062050,
@@ -371,6 +371,11 @@
           "target": 1385885225,
           "actual": 811116652,
           "pct": 0.5853
+        },
+        "monthly_8": {
+          "target": 6878115033,
+          "actual": 3768470393,
+          "pct": 0.5479
         }
       }
     },
@@ -556,8 +561,8 @@
         },
         "monthly_7": {
           "target": 2522696922,
-          "actual": 937220883,
-          "pct": 0.3715
+          "actual": 1224842294,
+          "pct": 0.4855
         },
         "weekly_7_1": {
           "target": 560599316,
@@ -590,9 +595,9 @@
           "pct": 0.6845
         },
         "monthly_8": {
-          "target": 560599316,
-          "actual": 263588230,
-          "pct": 0.4702
+          "target": 560000000,
+          "actual": 448568465,
+          "pct": 0.801
         },
         "weekly_8_1": {
           "target": 140149829,
@@ -786,8 +791,8 @@
         },
         "monthly_7": {
           "target": 2038560600,
-          "actual": 490297024,
-          "pct": 0.2405
+          "actual": 1109064287,
+          "pct": 0.544
         },
         "weekly_7_1": {
           "target": 171314000,
@@ -818,6 +823,11 @@
           "target": 281944000,
           "actual": 151554000,
           "pct": 0.5375
+        },
+        "monthly_8": {
+          "target": 2363216100,
+          "actual": 1168124339,
+          "pct": 0.4943
         }
       }
     },
@@ -1000,8 +1010,8 @@
         },
         "monthly_7": {
           "target": 550000000,
-          "actual": 317760058,
-          "pct": 0.5777
+          "actual": 394675888,
+          "pct": 0.7176
         },
         "weekly_7_1": {
           "target": 137500000,
@@ -1032,6 +1042,11 @@
           "target": 137500000,
           "actual": 107000000,
           "pct": 0.7782
+        },
+        "monthly_8": {
+          "target": 599908060,
+          "actual": 330926266,
+          "pct": 0.5516
         }
       }
     },
@@ -1220,8 +1235,8 @@
         },
         "monthly_7": {
           "target": 699925005,
-          "actual": 93971596,
-          "pct": 0.1343
+          "actual": 117944353,
+          "pct": 0.1685
         },
         "weekly_7_1": {
           "target": 86668234,
@@ -1252,6 +1267,11 @@
           "target": 151669409,
           "actual": 56793768,
           "pct": 0.3745
+        },
+        "monthly_8": {
+          "target": 750100325,
+          "actual": 216879317,
+          "pct": 0.2891
         }
       }
     },
@@ -1437,8 +1457,8 @@
         },
         "monthly_7": {
           "target": 651900000,
-          "actual": 424605317,
-          "pct": 0.6513
+          "actual": 557371998,
+          "pct": 0.855
         },
         "weekly_7_1": {
           "target": 130380000,
@@ -1469,6 +1489,11 @@
           "target": 190333000,
           "actual": 131308110,
           "pct": 0.6899
+        },
+        "monthly_8": {
+          "target": 728834540,
+          "actual": 656604844,
+          "pct": 0.9009
         }
       }
     },
@@ -1499,8 +1524,8 @@
         },
         "monthly_7": {
           "target": 610402000,
-          "actual": 271422638,
-          "pct": 0.4447
+          "actual": 351033806,
+          "pct": 0.5751
         },
         "weekly_7_1": {
           "target": 152600500,
@@ -1531,6 +1556,11 @@
           "target": 189696000,
           "actual": 123614393,
           "pct": 0.6516
+        },
+        "monthly_8": {
+          "target": 761994240,
+          "actual": 474183712,
+          "pct": 0.6223
         }
       }
     },
@@ -1559,8 +1589,8 @@
         },
         "monthly_7": {
           "target": 332709700,
-          "actual": 178557491,
-          "pct": 0.5367
+          "actual": 235867557,
+          "pct": 0.7089
         },
         "weekly_7_1": {
           "target": 50000000,
@@ -1591,6 +1621,11 @@
           "target": 60000000,
           "actual": 25480305,
           "pct": 0.4247
+        },
+        "monthly_8": {
+          "target": 283961768,
+          "actual": 210654401,
+          "pct": 0.7418
         }
       }
     },
@@ -1621,8 +1656,8 @@
         },
         "monthly_7": {
           "target": 250000000,
-          "actual": 38795478,
-          "pct": 0.1552
+          "actual": 58067596,
+          "pct": 0.2323
         },
         "weekly_7_1": {
           "target": 53655914,
@@ -1653,6 +1688,11 @@
           "target": 56451613,
           "actual": 13900213,
           "pct": 0.2462
+        },
+        "monthly_8": {
+          "target": 280000000,
+          "actual": 46814591,
+          "pct": 0.1672
         }
       }
     },
@@ -1679,6 +1719,16 @@
           "target": 0,
           "actual": 0,
           "pct": 0
+        },
+        "monthly_8": {
+          "target": 100100000,
+          "actual": 0,
+          "pct": 0
+        },
+        "monthly_7": {
+          "target": 26223056,
+          "actual": 26223056,
+          "pct": 1
         }
       }
     },
@@ -1978,6 +2028,11 @@
           "target": 772900709,
           "actual": 470911272,
           "pct": 0.6093
+        },
+        "monthly_8": {
+          "target": 2150000000,
+          "actual": 1180253335,
+          "pct": 0.5489
         }
       }
     },
@@ -2993,6 +3048,11 @@
           "target": 10400000,
           "actual": 10400000,
           "pct": 1
+        },
+        "monthly_8": {
+          "target": 100000000,
+          "actual": 42000000,
+          "pct": 0.42
         }
       }
     },
@@ -3522,6 +3582,11 @@
           "target": 5200000,
           "actual": 38000000,
           "pct": 7.3077
+        },
+        "monthly_8": {
+          "target": 4000000000,
+          "actual": 2330502599,
+          "pct": 0.5826
         }
       }
     },
@@ -4077,6 +4142,11 @@
         },
         "weekly_7_4": {
           "target": 22
+        },
+        "monthly_8": {
+          "target": 172,
+          "actual": 184,
+          "pct": 1.0698
         }
       }
     },
@@ -4272,6 +4342,11 @@
         },
         "weekly_7_4": {
           "target": 8
+        },
+        "monthly_8": {
+          "target": 120,
+          "actual": 142,
+          "pct": 1.1833
         }
       }
     },
@@ -4475,6 +4550,11 @@
         },
         "weekly_7_4": {
           "target": 8
+        },
+        "monthly_8": {
+          "target": 36,
+          "actual": 26,
+          "pct": 0.7222
         }
       }
     },
@@ -4681,6 +4761,11 @@
         },
         "weekly_7_4": {
           "target": 6
+        },
+        "monthly_8": {
+          "target": 16,
+          "actual": 16,
+          "pct": 1
         }
       }
     },
@@ -4877,6 +4962,11 @@
         },
         "weekly_7_4": {
           "target": 113
+        },
+        "monthly_8": {
+          "target": 410,
+          "actual": 458,
+          "pct": 1.1171
         }
       }
     },
@@ -5830,6 +5920,11 @@
         },
         "weekly_7_4": {
           "target": 284449967
+        },
+        "monthly_8": {
+          "target": 1017950099,
+          "actual": 619224479,
+          "pct": 0.6083
         }
       }
     },
@@ -6035,6 +6130,11 @@
         },
         "weekly_7_4": {
           "target": 162500000
+        },
+        "monthly_8": {
+          "target": 350000000,
+          "actual": 131973675,
+          "pct": 0.3771
         }
       }
     },
@@ -6243,6 +6343,11 @@
         },
         "weekly_7_4": {
           "target": 6800000
+        },
+        "monthly_8": {
+          "target": 27110000,
+          "actual": 19505974,
+          "pct": 0.7195
         }
       }
     },
@@ -6451,6 +6556,11 @@
         },
         "weekly_7_4": {
           "target": 5741140
+        },
+        "monthly_8": {
+          "target": 25705750,
+          "actual": 2450967,
+          "pct": 0.0953
         }
       }
     },
@@ -6653,6 +6763,11 @@
         },
         "weekly_7_4": {
           "target": 14250000
+        },
+        "monthly_8": {
+          "target": 60000000,
+          "actual": 60624497,
+          "pct": 1.0104
         }
       }
     },
@@ -6835,8 +6950,8 @@
         },
         "monthly_7": {
           "target": 359570000,
-          "actual": 331272676,
-          "pct": 0.9213
+          "actual": 476168018,
+          "pct": 1.3243
         },
         "weekly_7_1": {
           "target": 71914000,
@@ -6855,6 +6970,11 @@
         },
         "weekly_7_4": {
           "target": 71914000
+        },
+        "monthly_8": {
+          "target": 490000000,
+          "actual": 369863271,
+          "pct": 0.7548
         }
       }
     },
@@ -6902,6 +7022,11 @@
         },
         "weekly_7_4": {
           "target": 18919021
+        },
+        "monthly_8": {
+          "target": 45634349,
+          "actual": 26502317,
+          "pct": 0.5808
         }
       }
     },
@@ -6949,6 +7074,11 @@
         },
         "weekly_7_4": {
           "target": 1500000
+        },
+        "monthly_8": {
+          "target": 6000000,
+          "actual": 5238732,
+          "pct": 0.8731
         }
       }
     },
@@ -6965,8 +7095,8 @@
         },
         "monthly_7": {
           "target": 10300000,
-          "actual": 1953327,
-          "pct": 0.1896
+          "actual": 2904900,
+          "pct": 0.282
         },
         "weekly_7_1": {
           "target": 2194624,
@@ -6985,6 +7115,11 @@
         },
         "weekly_7_4": {
           "target": 2325806
+        },
+        "monthly_8": {
+          "target": 12000000,
+          "actual": 2761034,
+          "pct": 0.2301
         }
       }
     },
@@ -6996,8 +7131,8 @@
       "periods": {
         "monthly_7": {
           "target": 1510000,
-          "actual": 28926,
-          "pct": 0.0192
+          "actual": 223879,
+          "pct": 0.1483
         },
         "weekly_7_1": {
           "target": 10000
@@ -7014,6 +7149,11 @@
         },
         "weekly_7_4": {
           "target": 500000
+        },
+        "monthly_8": {
+          "target": 1500000,
+          "actual": 304012,
+          "pct": 0.2027
         }
       }
     },
@@ -10713,6 +10853,11 @@
           "target": 0.94,
           "actual": 0.9,
           "pct": 0.9574
+        },
+        "monthly_8": {
+          "target": 0.98,
+          "actual": 0.9722,
+          "pct": 0.992
         }
       }
     },
@@ -11331,6 +11476,42 @@
           "pct": 0.6047
         }
       }
+    },
+    "VM1-I02.01-IP": {
+      "code": "VM1-I02.01-IP",
+      "title": "Doanh thu Quỹ IP",
+      "unit": "VNĐ",
+      "periods": {
+        "monthly_8": {
+          "target": 450000000,
+          "actual": 215714458,
+          "pct": 0.4794
+        }
+      }
+    },
+    "TM2-I01.01": {
+      "code": "TM2-I01.01",
+      "title": "Số lượng video hoàn thành sản xuất",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 172,
+          "actual": 184,
+          "pct": 1.0698
+        }
+      }
+    },
+    "TM7-I01.01": {
+      "code": "TM7-I01.01",
+      "title": "Tỷ lệ nhân sự không vi phạm kỷ luật",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 0.98,
+          "actual": 0.9722,
+          "pct": 0.992
+        }
+      }
     }
   },
   "Wofloo": {
@@ -11549,7 +11730,9 @@
           "pct": 0.4816
         },
         "monthly_7": {
-          "target": 2522696922
+          "target": 2522696922,
+          "actual": 1224842294,
+          "pct": 0.4855
         },
         "weekly_7_1": {
           "target": 560599316,
@@ -11582,9 +11765,9 @@
           "pct": 0.6845
         },
         "monthly_8": {
-          "target": 560599316,
-          "actual": 263588230,
-          "pct": 0.4702
+          "target": 560000000,
+          "actual": 448568465,
+          "pct": 0.801
         },
         "weekly_8_1": {
           "target": 140149829,
@@ -13074,6 +13257,11 @@
         },
         "weekly_7_4": {
           "target": 8
+        },
+        "monthly_8": {
+          "target": 120,
+          "actual": 142,
+          "pct": 1.1833
         }
       }
     },
@@ -14008,6 +14196,11 @@
         },
         "weekly_7_4": {
           "target": 162500000
+        },
+        "monthly_8": {
+          "target": 350000000,
+          "actual": 131973675,
+          "pct": 0.3771
         }
       }
     },
@@ -15543,6 +15736,22 @@
           "target": 140149829,
           "actual": 97863800,
           "pct": 0.6983
+        },
+        "monthly_8": {
+          "target": 560000000,
+          "actual": 448568465,
+          "pct": 0.801
+        }
+      }
+    },
+    "VM2-I01.01-WF": {
+      "title": "Số lượng video hoàn thành sản xuất Wolfoo",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 120,
+          "actual": 142,
+          "pct": 1.1833
         }
       }
     }
@@ -15858,8 +16067,8 @@
         },
         "monthly_7": {
           "target": 2038560600,
-          "actual": 716852540,
-          "pct": 0.3516
+          "actual": 1109064287,
+          "pct": 0.544
         },
         "weekly_7_1": {
           "target": 171314000,
@@ -15890,6 +16099,11 @@
           "target": 281944000,
           "actual": 154934000,
           "pct": 0.5495
+        },
+        "monthly_8": {
+          "target": 2363216100,
+          "actual": 1168124339,
+          "pct": 0.4943
         }
       }
     },
@@ -18723,6 +18937,11 @@
         },
         "weekly_7_4": {
           "target": 6800000
+        },
+        "monthly_8": {
+          "target": 27110000,
+          "actual": 19505974,
+          "pct": 0.7195
         }
       }
     },
@@ -20096,6 +20315,22 @@
           "target": 278772000,
           "actual": 166088000,
           "pct": 0.5958
+        },
+        "monthly_8": {
+          "target": 2363216100,
+          "actual": 1168124339,
+          "pct": 0.4943
+        }
+      }
+    },
+    "VM2-I01.01-AS": {
+      "title": "Số lượng video hoàn thành sản xuất Animated Story",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 36,
+          "actual": 26,
+          "pct": 0.7222
         }
       }
     }
@@ -20313,7 +20548,9 @@
           "pct": 0.4428
         },
         "monthly_7": {
-          "target": 550000000
+          "target": 550000000,
+          "actual": 394675888,
+          "pct": 0.7176
         },
         "weekly_7_1": {
           "target": 137500000,
@@ -20344,6 +20581,11 @@
           "target": 137500000,
           "actual": 110425866,
           "pct": 0.8031
+        },
+        "monthly_8": {
+          "target": 599908060,
+          "actual": 330926266,
+          "pct": 0.5516
         }
       }
     },
@@ -21465,6 +21707,11 @@
         },
         "weekly_7_4": {
           "target": 113
+        },
+        "monthly_8": {
+          "target": 410,
+          "actual": 458,
+          "pct": 1.1171
         }
       }
     },
@@ -22084,6 +22331,11 @@
         },
         "weekly_7_4": {
           "target": 14250000
+        },
+        "monthly_8": {
+          "target": 60000000,
+          "actual": 60624497,
+          "pct": 1.0104
         }
       }
     },
@@ -23471,6 +23723,34 @@
           "target": 137500000,
           "actual": 80220411,
           "pct": 0.5834
+        },
+        "monthly_8": {
+          "target": 599908060,
+          "actual": 330926266,
+          "pct": 0.5516
+        }
+      }
+    },
+    "2.1": {
+      "code": "2.1",
+      "title": "Doanh thu BP NDTH",
+      "unit": "VNĐ",
+      "periods": {
+        "monthly_8": {
+          "target": 599908060,
+          "actual": 330926266,
+          "pct": 0.5516
+        }
+      }
+    },
+    "VM2-I01.02-NDTH": {
+      "title": "Số lượng video hoàn thành sản xuất NDTH",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 410,
+          "actual": 458,
+          "pct": 1.1171
         }
       }
     }
@@ -23666,7 +23946,9 @@
           "pct": 0.611
         },
         "monthly_7": {
-          "target": 651900000
+          "target": 651900000,
+          "actual": 557371998,
+          "pct": 0.855
         },
         "weekly_7_1": {
           "target": 130380000,
@@ -23697,6 +23979,11 @@
           "target": 190333000,
           "actual": 131308110,
           "pct": 0.6899
+        },
+        "monthly_8": {
+          "target": 728834540,
+          "actual": 656604844,
+          "pct": 0.9009
         }
       }
     },
@@ -24608,6 +24895,11 @@
         },
         "weekly_7_4": {
           "target": 19
+        },
+        "monthly_8": {
+          "target": 84,
+          "actual": 89,
+          "pct": 1.0595
         }
       }
     },
@@ -25452,7 +25744,9 @@
           "pct": 0.2967
         },
         "monthly_7": {
-          "target": 359570000
+          "target": 359570000,
+          "actual": 476168018,
+          "pct": 1.3243
         },
         "weekly_7_1": {
           "target": 71914000,
@@ -25471,6 +25765,11 @@
         },
         "weekly_7_4": {
           "target": 71914000
+        },
+        "monthly_8": {
+          "target": 490000000,
+          "actual": 369863271,
+          "pct": 0.7548
         }
       }
     },
@@ -26590,6 +26889,29 @@
           "target": 1.5
         }
       }
+    },
+    "DM1-I02.01-DA01": {
+      "code": "DM1-I02.01-DA01",
+      "title": "Doanh thu DA 01",
+      "unit": "VNĐ",
+      "periods": {
+        "monthly_8": {
+          "target": 728834540,
+          "actual": 656604844,
+          "pct": 0.9009
+        }
+      }
+    },
+    "DM2-I01.01-DA01": {
+      "title": "Số lượng sản phẩm hoàn thành sản xuất DA01",
+      "unit": "Sản phẩm",
+      "periods": {
+        "monthly_8": {
+          "target": 84,
+          "actual": 89,
+          "pct": 1.0595
+        }
+      }
     }
   },
   "Lego": {
@@ -27011,7 +27333,9 @@
           "pct": 0.2604
         },
         "monthly_7": {
-          "target": 699925005
+          "target": 699925005,
+          "actual": 117944353,
+          "pct": 0.1685
         },
         "weekly_7_1": {
           "target": 86668234,
@@ -27034,7 +27358,9 @@
           "pct": 0.2507
         },
         "monthly_8": {
-          "target": 750100325
+          "target": 750100325,
+          "actual": 216879317,
+          "pct": 0.2891
         },
         "monthly_9": {
           "target": 779894505
@@ -27941,7 +28267,9 @@
           "target": 4
         },
         "monthly_8": {
-          "target": 16
+          "target": 16,
+          "actual": 16,
+          "pct": 1
         },
         "monthly_9": {
           "target": 17
@@ -29094,7 +29422,9 @@
           "target": 5741140
         },
         "monthly_8": {
-          "target": 25705750
+          "target": 25705750,
+          "actual": 2450967,
+          "pct": 0.0953
         },
         "monthly_9": {
           "target": 25986550
@@ -31126,6 +31456,22 @@
           "target": 151669409,
           "actual": 59920582,
           "pct": 0.3951
+        },
+        "monthly_8": {
+          "target": 750100325,
+          "actual": 216879317,
+          "pct": 0.2891
+        }
+      }
+    },
+    "VM2-I01.01-Lego": {
+      "title": "Số lượng video hoàn thành sản xuất Lego",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 16,
+          "actual": 16,
+          "pct": 1
         }
       }
     }
@@ -31355,7 +31701,9 @@
           "pct": 0.0898
         },
         "monthly_7": {
-          "target": 332709700
+          "target": 332709700,
+          "actual": 235867557,
+          "pct": 0.7089
         },
         "weekly_7_1": {
           "target": 50000000,
@@ -31386,6 +31734,11 @@
           "target": 60000000,
           "actual": 25480305,
           "pct": 0.4247
+        },
+        "monthly_8": {
+          "target": 283961768,
+          "actual": 210654401,
+          "pct": 0.7418
         }
       }
     },
@@ -31639,6 +31992,11 @@
           "target": 43,
           "actual": 26,
           "pct": 0.6047
+        },
+        "monthly_8": {
+          "target": 308,
+          "actual": 248,
+          "pct": 0.8052
         }
       }
     },
@@ -33649,6 +34007,11 @@
         },
         "weekly_7_4": {
           "target": 1500000
+        },
+        "monthly_8": {
+          "target": 6000000,
+          "actual": 5238732,
+          "pct": 0.8731
         }
       }
     },
@@ -35031,6 +35394,29 @@
           "actual": 2
         }
       }
+    },
+    "MM1-I02.01-SCMU": {
+      "code": "MM1-I02.01-SCMU",
+      "title": "Doanh thu BP Music",
+      "unit": "VNĐ",
+      "periods": {
+        "monthly_8": {
+          "target": 283961768,
+          "actual": 210654401,
+          "pct": 0.7418
+        }
+      }
+    },
+    "MM2-I01.01-SCMU": {
+      "title": "Số lượng sản phẩm âm nhạc SCMU",
+      "unit": "Sản phẩm",
+      "periods": {
+        "monthly_8": {
+          "target": 308,
+          "actual": 248,
+          "pct": 0.8052
+        }
+      }
     }
   },
   "SCS": {
@@ -35223,7 +35609,9 @@
           "pct": 0.3623
         },
         "monthly_7": {
-          "target": 610402000
+          "target": 610402000,
+          "actual": 351033806,
+          "pct": 0.5751
         },
         "weekly_7_1": {
           "target": 152600500,
@@ -35246,7 +35634,9 @@
           "pct": 0.4283
         },
         "monthly_8": {
-          "target": 758784000
+          "target": 761994240,
+          "actual": 474183712,
+          "pct": 0.6223
         },
         "monthly_9": {
           "target": 951756000
@@ -35730,6 +36120,11 @@
         },
         "weekly_7_4": {
           "target": 36
+        },
+        "monthly_8": {
+          "target": 112,
+          "actual": 128,
+          "pct": 1.1429
         }
       }
     },
@@ -36469,7 +36864,9 @@
           "target": 18919021
         },
         "monthly_8": {
-          "target": 84967682
+          "target": 45634349,
+          "actual": 26502317,
+          "pct": 0.5808
         },
         "monthly_9": {
           "target": 95571356
@@ -36983,6 +37380,29 @@
           "actual": 2
         }
       }
+    },
+    "SM1-I02.01-SCS": {
+      "code": "SM1-I02.01-SCS",
+      "title": "Doanh thu BP Studio",
+      "unit": "VNĐ",
+      "periods": {
+        "monthly_8": {
+          "target": 761994240,
+          "actual": 474183712,
+          "pct": 0.6223
+        }
+      }
+    },
+    "SM2-I01.01-SCS": {
+      "title": "Số lượng video hoàn thành sản xuất SCS",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 112,
+          "actual": 128,
+          "pct": 1.1429
+        }
+      }
     }
   },
   "CN": {
@@ -37098,7 +37518,9 @@
           "pct": 0.3536
         },
         "monthly_7": {
-          "target": 250000000
+          "target": 250000000,
+          "actual": 58067596,
+          "pct": 0.2323
         },
         "weekly_7_1": {
           "target": 53655914,
@@ -37129,6 +37551,11 @@
           "target": 56451613,
           "actual": 13900213,
           "pct": 0.2462
+        },
+        "monthly_8": {
+          "target": 280000000,
+          "actual": 46814591,
+          "pct": 0.1672
         }
       }
     },
@@ -37471,6 +37898,11 @@
         },
         "weekly_7_4": {
           "target": 3
+        },
+        "monthly_8": {
+          "target": 10,
+          "actual": 10,
+          "pct": 1
         }
       }
     },
@@ -37663,7 +38095,9 @@
           "pct": 0.5996
         },
         "monthly_7": {
-          "target": 10300000
+          "target": 10300000,
+          "actual": 2904900,
+          "pct": 0.282
         },
         "weekly_7_1": {
           "target": 2194624,
@@ -37682,6 +38116,11 @@
         },
         "weekly_7_4": {
           "target": 2325806
+        },
+        "monthly_8": {
+          "target": 12000000,
+          "actual": 2761034,
+          "pct": 0.2301
         }
       }
     },
@@ -38045,6 +38484,29 @@
           "actual": 3
         }
       }
+    },
+    "NM1-I02.01-CNGP": {
+      "code": "NM1-I02.01-CNGP",
+      "title": "Doanh thu CNGP",
+      "unit": "VNĐ",
+      "periods": {
+        "monthly_8": {
+          "target": 280000000,
+          "actual": 46814591,
+          "pct": 0.1672
+        }
+      }
+    },
+    "NM2-I01.01-CNGP": {
+      "title": "Số lượng Game/Tính năng mới CNGP",
+      "unit": "Game",
+      "periods": {
+        "monthly_8": {
+          "target": 10,
+          "actual": 10,
+          "pct": 1
+        }
+      }
     }
   },
   "CR": {
@@ -38286,6 +38748,16 @@
           "target": 0,
           "actual": 0,
           "pct": 0
+        },
+        "monthly_8": {
+          "target": 100100000,
+          "actual": 0,
+          "pct": 0
+        },
+        "monthly_7": {
+          "target": 26223056,
+          "actual": 26223056,
+          "pct": 1
         }
       }
     },
@@ -38976,6 +39448,11 @@
         },
         "weekly_8_5": {
           "target": 175
+        },
+        "monthly_8": {
+          "target": 30,
+          "actual": 34,
+          "pct": 1.1333
         }
       }
     },
@@ -39557,7 +40034,9 @@
           "pct": 0.272
         },
         "monthly_7": {
-          "target": 1510000
+          "target": 1510000,
+          "actual": 223879,
+          "pct": 0.1483
         },
         "weekly_7_1": {
           "target": 10000
@@ -39592,6 +40071,11 @@
         },
         "weekly_12_5": {
           "target": 15179662
+        },
+        "monthly_8": {
+          "target": 1500000,
+          "actual": 304012,
+          "pct": 0.2027
         }
       }
     },
@@ -40052,6 +40536,29 @@
       "periods": {
         "monthly_6": {
           "actual": 1
+        }
+      }
+    },
+    "CM1-I02.01-CR": {
+      "code": "CM1-I02.01-CR",
+      "title": "Doanh thu BP Creative",
+      "unit": "VNĐ",
+      "periods": {
+        "monthly_8": {
+          "target": 100100000,
+          "actual": 0,
+          "pct": 0
+        }
+      }
+    },
+    "CM2-I01.01-CR": {
+      "title": "Số lượng video hoàn thành sản xuất Creative",
+      "unit": "Video",
+      "periods": {
+        "monthly_8": {
+          "target": 30,
+          "actual": 34,
+          "pct": 1.1333
         }
       }
     }
