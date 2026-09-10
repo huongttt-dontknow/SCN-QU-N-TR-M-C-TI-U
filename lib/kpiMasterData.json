@@ -11731,8 +11731,7 @@
         },
         "monthly_7": {
           "target": 2522696922,
-          "actual": 1224842294,
-          "pct": 0.4855
+          "actual": 1224842294
         },
         "weekly_7_1": {
           "target": 560599316,
@@ -11766,8 +11765,7 @@
         },
         "monthly_8": {
           "target": 560000000,
-          "actual": 448568465,
-          "pct": 0.801
+          "actual": 448568465
         },
         "weekly_8_1": {
           "target": 140149829,
@@ -14178,7 +14176,7 @@
         },
         "monthly_7": {
           "target": 650000000,
-          "actual": 145000000
+          "actual": 414243791
         },
         "weekly_7_1": {
           "target": 162500000,
@@ -15743,7 +15741,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 1225000000
+          "actual": 1224842294
         }
       }
     },
@@ -15764,7 +15762,7 @@
       "periods": {
         "monthly_7": {
           "target": 0,
-          "actual": 145000000
+          "actual": 414243791
         },
         "monthly_8": {
           "target": 0,
@@ -16084,8 +16082,7 @@
         },
         "monthly_7": {
           "target": 2038560600,
-          "actual": 1109064287,
-          "pct": 0.544
+          "actual": 1109064287
         },
         "weekly_7_1": {
           "target": 171314000,
@@ -16119,8 +16116,7 @@
         },
         "monthly_8": {
           "target": 2363216100,
-          "actual": 1168124339,
-          "pct": 0.4943
+          "actual": 1168124339
         }
       }
     },
@@ -18934,8 +18930,7 @@
         },
         "monthly_7": {
           "target": 29700000,
-          "actual": 29700000,
-          "pct": 1
+          "actual": 18171574
         },
         "weekly_7_1": {
           "target": 3539286,
@@ -18957,8 +18952,7 @@
         },
         "monthly_8": {
           "target": 27110000,
-          "actual": 19505974,
-          "pct": 0.7195
+          "actual": 19505974
         }
       }
     },
@@ -20339,7 +20333,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 1109000000
+          "actual": 1109064287
         }
       }
     },
@@ -20360,7 +20354,7 @@
       "periods": {
         "monthly_7": {
           "target": 0,
-          "actual": 29700000
+          "actual": 18171574
         },
         "monthly_8": {
           "target": 0,
@@ -20583,8 +20577,7 @@
         },
         "monthly_7": {
           "target": 550000000,
-          "actual": 394675888,
-          "pct": 0.7176
+          "actual": 394675888
         },
         "weekly_7_1": {
           "target": 137500000,
@@ -20618,8 +20611,7 @@
         },
         "monthly_8": {
           "target": 599908060,
-          "actual": 330926266,
-          "pct": 0.5516
+          "actual": 330926266
         }
       }
     },
@@ -22346,7 +22338,8 @@
           "pct": 1.0988
         },
         "monthly_7": {
-          "target": 53500000
+          "target": 53500000,
+          "actual": 49183482
         },
         "weekly_7_1": {
           "target": 14250000,
@@ -22368,8 +22361,7 @@
         },
         "monthly_8": {
           "target": 60000000,
-          "actual": 60624497,
-          "pct": 1.0104
+          "actual": 60624497
         }
       }
     },
@@ -23764,7 +23756,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 395000000
+          "actual": 394675888
         }
       }
     },
@@ -23797,7 +23789,7 @@
       "periods": {
         "monthly_7": {
           "target": 0,
-          "actual": 58000000
+          "actual": 49183482
         },
         "monthly_8": {
           "target": 0,
@@ -23998,7 +23990,7 @@
         },
         "monthly_7": {
           "target": 651900000,
-          "actual": 580000000
+          "actual": 557371998
         },
         "weekly_7_1": {
           "target": 130380000,
@@ -26948,7 +26940,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 580000000
+          "actual": 557371998
         }
       }
     },
@@ -27398,8 +27390,7 @@
         },
         "monthly_7": {
           "target": 699925005,
-          "actual": 117944353,
-          "pct": 0.1685
+          "actual": 117944353
         },
         "weekly_7_1": {
           "target": 86668234,
@@ -27423,8 +27414,7 @@
         },
         "monthly_8": {
           "target": 750100325,
-          "actual": 216879317,
-          "pct": 0.2891
+          "actual": 216879317
         },
         "monthly_9": {
           "target": 779894505
@@ -29465,7 +29455,8 @@
           "target": 208000
         },
         "monthly_7": {
-          "target": 25425050
+          "target": 25425050,
+          "actual": 1731035
         },
         "weekly_7_1": {
           "target": 3280652,
@@ -29487,8 +29478,7 @@
         },
         "monthly_8": {
           "target": 25705750,
-          "actual": 2450967,
-          "pct": 0.0953
+          "actual": 2450967
         },
         "monthly_9": {
           "target": 25986550
@@ -31527,7 +31517,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 118000000
+          "actual": 117944353
         }
       }
     },
@@ -31548,7 +31538,7 @@
       "periods": {
         "monthly_7": {
           "target": 0,
-          "actual": 2800000
+          "actual": 1731035
         },
         "monthly_8": {
           "target": 0,
@@ -31783,7 +31773,7 @@
         },
         "monthly_7": {
           "target": 332709700,
-          "actual": 200000000
+          "actual": 235867557
         },
         "weekly_7_1": {
           "target": 50000000,
@@ -34068,7 +34058,7 @@
         },
         "monthly_7": {
           "target": 5500000,
-          "actual": 6000000
+          "actual": 5406949
         },
         "weekly_7_1": {
           "target": 1200000,
@@ -35485,7 +35475,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 200000000
+          "actual": 235867557
         }
       }
     },
@@ -35506,7 +35496,7 @@
       "periods": {
         "monthly_7": {
           "target": 0,
-          "actual": 6000000
+          "actual": 5406949
         },
         "monthly_8": {
           "target": 0,
@@ -35706,7 +35696,7 @@
         },
         "monthly_7": {
           "target": 610402000,
-          "actual": 420000000
+          "actual": 351033806
         },
         "weekly_7_1": {
           "target": 152600500,
@@ -36938,7 +36928,7 @@
         },
         "monthly_7": {
           "target": 75676084,
-          "actual": 24000000
+          "actual": 75102923
         },
         "weekly_7_1": {
           "target": 18919021,
@@ -37486,7 +37476,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 420000000
+          "actual": 351033806
         }
       }
     },
@@ -37507,7 +37497,7 @@
       "periods": {
         "monthly_7": {
           "target": 0,
-          "actual": 24000000
+          "actual": 75102923
         },
         "monthly_8": {
           "target": 0,
@@ -37630,7 +37620,7 @@
         },
         "monthly_7": {
           "target": 250000000,
-          "actual": 50000000
+          "actual": 58067596
         },
         "weekly_7_1": {
           "target": 53655914,
@@ -38603,7 +38593,7 @@
         },
         "monthly_7": {
           "target": 0,
-          "actual": 50000000
+          "actual": 58067596
         }
       }
     },

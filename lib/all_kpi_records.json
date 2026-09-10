@@ -1,5 +1,41 @@
 [
   {
+    "id": "rec_monthly_8_NDTH_VM3-I01.02",
+    "unitCode": "NDTH",
+    "code": "VM3-I01.02",
+    "indicatorCode": "VM3-I01.02",
+    "title": "Traffic BP NDTH",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 60624497,
+    "targetMonth": 0,
+    "actualMonth": 60624497,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 60624497
+      }
+    }
+  },
+  {
+    "id": "rec_monthly_8_AS_VM3-I01.02",
+    "unitCode": "AS",
+    "code": "VM3-I01.02",
+    "indicatorCode": "VM3-I01.02",
+    "title": "Traffic BP AS",
+    "periodKey": "monthly_8",
+    "targetValue": 0,
+    "actualValue": 19505974,
+    "targetMonth": 0,
+    "actualMonth": 19505974,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 19505974
+      }
+    }
+  },
+  {
     "id": "rec_monthly_8_CR_CM3-I01.01",
     "unitCode": "CR",
     "code": "CM3-I01.01",
@@ -79,13 +115,13 @@
     "title": "Traffic Lego",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 2800000,
+    "actualValue": 1731035,
     "targetMonth": 0,
-    "actualMonth": 2800000,
+    "actualMonth": 1731035,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 2800000
+        "actual": 1731035
       }
     }
   },
@@ -187,13 +223,13 @@
     "title": "Traffic SCMU",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 6000000,
+    "actualValue": 5406949,
     "targetMonth": 0,
-    "actualMonth": 6000000,
+    "actualMonth": 5406949,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 6000000
+        "actual": 5406949
       }
     }
   },
@@ -223,13 +259,13 @@
     "title": "Traffic AS",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 29700000,
+    "actualValue": 18171574,
     "targetMonth": 0,
-    "actualMonth": 29700000,
+    "actualMonth": 18171574,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 29700000
+        "actual": 18171574
       }
     }
   },
@@ -259,13 +295,13 @@
     "title": "Traffic SCS",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 24000000,
+    "actualValue": 75102923,
     "targetMonth": 0,
-    "actualMonth": 24000000,
+    "actualMonth": 75102923,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 24000000
+        "actual": 75102923
       }
     }
   },
@@ -295,13 +331,13 @@
     "title": "Traffic NDTH",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 58000000,
+    "actualValue": 49183482,
     "targetMonth": 0,
-    "actualMonth": 58000000,
+    "actualMonth": 49183482,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 58000000
+        "actual": 49183482
       }
     }
   },
@@ -349,13 +385,13 @@
     "title": "Traffic WF",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 145000000,
+    "actualValue": 414243791,
     "targetMonth": 0,
-    "actualMonth": 145000000,
+    "actualMonth": 414243791,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 145000000
+        "actual": 414243791
       }
     }
   },
@@ -439,13 +475,13 @@
     "title": "Doanh thu BP WF",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 1225000000,
+    "actualValue": 1224842294,
     "targetMonth": 0,
-    "actualMonth": 1225000000,
+    "actualMonth": 1224842294,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 1225000000
+        "actual": 1224842294
       }
     }
   },
@@ -457,13 +493,13 @@
     "title": "Doanh thu BP NDTH",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 395000000,
+    "actualValue": 394675888,
     "targetMonth": 0,
-    "actualMonth": 395000000,
+    "actualMonth": 394675888,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 395000000
+        "actual": 394675888
       }
     }
   },
@@ -475,13 +511,13 @@
     "title": "Doanh thu CNGP",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 50000000,
+    "actualValue": 58067596,
     "targetMonth": 0,
-    "actualMonth": 50000000,
+    "actualMonth": 58067596,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 50000000
+        "actual": 58067596
       }
     }
   },
@@ -493,13 +529,13 @@
     "title": "Doanh thu SCMU",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 200000000,
+    "actualValue": 235867557,
     "targetMonth": 0,
-    "actualMonth": 200000000,
+    "actualMonth": 235867557,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 200000000
+        "actual": 235867557
       }
     }
   },
@@ -511,13 +547,13 @@
     "title": "Doanh thu BP AS",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 1109000000,
+    "actualValue": 1109064287,
     "targetMonth": 0,
-    "actualMonth": 1109000000,
+    "actualMonth": 1109064287,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 1109000000
+        "actual": 1109064287
       }
     }
   },
@@ -529,13 +565,13 @@
     "title": "Doanh thu SCS",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 420000000,
+    "actualValue": 351033806,
     "targetMonth": 0,
-    "actualMonth": 420000000,
+    "actualMonth": 351033806,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 420000000
+        "actual": 351033806
       }
     }
   },
@@ -547,13 +583,13 @@
     "title": "Doanh thu DA Lego",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 118000000,
+    "actualValue": 117944353,
     "targetMonth": 0,
-    "actualMonth": 118000000,
+    "actualMonth": 117944353,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 118000000
+        "actual": 117944353
       }
     }
   },
@@ -565,13 +601,13 @@
     "title": "Doanh thu DA 01",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 580000000,
+    "actualValue": 557371998,
     "targetMonth": 0,
-    "actualMonth": 580000000,
+    "actualMonth": 557371998,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 580000000
+        "actual": 557371998
       }
     }
   },
@@ -27067,7 +27103,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 1224842294
+    "actualMonth": 1224842294,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 1224842294
+      }
+    }
   },
   {
     "indicatorCode": "VM1-I02.01",
@@ -35640,7 +35682,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 650000000,
-    "actualValue": 145000000,
+    "actualValue": 414243791,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Traffic BP WF",
@@ -35648,11 +35690,11 @@
     "formula": "Tổng sổ views trên các kênh của đơn vị",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
     "parentCode": "M3",
-    "actualMonth": 145000000,
+    "actualMonth": 414243791,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 145000000
+        "actual": 414243791
       }
     }
   },
@@ -42285,7 +42327,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 1109064287
+    "actualMonth": 1109064287,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 1109064287
+      }
+    }
   },
   {
     "indicatorCode": "VM1-I02.01",
@@ -49306,7 +49354,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 394675888
+    "actualMonth": 394675888,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 394675888
+      }
+    }
   },
   {
     "indicatorCode": "VM1-I02.01",
@@ -54594,14 +54648,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 53500000,
-    "actualValue": 0,
+    "actualValue": 49183482,
     "pic": "TBP",
     "status": "Chưa thực hiện",
     "title": "Traffic BP",
     "unit": "Views",
     "formula": "Tổng sổ views trên các kênh của đơn vị",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 49183482,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 49183482
+      }
+    }
   },
   {
     "indicatorCode": "VM3-I01.02",
@@ -59394,7 +59455,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 651900000,
-    "actualValue": 580000000,
+    "actualValue": 557371998,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -59402,11 +59463,11 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 580000000,
+    "actualMonth": 557371998,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 580000000
+        "actual": 557371998
       }
     }
   },
@@ -71221,7 +71282,13 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 117944353
+    "actualMonth": 117944353,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 117944353
+      }
+    }
   },
   {
     "indicatorCode": "VM1-I02.01",
@@ -71301,7 +71368,13 @@
     "isOverridden": true,
     "targetMonth": 750100325,
     "actualMonth": 216879317,
-    "completionRate": 0.2891
+    "completionRate": 0.2891,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 216879317
+      }
+    }
   },
   {
     "indicatorCode": "VM1-I02.01",
@@ -79463,14 +79536,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 25425050,
-    "actualValue": 0,
+    "actualValue": 1731035,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Traffic Lego",
     "unit": "Views",
     "formula": "Tổng sổ views trên các kênh của đơn vị",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 1731035,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 1731035
+      }
+    }
   },
   {
     "indicatorCode": "VM3-I01.02",
@@ -79538,14 +79618,21 @@
     "periodType": "monthly",
     "periodKey": "monthly_8",
     "targetValue": 25705750,
-    "actualValue": 0,
+    "actualValue": 2450967,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Traffic Lego",
     "unit": "Views",
     "formula": "Tổng sổ views trên các kênh của đơn vị",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
-    "parentCode": "M3"
+    "parentCode": "M3",
+    "actualMonth": 2450967,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 2450967
+      }
+    }
   },
   {
     "indicatorCode": "VM3-I01.02",
@@ -88868,7 +88955,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 332709700,
-    "actualValue": 200000000,
+    "actualValue": 235867557,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -88876,11 +88963,11 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 200000000,
+    "actualMonth": 235867557,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 200000000
+        "actual": 235867557
       }
     }
   },
@@ -99470,7 +99557,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 5500000,
-    "actualValue": 6000000,
+    "actualValue": 5406949,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Số lượt view youtube",
@@ -99478,11 +99565,11 @@
     "formula": "Số lượng view trên nền tảng youtube",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
     "parentCode": "M3",
-    "actualMonth": 6000000,
+    "actualMonth": 5406949,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 6000000
+        "actual": 5406949
       }
     }
   },
@@ -105477,7 +105564,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 610402000,
-    "actualValue": 420000000,
+    "actualValue": 351033806,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -105485,11 +105572,11 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 420000000,
+    "actualMonth": 351033806,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 420000000
+        "actual": 351033806
       }
     }
   },
@@ -106918,7 +107005,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 75676084,
-    "actualValue": 24000000,
+    "actualValue": 75102923,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Số lượt view youtube SCS",
@@ -106926,11 +107013,11 @@
     "formula": "Số lượng view trên nền tảng youtube các dự án thử nghiệm",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
     "parentCode": "M3",
-    "actualMonth": 24000000,
+    "actualMonth": 75102923,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 24000000
+        "actual": 75102923
       }
     }
   },
@@ -108642,7 +108729,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 250000000,
-    "actualValue": 50000000,
+    "actualValue": 58067596,
     "pic": null,
     "status": "Chưa thực hiện",
     "title": "Tổng doanh thu",
@@ -108650,11 +108737,11 @@
     "formula": "Tổng doanh thu phát sinh trong kỳ đánh giá",
     "group": "M1. TÀI CHÍNH/KINH DOANH",
     "parentCode": "M1",
-    "actualMonth": 50000000,
+    "actualMonth": 58067596,
     "periods": {
       "monthly_7": {
         "target": 0,
-        "actual": 50000000
+        "actual": 58067596
       }
     }
   },
@@ -154254,7 +154341,7 @@
     "periodType": "monthly",
     "periodKey": "monthly_7",
     "targetValue": 0,
-    "actualValue": 0,
+    "actualValue": 18171574,
     "pic": null,
     "status": "Chưa thực hiện",
     "explanation": "",
@@ -154263,7 +154350,14 @@
     "formula": "",
     "group": "M3. KHÁCH HÀNG/DỊCH VỤ",
     "parentCode": "TM3-I01",
-    "frequency": "weekly"
+    "frequency": "weekly",
+    "actualMonth": 18171574,
+    "periods": {
+      "monthly_7": {
+        "target": 0,
+        "actual": 18171574
+      }
+    }
   },
   {
     "indicatorCode": "VM3-I01.02-MDA",
@@ -189647,7 +189741,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 448568465
+      }
+    }
   },
   {
     "id": "rec_m8_Wofloo_VM1-I02.01-WF",
@@ -189716,7 +189816,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 1168124339
+      }
+    }
   },
   {
     "id": "rec_m8_AS_VM1-I02.01-AS",
@@ -189785,7 +189891,13 @@
     "isOverridden": true,
     "year": 2026,
     "quarter": "Q3",
-    "month": 8
+    "month": 8,
+    "periods": {
+      "monthly_8": {
+        "target": 0,
+        "actual": 330926266
+      }
+    }
   },
   {
     "id": "rec_m8_NDTH_VM1-I02.01-NDTH",
