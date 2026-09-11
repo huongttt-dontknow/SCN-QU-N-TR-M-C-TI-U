@@ -38,13 +38,45 @@ export default function DashboardPage() {
       setIsLoadingRadar(true);
       const pType = filters.periodType || "monthly";
       const m = filters.month || "7";
+      const w = filters.week || "1";
       const q = (filters.quarter || "Q3").replace("Q", "");
       const y = filters.year || "2026";
+      const pKey = getPeriodKey();
+
+      // 1. Load từ localStorage làm fallback khởi đầu để không bao giờ bị nhảy lại số cũ
+      if (typeof window !== "undefined") {
+        const localStr = localStorage.getItem(`radar_scores_${filters.unitCode}_${pKey}`) ||
+                         localStorage.getItem(`radar_scores_${filters.unitCode}_monthly_${m}`) ||
+                         localStorage.getItem(`radar_scores_${filters.unitCode}_monthly_8`);
+        if (localStr) {
+          try {
+            const parsed = JSON.parse(localStr);
+            if (parsed && Array.isArray(parsed.points)) {
+              setDynamicRadarData(parsed);
+            }
+          } catch (e) {}
+        }
+      }
+
       try {
-        const res = await fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&quarter=${q}&year=${y}`);
+        const res = await fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}&periodKey=${pKey}`);
         if (res.ok) {
           const data = await res.json();
-          setDynamicRadarData(data);
+          if (data && Array.isArray(data.points) && data.points.length > 0) {
+            // Nạp dữ liệu mới nhất
+            setDynamicRadarData((prev: any) => {
+              if (!prev || !prev.points) return data;
+              // Nếu local storage có dữ liệu vừa nhập, ưu tiên giữ lại các điểm đã override
+              const mergedPoints = data.points.map((p: any) => {
+                const prevPoint = prev.points.find((prevP: any) => prevP.code === p.code);
+                if (prevPoint && prevPoint.isOverridden) {
+                  return { ...p, "Kỳ này": prevPoint["Kỳ này"], change: Math.round((prevPoint["Kỳ này"] - p["Kỳ trước"]) * 10) / 10 };
+                }
+                return p;
+              });
+              return { ...data, points: mergedPoints };
+            });
+          }
         }
       } catch (err) {
         console.error("Lỗi khi tải dữ liệu radar:", err);
@@ -53,7 +85,7 @@ export default function DashboardPage() {
       }
     };
     fetchRadarData();
-  }, [filters.unitCode, filters.periodType, filters.month, filters.quarter, filters.year]);
+  }, [filters.unitCode, filters.periodType, filters.month, filters.week, filters.quarter, filters.year]);
   // Helper tính periodKey dựa trên bộ lọc
   const getPeriodKey = () => {
     if (filters.periodType === "weekly") {
@@ -624,12 +656,21 @@ export default function DashboardPage() {
           )
         );
         if (match) {
-          let target = match.periods?.[pKey]?.target ?? (match.targetMonth || match.targetValue || 0);
-          let actual = match.periods?.[pKey]?.actual ?? (match.actualMonth || match.actualValue || 0);
+          let target = match.periods?.[pKey]?.target;
+          let actual = match.periods?.[pKey]?.actual;
+          if (target === undefined && actual === undefined) {
+            if (match.periodKey === pKey || !match.periodKey) {
+              target = match.targetMonth || match.targetValue || 0;
+              actual = match.actualMonth || match.actualValue || 0;
+            } else {
+              target = 0;
+              actual = 0;
+            }
+          }
           return {
-            target,
-            actual,
-            pct: calculateCompletionRate(target, actual, cCode, match.title)
+            target: target || 0,
+            actual: actual || 0,
+            pct: calculateCompletionRate(target || 0, actual || 0, cCode, match.title)
           };
         }
       }
@@ -989,9 +1030,9 @@ export default function DashboardPage() {
   } else {
     // Xem báo cáo Tháng: Lấy Kế hoạch Tháng (Master Target 6.69 Tỷ cho SCVN) & Lũy kế Thực tế Tháng
     const month8MasterTargets: Record<string, number> = {
-      TCT: 16124190344,
-      SCME: 9246075311,
-      SCVN: 6878115033,
+      TCT: 16153115033,
+      SCME: 9235000000,
+      SCVN: 6918115033,
       Wofloo: 560000000, WF: 560000000, WO: 560000000,
       AS: 2363216100,
       NDTH: 599908060,
@@ -1189,33 +1230,11 @@ export default function DashboardPage() {
     const normUnit = (filters.unitCode === "WF" || filters.unitCode === "WO") ? "Wofloo" : (filters.unitCode === "SCMU") ? "Music" : (filters.unitCode === "CNGP") ? "CN" : (filters.unitCode === "Studio") ? "SCS" : (filters.unitCode === "Creative") ? "CR" : (filters.unitCode === "LEGO") ? "Lego" : filters.unitCode;
     const currentMNum = Number(filters.month) || 8;
 
-    for (let m = 1; m <= 12; m++) {
+    for (let m = 1; m <= currentMNum; m++) {
       const mKey = `monthly_${m}`;
       
-      // Check if this month has any data for the selected unit (in MASTER_KPI_DATA or in DB)
-      let hasMonth = false;
-      const u = MASTER_KPI_DATA[normUnit] || MASTER_KPI_DATA[filters.unitCode] || MASTER_KPI_DATA["SCVN"];
-      for (const k in u) {
-        if (u[k].periods?.[mKey]) {
-          hasMonth = true;
-          break;
-        }
-      }
-
       const revRec = getKpiRecord(filters.unitCode, "VM1-I02.01", mKey);
       const trafRec = getKpiRecord(filters.unitCode, "VM3-I01.02", mKey) || getKpiRecord(filters.unitCode, "VM3-I01.01", mKey);
-
-      if (revRec && ((revRec.actual || 0) > 0 || (revRec.target || 0) > 0)) {
-        hasMonth = true;
-      }
-      if (trafRec && ((trafRec.actual || 0) > 0 || (trafRec.target || 0) > 0)) {
-        hasMonth = true;
-      }
-      if (m <= currentMNum && m <= 8 && filters.periodType === "monthly") {
-        hasMonth = true;
-      }
-
-      if (!hasMonth) continue;
 
       const revAct = revRec?.actual ?? 0;
       const revTgt = revRec?.target ?? 0;
@@ -2145,7 +2164,7 @@ export default function DashboardPage() {
               {/* Chi tiết biến động */}
               <div className="w-full md:w-72 shrink-0 flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-5">
                 <h4 className="text-xs font-black text-[var(--accent-purple)] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  📈 CHI TIẾT BIẾN ĐỘNG (7 MẶT MT)
+                  📈 CHI TIẾT BIẾN ĐỘNG (7 MT)
                 </h4>
                 <div className="space-y-2.5 text-xs flex-1">
                   <div className="flex justify-between text-xs text-[var(--text-muted)] font-black border-b border-white/10 pb-1.5 uppercase tracking-wider">

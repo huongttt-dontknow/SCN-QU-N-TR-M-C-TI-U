@@ -632,10 +632,10 @@ export async function POST(request: Request) {
 
     // Thiết lập Generative Model của Gemini với danh sách mô hình dự phòng tự động
     const MODEL_FALLBACK_LIST = [
+      "gemini-3.6-flash",
       "gemini-flash-latest",
-      "gemini-2.5-flash",
-      "gemini-1.5-flash-latest",
-      "gemini-2.5-pro",
+      "gemini-3.1-pro-preview",
+      "gemini-3-flash-preview",
       "gemini-pro-latest"
     ];
 

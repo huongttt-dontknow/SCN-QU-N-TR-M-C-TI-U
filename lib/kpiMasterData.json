@@ -373,9 +373,9 @@
           "pct": 0.5853
         },
         "monthly_8": {
-          "target": 6878115033,
+          "target": 6918115033,
           "actual": 3768470393,
-          "pct": 0.5479
+          "pct": 0.5447
         }
       }
     },
@@ -11941,6 +11941,16 @@
           "target": 560599316,
           "actual": 327802251,
           "pct": 0.5847
+        },
+        "monthly_8": {
+          "actual": 349434834,
+          "target": 0,
+          "pct": 0
+        },
+        "weekly_8_3": {
+          "actual": 76235900,
+          "target": 0,
+          "pct": 0
         }
       }
     },
@@ -12505,6 +12515,16 @@
         },
         "weekly_6_4": {
           "target": 50000000
+        },
+        "monthly_8": {
+          "actual": 32745498,
+          "target": 0,
+          "pct": 0
+        },
+        "weekly_8_3": {
+          "actual": 7144058,
+          "target": 0,
+          "pct": 0
         }
       }
     },
@@ -12884,6 +12904,16 @@
         },
         "weekly_7_3": {
           "actual": 20000000
+        },
+        "monthly_8": {
+          "actual": 66388133,
+          "target": 0,
+          "pct": 0
+        },
+        "weekly_8_3": {
+          "actual": 14483842,
+          "target": 0,
+          "pct": 0
         }
       }
     },
@@ -40774,7 +40804,11 @@
         "weekly_8_2": 50,
         "weekly_8_3": 50,
         "weekly_8_4": 50,
-        "monthly_8": 200,
+        "monthly_8": {
+          "target": 16153115033,
+          "actual": 12367884039,
+          "pct": 0.7656
+        },
         "quarterly_3": 600,
         "yearly_2026": 2400
       }
@@ -40792,7 +40826,11 @@
         "weekly_8_2": 50,
         "weekly_8_3": 50,
         "weekly_8_4": 50,
-        "monthly_8": 200,
+        "monthly_8": {
+          "target": 6918115033,
+          "actual": 3768470393,
+          "pct": 0.5447
+        },
         "quarterly_3": 600,
         "yearly_2026": 2400
       }
@@ -40810,7 +40848,11 @@
         "weekly_8_2": 50,
         "weekly_8_3": 50,
         "weekly_8_4": 50,
-        "monthly_8": 200,
+        "monthly_8": {
+          "target": 6918115033,
+          "actual": 3768470393,
+          "pct": 0.5447
+        },
         "quarterly_3": 600,
         "yearly_2026": 2400
       }
@@ -40828,7 +40870,11 @@
         "weekly_8_2": 50,
         "weekly_8_3": 50,
         "weekly_8_4": 50,
-        "monthly_8": 200,
+        "monthly_8": {
+          "target": 9235000000,
+          "actual": 8599413646,
+          "pct": 0.9312
+        },
         "quarterly_3": 600,
         "yearly_2026": 2400
       }
@@ -40846,7 +40892,11 @@
         "weekly_8_2": 50,
         "weekly_8_3": 50,
         "weekly_8_4": 50,
-        "monthly_8": 200,
+        "monthly_8": {
+          "target": 9235000000,
+          "actual": 8599413646,
+          "pct": 0.9312
+        },
         "quarterly_3": 600,
         "yearly_2026": 2400
       }
@@ -42368,7 +42418,9 @@
           "target": 25
         },
         "monthly_8": {
-          "target": 9235000000
+          "target": 9235000000,
+          "actual": 8599413646,
+          "pct": 0.9312
         },
         "weekly_8_1": {
           "target": 2308750000,
@@ -42400,7 +42452,9 @@
           "target": 25
         },
         "monthly_8": {
-          "target": 10
+          "target": 8635000000,
+          "actual": 8375826232,
+          "pct": 0.97
         },
         "weekly_8_1": {
           "target": 2.5
@@ -42430,7 +42484,9 @@
           "target": 25
         },
         "monthly_8": {
-          "target": 10
+          "target": 100000000,
+          "actual": 36787644,
+          "pct": 0.3679
         },
         "weekly_8_1": {
           "target": 2.5
@@ -42460,7 +42516,9 @@
           "target": 25
         },
         "monthly_8": {
-          "target": 10
+          "target": 500000000,
+          "actual": 186799770,
+          "pct": 0.3736
         },
         "weekly_8_1": {
           "target": 2.5

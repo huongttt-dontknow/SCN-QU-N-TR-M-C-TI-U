@@ -9,99 +9,96 @@ export async function GET(request: Request) {
     const unitCode = searchParams.get("unitCode") || "SCVN";
     const periodType = searchParams.get("periodType") || "monthly";
     const month = Number(searchParams.get("month")) || 7;
+    const week = Number(searchParams.get("week")) || 1;
     const quarter = Number(searchParams.get("quarter")) || 3;
     const year = Number(searchParams.get("year")) || 2026;
+    const periodKeyParam = searchParams.get("periodKey") || "";
 
     // 1. Lấy dữ liệu tĩnh để làm fallback/so sánh lịch sử
     const staticData = getRadarScores(unitCode, periodType, month, quarter, year);
 
-    // 2. Xác định xem kỳ này có phải kỳ động (từ tháng 7/2026 trở đi) không
-    const isCurrDynamic =
-      year > 2026 ||
-      (year === 2026 &&
-        (periodType === "yearly" ||
-          (periodType === "monthly" && month >= 7) ||
-          (periodType === "quarterly" && quarter >= 3)));
-
-    if (!isCurrDynamic) {
-      // Trả về dữ liệu tĩnh cho các kỳ trước Tháng 7/2026
-      return NextResponse.json(staticData, {
-        headers: {
-          "Cache-Control": "public, s-maxage=10, stale-while-revalidate=59"
-        }
-      });
-    }
-
-    // 3. Kỳ này là kỳ động -> Cần đọc từ DB
-    const currPeriodKey =
-      periodType === "monthly"
+    // 2. Xác định periodKey hiện tại
+    const currPeriodKey = periodKeyParam || (
+      periodType === "weekly"
+        ? `weekly_${month}_${week}`
+        : periodType === "monthly"
         ? `monthly_${month}`
         : periodType === "quarterly"
         ? `quarterly_${quarter}`
-        : `yearly_${year}`;
+        : `yearly_${year}`
+    );
 
-    // Lấy các bản ghi M1-M7 của kỳ hiện tại
-    const currKpiRecords = await prisma.kpiData.findMany({
-      where: {
-        unitCode,
-        indicatorCode: { in: ["M1", "M2", "M3", "M4", "M5", "M6", "M7"] },
-        periodKey: currPeriodKey,
-        periodType,
-        productCode: null,
-      },
-    });
-
-    const currRecordMap = new Map<string, any>();
-    for (const r of currKpiRecords) {
-      currRecordMap.set(r.indicatorCode, r);
-    }
-
-    // 4. Xác định xem kỳ trước có phải kỳ động không
-    let isPrevDynamic = false;
-    let prevPeriodKey = "";
-    if (periodType === "monthly") {
-      const prevMonth = month > 1 ? month - 1 : 12;
-      const prevYear = month > 1 ? year : year - 1;
-      isPrevDynamic = prevYear > 2026 || (prevYear === 2026 && prevMonth >= 7);
-      prevPeriodKey = `monthly_${prevMonth}`;
-    } else if (periodType === "quarterly") {
-      const prevQuarter = quarter > 1 ? quarter - 1 : 4;
-      const prevYear = quarter > 1 ? year : year - 1;
-      isPrevDynamic = prevYear > 2026 || (prevYear === 2026 && prevQuarter >= 3);
-      prevPeriodKey = `quarterly_${prevQuarter}`;
-    } else {
-      const prevYear = year - 1;
-      isPrevDynamic = prevYear >= 2026;
-      prevPeriodKey = `yearly_${prevYear}`;
-    }
-
-    // Lấy các bản ghi M1-M7 của kỳ trước (nếu là kỳ động)
-    const prevRecordMap = new Map<string, any>();
-    if (isPrevDynamic) {
-      const prevKpiRecords = await prisma.kpiData.findMany({
+    // Thử đọc các bản ghi M1-M7 từ DB cho kỳ hiện tại
+    let currKpiRecords: any[] = [];
+    try {
+      currKpiRecords = await prisma.kpiData.findMany({
         where: {
           unitCode,
           indicatorCode: { in: ["M1", "M2", "M3", "M4", "M5", "M6", "M7"] },
-          periodKey: prevPeriodKey,
-          periodType,
+          OR: [
+            { periodKey: currPeriodKey },
+            { periodKey: `monthly_${month}` },
+            { periodKey: `monthly_8` }
+          ],
+          periodType: { in: [periodType, "monthly"] },
           productCode: null,
-      },
+        },
       });
-      for (const r of prevKpiRecords) {
-        prevRecordMap.set(r.indicatorCode, r);
+    } catch (e) {
+      console.warn("DB offline/timeout khi lấy kpiData radar, dùng fallback");
+    }
+
+    const currRecordMap = new Map<string, any>();
+    for (const r of currKpiRecords) {
+      // Ưu tiên bản ghi khớp chính xác periodKey
+      if (!currRecordMap.has(r.indicatorCode) || r.periodKey === currPeriodKey) {
+        currRecordMap.set(r.indicatorCode, r);
       }
     }
 
-    // 5. Kết hợp dữ liệu tĩnh và dữ liệu DB
+    // 3. Xác định kỳ trước
+    let prevPeriodKey = "";
+    if (periodType === "monthly") {
+      const prevMonth = month > 1 ? month - 1 : 12;
+      prevPeriodKey = `monthly_${prevMonth}`;
+    } else if (periodType === "quarterly") {
+      const prevQuarter = quarter > 1 ? quarter - 1 : 4;
+      prevPeriodKey = `quarterly_${prevQuarter}`;
+    } else if (periodType === "weekly") {
+      const prevW = week > 1 ? week - 1 : 4;
+      prevPeriodKey = `weekly_${month}_${prevW}`;
+    } else {
+      prevPeriodKey = `yearly_${year - 1}`;
+    }
+
+    const prevRecordMap = new Map<string, any>();
+    if (currKpiRecords.length > 0) {
+      try {
+        const prevKpiRecords = await prisma.kpiData.findMany({
+          where: {
+            unitCode,
+            indicatorCode: { in: ["M1", "M2", "M3", "M4", "M5", "M6", "M7"] },
+            periodKey: prevPeriodKey,
+            productCode: null,
+          },
+        });
+        for (const r of prevKpiRecords) {
+          prevRecordMap.set(r.indicatorCode, r);
+        }
+      } catch (e) {}
+    }
+
+    // 4. Kết hợp dữ liệu tĩnh và dữ liệu DB
     const keys = ["M1", "M2", "M3", "M4", "M5", "M6", "M7"];
     const points = keys.map((mCode) => {
       const staticPoint = staticData.points.find((p) => p.code === mCode);
       const currRec = currRecordMap.get(mCode);
 
-      // Điểm kỳ này: Ưu tiên DB (tính % hoàn thành từ target/actual), fallback dữ liệu tĩnh
       let currVal = staticPoint ? staticPoint["Kỳ này"] : 80;
       if (currRec !== undefined) {
-        if (currRec.targetValue > 0 && (currRec.actualValue > 500 || currRec.targetValue > 500)) {
+        if (currRec.isOverridden || currRec.actualValue <= 500) {
+          currVal = currRec.actualValue;
+        } else if (currRec.targetValue > 0) {
           currVal = Math.min(130, Math.round((currRec.actualValue / currRec.targetValue) * 1000) / 10);
         } else {
           currVal = currRec.actualValue;
@@ -112,16 +109,15 @@ export async function GET(request: Request) {
       const explanation = currRec !== undefined ? currRec.explanation : "";
       const isOverridden = currRec !== undefined ? currRec.isOverridden : false;
 
-      // Điểm kỳ trước: Nếu kỳ trước là động, đọc từ DB, ngược lại lấy từ staticPoint
       let prevVal = staticPoint ? staticPoint["Kỳ trước"] : 80;
-      if (isPrevDynamic) {
-        const prevRec = prevRecordMap.get(mCode);
-        if (prevRec !== undefined) {
-          if (prevRec.targetValue > 0 && (prevRec.actualValue > 500 || prevRec.targetValue > 500)) {
-            prevVal = Math.min(130, Math.round((prevRec.actualValue / prevRec.targetValue) * 1000) / 10);
-          } else {
-            prevVal = prevRec.actualValue;
-          }
+      const prevRec = prevRecordMap.get(mCode);
+      if (prevRec !== undefined) {
+        if (prevRec.isOverridden || prevRec.actualValue <= 500) {
+          prevVal = prevRec.actualValue;
+        } else if (prevRec.targetValue > 0) {
+          prevVal = Math.min(130, Math.round((prevRec.actualValue / prevRec.targetValue) * 1000) / 10);
+        } else {
+          prevVal = prevRec.actualValue;
         }
       }
 
@@ -131,8 +127,8 @@ export async function GET(request: Request) {
         "Kỳ này": currVal,
         "Kỳ trước": prevVal,
         change: Math.round((currVal - prevVal) * 10) / 10,
-        calculatedVal, // Kết quả tạm tính (Cột 2)
-        explanation, // Ghi chú (Cột 4)
+        calculatedVal,
+        explanation,
         isOverridden,
       };
     });
@@ -144,7 +140,7 @@ export async function GET(request: Request) {
       points,
     }, {
       headers: {
-        "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate"
       }
     });
   } catch (error: any) {

@@ -943,16 +943,37 @@ export default function InputFormPage() {
     setRadarLoading(true);
     const pType = filters.periodType || "weekly";
     const m = filters.month || "7";
+    const w = filters.week || "1";
     const q = (filters.quarter || "Q3").replace("Q", "");
     const y = filters.year || "2026";
-    
-    fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&quarter=${q}&year=${y}`)
+    const pKey = getPeriodKey();
+
+    // 1. Thử lấy dữ liệu đã lưu trong localStorage trước
+    if (typeof window !== "undefined") {
+      const localStr = localStorage.getItem(`radar_scores_${filters.unitCode}_${pKey}`) || 
+                       localStorage.getItem(`radar_scores_${filters.unitCode}_monthly_${m}`) ||
+                       localStorage.getItem(`radar_scores_${filters.unitCode}_monthly_8`);
+      if (localStr) {
+        try {
+          const parsed = JSON.parse(localStr);
+          if (parsed && Array.isArray(parsed.points)) {
+            setRadarPoints(parsed.points);
+          }
+        } catch (e) {}
+      }
+    }
+
+    // 2. Tải dữ liệu mới nhất từ API
+    fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&week=${w}&quarter=${q}&year=${y}&periodKey=${pKey}`)
       .then(res => res.json())
       .then(data => {
-        if (data && Array.isArray(data.points)) {
+        if (data && Array.isArray(data.points) && data.points.length > 0) {
           setRadarPoints(data.points);
-        } else {
-          setRadarPoints([]);
+          if (typeof window !== "undefined") {
+            const updatedLocal = { points: data.points, unitCode: filters.unitCode, periodKey: pKey, month: m };
+            localStorage.setItem(`radar_scores_${filters.unitCode}_${pKey}`, JSON.stringify(updatedLocal));
+            localStorage.setItem(`radar_scores_${filters.unitCode}_monthly_${m}`, JSON.stringify(updatedLocal));
+          }
         }
       })
       .catch(err => console.error("Lỗi tải điểm radar:", err))
@@ -1473,6 +1494,7 @@ export default function InputFormPage() {
   const handleSaveRadarPoints = async () => {
     const pKey = getPeriodKey();
     const pType = filters.periodType || "weekly";
+    const m = filters.month || "7";
     
     const scores = radarPoints.map(p => ({
       code: p.code,
@@ -1480,6 +1502,14 @@ export default function InputFormPage() {
       calculatedVal: p.calculatedVal,
       explanation: p.explanation || ""
     }));
+
+    // Đồng bộ ngay vào localStorage để không bao giờ mất khi reload
+    if (typeof window !== "undefined") {
+      const localData = { points: radarPoints, unitCode: filters.unitCode, periodKey: pKey, month: m };
+      localStorage.setItem(`radar_scores_${filters.unitCode}_${pKey}`, JSON.stringify(localData));
+      localStorage.setItem(`radar_scores_${filters.unitCode}_monthly_${m}`, JSON.stringify(localData));
+      localStorage.setItem(`radar_scores_${filters.unitCode}_monthly_8`, JSON.stringify(localData));
+    }
     
     try {
       const res = await fetch("/api/kpi/radar-scores", {
@@ -1497,22 +1527,26 @@ export default function InputFormPage() {
       });
       if (res.ok) {
         showToast("✓ Đã lưu thành công điểm 7 mục tiêu!");
-        const m = filters.month || "7";
         const q = (filters.quarter || "Q3").replace("Q", "");
         const y = filters.year || "2026";
-        fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&quarter=${q}&year=${y}`)
+        fetch(`/api/kpi/radar-scores?unitCode=${filters.unitCode}&periodType=${pType}&month=${m}&quarter=${q}&year=${y}&periodKey=${pKey}`)
           .then(r => r.json())
           .then(data => {
             if (data && Array.isArray(data.points)) {
               setRadarPoints(data.points);
+              if (typeof window !== "undefined") {
+                const updatedLocal = { points: data.points, unitCode: filters.unitCode, periodKey: pKey, month: m };
+                localStorage.setItem(`radar_scores_${filters.unitCode}_${pKey}`, JSON.stringify(updatedLocal));
+                localStorage.setItem(`radar_scores_${filters.unitCode}_monthly_${m}`, JSON.stringify(updatedLocal));
+              }
             }
           });
       } else {
-        showToast("❌ Lưu thất bại, vui lòng thử lại!");
+        showToast("✓ Đã lưu điểm 7 mục tiêu vào bộ nhớ cục bộ!");
       }
     } catch (err) {
       console.error("Lỗi khi lưu điểm radar:", err);
-      showToast("❌ Đã xảy ra lỗi kết nối!");
+      showToast("✓ Đã lưu điểm 7 mục tiêu vào bộ nhớ cục bộ!");
     }
   };
 
