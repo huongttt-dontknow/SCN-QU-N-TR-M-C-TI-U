@@ -574,7 +574,7 @@
   {
     "excel_code": "VM2-I01.01-WF",
     "code": "VM2-I01.01-WF",
-    "title": "SP BP WF",
+    "title": "Sản lượng BP Wolfoo (WO)",
     "unit": "Nội dung",
     "formula": "Số lượng video hoàn thành sản xuất",
     "frequency": "weekly",
@@ -585,7 +585,7 @@
   {
     "excel_code": "VM2-I01.01-AS",
     "code": "VM2-I01.01-AS",
-    "title": "SP BP AS",
+    "title": "Sản lượng BP Animated Story (AS)",
     "unit": "Nội dung",
     "formula": "Số lượng video hoàn thành sản xuất",
     "frequency": "weekly",
@@ -596,7 +596,7 @@
   {
     "excel_code": "VM2-I01.01-Lego",
     "code": "VM2-I01.01-Lego",
-    "title": "SP DA Lego",
+    "title": "Sản lượng DA Lego (LEGO)",
     "unit": "Nội dung",
     "formula": "Số lượng video hoàn thành sản xuất",
     "frequency": "weekly",
@@ -607,7 +607,7 @@
   {
     "excel_code": "VM2-I01.02-NDTH",
     "code": "VM2-I01.02-NDTH",
-    "title": "SP BP NDTH",
+    "title": "Số lượng video BIÊN TẬP hoàn thành",
     "unit": "Nội dung",
     "formula": "Số lượng video BIÊN TẬP hoàn thành (funny)",
     "frequency": "weekly",
@@ -629,7 +629,7 @@
   {
     "excel_code": "DM2-I01.01-DA01",
     "code": "DM2-I01.01-DA01",
-    "title": "DA 01",
+    "title": "Sản lượng Dự án 01 (DA01)",
     "unit": "Nội dung",
     "formula": "Số lượng video hoàn thành sản xuất",
     "frequency": "weekly",
@@ -640,7 +640,7 @@
   {
     "excel_code": "SM2-I01.01",
     "code": "SM2-I01.01",
-    "title": "SCS",
+    "title": "Sản lượng SCS",
     "unit": "Nội dung",
     "formula": "Số lượng video hoàn thành sản xuất",
     "frequency": "monthly",
@@ -651,7 +651,7 @@
   {
     "excel_code": "VM2-I01.03-NDTH",
     "code": "VM2-I01.03-NDTH",
-    "title": "BP NDTH",
+    "title": "SP BP NDTH",
     "unit": "Nội dung",
     "formula": "Số lượng video hoàn thành sản xuất (toca)",
     "frequency": "weekly",
@@ -662,7 +662,7 @@
   {
     "excel_code": "CM2-I01.01-CR",
     "code": "CM2-I01.01-CR",
-    "title": "BP Creative",
+    "title": "Sản lượng BP Creative",
     "unit": "Nội dung",
     "formula": "Số lượng video hoàn thành sản xuất (toca)",
     "frequency": "weekly",
@@ -673,7 +673,7 @@
   {
     "excel_code": "MM2-I01.01",
     "code": "MM2-I01.01",
-    "title": "SP âm nhạc SCMU",
+    "title": "Sản lượng BP Music (SCMU)",
     "unit": "Nội dung",
     "formula": "Số lượng SP âm nhạc hoàn thành",
     "frequency": "weekly",
@@ -1012,9 +1012,9 @@
     "rollup": "SUM"
   },
   {
-    "excel_code": "SM3-I01.04-SCS",
-    "code": "SM3-I01.04-SCS",
-    "title": "View SCS",
+    "excel_code": "SM3-I01.04",
+    "code": "SM3-I01.04",
+    "title": "Traffic BP Studio (SCS)",
     "unit": "Views",
     "formula": "",
     "frequency": "weekly",
@@ -1023,9 +1023,9 @@
     "rollup": "SUM"
   },
   {
-    "excel_code": "MM3-I01.01-SCMU",
-    "code": "MM3-I01.01-SCMU",
-    "title": "View SCMU",
+    "excel_code": "MM3-I01.01",
+    "code": "MM3-I01.01",
+    "title": "Traffic BP Music (SCMU)",
     "unit": "Views",
     "formula": "",
     "frequency": "weekly",
@@ -1034,9 +1034,9 @@
     "rollup": "SUM"
   },
   {
-    "excel_code": "NM3-I01.05-CNGP",
-    "code": "NM3-I01.05-CNGP",
-    "title": "View CNGP",
+    "excel_code": "NM3-I01.05",
+    "code": "NM3-I01.05",
+    "title": "Traffic CNGP (CN)",
     "unit": "Views",
     "formula": "",
     "frequency": "weekly",

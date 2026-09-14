@@ -561,21 +561,61 @@ export async function GET(request: Request) {
           r.parentCode = "VM1-I02.03";
         } else if (/^(VM1|DM1|SM1|MM1|NM1|CM1)-I02\.04-/i.test(code)) {
           r.parentCode = "VM1-I02.04";
+        } else if (/^(VM2|CM2|DM2|MM2|NM2|SM2)-I01\.01-/i.test(code)) {
+          r.parentCode = "VM2-I01.01";
+        } else if (/^(VM3|CM3|DM3|MM3|NM3|SM3)-I01\.02-/i.test(code)) {
+          r.parentCode = "TM3-I01.02";
+        } else if (/^(VM7|CM7|DM7|MM7|NM7|SM7)-I03\.01-/i.test(code)) {
+          r.parentCode = "VM7-I03.01";
         }
       });
 
-      const children = enrichedRecords.filter((r: any) => r.parentCode === "VM1-I02.01");
-      if (children.length > 0) {
-        const sumTarget = children.reduce((sum: number, c: any) => sum + (c.targetValue || c.target || 0), 0);
-        const sumActual = children.reduce((sum: number, c: any) => sum + (c.actualValue || c.actual || 0), 0);
+      const recMap = new Map(enrichedRecords.map((r: any) => [r.indicatorCode, r]));
+      for (let pass = 0; pass < 3; pass++) {
+        const childrenByParent = new Map<string, any[]>();
+        enrichedRecords.forEach((r: any) => {
+          if (r.parentCode) {
+            if (!childrenByParent.has(r.parentCode)) childrenByParent.set(r.parentCode, []);
+            childrenByParent.get(r.parentCode)!.push(r);
+          }
+        });
 
-        const parentRecord = enrichedRecords.find((r: any) => r.indicatorCode === "VM1-I02.01" || r.code === "VM1-I02.01");
-        if (parentRecord) {
-          parentRecord.targetValue = sumTarget;
-          parentRecord.actualValue = sumActual;
-          if (parentRecord.target !== undefined) parentRecord.target = sumTarget;
-          if (parentRecord.actual !== undefined) parentRecord.actual = sumActual;
-        }
+        childrenByParent.forEach((children, parentCode) => {
+          const parent = recMap.get(parentCode);
+          if (!parent) return;
+
+          const isAvg = parent.aggregationMethod === "AVERAGE" || 
+                        parentCode.startsWith("VM5-I02") || 
+                        parentCode === "VM7-I03.01" || 
+                        parentCode === "VM1-I01.01" || 
+                        parentCode === "VM1-I01.02" || 
+                        parentCode === "VM1-I05.01" || 
+                        parentCode === "VM1-I05.02";
+
+          let sumTgt = 0, sumAct = 0, cntTgt = 0, cntAct = 0;
+          for (const child of children) {
+            const t = child.targetValue || child.target || 0;
+            const a = child.actualValue || child.actual || 0;
+            sumTgt += t;
+            sumAct += a;
+            if (t > 0) cntTgt++;
+            if (a > 0) cntAct++;
+          }
+
+          let parentTgt = sumTgt;
+          let parentAct = sumAct;
+          if (isAvg && children.length > 0) {
+            parentTgt = cntTgt > 0 ? sumTgt / cntTgt : sumTgt / children.length;
+            parentAct = cntAct > 0 ? sumAct / cntAct : sumAct / children.length;
+            parentTgt = Math.round(parentTgt * 100) / 100;
+            parentAct = Math.round(parentAct * 100) / 100;
+          }
+
+          parent.targetValue = parentTgt;
+          parent.actualValue = parentAct;
+          if (parent.target !== undefined) parent.target = parentTgt;
+          if (parent.actual !== undefined) parent.actual = parentAct;
+        });
       }
     }
 
@@ -871,31 +911,40 @@ async function syncKpisBetweenUnits(
     { fromUnit: "Lego", fromCode: "VM1-I02.01", toUnit: "SCVN", toCode: "VM1-I02.01-Lego", title: "Doanh thu DA Lego" },
     { fromUnit: "DA01", fromCode: "DM1-I02.01", toUnit: "SCVN", toCode: "DM1-I02.01-DA01", title: "Doanh thu DA 01" },
     { fromUnit: "CR", fromCode: "CM1-I02.01", toUnit: "SCVN", toCode: "CM1-I02.01-CR", title: "Doanh thu BP Creative" },
-    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "SCVN", toCode: "MM1-I02.01-SCMU", title: "Doanh thu SCMU" },
-    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "SCVN", toCode: "NM1-I02.01-CNGP", title: "Doanh thu CNGP" },
-    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "SCVN", toCode: "SM1-I02.01-SCS", title: "Doanh thu SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01", toUnit: "SCVN", toCode: "MM1-I02.01", title: "Doanh thu SCMU" },
+    { fromUnit: "CN", fromCode: "NM1-I02.01", toUnit: "SCVN", toCode: "NM1-I02.01", title: "Doanh thu CNGP" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01", toUnit: "SCVN", toCode: "SM1-I02.01", title: "Doanh thu SCS" },
     { fromUnit: "Wofloo", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-WF", title: "Doanh thu NB BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-AS", title: "Doanh thu NB BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-NDTH", title: "Doanh thu NB BP NDTH" },
     { fromUnit: "Lego", fromCode: "VM1-I02.02", toUnit: "SCVN", toCode: "VM1-I02.02-Lego", title: "Doanh thu NB DA Lego" },
     { fromUnit: "DA01", fromCode: "DM1-I02.02", toUnit: "SCVN", toCode: "DM1-I02.02-DA01", title: "Doanh thu NB DA 01" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01.01", toUnit: "SCVN", toCode: "SM1-I02.01.01", title: "Doanh thu NB SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01.01", toUnit: "SCVN", toCode: "MM1-I02.01.01", title: "Doanh thu NB SCMU" },
+    { fromUnit: "CN", fromCode: "CM1-I02.01-CNGP", toUnit: "SCVN", toCode: "CM1-I02.01-CNGP", title: "Doanh thu NB CNGP" },
     { fromUnit: "CR", fromCode: "CM1-I02.02", toUnit: "SCVN", toCode: "CM1-I02.02-CR", title: "Doanh thu NB BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-WF", title: "Doanh thu chéo BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-AS", title: "Doanh thu chéo BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-NDTH", title: "Doanh thu chéo BP NDTH" },
     { fromUnit: "Lego", fromCode: "VM1-I02.03", toUnit: "SCVN", toCode: "VM1-I02.03-Lego", title: "Doanh thu chéo DA Lego" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01.03", toUnit: "SCVN", toCode: "SM1-I02.01.03", title: "Doanh thu chéo SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01.02", toUnit: "SCVN", toCode: "MM1-I02.01.02", title: "Doanh thu chéo SCMU" },
     { fromUnit: "Wofloo", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-WF", title: "Doanh thu ĐT BP WF" },
     { fromUnit: "AS", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-AS", title: "Doanh thu ĐT BP AS" },
     { fromUnit: "NDTH", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-NDTH", title: "Doanh thu ĐT BP NDTH" },
     { fromUnit: "Lego", fromCode: "VM1-I02.04", toUnit: "SCVN", toCode: "VM1-I02.04-Lego", title: "Doanh thu ĐT DA Lego" },
+    { fromUnit: "SCS", fromCode: "SM1-I02.01.04", toUnit: "SCVN", toCode: "SM1-I02.01.04", title: "Doanh thu ĐT SCS" },
+    { fromUnit: "Music", fromCode: "MM1-I02.01.03", toUnit: "SCVN", toCode: "MM1-I02.01.03", title: "Doanh thu ĐT SCMU" },
     { fromUnit: "CR", fromCode: "CM1-I02.03", toUnit: "SCVN", toCode: "CM1-I02.03-CR", title: "Doanh thu ĐT BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-WF", title: "SP BP WF" },
     { fromUnit: "AS", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-AS", title: "SP BP AS" },
     { fromUnit: "Lego", fromCode: "VM2-I01.01", toUnit: "SCVN", toCode: "VM2-I01.01-Lego", title: "SP DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM2-I01.02", toUnit: "SCVN", toCode: "VM2-I01.02-NDTH", title: "SP BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM2-I01.01", toUnit: "SCVN", toCode: "DM2-I01.01-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "SM2-I01.01", toUnit: "SCVN", toCode: "SM2-I01.01", title: "SCS" },
     { fromUnit: "NDTH", fromCode: "VM2-I01.03", toUnit: "SCVN", toCode: "VM2-I01.03-NDTH", title: "BP NDTH" },
     { fromUnit: "CR", fromCode: "CM2-I01.01", toUnit: "SCVN", toCode: "CM2-I01.01-CR", title: "BP Creative" },
+    { fromUnit: "Music", fromCode: "MM2-I01.01", toUnit: "SCVN", toCode: "MM2-I01.01", title: "SP âm nhạc SCMU" },
     { fromUnit: "Wofloo", fromCode: "VWM2-I01.3", toUnit: "SCVN", toCode: "VWM2-I01.3-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VAM2-I01.3", toUnit: "SCVN", toCode: "VAM2-I01.3-AS", title: "BP AS" },
     { fromUnit: "Wofloo", fromCode: "VWM2-I01.4", toUnit: "SCVN", toCode: "VWM2-I01.4-WF", title: "BP WF" },
@@ -909,12 +958,17 @@ async function syncKpisBetweenUnits(
     { fromUnit: "Lego", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-Lego", title: "Video >1M  DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-NDTH", title: "Video >1M  BP NDTH" },
     { fromUnit: "DA01", fromCode: "TM4-I02.01", toUnit: "SCVN", toCode: "TM4-I02.01-DA01", title: "Video >1M  DA 01" },
+    { fromUnit: "SCS", fromCode: "SM2-I02.01", toUnit: "SCVN", toCode: "SM2-I02.01", title: "Video >1M SCS" },
+    { fromUnit: "Music", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-SCMU", title: "Video >1M SCMU" },
     { fromUnit: "CR", fromCode: "VM2-I02.01", toUnit: "SCVN", toCode: "VM2-I02.01-CR", title: "Video >1M  BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-WF", title: "View BP WF" },
     { fromUnit: "AS", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-AS", title: "View BP AS" },
     { fromUnit: "Lego", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-Lego", title: "View DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM3-I01.02", toUnit: "SCVN", toCode: "VM3-I01.02-NDTH", title: "View BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM3-I01.03", toUnit: "SCVN", toCode: "DM3-I01.03-DA01", title: "View DA 01" },
+    { fromUnit: "SCS", fromCode: "SM3-I01.04", toUnit: "SCVN", toCode: "SM3-I01.04-SCS", title: "View SCS" },
+    { fromUnit: "Music", fromCode: "MM3-I01.01", toUnit: "SCVN", toCode: "MM3-I01.01-SCMU", title: "View SCMU" },
+    { fromUnit: "CN", fromCode: "NM3-I01.05", toUnit: "SCVN", toCode: "NM3-I01.05-CNGP", title: "View CNGP" },
     { fromUnit: "CR", fromCode: "CM3-I01.01", toUnit: "SCVN", toCode: "CM3-I01.01-CR", title: "View BP Creative" },
     { fromUnit: "Wofloo", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM2-I03.01", toUnit: "SCVN", toCode: "VM2-I03.01-AS", title: "BP AS" },
@@ -930,6 +984,8 @@ async function syncKpisBetweenUnits(
     { fromUnit: "Lego", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM4-I02.01", toUnit: "SCVN", toCode: "VM4-I02.01-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM4-I02.01", toUnit: "SCVN", toCode: "DM4-I02.01-DA01", title: "DA 01" },
+    { fromUnit: "SCS", fromCode: "SM4-I02.01", toUnit: "SCVN", toCode: "SM4-I02.01-SCS", title: "SCS" },
+    { fromUnit: "Music", fromCode: "MM4-I02.01", toUnit: "SCVN", toCode: "MM4-I02.01-SCMU", title: "SCMU" },
     { fromUnit: "Wofloo", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-WF", title: "BP WF" },
     { fromUnit: "AS", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-AS", title: "BP AS" },
     { fromUnit: "Lego", fromCode: "VM4-I02.02", toUnit: "SCVN", toCode: "VM4-I02.02-Lego", title: "DA Lego" },
@@ -976,8 +1032,29 @@ async function syncKpisBetweenUnits(
     { fromUnit: "Lego", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-Lego", title: "DA Lego" },
     { fromUnit: "NDTH", fromCode: "VM6-I01.02", toUnit: "SCVN", toCode: "VM6-I01.02-NDTH", title: "BP NDTH" },
     { fromUnit: "DA01", fromCode: "DM6-I01.02", toUnit: "SCVN", toCode: "DM6-I01.02-DA01", title: "DA 01" },
-    { fromUnit: "CR", fromCode: "CM6-I01.02", toUnit: "SCVN", toCode: "CM6-I01.02-CR", title: "BP Creative" }
+    { fromUnit: "CR", fromCode: "CM6-I01.02", toUnit: "SCVN", toCode: "CM6-I01.02-CR", title: "BP Creative" },
+    { fromUnit: "Wofloo", fromCode: "VM7-I03.01", toUnit: "SCVN", toCode: "VM7-I03.01-WF", title: "Kỷ luật BP WF" },
+    { fromUnit: "AS", fromCode: "VM7-I03.01", toUnit: "SCVN", toCode: "VM7-I03.01-AS", title: "Kỷ luật BP AS" },
+    { fromUnit: "Lego", fromCode: "VM7-I03.01", toUnit: "SCVN", toCode: "VM7-I03.01-Lego", title: "Kỷ luật DA Lego" },
+    { fromUnit: "NDTH", fromCode: "VM7-I03.01", toUnit: "SCVN", toCode: "VM7-I03.01-NDTH", title: "Kỷ luật BP NDTH" },
+    { fromUnit: "DA01", fromCode: "DM7-I03.01", toUnit: "SCVN", toCode: "DM7-I03.01-DA01", title: "Kỷ luật DA 01" },
+    { fromUnit: "SCS", fromCode: "SM7-I03.01", toUnit: "SCVN", toCode: "SM7-I03.01-SCS", title: "Kỷ luật SCS" },
+    { fromUnit: "Music", fromCode: "MM7-I03.01", toUnit: "SCVN", toCode: "MM7-I03.01-SCMU", title: "Kỷ luật SCMU" },
+    { fromUnit: "CN", fromCode: "NM7-I03.01", toUnit: "SCVN", toCode: "NM7-I03.01-CNGP", title: "Kỷ luật CNGP" },
+    { fromUnit: "CR", fromCode: "CM7-I03.01", toUnit: "SCVN", toCode: "CM7-I03.01-CR", title: "Kỷ luật BP Creative" }
   ];
+
+  const unitAliasesMap: Record<string, string[]> = {
+    "Wofloo": ["Wofloo", "WF", "WO"],
+    "AS": ["AS"],
+    "NDTH": ["NDTH"],
+    "Lego": ["Lego", "LEGO"],
+    "DA01": ["DA01"],
+    "SCS": ["SCS", "Studio"],
+    "Music": ["Music", "SCMU"],
+    "CN": ["CN", "CNGP"],
+    "CR": ["CR", "Creative"]
+  };
 
   const isMatchingUnit = (fromUnit: string, targetUnit?: string) => {
     if (!targetUnit) return true;
@@ -988,6 +1065,8 @@ async function syncKpisBetweenUnits(
     if ((u1 === "MUSIC" || u1 === "SCMU") && (u2 === "MUSIC" || u2 === "SCMU")) return true;
     if ((u1 === "CN" || u1 === "CNGP") && (u2 === "CN" || u2 === "CNGP")) return true;
     if ((u1 === "WOFLOO" || u1 === "WF" || u1 === "WO") && (u2 === "WOFLOO" || u2 === "WF" || u2 === "WO")) return true;
+    if ((u1 === "SCS" || u1 === "STUDIO") && (u2 === "SCS" || u2 === "STUDIO")) return true;
+    if ((u1 === "CR" || u1 === "CREATIVE") && (u2 === "CR" || u2 === "CREATIVE")) return true;
     return false;
   };
 
@@ -1004,7 +1083,7 @@ async function syncKpisBetweenUnits(
 
   const mappingsToProcess = matchedMappings.length > 0 ? matchedMappings : syncMappings;
 
-  const fromUnits = Array.from(new Set(mappingsToProcess.map(m => m.fromUnit)));
+  const fromUnits = Array.from(new Set(mappingsToProcess.flatMap(m => unitAliasesMap[m.fromUnit] || [m.fromUnit])));
   const fromCodes = Array.from(new Set(mappingsToProcess.map(m => m.fromCode)));
   const toUnits = Array.from(new Set(mappingsToProcess.map(m => m.toUnit)));
   const toCodes = Array.from(new Set(mappingsToProcess.map(m => m.toCode)));
@@ -1065,7 +1144,16 @@ async function syncKpisBetweenUnits(
 
   // === PHẦN 1: ĐỒNG BỘ CON -> CHA ===
   for (const map of mappingsToProcess) {
-    const source = sourceMap.get(`${map.fromUnit}_${map.fromCode}`);
+    const aliases = unitAliasesMap[map.fromUnit] || [map.fromUnit];
+    let source = null;
+    for (const u of aliases) {
+      const candidate = sourceMap.get(`${u}_${map.fromCode}`);
+      if (candidate && ((candidate.actualValue || 0) > 0 || (candidate.targetValue || 0) > 0)) {
+        source = candidate;
+        break;
+      }
+      if (candidate && !source) source = candidate;
+    }
     if (source) {
       const existing = targetMap.get(`${map.toUnit}_${map.toCode}`);
       const updateData = {

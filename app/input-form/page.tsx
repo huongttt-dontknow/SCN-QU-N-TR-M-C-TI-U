@@ -1075,14 +1075,7 @@ export default function InputFormPage() {
 
       if (Array.isArray(currData) && currData.length > 0) {
         const EXCLUDED_KPI_CODES = new Set([
-          "MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD",
-          ...(filters.unitCode === "SCVN" ? [
-            "CM1-I02.01", "DM1-I02.01",
-            "CM7-I03.01", "DM7-I03.01", "MM7-I03.01", "NM7-I03.01", "SM7-I03.01",
-            "CM7-I03.02", "DM7-I03.02", "MM7-I03.02", "NM7-I03.02", "SM7-I03.02",
-            "DM4-I02.01", "DM4-I02.02", "DM4-I02.04", "NM4-I02.04", "SM4-I02.06", "SM4-I02.06-SCMU",
-            "VM4-I02.05-CR"
-          ] : [])
+          "MM1-I02.01.01-CNGP", "VM1-I02.02-DA01", "VM1-I02.02-PD"
         ]);
         const mapped = currData
           .filter((d: any) => {
@@ -1145,14 +1138,20 @@ export default function InputFormPage() {
               }
               if (/^(VM1|CM1|DM1|MM1|NM1|SM1)-I02\.01(-[A-Z0-9]+)?$/i.test(code) && code !== "VM1-I02.01" && code !== "TM1-I02") {
                 parentCode = "VM1-I02.01";
-              } else if (/^(VM2|CM2|DM2|MM2|NM2|SM2)-I01\.01(-[A-Z0-9]+)?$/i.test(code) && code !== "VM2-I01.01" && code !== "TM2-I01") {
+              } else if (/^(VM1|CM1|DM1|MM1|NM1|SM1)-I02\.02(-[A-Z0-9]+)?$/i.test(code) && code !== "VM1-I02.02" && code !== "TM1-I02") {
+                parentCode = "VM1-I02.02";
+              } else if (/^(VM1|CM1|DM1|MM1|NM1|SM1)-I02\.03(-[A-Z0-9]+)?$/i.test(code) && code !== "VM1-I02.03" && code !== "TM1-I02") {
+                parentCode = "VM1-I02.03";
+              } else if (/^(VM1|CM1|DM1|MM1|NM1|SM1)-I02\.04(-[A-Z0-9]+)?$/i.test(code) && code !== "VM1-I02.04" && code !== "TM1-I02") {
+                parentCode = "VM1-I02.04";
+              } else if (/^(DM2|CM2|SM2)-I01\.01(-[A-Z0-9]+)?$/i.test(code)) {
+                parentCode = "VM2-I02.01";
+              } else if (/^(VM2|MM2|NM2)-I01\.01(-[A-Z0-9]+)?$/i.test(code) && code !== "VM2-I01.01" && code !== "TM2-I01") {
                 parentCode = "VM2-I01.01";
-              } else if (/^(VM3|CM3|DM3|MM3|NM3|SM3)-I01\.(01|02|03|04|05)(-[A-Z0-9]+)?$/i.test(code) && code !== "VM3-I01.02" && code !== "TM3-I01") {
-                parentCode = "VM3-I01.02";
-              } else if (/^(VM7|CM7|DM7|MM7|NM7|SM7)-I01\.01-/i.test(code)) {
-                parentCode = "VM7-I01.01";
-              } else if (/^(VM7|CM7|DM7|MM7|NM7|SM7)-I03\.02-/i.test(code)) {
-                parentCode = "VM7-I03.02";
+              } else if (/^(VM3|CM3|DM3|MM3|NM3|SM3)-I01\.(01|02|03|04|05)(-[A-Z0-9]+)?$/i.test(code) && code !== "TM3-I01.02" && code !== "TM3-I01" && code !== "TM3-I01.03" && code !== "VM3-I01.04" && code !== "VM3-I01.05" && code !== "VM3-I01.06") {
+                parentCode = "TM3-I01.02";
+              } else if (/^(VM7|CM7|DM7|MM7|NM7|SM7)-I03\.01(-[A-Z0-9]+)?$/i.test(code) && code !== "VM7-I03.01" && code !== "TM7-I03") {
+                parentCode = "VM7-I03.01";
               }
             }
             return {
@@ -1964,6 +1963,16 @@ export default function InputFormPage() {
     return pBase !== "" && pBase === cBase;
   };
 
+  const findParentKpiInList = (list: any[], childParentCode: string | undefined) => {
+    if (!childParentCode) return undefined;
+    const normChildParent = normalizeCodeForMatch(childParentCode);
+    // 1. Tìm chính xác mã cha trước (ví dụ TM2-I02.01 khớp chính xác TM2-I02.01 thay vì lấy nhầm VM2-I02.01)
+    const exact = list.find(k => normalizeCodeForMatch(k.code) === normChildParent);
+    if (exact) return exact;
+    // 2. Nếu không có bản ghi khớp 100% mã mới tìm theo quy tắc fuzzy match
+    return list.find(k => isParentChildMatch(k.code, childParentCode));
+  };
+
   const isRowVisible = (kpi: any) => {
     if (!shouldShowByFrequency(kpi.frequency, kpi.title, kpi.code)) return false;
     let curr = kpi;
@@ -1972,7 +1981,7 @@ export default function InputFormPage() {
       if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
       visited.add(curr.code);
       visited.add(curr.parentCode);
-      const parent = kpis.find(k => isParentChildMatch(k.code, curr.parentCode));
+      const parent = findParentKpiInList(kpis, curr.parentCode);
       if (!parent) break;
       const isParentExpanded = expandedParents[parent.code] !== false && expandedParents[normalizeCodeForMatch(parent.code)] !== false;
       if (!isParentExpanded) return false;
@@ -1989,7 +1998,7 @@ export default function InputFormPage() {
       if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
       visited.add(curr.code);
       visited.add(curr.parentCode);
-      const parent = kpis.find(k => isParentChildMatch(k.code, curr.parentCode));
+      const parent = findParentKpiInList(kpis, curr.parentCode);
       if (!parent) break;
       depth++;
       curr = parent;
@@ -2004,7 +2013,7 @@ export default function InputFormPage() {
       if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
       visited.add(curr.code);
       visited.add(curr.parentCode);
-      const parent = productKpis.find(k => isParentChildMatch(k.code, curr.parentCode));
+      const parent = findParentKpiInList(productKpis, curr.parentCode);
       if (!parent) break;
       const isParentExpanded = expandedParents[parent.code] !== false && expandedParents[normalizeCodeForMatch(parent.code)] !== false;
       if (!isParentExpanded) return false;
@@ -2021,7 +2030,7 @@ export default function InputFormPage() {
       if (visited.has(curr.code) || visited.has(curr.parentCode) || curr.parentCode === curr.code) break;
       visited.add(curr.code);
       visited.add(curr.parentCode);
-      const parent = productKpis.find(k => isParentChildMatch(k.code, curr.parentCode));
+      const parent = findParentKpiInList(productKpis, curr.parentCode);
       if (!parent) break;
       depth++;
       curr = parent;
@@ -2032,7 +2041,7 @@ export default function InputFormPage() {
   const sortKpisTree = (flatKpis: any[]) => {
     const findParent = (pk: any) => {
       if (!pk.parentCode) return null;
-      return flatKpis.find(parent => isParentChildMatch(parent.code, pk.parentCode));
+      return findParentKpiInList(flatKpis, pk.parentCode) || null;
     };
 
     const childrenMap = new Map<string, any[]>();
